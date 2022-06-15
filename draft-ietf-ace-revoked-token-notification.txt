@@ -5,13 +5,13 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                                L. Seitz
-Expires: 1 September 2022                                      Combitech
+Expires: 17 December 2022                                      Combitech
                                                             F. Palombini
                                                              Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                        28 February 2022
+                                                            15 June 2022
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 September 2022.
+   This Internet-Draft will expire on 17 December 2022.
 
 Copyright Notice
 
@@ -797,7 +797,7 @@ Table of Contents
                  |         }                             |
                  |                                       |
                  | GET Observe: 0                        |
-                 |  coap://example.as.com/revoke/trl/    |
+                 |  coap://as.example.com/revoke/trl/    |
                  +-------------------------------------->|
                  |                                       |
                  |<--------------------------------------+
@@ -875,7 +875,7 @@ Table of Contents
              |                }                             |
              |                                              |
              | GET Observe: 0                               |
-             |  coap://example.as.com/revoke/trl?diff=3     |
+             |  coap://as.example.com/revoke/trl?diff=3     |
              +--------------------------------------------->|
              |                                              |
              |<---------------------------------------------+
@@ -973,7 +973,7 @@ Table of Contents
              |                }                             |
              |                                              |
              | GET Observe: 0                               |
-             |  coap://example.as.com/revoke/trl/           |
+             |  coap://as.example.com/revoke/trl/           |
              +--------------------------------------------->|
              |                                              |
              |<---------------------------------------------+
@@ -1031,7 +1031,7 @@ Table of Contents
              |       the latest received notification)      |
              |                                              |
              | GET                                          |
-             |  coap://example.as.com/revoke/trl?diff=8     |
+             |  coap://as.example.com/revoke/trl?diff=8     |
              +--------------------------------------------->|
              |                                              |
              |<---------------------------------------------+
@@ -1333,9 +1333,9 @@ Table of Contents
               Koster, M., Soloway, A., and B. Silverajan, "Conditional
               Attributes for Constrained RESTful Environments", Work in
               Progress, Internet-Draft, draft-ietf-core-conditional-
-              attributes-02, 24 February 2022,
+              attributes-04, 10 May 2022,
               <https://www.ietf.org/archive/id/draft-ietf-core-
-              conditional-attributes-02.txt>.
+              conditional-attributes-04.txt>.
 
    [Named.Information.Hash.Algorithm]
               IANA, "Named Information Hash Algorithm",
