@@ -532,7 +532,7 @@ Table of Contents
           token hashes in the current TRL resource representation.
 
    2.  The Authorization Server sends a 2.05 (Content) Response to the
-       requester, with a CBOR array 'full-set' as payload.  Each element
+       requester, with a CBOR array 'full_set' as payload.  Each element
        of the array specifies one of the token hashes from the set
        HASHES, encoded as a CBOR byte string.
 
@@ -540,12 +540,12 @@ Table of Contents
        i.e., the CBOR array MUST be treated as a set in which the order
        of elements has no significant meaning.
 
-   The CDDL definition [RFC8610] of the CBOR array 'full-set' specified
+   The CDDL definition [RFC8610] of the CBOR array 'full_set' specified
    as payload in the response from the Authorization Server is provided
    below.
 
-      token-hash = bytes
-      full-set = [* token-hash]
+      token_hash = bytes
+      full_set = [* token_hash]
 
        Figure 4: CDDL definition of the response payload following a
                    Full Query request to the TRL endpoint
@@ -571,7 +571,7 @@ Table of Contents
        updates, the second entry refers to the second from last of such
        updates, and so on.
 
-       Each diff entry is a CBOR array 'diff-entry', which includes the
+       Each diff entry is a CBOR array 'diff_entry', which includes the
        following two elements.
 
        *  The first element is a CBOR array 'removed'.  Each element of
@@ -592,27 +592,27 @@ Table of Contents
        has no significant meaning.
 
    3.  The Authorization Server prepares a 2.05 (Content) response for
-       the requester, with a CBOR array 'diff-set' of U elements as
-       payload.  Each element of the CBOR array 'diff-set' specifies one
-       of the CBOR arrays 'diff-entry' prepared at step 2 as diff
+       the requester, with a CBOR array 'diff_set' of U elements as
+       payload.  Each element of the CBOR array 'diff_set' specifies one
+       of the CBOR arrays 'diff_entry' prepared at step 2 as diff
        entries.
 
-       Within the CBOR array 'diff-set', the CBOR arrays 'diff-entry'
+       Within the CBOR array 'diff_set', the CBOR arrays 'diff_entry'
        MUST be sorted to reflect the corresponding updates to the TRL in
-       reverse chronological order.  That is, the first 'diff-entry'
-       element of 'diff-set' relates to the most recent update to the
+       reverse chronological order.  That is, the first 'diff_entry'
+       element of 'diff_set' relates to the most recent update to the
        portion of the TRL pertaining to the requester.  The second
-       'diff-entry' element of 'diff-set' relates to the second from
+       'diff_entry' element of 'diff_set' relates to the second from
        last most recent update to that portion, and so on.
 
-   The CDDL definition [RFC8610] of the CBOR array 'diff-set' specified
+   The CDDL definition [RFC8610] of the CBOR array 'diff_set' specified
    as payload in the response from the Authorization Server is provided
    below.
 
-      token-hash = bytes
-      trl-patch = [* token-hash]
-      diff-entry = [removed: trl-patch, added: trl-patch]
-      diff-set = [* diff-entry]
+      token_hash = bytes
+      trl_patch = [* token_hash]
+      diff_entry = [removed: trl_patch, added: trl_patch]
+      diff_set = [* diff_entry]
 
        Figure 5: CDDL definition of the response payload following a
                    Diff Query request to the TRL endpoint
@@ -1061,13 +1061,13 @@ Table of Contents
         +-------------------+------------+-----------------------+
         | Name              | CBOR Value | CBOR Type             |
         +-------------------+------------+-----------------------+
-        | full-set          | TBD        | array                 |
+        | full_set          | TBD        | array                 |
         |                   |            |                       |
         +-------------------+------------+-----------------------+
         | cursor            | TBD        | simple value "null" / |
         |                   |            | unsigned integer      |
         +-------------------+------------+-----------------------+
-        | diff-set          | TBD        | array                 |
+        | diff_set          | TBD        | array                 |
         |                   |            |                       |
         +-------------------+------------+-----------------------+
         | more              | TBD        | simple value "true"   |
@@ -1452,9 +1452,9 @@ Appendix A.  On using the Series Transfer Pattern
        collection associated with the registered device.
 
    When responding to a diff query request from a registered device (see
-   Section 7), 'diff-set' is a subset of the collection associated with
+   Section 7), 'diff_set' is a subset of the collection associated with
    the requester, where each 'diff_entry' record is a series item from
-   that collection.  Note that 'diff-set' specifies the whole current
+   that collection.  Note that 'diff_set' specifies the whole current
    collection when the value of U is equal to SIZE, i.e., the current
    number of series items in the collection.
 
@@ -1484,14 +1484,14 @@ Appendix B.  Usage of the "Cursor" Pattern
    *  What is defined below for "Full Query Response" becomes part of
       the full query processing in the document body.  The successful
       response payload is a CBOR map if the AS supports both the "Diff
-      Query" mode and the "Cursor" pattern, or just the CBOR array full-
-      set otherwise.
+      Query" mode and the "Cursor" pattern, or just the CBOR array
+      full_set otherwise.
 
    *  The diff-query processing in the document body becomes as defined
       below for "Diff Query Request" and "Diff Query Response".  The
       successful response payload is a CBOR map if the AS supports both
       the "Diff Query" mode and the "Cursor" pattern, or just the CBOR
-      array diff-set otherwise.
+      array diff_set otherwise.
 
    *  An example using also the "Cursor" pattern can be added in
       "Interaction Examples".
@@ -1542,9 +1542,9 @@ B.2.  Full Query Response
    Appendix B.1), the response payload includes a CBOR map with the
    following fields, whose CBOR labels are defined in Section 11.
 
-   *  'full-set': this field MUST include a CBOR array of token hashes.
+   *  'full_set': this field MUST include a CBOR array of token hashes.
       The CBOR array is populated and formatted as defined for the CBOR
-      array 'full-set' in Section 6.
+      array 'full_set' in Section 6.
 
    *  'cursor': this field MUST include either the CBOR simple value
       "null" (0xf6) or a CBOR unsigned integer.
@@ -1589,7 +1589,7 @@ B.4.1.  Empty Collection
    The response payload includes a CBOR map with the following fields,
    whose CBOR labels are defined in Section 11.
 
-   *  'diff-set': this field MUST include an empty CBOR array.
+   *  'diff_set': this field MUST include an empty CBOR array.
 
    *  'cursor': this field MUST include the CBOR simple value "null"
       (0xf6).
@@ -1607,7 +1607,7 @@ B.4.2.  Cursor Not Specified in the Diff Query Request
    The response payload includes a CBOR map with the following fields,
    whose CBOR labels are defined in Section 11.
 
-   *  'diff-set': this field MUST include a CBOR array, containing L =
+   *  'diff_set': this field MUST include a CBOR array, containing L =
       min(U, MAX_DIFF_BATCH) diff entries.  In particular, the CBOR
       array is populated as follows.
 
@@ -1621,13 +1621,13 @@ B.4.2.  Cursor Not Specified in the Diff Query Request
          requester, as corresponding to the first L of the U most recent
          TRL updates pertaining to the requester.
 
-      The 'diff-set' CBOR array as well as the individual diff entries
+      The 'diff_set' CBOR array as well as the individual diff entries
       have the same format specified in Figure 5 and used for the
       response payload defined in Section 7.
 
    *  'cursor': this field MUST include a CBOR unsigned integer.  This
       takes the 'index' value of the series element of the collection
-      included as first diff entry in the 'diff-set' CBOR array.  That
+      included as first diff entry in the 'diff_set' CBOR array.  That
       is, it takes the 'index' value of the series item in the
       collection corresponding to the most recent update pertaining to
       the requester and returned in this diff query response.
@@ -1687,7 +1687,7 @@ B.4.3.  Cursor Specified in the Diff Query Request
       The response payload includes a CBOR map with the following
       fields, whose CBOR labels are defined in Section 11.
 
-      -  'diff-set': this field MUST include an empty CBOR array.
+      -  'diff_set': this field MUST include an empty CBOR array.
 
       -  'cursor': this field MUST include the CBOR simple value "null"
          (0xf6).
@@ -1716,7 +1716,7 @@ B.4.3.  Cursor Specified in the Diff Query Request
       The response payload includes a CBOR map with the following
       fields, whose CBOR labels are defined in Section 11.
 
-      -  'diff-set': this field MUST include a CBOR array, containing L
+      -  'diff_set': this field MUST include a CBOR array, containing L
          = min(SUB_U, MAX_DIFF_BATCH) diff entries, where SUB_U =
          min(NUM, SUB_SIZE), and SUB_SIZE is the number of series items
          in the collection following the series item X.
@@ -1736,7 +1736,7 @@ B.4.3.  Cursor Specified in the Diff Query Request
             with the requester, corresponding to the first L of the
             SUB_U most recent TRL updates pertaining to the requester.
 
-         The 'diff-set' CBOR array as well as the individual diff
+         The 'diff_set' CBOR array as well as the individual diff
          entries have the same format specified in Figure 5 and used for
          the response payload defined in Section 7.
 
@@ -1749,7 +1749,7 @@ B.4.3.  Cursor Specified in the Diff Query Request
 
          o  If L is different than 0, 'cursor' takes the 'index' value
             of the series element of the collection included as first
-            diff entry in the 'diff-set' CBOR array.  That is, it takes
+            diff entry in the 'diff_set' CBOR array.  That is, it takes
             the 'index' value of the series item in the collection
             corresponding to the most recent update pertaining to the
             requester and returned in this diff query response.
