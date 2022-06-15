@@ -1172,6 +1172,11 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-diff-query-of-the-trl" class="xref">Diff Query of the TRL</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-using-the-cursor-extension" class="xref">Using the Cursor Extension</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-upon-registration" class="xref">Upon Registration</a></p>
@@ -1333,6 +1338,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
             </ul>
 </li>
         </ul>
+<p id="section-1.1-7">Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1446,11 +1452,11 @@ Content-Format: application/ace+cbor
 Max-Age: 85800
 Payload:
 {
-   access_token : h'd08344a1...'
-   (remainder of the Access Token omitted for brevity)
-   token_type : pop,
-   expires_in : 86400,
-   profile    : coap_dtls,
+   "access_token" : h'd08344a1 ...
+    (remainder of the Access Token omitted for brevity) ...',
+   "token_type" : pop,
+   "expires_in" : 86400,
+   "profile" : coap_dtls,
    (remainder of the response omitted for brevity)
 }
 </pre>
@@ -1469,11 +1475,11 @@ Cache-Control: no-store
 Pragma: no-cache
 Payload:
 {
-   "access_token" : "2YotnFZFEjr1zCsicMWpAA"
-   (remainder of the Access Token omitted for brevity)
+   "access_token" : "2YotnFZFEjr1zCsicMWpAA ...
+    (remainder of the Access Token omitted for brevity) ...",
    "token_type" : "pop",
    "expires_in" : 86400,
-   "profile"    : "coap_dtls",
+   "profile" : "coap_dtls",
    (remainder of the response omitted for brevity)
 }
 </pre>
@@ -1567,22 +1573,51 @@ Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in
           </ul>
 </li>
         <li id="section-6-2.2">
-          <p id="section-6-2.2.1">The Authorization Server sends a 2.05 (Content) Response to the requester, with a CBOR array 'full_set' as payload. Each element of the array specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
-<p id="section-6-2.2.2">
-The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-6-2.2.2" class="pilcrow">¶</a></p>
+          <p id="section-6-2.2.1">The Authorization Server sends a 2.05 (Content) response to the requester. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6-2.2.2.1">
+              <p id="section-6-2.2.2.1.1">The 'full_set' parameter MUST be included and specifies a CBOR array 'full_set_array'. Each element of 'full_set_array' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
+<p id="section-6-2.2.2.1.2">
+The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-6-2.2.2.1.2" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6-2.2.2.2">
+              <p id="section-6-2.2.2.2.1">The 'cursor' parameter is included if the Authorization Server supports both the diff queries and the related cursor extension (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a> and <a href="#ssec-trl-diff-query-cursor" class="xref">Section 7.1</a>). If included, this parameter provides the requester with information for performing diff queries using the cursor extension, according to what is defined later in <a href="#ssec-trl-diff-query-cursor" class="xref">Section 7.1</a>.<a href="#section-6-2.2.2.2.1" class="pilcrow">¶</a></p>
+<p id="section-6-2.2.2.2.2">
+If the Authorization Server does not support both diff queries and the cursor extension, this parameter MUST NOT be included. In case the requester does not support both diff queries and the cursor extension, it MUST silently ignore the 'cursor' parameter if present.<a href="#section-6-2.2.2.2.2" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </li>
       </ol>
-<p id="section-6-3">The CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'full_set' specified as payload in the response from the Authorization Server is provided below.<a href="#section-6-3" class="pilcrow">¶</a></p>
-<span id="name-cddl-definition-of-the-resp"></span><div id="cddl-full">
+<p id="section-6-3"><a href="#cddl-full" class="xref">Figure 4</a> provides the CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'full_set_array' specified in the response from the Authorization Server, as value of the 'full_set' parameter.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<span id="name-cddl-definition-of-full_set"></span><div id="cddl-full">
 <figure id="figure-4">
         <div class="alignLeft art-CDDL art-text artwork" id="section-6-4.1">
 <pre>
-   token_hash = bytes
-   full_set = [* token_hash]
+token_hash = bytes
+full_set_array = [* token_hash]
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-cddl-definition-of-the-resp" class="selfRef">CDDL definition of the response payload following a Full Query request to the TRL endpoint</a>
+<a href="#name-cddl-definition-of-full_set" class="selfRef">CDDL definition of 'full_set_array'</a>
+        </figcaption></figure>
+</div>
+<p id="section-6-5"><a href="#response-full" class="xref">Figure 5</a> shows an example of response from the Authorization Server, following a Full Query request to the TRL endpoint. Full token hashes are omitted for brevity.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<span id="name-example-of-response-followi"></span><div id="response-full">
+<figure id="figure-5">
+        <div class="alignLeft art-text artwork" id="section-6-6.1">
+<pre>
+2.05 Content
+Content-Format: application/ace-trl+cbor
+Payload:
+{
+   "full_set" : [
+     h'01fa51cc ... ', h'01748190 ... '
+   ]
+}
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-example-of-response-followi" class="selfRef">Example of response following a Full Query request to the TRL endpoint</a>
         </figcaption></figure>
 </div>
 </section>
@@ -1612,37 +1647,85 @@ Each diff entry is a CBOR array 'diff_entry', which includes the following two e
 The order of the token hashes in the CBOR arrays 'removed' and 'added' is irrelevant. That is, the CBOR arrays 'removed' and 'added' MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-7-2.2.5" class="pilcrow">¶</a></p>
 </li>
         <li id="section-7-2.3">
-          <p id="section-7-2.3.1">The Authorization Server prepares a 2.05 (Content) response for the requester, with a CBOR array 'diff_set' of U elements as payload. Each element of the CBOR array 'diff_set' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case the response payload includes 'diff_set' as the empty CBOR array.<a href="#section-7-2.3.1" class="pilcrow">¶</a></p>
-<p id="section-7-2.3.2">
-Within the CBOR array 'diff_set', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set' relates to the second from last most recent update to that portion, and so on.<a href="#section-7-2.3.2" class="pilcrow">¶</a></p>
+          <p id="section-7-2.3.1">The Authorization Server prepares a 2.05 (Content) response for the requester. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.<a href="#section-7-2.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7-2.3.2.1">
+              <p id="section-7-2.3.2.1.1">The 'diff_set' paramenter MUST be present and specifies a CBOR array 'diff_set_array' of U elements. Each element of 'diff_set_array' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case 'diff_set_array' is the empty CBOR array.<a href="#section-7-2.3.2.1.1" class="pilcrow">¶</a></p>
+<p id="section-7-2.3.2.1.2">
+Within 'diff_set_array', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_array' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set_array' relates to the second from last most recent update to that portion, and so on.<a href="#section-7-2.3.2.1.2" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7-2.3.2.2">
+              <p id="section-7-2.3.2.2.1">The 'cursor' parameter and the 'more' parameters are included if the Authorization Server supports both the diff queries and the related cursor extension (see <a href="#ssec-trl-diff-query-cursor" class="xref">Section 7.1</a>). If included, these parameters provide the requester with information for performing diff queries using the cursor extension, according to what is defined later in <a href="#ssec-trl-diff-query-cursor" class="xref">Section 7.1</a>.<a href="#section-7-2.3.2.2.1" class="pilcrow">¶</a></p>
+<p id="section-7-2.3.2.2.2">
+If the Authorization Server does not support both diff queries and the cursor extension, these parameters MUST NOT be included. In case the requester does not support both diff queries and the cursor extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.<a href="#section-7-2.3.2.2.2" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </li>
       </ol>
-<p id="section-7-3">The CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'diff_set' specified as payload in the response from the Authorization Server is provided below.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<span id="name-cddl-definition-of-the-respo"></span><div id="cddl-diff">
-<figure id="figure-5">
+<p id="section-7-3"><a href="#cddl-diff" class="xref">Figure 6</a> provides the CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'diff_set_array' specified in the response from the Authorization Server, as value of the 'diff_set' parameter.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<span id="name-cddl-definition-of-diff_set"></span><div id="cddl-diff">
+<figure id="figure-6">
         <div class="alignLeft art-CDDL art-text artwork" id="section-7-4.1">
 <pre>
    token_hash = bytes
    trl_patch = [* token_hash]
    diff_entry = [removed: trl_patch, added: trl_patch]
-   diff_set = [* diff_entry]
+   diff_set_array = [* diff_entry]
 </pre>
 </div>
-<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-cddl-definition-of-the-respo" class="selfRef">CDDL definition of the response payload following a Diff Query request to the TRL endpoint</a>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-cddl-definition-of-diff_set" class="selfRef">CDDL definition of 'diff_set_array'</a>
         </figcaption></figure>
 </div>
-<p id="section-7-5">If the Authorization Server supports diff queries:<a href="#section-7-5" class="pilcrow">¶</a></p>
+<p id="section-7-5"><a href="#response-diff" class="xref">Figure 7</a> shows an example of response from the Authorization Server, following a Diff Query request to the TRL endpoint, where U = 3 diff entries are specified. Full token hashes are omitted for brevity.<a href="#section-7-5" class="pilcrow">¶</a></p>
+<span id="name-example-of-response-followin"></span><div id="response-diff">
+<figure id="figure-7">
+        <div class="alignLeft art-text artwork" id="section-7-6.1">
+<pre>
+2.05 Content
+Content-Format: application/ace-trl+cbor
+Payload:
+{
+   "diff_set" : [
+     [
+       [ h'01fa51cc ... ', h'01748190 ... '],
+       [ h'01cdf1ca ... ', h'01be41a6 ... ']
+     ],
+     [
+       [ h'0144dd12 ... ', h'01231fff ... '],
+       [ h'01fcd111 ... ', h'010a2b3e ... ']
+     ],
+     [
+       [ h'01ccc321 ... ', h'01032b8d ... '],
+       [ h'01ca986f ... ', h'01fe1a2b ... ']
+     ]
+   ]
+}
+</pre>
+</div>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-example-of-response-followin" class="selfRef">Example of response following a Diff Query request to the TRL endpoint</a>
+        </figcaption></figure>
+</div>
+<p id="section-7-7">If the Authorization Server supports diff queries:<a href="#section-7-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-6.1">The Authorization Server MUST keep track of N_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method used to achieve this is implementation-specific.<a href="#section-7-6.1" class="pilcrow">¶</a>
+<li class="normal" id="section-7-8.1">The Authorization Server MUST keep track of N_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method used to achieve this is implementation-specific.<a href="#section-7-8.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-7-6.2">When SIZE is equal to N_MAX, and a new TRL update occurs as pertaining to a registered device, the Authorization Server MUST first delete the oldest stored update for that device, before storing this latest update as the most recent one for that device.<a href="#section-7-6.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-7-8.2">When SIZE is equal to N_MAX, and a new TRL update occurs as pertaining to a registered device, the Authorization Server MUST first delete the oldest stored update for that device, before storing this latest update as the most recent one for that device.<a href="#section-7-8.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-7-6.3">The Authorization Server SHOULD provide registered devices and administrators with the value of N_MAX, upon their registration (see <a href="#sec-registration" class="xref">Section 8</a>).<a href="#section-7-6.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-7-8.3">The Authorization Server SHOULD provide registered devices and administrators with the value of N_MAX, upon their registration (see <a href="#sec-registration" class="xref">Section 8</a>).<a href="#section-7-8.3" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-7-7"><a href="#sec-series-pattern" class="xref">Appendix A</a> discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-7" class="pilcrow">¶</a></p>
-<p id="section-7-8"><a href="#sec-cursor-pattern" class="xref">Appendix B</a> discusses how the execution of a diff query of the TRL can be further improved by using the "Cursor" pattern defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-t2trg-stp-03#section-3.3" class="relref">Section 3.3</a> of [<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-8" class="pilcrow">¶</a></p>
+<p id="section-7-9"><a href="#sec-series-pattern" class="xref">Appendix A</a> discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-9" class="pilcrow">¶</a></p>
+<p id="section-7-10"><a href="#sec-cursor-pattern" class="xref">Appendix B</a> discusses how the execution of a diff query of the TRL can be further improved by using the "Cursor" pattern defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-t2trg-stp-03#section-3.3" class="relref">Section 3.3</a> of [<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-10" class="pilcrow">¶</a></p>
+<div id="ssec-trl-diff-query-cursor">
+<section id="section-7.1">
+        <h3 id="name-using-the-cursor-extension">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-using-the-cursor-extension" class="section-name selfRef">Using the Cursor Extension</a>
+        </h3>
+<p id="section-7.1-1">TBD<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-registration">
@@ -1711,80 +1794,95 @@ This can happen when receiving a subsequent response from the TRL endpoint (i.e.
         <h3 id="name-full-query-with-observation">
 <a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-full-query-with-observation" class="section-name selfRef">Full Query with Observation</a>
         </h3>
-<p id="section-10.1-1"><a href="#fig-RS-AS" class="xref">Figure 6</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-1"><a href="#fig-RS-AS" class="xref">Figure 8</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-full-query-"></span><div id="fig-RS-AS">
-<figure id="figure-6">
+<figure id="figure-8">
           <div class="alignCenter art-text artwork" id="section-10.1-2.1">
 <pre>
-RS                                     AS
-|                                       |
-| Registration: POST                    |
-+--------------------------------------&gt;|
-|                                       |
-|&lt;--------------------------------------+
-|          2.01 CREATED                 |
-|           Payload: {                  |
-|            ...                        |
-|              trl_path = "revoke/trl", |
-|              trl_hash = "sha-256",    |
-|              n_max = 10               |
-|           }                           |
-|                                       |
-| GET Observe: 0                        |
-|  coap://as.example.com/revoke/trl/    |
-+--------------------------------------&gt;|
-|                                       |
-|&lt;--------------------------------------+
-|              2.05 CONTENT Observe: 42 |
-|               Payload: []             |
-|                   .                   |
-|                   .                   |
-|                   .                   |
-|                                       |
-|    (Access Tokens t1 and t2 issued    |
-|   and successfully submitted to RS)   |
-|                   .                   |
-|                   .                   |
-|                   .                   |
-|                                       |
-|                                       |
-|     (Access Token t1 is revoked)      |
-|                                       |
-|&lt;--------------------------------------+
-|              2.05 CONTENT Observe: 53 |
-|               Payload: [bstr.h(t1)]   |
-|                   .                   |
-|                   .                   |
-|                   .                   |
-|                                       |
-|     (Access Token t2 is revoked)      |
-|                                       |
-|&lt;--------------------------------------+
-|              2.05 CONTENT Observe: 64 |
-|               Payload: [bstr.h(t1),   |
-|                         bstr.h(t2)]   |
-|                   .                   |
-|                   .                   |
-|                   .                   |
-|                                       |
-|       (Access Token t1 expires)       |
-|                                       |
-|&lt;--------------------------------------+
-|              2.05 CONTENT Observe: 75 |
-|               Payload: [bstr.h(t2)]   |
-|                   .                   |
-|                   .                   |
-|                   .                   |
-|                                       |
-|       (Access Token t2 expires)       |
-|                                       |
-|&lt;--------------------------------------+
-|              2.05 CONTENT Observe: 86 |
-|               Payload: []             |
-|                                       |
+RS                                                 AS
+|                                                   |
+| Registration: POST                                |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|                   2.01 CREATED                    |
+|                     Payload: {                    |
+|                        ...                        |
+|                        "trl_path" : "revoke/trl", |
+|                        "trl_hash" : "sha-256",    |
+|                        "n_max" : 10               |
+|                     }                             |
+|                                                   |
+| GET Observe: 0                                    |
+|  coap://as.example.com/revoke/trl/                |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 42                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : []                         |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|          (Access Tokens t1 and t2 issued          |
+|          and successfully submitted to RS)        |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|                                                   |
+|            (Access Token t1 is revoked)           |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 53                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : [bstr.h(t1)]               |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|            (Access Token t2 is revoked)           |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 64                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : [bstr.h(t1), bstr.h(t2)]   |
+|        }                                          |
+|                                                   |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|             (Access Token t1 expires)             |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 75                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : [bstr.h(t2)]               |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|            (Access Token t2 expires)              |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 86                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : []                         |
+|         }                                         |
+|                                                   |
 </pre>
 </div>
-<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
 <a href="#name-interaction-for-full-query-" class="selfRef">Interaction for Full Query with Observation</a>
           </figcaption></figure>
 </div>
@@ -1795,94 +1893,107 @@ RS                                     AS
         <h3 id="name-diff-query-with-observation">
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-diff-query-with-observation" class="section-name selfRef">Diff Query with Observation</a>
         </h3>
-<p id="section-10.2-1"><a href="#fig-RS-AS-2" class="xref">Figure 7</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-1"><a href="#fig-RS-AS-2" class="xref">Figure 9</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <p id="section-10.2-2">The Resource Server indicates N=3 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-diff-query-"></span><div id="fig-RS-AS-2">
-<figure id="figure-7">
+<figure id="figure-9">
           <div class="alignCenter art-text artwork" id="section-10.2-3.1">
 <pre>
-RS                                            AS
-|                                              |
-| Registration: POST                           |
-+---------------------------------------------&gt;|
-|                                              |
-|&lt;---------------------------------------------+
-|                 2.01 CREATED                 |
-|                  Payload: {                  |
-|                     ...                      |
-|                     trl_path = "revoke/trl", |
-|                     trl_hash = "sha-256",    |
-|                     n_max = 10               |
-|                  }                           |
-|                                              |
-| GET Observe: 0                               |
-|  coap://as.example.com/revoke/trl?diff=3     |
-+---------------------------------------------&gt;|
-|                                              |
-|&lt;---------------------------------------------+
-|                     2.05 CONTENT Observe: 42 |
-|                      Payload: []             |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|         (Access Tokens t1 and t2 issued      |
-|         and successfully submitted to RS)    |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|          (Access Token t1 is revoked)        |
-|                                              |
-|&lt;---------------------------------------------+
-|            2.05 CONTENT Observe: 53          |
-|             Payload: [                       |
-|                        [ [], [bstr.h(t1)] ]  |
-|                      ]                       |
-|                                              |
-|                                              |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|          (Access Token t2 is revoked)        |
-|                                              |
-|&lt;---------------------------------------------+
-|            2.05 CONTENT Observe: 64          |
-|             Payload: [                       |
-|                        [ [], [bstr.h(t2)] ], |
-|                        [ [], [bstr.h(t1)] ]  |
-|                      ]                       |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|          (Access Token t1 expires)           |
-|                                              |
-|&lt;---------------------------------------------+
-|            2.05 CONTENT Observe: 75          |
-|             Payload: [                       |
-|                        [ [bstr.h(t1)], [] ], |
-|                        [ [], [bstr.h(t2)] ], |
-|                        [ [], [bstr.h(t1)] ]  |
-|                      ]                       |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|          (Access Token t2 expires)           |
-|                                              |
-|&lt;---------------------------------------------+
-|            2.05 CONTENT Observe: 86          |
-|             Payload: [                       |
-|                        [ [bstr.h(t2)], [] ], |
-|                        [ [bstr.h(t1)], [] ], |
-|                        [ [], [bstr.h(t2)] ]  |
-|                      ]                       |
-|                                              |
+RS                                                 AS
+|                                                   |
+| Registration: POST                                |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|                    2.01 CREATED                   |
+|                     Payload: {                    |
+|                        ...                        |
+|                        "trl_path" : "revoke/trl", |
+|                        "trl_hash" : "sha-256",    |
+|                        "n_max" : 10               |
+|                     }                             |
+|                                                   |
+| GET Observe: 0                                    |
+|  coap://as.example.com/revoke/trl?diff=3          |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 42                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "diff_set" : []                         |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|          (Access Tokens t1 and t2 issued          |
+|          and successfully submitted to RS)        |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|            (Access Token t1 is revoked)           |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 53                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "diff_set" : [                          |
+|                          [ [], [bstr.h(t1)] ]     |
+|                        ]                          |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|            (Access Token t2 is revoked)           |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 64                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "diff_set" : [                          |
+|                          [ [], [bstr.h(t2)] ],    |
+|                          [ [], [bstr.h(t1)] ]     |
+|                        ]                          |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|              (Access Token t1 expires)            |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 75                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "diff_set" : [                          |
+|                          [ [bstr.h(t1)], [] ],    |
+|                          [ [], [bstr.h(t2)] ],    |
+|                          [ [], [bstr.h(t1)] ]     |
+|                        ]                          |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|              (Access Token t2 expires)            |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 86                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "diff_set" : [                          |
+|                          [ [bstr.h(t2)], [] ],    |
+|                          [ [bstr.h(t1)], [] ],    |
+|                          [ [], [bstr.h(t2)] ]     |
+|                        ]                          |
+|         }                                         |
+|                                                   |
 </pre>
 </div>
-<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
 <a href="#name-interaction-for-diff-query-" class="selfRef">Interaction for Diff Query with Observation</a>
           </figcaption></figure>
 </div>
@@ -1893,101 +2004,117 @@ RS                                            AS
         <h3 id="name-full-query-with-observation-">
 <a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-full-query-with-observation-" class="section-name selfRef">Full Query with Observation and Additional Diff Query</a>
         </h3>
-<p id="section-10.3-1"><a href="#fig-RS-AS-3" class="xref">Figure 8</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
+<p id="section-10.3-1"><a href="#fig-RS-AS-3" class="xref">Figure 10</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
 <p id="section-10.3-2">The example also considers one of the notifications from the Authorization Server to get lost in transmission, and thus not reaching the Resource Server.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
 <p id="section-10.3-3">When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the Authorization Server, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-full-query-w"></span><div id="fig-RS-AS-3">
-<figure id="figure-8">
+<figure id="figure-10">
           <div class="alignCenter art-text artwork" id="section-10.3-4.1">
 <pre>
-RS                                            AS
-|                                              |
-| Registration: POST                           |
-+---------------------------------------------&gt;|
-|                                              |
-|&lt;---------------------------------------------+
-|                 2.01 CREATED                 |
-|                  Payload: {                  |
-|                     ...                      |
-|                     trl_path = "revoke/trl", |
-|                     trl_hash = "sha-256",    |
-|                     n_max = 10               |
-|                  }                           |
-|                                              |
-| GET Observe: 0                               |
-|  coap://as.example.com/revoke/trl/           |
-+---------------------------------------------&gt;|
-|                                              |
-|&lt;---------------------------------------------+
-|                     2.05 CONTENT Observe: 42 |
-|                      Payload: []             |
-|                       .                      |
-|                       .                      |
-|                       .                      |
-|                                              |
-|      (Access Tokens t1 and t2 issued         |
-|      and successfully submitted to RS)       |
-|                       .                      |
-|                       .                      |
-|                       .                      |
-|                                              |
-|         (Access Token t1 is revoked)         |
-|                                              |
-|&lt;---------------------------------------------+
-|                     2.05 CONTENT Observe: 53 |
-|                      Payload: [bstr.h(t1)]   |
-|                                              |
-|                       .                      |
-|                       .                      |
-|                       .                      |
-|                                              |
-|         (Access Token t2 is revoked)         |
-|                                              |
-|&lt;---------------------------------------------+
-|                     2.05 CONTENT Observe: 64 |
-|                      Payload: [bstr.h(t1),   |
-|                                bstr.h(t2)]   |
-|                       .                      |
-|                       .                      |
-|                       .                      |
-|                                              |
-|         (Access Token t1 expires)            |
-|                                              |
-|&lt;---------------------------------------------+
-|                     2.05 CONTENT Observe: 75 |
-|                      Payload: [bstr.h(t2)]   |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|         (Access Token t2 expires)            |
-|                                              |
-|       X&lt;-------------------------------------+
-|                     2.05 CONTENT Observe: 86 |
-|                      Payload: []             |
-|                        .                     |
-|                        .                     |
-|                        .                     |
-|                                              |
-|       (Enough time has passed since          |
-|       the latest received notification)      |
-|                                              |
-| GET                                          |
-|  coap://as.example.com/revoke/trl?diff=8     |
-+---------------------------------------------&gt;|
-|                                              |
-|&lt;---------------------------------------------+
-|            2.05 CONTENT                      |
-|             Payload: [                       |
-|                        [ [bstr.h(t2)], [] ], |
-|                        [ [bstr.h(t1)], [] ], |
-|                        [ [], [bstr.h(t2)] ], |
-|                        [ [], [bstr.h(t1)] ]  |
-|                      ]                       |
-|                                              |
+RS                                                 AS
+|                                                   |
+| Registration: POST                                |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|                    2.01 CREATED                   |
+|                     Payload: {                    |
+|                        ...                        |
+|                        "trl_path" : "revoke/trl", |
+|                        "trl_hash" : "sha-256",    |
+|                        "n_max" : 10               |
+|                     }                             |
+|                                                   |
+| GET Observe: 0                                    |
+|  coap://as.example.com/revoke/trl/                |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 42                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : []                         |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|          (Access Tokens t1 and t2 issued          |
+|          and successfully submitted to RS)        |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|            (Access Token t1 is revoked)           |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 53                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : [bstr.h(t1)]               |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|            (Access Token t2 is revoked)           |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 64                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : [bstr.h(t1), bstr.h(t2)]   |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|             (Access Token t1 expires)             |
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT Observe: 75                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : [bstr.h(t2)]               |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|             (Access Token t2 expires)             |
+|                                                   |
+|    X&lt;---------------------------------------------+
+|        2.05 CONTENT Observe: 86                   |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "full_set" : []                         |
+|         }                                         |
+|                         .                         |
+|                         .                         |
+|                         .                         |
+|                                                   |
+|           (Enough time has passed since           |
+|         the latest received notification)         |
+|                                                   |
+| GET                                               |
+|  coap://as.example.com/revoke/trl?diff=8          |
++--------------------------------------------------&gt;|
+|                                                   |
+|&lt;--------------------------------------------------+
+|        2.05 CONTENT                               |
+|        Content-Format: "application/ace-trl+cbor" |
+|         Payload: {                                |
+|           "diff_set" : [                          |
+|                          [ [bstr.h(t2)], [] ],    |
+|                          [ [bstr.h(t1)], [] ],    |
+|                          [ [], [bstr.h(t2)] ],    |
+|                          [ [], [bstr.h(t1)] ]     |
+|                        ]                          |
+|         }                                         |
+|                                                   |
 </pre>
 </div>
-<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
 <a href="#name-interaction-for-full-query-w" class="selfRef">Interaction for Full Query with Observation and Diff Query</a>
           </figcaption></figure>
 </div>
@@ -2000,36 +2127,32 @@ RS                                            AS
       <h2 id="name-ace-token-revocation-list-p">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-ace-token-revocation-list-p" class="section-name selfRef">ACE Token Revocation List Parameters</a>
       </h2>
-<p id="section-11-1">This specification defines a number of parameters that can be transported in the response from the TRL endpoint, when the response payload is encoded as a CBOR map. Note that such a response MUST use the Content-Format "application/ace-trl+cbor" defined in <a href="#iana-content-type" class="xref">Section 14.2</a> of this specification.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">This specification defines a number of parameters that can be transported in the response from the TRL endpoint, when the response payload is a CBOR map. Note that such a response MUST use the Content-Format "application/ace-trl+cbor" defined in <a href="#iana-content-type" class="xref">Section 14.2</a> of this specification.<a href="#section-11-1" class="pilcrow">¶</a></p>
 <p id="section-11-2">The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.<a href="#section-11-2" class="pilcrow">¶</a></p>
 <span id="name-cbor-abbreviations-for-the-"></span><div id="fig-cbor-trl-params">
-<figure id="figure-9">
+<figure id="figure-11">
         <div class="alignCenter art-text artwork" id="section-11-3.1">
 <pre>
-+-------------------+------------+-----------------------+
-| Name              | CBOR Value | CBOR Type             |
-+-------------------+------------+-----------------------+
-| full_set          | TBD        | array                 |
-|                   |            |                       |
-+-------------------+------------+-----------------------+
-| cursor            | TBD        | simple value "null" / |
-|                   |            | unsigned integer      |
-+-------------------+------------+-----------------------+
-| diff_set          | TBD        | array                 |
-|                   |            |                       |
-+-------------------+------------+-----------------------+
-| more              | TBD        | simple value "true"   |
-|                   |            | or "false"            |
-+-------------------+------------+-----------------------+
-| error             | TBD        | int                   |
-|                   |            |                       |
-+-------------------+------------+-----------------------+
-| error_description | TBD        | tstr                  |
-|                   |            |                       |
-+-------------------+------------+-----------------------+
++-------------------+------------+------------------------+
+| Name              | CBOR Value | CBOR Type              |
++-------------------+------------+------------------------+
+| full_set          |  0         | array                  |
++-------------------+------------+------------------------+
+| diff_set          |  1         | array                  |
++-------------------+------------+------------------------+
+| cursor            |  2         | unsigned integer /     |
+|                   |            | simple value "null"    |
++-------------------+------------+------------------------+
+| more              |  3         | simple value "false" / |
+|                   |            | simple value "true"    |
++-------------------+------------+------------------------+
+| error             | -1         | int                    |
++-------------------+------------+------------------------+
+| error_description | -2         | tstr                   |
++-------------------+------------+------------------------+
 </pre>
 </div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-cbor-abbreviations-for-the-" class="selfRef">CBOR abbreviations for the ACE Token Revocation List parameters</a>
         </figcaption></figure>
 </div>
@@ -2040,9 +2163,9 @@ RS                                            AS
       <h2 id="name-ace-token-revocation-list-e">
 <a href="#section-12" class="section-number selfRef">12. </a><a href="#name-ace-token-revocation-list-e" class="section-name selfRef">ACE Token Revocation List Error Identifiers</a>
       </h2>
-<p id="section-12-1">This specification defines a number of values that the Authorization Server can include as error identifiers, in the 'error' field of an error response from the TRL endpoint. This applies to error responses whose payload is encoded as a CBOR map and whose Content-Format is "application/ace-trl+cbor".<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-1">This specification defines a number of values that the Authorization Server can include as error identifiers, in the 'error' field of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".<a href="#section-12-1" class="pilcrow">¶</a></p>
 <span id="name-ace-token-revocation-list-er"></span><div id="fig-ACE-TRL-Error">
-<figure id="figure-10">
+<figure id="figure-12">
         <div class="alignCenter art-text artwork" id="section-12-2.1">
 <pre>
 +-------+---------------------------+
@@ -2056,7 +2179,7 @@ RS                                            AS
 +-------+---------------------------+
 </pre>
 </div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
 <a href="#name-ace-token-revocation-list-er" class="selfRef">ACE Token Revocation List Error Identifiers</a>
         </figcaption></figure>
 </div>
@@ -2389,7 +2512,7 @@ Otherwise, the field MUST include a CBOR unsigned integer, encoding the 'index' 
 </li>
               </ul>
 <p id="appendix-B.4.2-3.1.3">
-The 'diff_set' CBOR array as well as the individual diff entries have the same format specified in <a href="#cddl-diff" class="xref">Figure 5</a> and used for the response payload defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#appendix-B.4.2-3.1.3" class="pilcrow">¶</a></p>
+The 'diff_set' CBOR array as well as the individual diff entries have the same format specified in <a href="#cddl-diff" class="xref">Figure 6</a> and used for the response payload defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#appendix-B.4.2-3.1.3" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="appendix-B.4.2-3.2">
               <p id="appendix-B.4.2-3.2.1">'cursor': this field MUST include a CBOR unsigned integer. This takes the 'index' value of the series element of the collection included as first diff entry in the 'diff_set' CBOR array. That is, it takes the 'index' value of the series item in the collection corresponding to the most recent update pertaining to the requester and returned in this diff query response.<a href="#appendix-B.4.2-3.2.1" class="pilcrow">¶</a></p>
@@ -2454,7 +2577,7 @@ That is, these are the L updates pertaining to the requester that immediately fo
 </li>
                   </ul>
 <p id="appendix-B.4.3-2.4.3.1.4">
-The 'diff_set' CBOR array as well as the individual diff entries have the same format specified in <a href="#cddl-diff" class="xref">Figure 5</a> and used for the response payload defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#appendix-B.4.3-2.4.3.1.4" class="pilcrow">¶</a></p>
+The 'diff_set' CBOR array as well as the individual diff entries have the same format specified in <a href="#cddl-diff" class="xref">Figure 6</a> and used for the response payload defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#appendix-B.4.3-2.4.3.1.4" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="appendix-B.4.3-2.4.3.2">
                   <p id="appendix-B.4.3-2.4.3.2.1">'cursor': this field MUST include a CBOR unsigned integer. In particular:<a href="#appendix-B.4.3-2.4.3.2.1" class="pilcrow">¶</a></p>
@@ -2495,9 +2618,11 @@ If 'more' has value "true", the requester can send a follow-up diff query reques
 <ul class="normal">
 <li class="normal" id="appendix-C.1-1.1">Earlier mentioning of error cases.<a href="#appendix-C.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.2">Corner cases of message processing explained more explcitly.<a href="#appendix-C.1-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.2">Both success and error responses have a CBOR map as payload.<a href="#appendix-C.1-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.3">Clarifications and editorial improvements.<a href="#appendix-C.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.3">Corner cases of message processing explained more explcitly.<a href="#appendix-C.1-1.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-C.1-1.4">Clarifications and editorial improvements.<a href="#appendix-C.1-1.4" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
