@@ -443,7 +443,7 @@ RS                                     AS
 |         }                             |
 |                                       |
 | GET Observe: 0                        |
-|  coap://example.as.com/revoke/trl/    |
+|  coap://as.example.com/revoke/trl/    |
 +-------------------------------------->|
 |                                       |
 |<--------------------------------------+
@@ -519,7 +519,7 @@ RS                                            AS
 |                }                             |
 |                                              |
 | GET Observe: 0                               |
-|  coap://example.as.com/revoke/trl?diff=3     |
+|  coap://as.example.com/revoke/trl?diff=3     |
 +--------------------------------------------->|
 |                                              |
 |<---------------------------------------------+
@@ -610,7 +610,7 @@ RS                                            AS
 |                }                             |
 |                                              |
 | GET Observe: 0                               |
-|  coap://example.as.com/revoke/trl/           |
+|  coap://as.example.com/revoke/trl/           |
 +--------------------------------------------->|
 |                                              |
 |<---------------------------------------------+
@@ -668,7 +668,7 @@ RS                                            AS
 |       the latest received notification)      |
 |                                              |
 | GET                                          |
-|  coap://example.as.com/revoke/trl?diff=8     |
+|  coap://as.example.com/revoke/trl?diff=8     |
 +--------------------------------------------->|
 |                                              |
 |<---------------------------------------------+
