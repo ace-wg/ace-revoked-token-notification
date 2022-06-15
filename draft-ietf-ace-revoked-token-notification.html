@@ -1268,7 +1268,10 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
             <p id="section-toc.1-1.18.1"><a href="#appendix-C" class="xref">Appendix C</a>.  <a href="#name-document-updates" class="xref">Document Updates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.1">
-                <p id="section-toc.1-1.18.2.1.1"><a href="#appendix-C.1" class="xref">C.1</a>.  <a href="#name-version-00-to-01" class="xref">Version -00 to -01</a></p>
+                <p id="section-toc.1-1.18.2.1.1"><a href="#appendix-C.1" class="xref">C.1</a>.  <a href="#name-version-01-to-02" class="xref">Version -01 to -02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18.2.2">
+                <p id="section-toc.1-1.18.2.2.1"><a href="#appendix-C.2" class="xref">C.2</a>.  <a href="#name-version-00-to-01" class="xref">Version -00 to -01</a></p>
 </li>
             </ul>
 </li>
@@ -1298,7 +1301,11 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
         <h3 id="name-terminology">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
         </h3>
-<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization <span>[<a href="#I-D.ietf-ace-oauth-authz" class="xref">I-D.ietf-ace-oauth-authz</a>]</span>, as well as with terms and concepts related to CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="xref">RFC8392</a>]</span>, and JSON Web Tokens (JWTs) <span>[<a href="#RFC7519" class="xref">RFC7519</a>]</span>. The terminology for entities in the considered architecture is defined in OAuth 2.0 <span>[<a href="#RFC6749" class="xref">RFC6749</a>]</span>. In particular, this includes Client, Resource Server, and Authorization Server.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <p id="section-1.1-3">Readers are also expected to be familiar with the terms and concepts related to CBOR <span>[<a href="#RFC8949" class="xref">RFC8949</a>]</span>, JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span>, the CoAP protocol <span>[<a href="#RFC7252" class="xref">RFC7252</a>]</span>, CoAP Observe <span>[<a href="#RFC7641" class="xref">RFC7641</a>]</span>, and the use of hash functions to name objects as defined in <span>[<a href="#RFC6920" class="xref">RFC6920</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the Authorization Server, and /authz-info at the Resource Server. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."<a href="#section-1.1-4" class="pilcrow">¶</a></p>
@@ -1343,7 +1350,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
         <li class="normal" id="section-2-3.2">
           <p id="section-2-3.2.1">When a device registers at the Authorization Server, it also receives the url-path to the TRL resource.<a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
 <p id="section-2-3.2.2">
-After the registration procedure is finished, the registered device can send an Observation Request to the TRL resource as described in <span>[<a href="#RFC7641" class="xref">RFC7641</a>]</span>, i.e., a GET request with an Observe option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL resource, as interested to receive notifications about its update. Upon receiving the request, the Authorization Server adds the registered device to the list of observers of the TRL resource.<a href="#section-2-3.2.2" class="pilcrow">¶</a></p>
+After the registration procedure is finished, the registered device can send an Observation Request to the TRL resource as described in <span>[<a href="#RFC7641" class="xref">RFC7641</a>]</span>, i.e., a GET request including the CoAP Observe Option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL resource, as interested to receive notifications about its update. Upon receiving the request, the Authorization Server adds the registered device to the list of observers of the TRL resource.<a href="#section-2-3.2.2" class="pilcrow">¶</a></p>
 <p id="section-2-3.2.3">
 At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked Access Tokens (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>); or the most recent TRL updates occurred over the list of pertaining revoked Access Tokens (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>). In either case, the registered device may especially rely on an Observation Request for subscribing to the TRL resource as discussed above.<a href="#section-2-3.2.3" class="pilcrow">¶</a></p>
 </li>
@@ -1483,7 +1490,7 @@ Payload:
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-trl-resource" class="section-name selfRef">The TRL Resource</a>
       </h2>
 <p id="section-4-1">Upon startup, the Authorization Server creates a single TRL resource, encoded as a CBOR array.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Each element of the array is a CBOR byte string, with value the token hash of an Access Token. The order of the token hashes in the CBOR array is irrelevant, and the CBOR array MUST be treated as a set in which the order has no significant meaning.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-2">Each element of the array is a CBOR byte string, with value the token hash of an Access Token. The order of the token hashes in the CBOR array is irrelevant, and the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">The TRL is initialized as empty, i.e., the initial content of the TRL resource representation MUST be an empty CBOR array.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <div id="ssec-trl-update">
 <section id="section-4.1">
@@ -1521,7 +1528,7 @@ The entry associated with one of such updates contains a list of token hashes, s
 <p id="section-5-5">The TRL endpoint allows the following query parameters in a GET request. The Authorization Server MUST silently ignore unknown query parameters.<a href="#section-5-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-6.1">
-          <p id="section-5-6.1.1">'pmax': if included, it follows the semantics defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-conditional-attributes-04#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#I-D.ietf-core-conditional-attributes" class="xref">I-D.ietf-core-conditional-attributes</a>]</span>. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe option set to 0 (register). In such a case, this parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-6.1.1">'pmax': if included, it follows the semantics defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-conditional-attributes-04#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#I-D.ietf-core-conditional-attributes" class="xref">I-D.ietf-core-conditional-attributes</a>]</span>. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
 <p id="section-5-6.1.2">
 If the Observation Request does not include the 'pmax' parameter, the maximum time to consider is up to the Authorization Server. If the Observation Request includes the 'pmax' parameter, its value MUST be greater than zero, otherwise the Authorization Server MUST return a 4.00 (Bad Request) response.<a href="#section-5-6.1.2" class="pilcrow">¶</a></p>
 <p id="section-5-6.1.3">
@@ -1560,7 +1567,7 @@ If the Authorization Server does not support diff queries, it ignores the query 
         <li id="section-6-2.2">
           <p id="section-6-2.2.1">The Authorization Server sends a 2.05 (Content) Response to the requester, with a CBOR array 'full-set' as payload. Each element of the array specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-6-2.2.2">
-The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order has no significant meaning.<a href="#section-6-2.2.2" class="pilcrow">¶</a></p>
+The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-6-2.2.2" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <p id="section-6-3">The CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'full-set' specified as payload in the response from the Authorization Server is provided below.<a href="#section-6-3" class="pilcrow">¶</a></p>
@@ -1585,7 +1592,7 @@ The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR ar
       </h2>
 <p id="section-7-1">In order to produce a (notification) response to a GET request asking for a diff query of the TRL, the Authorization Server performs the following actions.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7-2">
-<li id="section-7-2.1">The Authorization Server defines the positive integer NUM. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than a pre-defined positive integer N_MAX, then NUM takes the value of N_MAX. Otherwise, NUM takes N.<a href="#section-7-2.1" class="pilcrow">¶</a>
+<li id="section-7-2.1">The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than a pre-defined positive integer N_MAX, then NUM takes the value of N_MAX. Otherwise, NUM takes N.<a href="#section-7-2.1" class="pilcrow">¶</a>
 </li>
         <li id="section-7-2.2">
           <p id="section-7-2.2.1">The Authorization Server prepares U = min(NUM, SIZE) diff entries, where SIZE &lt;= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server. That is, the diff entries are related to the U most recent TRL updates pertaining to the requester. In particular, the first entry refers to the most recent of such updates, the second entry refers to the second from last of such updates, and so on.<a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
@@ -1601,7 +1608,7 @@ Each diff entry is a CBOR array 'diff-entry', which includes the following two e
 The order of the token hashes in the CBOR arrays 'removed' and 'added' is irrelevant. That is, the CBOR arrays 'removed' and 'added' MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-7-2.2.4" class="pilcrow">¶</a></p>
 </li>
         <li id="section-7-2.3">
-          <p id="section-7-2.3.1">The Authorization Server prepares a 2.05 (Content) Response for the requester, with a CBOR array 'diff-set' of U elements as payload. Each element of the CBOR array 'diff-set' specifies one of the CBOR arrays 'diff-entry' prepared at step 2 as diff entries.<a href="#section-7-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-7-2.3.1">The Authorization Server prepares a 2.05 (Content) response for the requester, with a CBOR array 'diff-set' of U elements as payload. Each element of the CBOR array 'diff-set' specifies one of the CBOR arrays 'diff-entry' prepared at step 2 as diff entries.<a href="#section-7-2.3.1" class="pilcrow">¶</a></p>
 <p id="section-7-2.3.2">
 Within the CBOR array 'diff-set', the CBOR arrays 'diff-entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff-entry' element of 'diff-set' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff-entry' element of 'diff-set' relates to the second from last most recent update to that portion, and so on.<a href="#section-7-2.3.2" class="pilcrow">¶</a></p>
 </li>
@@ -1628,7 +1635,7 @@ Within the CBOR array 'diff-set', the CBOR arrays 'diff-entry' MUST be sorted to
 <p id="section-7-6.1.2">
 The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.<a href="#section-7-6.1.2" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-6.2">The Authorization Server MUST keep track of N_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method to achieve this is implementation-specific.<a href="#section-7-6.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-7-6.2">The Authorization Server MUST keep track of N_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method used to achieve this is implementation-specific.<a href="#section-7-6.2" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="section-7-6.3">When SIZE is equal to N_MAX, and a new TRL update occurs as pertaining to a registered device, the Authorization Server MUST first delete the oldest stored update for that device, before storing this latest update as the most recent one for that device.<a href="#section-7-6.3" class="pilcrow">¶</a>
 </li>
@@ -1653,8 +1660,8 @@ The response MUST have Content-Format "application/ace-trl+cbor". The payload of
         <li class="normal" id="section-8-2.3">Optionally, a positive integer N_MAX, if the Authorization Server supports diff queries of the TRL resource (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>).<a href="#section-8-2.3" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-8-3">After the registration procedure is finished, the administrator or registered device can send a GET request to the TRL resource, including the CoAP Observe option set to 0 (register), in order to start an observation of the TRL resource at the Authorization Server as per <span><a href="https://rfc-editor.org/rfc/rfc7641#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7641" class="xref">RFC7641</a>]</span>. The GET request can express the wish for a full query (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>) of the TRL.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<p id="section-8-4">In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content) and including the CoAP Observe option. The payload of the response is formatted as defined in <a href="#ssec-trl-full-query" class="xref">Section 6</a> or in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>, in case the GET yielded the execution of a full query or a diff query of the TRL, respectively.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-3">After the registration procedure is finished, the administrator or registered device can send a GET request to the TRL resource, including the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource at the Authorization Server as per <span><a href="https://rfc-editor.org/rfc/rfc7641#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7641" class="xref">RFC7641</a>]</span>. The GET request can express the wish for a full query (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>) of the TRL.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content) and including the CoAP Observe Option. The payload of the response is formatted as defined in <a href="#ssec-trl-full-query" class="xref">Section 6</a> or in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>, in case the GET request yielded the execution of a full query or a diff query of the TRL, respectively.<a href="#section-8-4" class="pilcrow">¶</a></p>
 <p id="section-8-5">Further details about the registration process at the Authorization Server are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-oauth-authz-46#section-5.5" class="relref">Section 5.5</a> of [<a href="#I-D.ietf-ace-oauth-authz" class="xref">I-D.ietf-ace-oauth-authz</a>]</span>).<a href="#section-8-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1666,7 +1673,7 @@ The response MUST have Content-Format "application/ace-trl+cbor". The payload of
 <p id="section-9-1">When the TRL is updated (see <a href="#ssec-trl-update" class="xref">Section 4.1</a>), the Authorization Server sends Observe Notifications to the observers of the TRL resource. Observe Notifications are sent as per <span><a href="https://rfc-editor.org/rfc/rfc7641#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC7641" class="xref">RFC7641</a>]</span>.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <p id="section-9-2">If the 'pmax' query parameter was specified in the Observation Request starting an observation (see <a href="#sec-trl-endpoint" class="xref">Section 5</a>), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.<a href="#section-9-2" class="pilcrow">¶</a></p>
 <p id="section-9-3">The payload of each Observe Notification is formatted as defined in <a href="#ssec-trl-full-query" class="xref">Section 6</a> or in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>, in case the original Observation Request yielded the execution of a full query or a diff query of the TRL, respectively.<a href="#section-9-3" class="pilcrow">¶</a></p>
-<p id="section-9-4">Furthermore, an administrator or a registered device can send additional GET requests to the TRL endpoint at any time, in order to retrieve the token hashes of the pertaining revoked Access Tokens. When doing so, the caller of the TRL endpoint can perform a full query (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>).<a href="#section-9-4" class="pilcrow">¶</a></p>
+<p id="section-9-4">Furthermore, an administrator or a registered device can send additional GET requests to the TRL endpoint at any time, in order to retrieve the token hashes of the pertaining revoked Access Tokens. When doing so, the caller of the TRL endpoint can perform a full query (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>) of the TRL.<a href="#section-9-4" class="pilcrow">¶</a></p>
 <p id="section-9-5">When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.<a href="#section-9-5" class="pilcrow">¶</a></p>
 <p id="section-9-6">When a Resource Server RS receives a response from the TRL endpoint specifying the token hash H associated with a certain revoked Access Token, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-oauth-authz-46#section-5.10.1" class="relref">Section 5.10.1</a> of [<a href="#I-D.ietf-ace-oauth-authz" class="xref">I-D.ietf-ace-oauth-authz</a>]</span>). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending or deliberately holding the Access Token back.<a href="#section-9-6" class="pilcrow">¶</a></p>
 <p id="section-9-7">In such a case, the RS performs the following actions.<a href="#section-9-7" class="pilcrow">¶</a></p>
@@ -2062,10 +2069,10 @@ RS                                            AS
 <a href="#section-13" class="section-number selfRef">13. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-13-1">Security considerations are inherited from the ACE framework for Authentication and Authorization <span>[<a href="#I-D.ietf-ace-oauth-authz" class="xref">I-D.ietf-ace-oauth-authz</a>]</span>, from <span>[<a href="#RFC8392" class="xref">RFC8392</a>]</span> as to the usage of CWTs, from <span>[<a href="#RFC7519" class="xref">RFC7519</a>]</span> as to the usage of JWTs, from <span>[<a href="#RFC7641" class="xref">RFC7641</a>]</span> as to the usage of CoAP Observe, and from <span>[<a href="#RFC6920" class="xref">RFC6920</a>]</span> with regard to resource naming through hashes. The following considerations also apply.<a href="#section-13-1" class="pilcrow">¶</a></p>
-<p id="section-13-2">The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association they use to communicate.<a href="#section-13-2" class="pilcrow">¶</a></p>
+<p id="section-13-2">The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association that they use to communicate.<a href="#section-13-2" class="pilcrow">¶</a></p>
 <p id="section-13-3">Disclosing any information about revoked Access Tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the Authorization Server MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the Authorization Server may rely on an access control list or similar.<a href="#section-13-3" class="pilcrow">¶</a></p>
 <p id="section-13-4">If a registered device has many non-expired Access Tokens associated with itself that are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL resource (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>). This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of a TRL, but an Authorization Server SHOULD take measures to limit this size.<a href="#section-13-4" class="pilcrow">¶</a></p>
-<p id="section-13-5">Most of the communication about revoked Access Tokens presented in this specification relies on CoAP Observe Notifications sent from the Authorization Server to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked. To avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the Authorization Server for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.<a href="#section-13-5" class="pilcrow">¶</a></p>
+<p id="section-13-5">Most of the communication about revoked Access Tokens presented in this specification relies on CoAP Observe Notifications sent from the Authorization Server to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked. In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the Authorization Server for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.<a href="#section-13-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
@@ -2073,8 +2080,9 @@ RS                                            AS
       <h2 id="name-iana-considerations">
 <a href="#section-14" class="section-number selfRef">14. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-14-1">RFC EDITOR: Throughout this section, please replace [this document] with the RFC number of this specification and remove this note.<a href="#section-14-1" class="pilcrow">¶</a></p>
-<p id="section-14-2">This document has the following actions for IANA.<a href="#section-14-2" class="pilcrow">¶</a></p>
+<p id="section-14-1">This document has the following actions for IANA.<a href="#section-14-1" class="pilcrow">¶</a></p>
+<p id="section-14-2">Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]" with
+the RFC number of this specification and delete this paragraph.<a href="#section-14-2" class="pilcrow">¶</a></p>
 <div id="iana-media-type">
 <section id="section-14.1">
         <h3 id="name-media-type-registrations">
@@ -2085,11 +2093,11 @@ RS                                            AS
 <p id="section-14.1-3">Subtype name: ace-trl+cbor<a href="#section-14.1-3" class="pilcrow">¶</a></p>
 <p id="section-14.1-4">Required parameters: N/A<a href="#section-14.1-4" class="pilcrow">¶</a></p>
 <p id="section-14.1-5">Optional parameters: N/A<a href="#section-14.1-5" class="pilcrow">¶</a></p>
-<p id="section-14.1-6">Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in [this document].<a href="#section-14.1-6" class="pilcrow">¶</a></p>
+<p id="section-14.1-6">Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in [RFC-XXXX].<a href="#section-14.1-6" class="pilcrow">¶</a></p>
 <p id="section-14.1-7">Security considerations: See <a href="#sec-security-considerations" class="xref">Section 13</a> of this document.<a href="#section-14.1-7" class="pilcrow">¶</a></p>
 <p id="section-14.1-8">Interoperability considerations: N/A<a href="#section-14.1-8" class="pilcrow">¶</a></p>
-<p id="section-14.1-9">Published specification: [this document]<a href="#section-14.1-9" class="pilcrow">¶</a></p>
-<p id="section-14.1-10">Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked Access Tokens, according to a Token Revocation List maintained by the Authorization Server as specified in [this document].<a href="#section-14.1-10" class="pilcrow">¶</a></p>
+<p id="section-14.1-9">Published specification: [RFC-XXXX]<a href="#section-14.1-9" class="pilcrow">¶</a></p>
+<p id="section-14.1-10">Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked Access Tokens, according to a Token Revocation List maintained by the Authorization Server as specified in [RFC-XXXX].<a href="#section-14.1-10" class="pilcrow">¶</a></p>
 <p id="section-14.1-11">Fragment identifier considerations: N/A<a href="#section-14.1-11" class="pilcrow">¶</a></p>
 <p id="section-14.1-12">Additional information: N/A<a href="#section-14.1-12" class="pilcrow">¶</a></p>
 <p id="section-14.1-13">Person &amp; email address to contact for further information: &lt;iesg@ietf.org&gt;<a href="#section-14.1-13" class="pilcrow">¶</a></p>
@@ -2108,7 +2116,7 @@ RS                                            AS
 <p id="section-14.2-2">Media Type: application/ace-trl+cbor<a href="#section-14.2-2" class="pilcrow">¶</a></p>
 <p id="section-14.2-3">Encoding: -<a href="#section-14.2-3" class="pilcrow">¶</a></p>
 <p id="section-14.2-4">ID: TBD<a href="#section-14.2-4" class="pilcrow">¶</a></p>
-<p id="section-14.2-5">Reference: [this document]<a href="#section-14.2-5" class="pilcrow">¶</a></p>
+<p id="section-14.2-5">Reference: [RFC-XXXX]<a href="#section-14.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-token-revocation-list">
@@ -2117,7 +2125,7 @@ RS                                            AS
 <a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-ace-token-revocation-list-pa" class="section-name selfRef">ACE Token Revocation List Parameters Registry</a>
         </h3>
 <p id="section-14.3-1">This specification establishes the "ACE Token Revocation List Parameters" IANA registry. The
-registry has been created to use the "Expert Review" registration procedure <span>[<a href="#RFC8126" class="xref">RFC8126</a>]</span>. Expert review guidelines are provided in <a href="#review" class="xref">Section 14.5</a>. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.<a href="#section-14.3-1" class="pilcrow">¶</a></p>
+registry has been created to use the "Expert Review" registration procedure <span>[<a href="#RFC8126" class="xref">RFC8126</a>]</span>. Expert Review guidelines are provided in <a href="#review" class="xref">Section 14.5</a>. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.<a href="#section-14.3-1" class="pilcrow">¶</a></p>
 <p id="section-14.3-2">The columns of this registry are:<a href="#section-14.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-14.3-3.1">Name: This is a descriptive name that enables easier reference to the item. The name MUST be unique. It is not used in the encoding.<a href="#section-14.3-3.1" class="pilcrow">¶</a>
@@ -2129,7 +2137,7 @@ registry has been created to use the "Expert Review" registration procedure <spa
           <li class="normal" id="section-14.3-3.4">Reference: This contains a pointer to the public specification for the item.<a href="#section-14.3-3.4" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-14.3-4">This registry has been initially populated by the values in <a href="#trl-registry-parameters" class="xref">Section 11</a>. The Reference column for all of these entries refers to this document.<a href="#section-14.3-4" class="pilcrow">¶</a></p>
+<p id="section-14.3-4">This registry has been initially populated by the values in <a href="#trl-registry-parameters" class="xref">Section 11</a>. The "Reference" column for all of these entries refers to this document.<a href="#section-14.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-token-revocation-list-errors">
@@ -2137,17 +2145,17 @@ registry has been created to use the "Expert Review" registration procedure <spa
         <h3 id="name-ace-token-revocation-list-err">
 <a href="#section-14.4" class="section-number selfRef">14.4. </a><a href="#name-ace-token-revocation-list-err" class="section-name selfRef">ACE Token Revocation List Errors</a>
         </h3>
-<p id="section-14.4-1">This specification establishes the "ACE Token Revocation List Errors" IANA registry. The registry has been created to use the "Expert Review" registration procedure <span>[<a href="#RFC8126" class="xref">RFC8126</a>]</span>. Expert review guidelines are provided in <a href="#review" class="xref">Section 14.5</a>. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.<a href="#section-14.4-1" class="pilcrow">¶</a></p>
+<p id="section-14.4-1">This specification establishes the "ACE Token Revocation List Errors" IANA registry. The registry has been created to use the "Expert Review" registration procedure <span>[<a href="#RFC8126" class="xref">RFC8126</a>]</span>. Expert Review guidelines are provided in <a href="#review" class="xref">Section 14.5</a>. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.<a href="#section-14.4-1" class="pilcrow">¶</a></p>
 <p id="section-14.4-2">The columns of this registry are:<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-14.4-3.1">Value: The value to be used to identify the error. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.<a href="#section-14.4-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-14.4-3.1">Value: The value to be used to identify the error. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as private use.<a href="#section-14.4-3.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-14.4-3.2">Description: This field contains a brief description of the error.<a href="#section-14.4-3.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-14.4-3.3">Reference: This field contains a pointer to the public specification defining the error, if one exists.<a href="#section-14.4-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-14.4-4">This registry has been initially populated by the values in <a href="#error-types" class="xref">Section 12</a>. The Reference column for all of these entries refers to this document.<a href="#section-14.4-4" class="pilcrow">¶</a></p>
+<p id="section-14.4-4">This registry has been initially populated by the values in <a href="#error-types" class="xref">Section 12</a>. The "Reference" column for all of these entries refers to this document.<a href="#section-14.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="review">
@@ -2155,14 +2163,14 @@ registry has been created to use the "Expert Review" registration procedure <spa
         <h3 id="name-expert-review-instructions">
 <a href="#section-14.5" class="section-number selfRef">14.5. </a><a href="#name-expert-review-instructions" class="section-name selfRef">Expert Review Instructions</a>
         </h3>
-<p id="section-14.5-1">The IANA registries established in this document is defined as expert review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.<a href="#section-14.5-1" class="pilcrow">¶</a></p>
+<p id="section-14.5-1">The IANA registries established in this document is defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.<a href="#section-14.5-1" class="pilcrow">¶</a></p>
 <p id="section-14.5-2">Expert reviewers should take into consideration the following points:<a href="#section-14.5-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-14.5-3.1">Point squatting should be discouraged. Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. The zones tagged as private use are intended for testing purposes and closed environments, code points in other ranges should not be assigned for testing.<a href="#section-14.5-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-14.5-3.1">Point squatting should be discouraged. Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. The zones tagged as private use are intended for testing purposes and closed environments. Code points in other ranges should not be assigned for testing.<a href="#section-14.5-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-14.5-3.2">Specifications are required for the standards track range of point assignment. Specifications should exist for specification required ranges, but early assignment before a specification is available is considered to be permissible. Specifications are needed for the first-come, first-serve range if they are expected to be used outside of closed environments in an interoperable way. When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.<a href="#section-14.5-3.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-14.5-3.2">Specifications are required for the Standards Track range of point assignment. Specifications should exist for Specification Required ranges, but early assignment before a specification is available is considered to be permissible. Specifications are needed for the Expert Review range if they are expected to be used outside of closed environments in an interoperable way. When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.<a href="#section-14.5-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-14.5-3.3">Experts should take into account the expected usage of fields when approving point assignment. The fact that there is a range for standards track documents does not mean that a standards track document cannot have points assigned outside of that range. The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.<a href="#section-14.5-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-14.5-3.3">Experts should take into account the expected usage of fields when approving point assignment. The fact that there is a range for Standards Track documents does not mean that a Standards Track document cannot have points assigned outside of that range. The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.<a href="#section-14.5-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -2480,23 +2488,34 @@ If 'more' has value "true", the requester can send a follow-up diff query reques
 <a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
       </h2>
 <p id="appendix-C-1">RFC EDITOR: Please remove this section.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<div id="sec-0-01">
+<div id="sec-01-02">
 <section id="appendix-C.1">
-        <h3 id="name-version-00-to-01">
-<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+        <h3 id="name-version-01-to-02">
+<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-C.1-1.1">Added actions to perform upon receiving responses from the TRL endpoint.<a href="#appendix-C.1-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-C.1-1.1">Clarifications and editorial improvements.<a href="#appendix-C.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.2">Fixed off-by-one error when using the "Cursor" pattern.<a href="#appendix-C.1-1.2" class="pilcrow">¶</a>
+        </ul>
+</section>
+</div>
+<div id="sec-00-01">
+<section id="appendix-C.2">
+        <h3 id="name-version-00-to-01">
+<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-C.2-1.1">Added actions to perform upon receiving responses from the TRL endpoint.<a href="#appendix-C.2-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.3">Improved error handling, with registered error codes.<a href="#appendix-C.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.2-1.2">Fixed off-by-one error when using the "Cursor" pattern.<a href="#appendix-C.2-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.4">Section restructuring (full- and diff-query as self-standing sections).<a href="#appendix-C.1-1.4" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.2-1.3">Improved error handling, with registered error codes.<a href="#appendix-C.2-1.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.5">Renamed identifiers and CBOR parameters.<a href="#appendix-C.1-1.5" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.2-1.4">Section restructuring (full- and diff-query as self-standing sections).<a href="#appendix-C.2-1.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.6">Clarifications and editorial improvements.<a href="#appendix-C.1-1.6" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.2-1.5">Renamed identifiers and CBOR parameters.<a href="#appendix-C.2-1.5" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-C.2-1.6">Clarifications and editorial improvements.<a href="#appendix-C.2-1.6" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>

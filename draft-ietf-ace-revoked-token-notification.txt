@@ -113,7 +113,8 @@ Table of Contents
        B.4.2.  Cursor Not Specified in the Diff Query Request
        B.4.3.  Cursor Specified in the Diff Query Request
    Appendix C.  Document Updates
-     C.1.  Version -00 to -01
+     C.1.  Version -01 to -02
+     C.2.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -176,8 +177,8 @@ Table of Contents
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
-   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
    Readers are expected to be familiar with the terms and concepts
@@ -263,10 +264,10 @@ Table of Contents
 
       After the registration procedure is finished, the registered
       device can send an Observation Request to the TRL resource as
-      described in [RFC7641], i.e., a GET request with an Observe option
-      set to 0 (register).  By doing so, the registered device
-      effectively subscribes to the TRL resource, as interested to
-      receive notifications about its update.  Upon receiving the
+      described in [RFC7641], i.e., a GET request including the CoAP
+      Observe Option set to 0 (register).  By doing so, the registered
+      device effectively subscribes to the TRL resource, as interested
+      to receive notifications about its update.  Upon receiving the
       request, the Authorization Server adds the registered device to
       the list of observers of the TRL resource.
 
@@ -422,7 +423,7 @@ Table of Contents
    Each element of the array is a CBOR byte string, with value the token
    hash of an Access Token.  The order of the token hashes in the CBOR
    array is irrelevant, and the CBOR array MUST be treated as a set in
-   which the order has no significant meaning.
+   which the order of elements has no significant meaning.
 
    The TRL is initialized as empty, i.e., the initial content of the TRL
    resource representation MUST be an empty CBOR array.
@@ -481,7 +482,7 @@ Table of Contents
       Section 3.2.2 of [I-D.ietf-core-conditional-attributes].  This
       query parameter is relevant only in case the GET request is
       specifically an Observation Request, i.e., if it includes the CoAP
-      Observe option set to 0 (register).  In such a case, this
+      Observe Option set to 0 (register).  In such a case, this
       parameter indicates the maximum time, in seconds, between two
       consecutive notifications for the observation in question,
       regardless whether the TRL resource has changed or not.
@@ -537,7 +538,7 @@ Table of Contents
 
        The order of the token hashes in the CBOR array is irrelevant,
        i.e., the CBOR array MUST be treated as a set in which the order
-       has no significant meaning.
+       of elements has no significant meaning.
 
    The CDDL definition [RFC8610] of the CBOR array 'full-set' specified
    as payload in the response from the Authorization Server is provided
@@ -555,11 +556,11 @@ Table of Contents
    for a diff query of the TRL, the Authorization Server performs the
    following actions.
 
-   1.  The Authorization Server defines the positive integer NUM.  If
-       the value N specified in the query parameter 'diff' in the GET
-       request is equal to 0 or greater than a pre-defined positive
-       integer N_MAX, then NUM takes the value of N_MAX.  Otherwise, NUM
-       takes N.
+   1.  The Authorization Server defines the positive integer NUM as
+       follows.  If the value N specified in the query parameter 'diff'
+       in the GET request is equal to 0 or greater than a pre-defined
+       positive integer N_MAX, then NUM takes the value of N_MAX.
+       Otherwise, NUM takes N.
 
    2.  The Authorization Server prepares U = min(NUM, SIZE) diff
        entries, where SIZE <= N_MAX is the number of TRL updates
@@ -590,7 +591,7 @@ Table of Contents
        'added' MUST be treated as a set in which the order of elements
        has no significant meaning.
 
-   3.  The Authorization Server prepares a 2.05 (Content) Response for
+   3.  The Authorization Server prepares a 2.05 (Content) response for
        the requester, with a CBOR array 'diff-set' of U elements as
        payload.  Each element of the CBOR array 'diff-set' specifies one
        of the CBOR arrays 'diff-entry' prepared at step 2 as diff
@@ -630,7 +631,7 @@ Table of Contents
 
    *  The Authorization Server MUST keep track of N_MAX most recent
       updates to the portion of the TRL that pertains to each caller of
-      the TRL endpoint.  The particular method to achieve this is
+      the TRL endpoint.  The particular method used to achieve this is
       implementation-specific.
 
    *  When SIZE is equal to N_MAX, and a new TRL update occurs as
@@ -669,7 +670,7 @@ Table of Contents
 
    After the registration procedure is finished, the administrator or
    registered device can send a GET request to the TRL resource,
-   including the CoAP Observe option set to 0 (register), in order to
+   including the CoAP Observe Option set to 0 (register), in order to
    start an observation of the TRL resource at the Authorization Server
    as per Section 3.1 of [RFC7641].  The GET request can express the
    wish for a full query (see Section 6) or a diff query (see Section 7)
@@ -677,10 +678,10 @@ Table of Contents
 
    In case the request is successfully processed, the Authorization
    Server replies with a response specifying the CoAP response code 2.05
-   (Content) and including the CoAP Observe option.  The payload of the
+   (Content) and including the CoAP Observe Option.  The payload of the
    response is formatted as defined in Section 6 or in Section 7, in
-   case the GET yielded the execution of a full query or a diff query of
-   the TRL, respectively.
+   case the GET request yielded the execution of a full query or a diff
+   query of the TRL, respectively.
 
    Further details about the registration process at the Authorization
    Server are out of scope for this specification.  Note that the
@@ -713,7 +714,7 @@ Table of Contents
    additional GET requests to the TRL endpoint at any time, in order to
    retrieve the token hashes of the pertaining revoked Access Tokens.
    When doing so, the caller of the TRL endpoint can perform a full
-   query (see Section 6) or a diff query (see Section 7).
+   query (see Section 6) or a diff query (see Section 7) of the TRL.
 
    When receiving a response from the TRL endpoint, a registered device
    MUST expunge every stored Access Token associated with a token hash
@@ -1116,8 +1117,8 @@ Table of Contents
    end, the Authorization Server can perform the required filtering
    based on the authenticated identity of the registered device, i.e., a
    (non-public) identifier that the Authorization Server can securely
-   relate to the registered device and the secure association they use
-   to communicate.
+   relate to the registered device and the secure association that they
+   use to communicate.
 
    Disclosing any information about revoked Access Tokens to entities
    other than the intended registered devices may result in privacy
@@ -1142,8 +1143,8 @@ Table of Contents
    Authorization Server to a registered device.  The suppression of
    those notifications by an external attacker that has access to the
    network would prevent registered devices from ever knowing that their
-   pertaining Access Tokens have been revoked.  To avoid this, a
-   registered device SHOULD NOT rely solely on the CoAP Observe
+   pertaining Access Tokens have been revoked.  In order to avoid this,
+   a registered device SHOULD NOT rely solely on the CoAP Observe
    notifications.  In particular, a registered device SHOULD also
    regularly poll the Authorization Server for the most current
    information about revoked Access Tokens, by sending GET requests to
@@ -1151,10 +1152,10 @@ Table of Contents
 
 14.  IANA Considerations
 
-   RFC EDITOR: Throughout this section, please replace [this document]
-   with the RFC number of this specification and remove this note.
-
    This document has the following actions for IANA.
+
+   Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
+   with the RFC number of this specification and delete this paragraph.
 
 14.1.  Media Type Registrations
 
@@ -1172,19 +1173,19 @@ Table of Contents
    Optional parameters: N/A
 
    Encoding considerations: Must be encoded as CBOR map containing the
-   protocol parameters defined in [this document].
+   protocol parameters defined in [RFC-XXXX].
 
    Security considerations: See Section 13 of this document.
 
    Interoperability considerations: N/A
 
-   Published specification: [this document]
+   Published specification: [RFC-XXXX]
 
    Applications that use this media type: The type is used by
    Authorization Servers, Clients and Resource Servers that support the
    notification of revoked Access Tokens, according to a Token
    Revocation List maintained by the Authorization Server as specified
-   in [this document].
+   in [RFC-XXXX].
 
    Fragment identifier considerations: N/A
 
@@ -1212,15 +1213,15 @@ Table of Contents
 
    ID: TBD
 
-   Reference: [this document]
+   Reference: [RFC-XXXX]
 
 14.3.  ACE Token Revocation List Parameters Registry
 
    This specification establishes the "ACE Token Revocation List
    Parameters" IANA registry.  The registry has been created to use the
-   "Expert Review" registration procedure [RFC8126].  Expert review
+   "Expert Review" registration procedure [RFC8126].  Expert Review
    guidelines are provided in Section 14.5.  It should be noted that, in
-   addition to the expert review, some portions of the registry require
+   addition to the Expert Review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
    well.
 
@@ -1248,16 +1249,16 @@ Table of Contents
       the item.
 
    This registry has been initially populated by the values in
-   Section 11.  The Reference column for all of these entries refers to
-   this document.
+   Section 11.  The "Reference" column for all of these entries refers
+   to this document.
 
 14.4.  ACE Token Revocation List Errors
 
    This specification establishes the "ACE Token Revocation List Errors"
    IANA registry.  The registry has been created to use the "Expert
-   Review" registration procedure [RFC8126].  Expert review guidelines
+   Review" registration procedure [RFC8126].  Expert Review guidelines
    are provided in Section 14.5.  It should be noted that, in addition
-   to the expert review, some portions of the registry require a
+   to the Expert Review, some portions of the registry require a
    specification, potentially a Standards Track RFC, to be supplied as
    well.
 
@@ -1268,7 +1269,7 @@ Table of Contents
       integer.  Integer values between 0 and 255 are designated as
       Standards Track Document required.  Integer values from 256 to
       65535 are designated as Specification Required.  Integer values
-      greater than 65535 are designated as expert review.  Integer
+      greater than 65535 are designated as Expert Review.  Integer
       values less than -65536 are marked as private use.
 
    *  Description: This field contains a brief description of the error.
@@ -1277,13 +1278,13 @@ Table of Contents
       specification defining the error, if one exists.
 
    This registry has been initially populated by the values in
-   Section 12.  The Reference column for all of these entries refers to
-   this document.
+   Section 12.  The "Reference" column for all of these entries refers
+   to this document.
 
 14.5.  Expert Review Instructions
 
-   The IANA registries established in this document is defined as expert
-   review.  This section gives some general guidelines for what the
+   The IANA registries established in this document is defined as Expert
+   Review.  This section gives some general guidelines for what the
    experts should be looking for, but they are being designated as
    experts for a reason so they should be given substantial latitude.
 
@@ -1294,22 +1295,22 @@ Table of Contents
       that the usage is not going to duplicate one that is already
       registered and that the point is likely to be used in deployments.
       The zones tagged as private use are intended for testing purposes
-      and closed environments, code points in other ranges should not be
-      assigned for testing.
+      and closed environments.  Code points in other ranges should not
+      be assigned for testing.
 
-   *  Specifications are required for the standards track range of point
-      assignment.  Specifications should exist for specification
-      required ranges, but early assignment before a specification is
+   *  Specifications are required for the Standards Track range of point
+      assignment.  Specifications should exist for Specification
+      Required ranges, but early assignment before a specification is
       available is considered to be permissible.  Specifications are
-      needed for the first-come, first-serve range if they are expected
-      to be used outside of closed environments in an interoperable way.
-      When specifications are not provided, the description provided
-      needs to have sufficient information to identify what the point is
-      being used for.
+      needed for the Expert Review range if they are expected to be used
+      outside of closed environments in an interoperable way.  When
+      specifications are not provided, the description provided needs to
+      have sufficient information to identify what the point is being
+      used for.
 
    *  Experts should take into account the expected usage of fields when
       approving point assignment.  The fact that there is a range for
-      standards track documents does not mean that a standards track
+      Standards Track documents does not mean that a Standards Track
       document cannot have points assigned outside of that range.  The
       length of the encoded value should be weighed against how many
       code points of that length are left, the size of device it will be
@@ -1772,7 +1773,11 @@ Appendix C.  Document Updates
 
    RFC EDITOR: Please remove this section.
 
-C.1.  Version -00 to -01
+C.1.  Version -01 to -02
+
+   *  Clarifications and editorial improvements.
+
+C.2.  Version -00 to -01
 
    *  Added actions to perform upon receiving responses from the TRL
       endpoint.
