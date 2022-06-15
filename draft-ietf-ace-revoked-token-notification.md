@@ -333,7 +333,9 @@ In order to produce a (notification) response to a GET request asking for a diff
 
 1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than a pre-defined positive integer N\_MAX, then NUM takes the value of N_MAX. Otherwise, NUM takes N.
 
-2. The Authorization Server prepares U = min(NUM, SIZE) diff entries, where SIZE <= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server. That is, the diff entries are related to the U most recent TRL updates pertaining to the requester. In particular, the first entry refers to the most recent of such updates, the second entry refers to the second from last of such updates, and so on.
+2. The Authorization Server prepares U = min(NUM, SIZE) diff entries, where SIZE <= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server. Note that SIZE = 0 yields U = 0, in which case no diff entries are prepared.
+
+    The prepared diff entries are related to the U most recent TRL updates pertaining to the requester. In particular, the first entry refers to the most recent of such updates, the second entry refers to the second from last of such updates, and so on.
 
     Each diff entry is a CBOR array 'diff_entry', which includes the following two elements.
 
@@ -343,7 +345,7 @@ In order to produce a (notification) response to a GET request asking for a diff
 
     The order of the token hashes in the CBOR arrays 'removed' and 'added' is irrelevant. That is, the CBOR arrays 'removed' and 'added' MUST be treated as a set in which the order of elements has no significant meaning.
 
-3. The Authorization Server prepares a 2.05 (Content) response for the requester, with a CBOR array 'diff_set' of U elements as payload. Each element of the CBOR array 'diff_set' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries.
+3. The Authorization Server prepares a 2.05 (Content) response for the requester, with a CBOR array 'diff_set' of U elements as payload. Each element of the CBOR array 'diff_set' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case the response payload includes 'diff_set' as the empty CBOR array.
 
    Within the CBOR array 'diff_set', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set' relates to the second from last most recent update to that portion, and so on.
 
@@ -440,13 +442,13 @@ RS                                     AS
 +-------------------------------------->|
 |                                       |
 |<--------------------------------------+
-|        2.01 CREATED                   |
-|         Payload: {                    |
-|          ...                          |
-|            "trl_path" = "revoke/trl", |
-|            "trl_hash" = "sha-256",    |
-|            "n_max" = 10               |
-|         }                             |
+|          2.01 CREATED                 |
+|           Payload: {                  |
+|            ...                        |
+|              trl_path = "revoke/trl", |
+|              trl_hash = "sha-256",    |
+|              n_max = 10               |
+|           }                           |
 |                                       |
 | GET Observe: 0                        |
 |  coap://as.example.com/revoke/trl/    |
@@ -507,7 +509,7 @@ RS                                     AS
 
 {{fig-RS-AS-2}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
-The Resource Server indicates N=3 as value of the query parameter "diff", i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
+The Resource Server indicates N=3 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
 
 ~~~~~~~~~~~
 RS                                            AS
@@ -516,13 +518,13 @@ RS                                            AS
 +--------------------------------------------->|
 |                                              |
 |<---------------------------------------------+
-|               2.01 CREATED                   |
-|                Payload: {                    |
-|                   ...                        |
-|                   "trl_path" = "revoke/trl", |
-|                   "trl_hash" = "sha-256",    |
-|                   "n_max" = 10               |
-|                }                             |
+|                 2.01 CREATED                 |
+|                  Payload: {                  |
+|                     ...                      |
+|                     trl_path = "revoke/trl", |
+|                     trl_hash = "sha-256",    |
+|                     n_max = 10               |
+|                  }                           |
 |                                              |
 | GET Observe: 0                               |
 |  coap://as.example.com/revoke/trl?diff=3     |
@@ -598,7 +600,7 @@ RS                                            AS
 
 The example also considers one of the notifications from the Authorization Server to get lost in transmission, and thus not reaching the Resource Server.
 
-When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the Authorization Server, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the query parameter "diff", i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
+When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the Authorization Server, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
 
 ~~~~~~~~~~~
 RS                                            AS
@@ -607,13 +609,13 @@ RS                                            AS
 +--------------------------------------------->|
 |                                              |
 |<---------------------------------------------+
-|               2.01 CREATED                   |
-|                Payload: {                    |
-|                   ...                        |
-|                   "trl_path" = "revoke/trl", |
-|                   "trl_hash" = "sha-256",    |
-|                   "n_max" = 10               |
-|                }                             |
+|                 2.01 CREATED                 |
+|                  Payload: {                  |
+|                     ...                      |
+|                     trl_path = "revoke/trl", |
+|                     trl_hash = "sha-256",    |
+|                     n_max = 10               |
+|                  }                           |
 |                                              |
 | GET Observe: 0                               |
 |  coap://as.example.com/revoke/trl/           |
@@ -1019,6 +1021,8 @@ If the update collection associated with the requester is not empty and the diff
 RFC EDITOR: Please remove this section.
 
 ## Version -01 to -02 ## {#sec-01-02}
+
+* Corner cases of message processing explained more explcitly.
 
 * Clarifications and editorial improvements.
 
