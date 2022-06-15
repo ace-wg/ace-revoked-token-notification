@@ -1,4 +1,6 @@
 ---
+v: 3
+
 title: Notification of Revoked Access Tokens in the Authentication and Authorization for Constrained Environments (ACE) Framework
 abbrev: Notification of Revoked Tokens in ACE
 docname: draft-ietf-ace-revoked-token-notification-latest
@@ -1028,6 +1030,6 @@ RFC EDITOR: Please remove this section.
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
 
-The authors sincerely thank Carsten Bormann, Benjamin Kaduk, Marco Rasori, Michael Richardson, Jim Schaad, Goeran Selander and Travis Spencer for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}} and {{{Travis Spencer}}} for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
