@@ -565,11 +565,13 @@ Table of Contents
    2.  The Authorization Server prepares U = min(NUM, SIZE) diff
        entries, where SIZE <= N_MAX is the number of TRL updates
        pertaining to the requester and currently stored at the
-       Authorization Server.  That is, the diff entries are related to
-       the U most recent TRL updates pertaining to the requester.  In
-       particular, the first entry refers to the most recent of such
-       updates, the second entry refers to the second from last of such
-       updates, and so on.
+       Authorization Server.  Note that SIZE = 0 yields U = 0, in which
+       case no diff entries are prepared.
+
+       The prepared diff entries are related to the U most recent TRL
+       updates pertaining to the requester.  In particular, the first
+       entry refers to the most recent of such updates, the second entry
+       refers to the second from last of such updates, and so on.
 
        Each diff entry is a CBOR array 'diff_entry', which includes the
        following two elements.
@@ -595,7 +597,8 @@ Table of Contents
        the requester, with a CBOR array 'diff_set' of U elements as
        payload.  Each element of the CBOR array 'diff_set' specifies one
        of the CBOR arrays 'diff_entry' prepared at step 2 as diff
-       entries.
+       entries.  Note that U might have value 0, in which case the
+       response payload includes 'diff_set' as the empty CBOR array.
 
        Within the CBOR array 'diff_set', the CBOR arrays 'diff_entry'
        MUST be sorted to reflect the corresponding updates to the TRL in
@@ -789,13 +792,13 @@ Table of Contents
                  +-------------------------------------->|
                  |                                       |
                  |<--------------------------------------+
-                 |        2.01 CREATED                   |
-                 |         Payload: {                    |
-                 |          ...                          |
-                 |            "trl_path" = "revoke/trl", |
-                 |            "trl_hash" = "sha-256",    |
-                 |            "n_max" = 10               |
-                 |         }                             |
+                 |          2.01 CREATED                 |
+                 |           Payload: {                  |
+                 |            ...                        |
+                 |              trl_path = "revoke/trl", |
+                 |              trl_hash = "sha-256",    |
+                 |              n_max = 10               |
+                 |           }                           |
                  |                                       |
                  | GET Observe: 0                        |
                  |  coap://as.example.com/revoke/trl/    |
@@ -858,7 +861,7 @@ Table of Contents
    and a diff query of the TRL.
 
    The Resource Server indicates N=3 as value of the query parameter
-   "diff", i.e., as the maximum number of diff entries to be specified
+   'diff', i.e., as the maximum number of diff entries to be specified
    in a response from the Authorization Server.
 
              RS                                            AS
@@ -867,13 +870,13 @@ Table of Contents
              +--------------------------------------------->|
              |                                              |
              |<---------------------------------------------+
-             |               2.01 CREATED                   |
-             |                Payload: {                    |
-             |                   ...                        |
-             |                   "trl_path" = "revoke/trl", |
-             |                   "trl_hash" = "sha-256",    |
-             |                   "n_max" = 10               |
-             |                }                             |
+             |                 2.01 CREATED                 |
+             |                  Payload: {                  |
+             |                     ...                      |
+             |                     trl_path = "revoke/trl", |
+             |                     trl_hash = "sha-256",    |
+             |                     n_max = 10               |
+             |                  }                           |
              |                                              |
              | GET Observe: 0                               |
              |  coap://as.example.com/revoke/trl?diff=3     |
@@ -956,7 +959,7 @@ Table of Contents
    application has elapsed, the Resource Server sends a GET request with
    no Observe Option to the Authorization Server, to perform a diff
    query of the TRL.  The Resource Server indicates N=8 as value of the
-   query parameter "diff", i.e., as the maximum number of diff entries
+   query parameter 'diff', i.e., as the maximum number of diff entries
    to be specified in a response from the Authorization Server.
 
              RS                                            AS
@@ -965,13 +968,13 @@ Table of Contents
              +--------------------------------------------->|
              |                                              |
              |<---------------------------------------------+
-             |               2.01 CREATED                   |
-             |                Payload: {                    |
-             |                   ...                        |
-             |                   "trl_path" = "revoke/trl", |
-             |                   "trl_hash" = "sha-256",    |
-             |                   "n_max" = 10               |
-             |                }                             |
+             |                 2.01 CREATED                 |
+             |                  Payload: {                  |
+             |                     ...                      |
+             |                     trl_path = "revoke/trl", |
+             |                     trl_hash = "sha-256",    |
+             |                     n_max = 10               |
+             |                  }                           |
              |                                              |
              | GET Observe: 0                               |
              |  coap://as.example.com/revoke/trl/           |
@@ -1774,6 +1777,8 @@ Appendix C.  Document Updates
    RFC EDITOR: Please remove this section.
 
 C.1.  Version -01 to -02
+
+   *  Corner cases of message processing explained more explcitly.
 
    *  Clarifications and editorial improvements.
 
