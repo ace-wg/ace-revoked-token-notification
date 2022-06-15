@@ -513,6 +513,15 @@ Table of Contents
       and proceeds like when processing a full query of the TRL (see
       Section 6).
 
+      Otherwise, the Authorization Server MUST return a 4.00 (Bad
+      Request) response in case the query parameter 'diff' of the GET
+      request specifies a value other than 0 or than a positive integer.
+      The response MUST have Content-Format "application/ace-trl+cbor".
+      The payload of the response is a CBOR map, which MUST include the
+      'error' field with value 0 ("Invalid parameter value") and MAY
+      include the 'error_description' field to provide additional
+      context.
+
 6.  Full Query of the TRL
 
    In order to produce a (notification) response to a GET request asking
@@ -621,16 +630,6 @@ Table of Contents
                    Diff Query request to the TRL endpoint
 
    If the Authorization Server supports diff queries:
-
-   *  The Authorization Server MUST return a 4.00 (Bad Request) response
-      in case the query parameter 'diff' of the GET request specifies a
-      value other than 0 or than a positive integer.
-
-      The response MUST have Content-Format "application/ace-trl+cbor".
-      The payload of the response is a CBOR map, which MUST include the
-      'error' field with value 0 ("Invalid parameter value") and MAY
-      include the 'error_description' field to provide additional
-      context.
 
    *  The Authorization Server MUST keep track of N_MAX most recent
       updates to the portion of the TRL that pertains to each caller of
@@ -1779,6 +1778,8 @@ Appendix C.  Document Updates
    RFC EDITOR: Please remove this section.
 
 C.1.  Version -01 to -02
+
+   *  Earlier mentioning of error cases.
 
    *  Corner cases of message processing explained more explcitly.
 
