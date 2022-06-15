@@ -305,6 +305,8 @@ The TRL endpoint allows the following query parameters in a GET request. The Aut
 
    If the Authorization Server does not support diff queries, it ignores the query parameter 'diff' when present in the GET request and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
+   Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in case the query parameter 'diff' of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.
+
 # Full Query of the TRL ## {#ssec-trl-full-query}
 
 In order to produce a (notification) response to a GET request asking for a full query of the TRL, the Authorization Server performs the following actions.
@@ -360,10 +362,6 @@ The CDDL definition {{RFC8610}} of the CBOR array 'diff_set' specified as payloa
 {: #cddl-diff title="CDDL definition of the response payload following a Diff Query request to the TRL endpoint" artwork-align="left"}
 
 If the Authorization Server supports diff queries:
-
-* The Authorization Server MUST return a 4.00 (Bad Request) response in case the query parameter 'diff' of the GET request specifies a value other than 0 or than a positive integer.
-
-   The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.
 
 * The Authorization Server MUST keep track of N\_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method used to achieve this is implementation-specific.
 
@@ -1021,6 +1019,8 @@ If the update collection associated with the requester is not empty and the diff
 RFC EDITOR: Please remove this section.
 
 ## Version -01 to -02 ## {#sec-01-02}
+
+* Earlier mentioning of error cases.
 
 * Corner cases of message processing explained more explcitly.
 
