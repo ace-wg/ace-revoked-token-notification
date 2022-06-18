@@ -285,11 +285,15 @@ The Authorization Server MUST implement measures to prevent access to the TRL en
 
 The TRL endpoint supports only the GET method, and allows two types of query of the TRL.
 
-* Full query: the Authorization Server returns the token hashes of the revoked Access Tokens currently in the TRL and pertaining to the requester. The Authorization Server MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
+* Full query: the Authorization Server returns the token hashes of the revoked Access Tokens currently in the TRL and pertaining to the requester.
 
-* Diff query: the Authorization Server returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the portion of the TRL pertaining to the requester. The Authorization Server MAY support this type of query.
+   The Authorization Server MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
 
-   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked Access Tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
+* Diff query: the Authorization Server returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the portion of the TRL pertaining to the requester.
+
+   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked Access Tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
+
+   The Authorization Server MAY support this type of query. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
 
 The TRL endpoint allows the following query parameters in a GET request. The Authorization Server MUST silently ignore unknown query parameters.
 
