@@ -1170,6 +1170,9 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-query-parameters" class="xref">Query Parameters</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-supporting-diff-queries" class="xref">Supporting Diff Queries</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
@@ -1538,7 +1541,7 @@ The Authorization Server MUST support this type of query. The processing of a fu
 <p id="section-5-4.2.2">
 The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked Access Tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.<a href="#section-5-4.2.2" class="pilcrow">¶</a></p>
 <p id="section-5-4.2.3">
-The Authorization Server MAY support this type of query. The processing of a diff query and the related response format are defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#section-5-4.2.3" class="pilcrow">¶</a></p>
+The Authorization Server MAY support this type of query. In such a case, the Authorization Server maintains the history of updates to the TRL resource as defined in <a href="#sec-trl-endpoint-supporting-diff-queries" class="xref">Section 5.2</a>. The processing of a diff query and the related response format are defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#section-5-4.2.3" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="sec-trl-endpoint-query-parameters">
@@ -1571,6 +1574,35 @@ Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in
         </ul>
 </section>
 </div>
+<div id="sec-trl-endpoint-supporting-diff-queries">
+<section id="section-5.2">
+        <h3 id="name-supporting-diff-queries">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-supporting-diff-queries" class="section-name selfRef">Supporting Diff Queries</a>
+        </h3>
+<p id="section-5.2-1">If the Authorization Server supports diff queries, it is able to transfer a list of diff entries, as a series of TRL updates. That is, when replying to a diff query performed by a requester, the Authorization Server specifies the most recent updates to the portion of the TRL pertaining to that requester.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The following defines how the Authorization Server builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">For each requester, the Authorization Server maintains an update collection of maximum N_MAX series items, where N_MAX is a pre-defined positive integer. The Authorization Server MUST keep track of the N_MAX most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of N_MAX, upon their registration (see <a href="#sec-registration" class="xref">Section 8</a>).<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2-4">The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, the current first (last) series item is the least (most) recently series item added to the update collection. The particular method used to achieve this is implementation-specific.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">Each time the TRL changes, the Authorization Server performs the following operations for each requester.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.2-6">
+<li id="section-5.2-6.1">The Authorization Server considers the portion of the TRL pertaining to that requester. If the TRL portion is not affected by this TRL update, the Authorization Server stops the processing for that requester.<a href="#section-5.2-6.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-5.2-6.2">Otherwise, the Authorization Server creates two sets "trl_patch" of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.<a href="#section-5.2-6.2" class="pilcrow">¶</a>
+</li>
+          <li id="section-5.2-6.3">The Authorization Server fills the two sets with the token hashes of the removed and added Access Tokens, respectively, from/to the TRL portion considered at step 1.<a href="#section-5.2-6.3" class="pilcrow">¶</a>
+</li>
+          <li id="section-5.2-6.4">The Authorization Server creates a new series item, which includes the two sets from step 3.<a href="#section-5.2-6.4" class="pilcrow">¶</a>
+</li>
+          <li id="section-5.2-6.5">
+            <p id="section-5.2-6.5.1">If the update collection associated with the requester currently includes N_MAX series items, the Authorization Server MUST delete the oldest series item in the update collection.<a href="#section-5.2-6.5.1" class="pilcrow">¶</a></p>
+<p id="section-5.2-6.5.2">
+This occurs when the number of TRL updates pertaining to the requester and currently stored at the Authorization Server is equal to N_MAX.<a href="#section-5.2-6.5.2" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-6.6">The Authorization Server adds the series item to the update collection associated with the requester, as the most recent one.<a href="#section-5.2-6.6" class="pilcrow">¶</a>
+</li>
+        </ol>
+</section>
+</div>
 </section>
 </div>
 <div id="ssec-trl-full-query">
@@ -1593,7 +1625,7 @@ Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in
           <p id="section-6-2.2.1">The Authorization Server sends a 2.05 (Content) response to the requester. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-2.2.2.1">
-              <p id="section-6-2.2.2.1.1">The 'full_set' parameter MUST be included and specifies a CBOR array 'full_set_array'. Each element of 'full_set_array' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-6-2.2.2.1.1">The 'full_set' parameter MUST be included and specifies a CBOR array 'full_set_value'. Each element of 'full_set_value' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-6-2.2.2.1.2">
 The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.<a href="#section-6-2.2.2.1.2" class="pilcrow">¶</a></p>
 </li>
@@ -1605,17 +1637,17 @@ If the Authorization Server does not support both diff queries and the cursor ex
           </ul>
 </li>
       </ol>
-<p id="section-6-3"><a href="#cddl-full" class="xref">Figure 4</a> provides the CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'full_set_array' specified in the response from the Authorization Server, as value of the 'full_set' parameter.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-3"><a href="#cddl-full" class="xref">Figure 4</a> provides the CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'full_set_value' specified in the response from the Authorization Server, as value of the 'full_set' parameter.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <span id="name-cddl-definition-of-full_set"></span><div id="cddl-full">
 <figure id="figure-4">
         <div class="alignLeft art-CDDL art-text artwork" id="section-6-4.1">
 <pre>
 token_hash = bytes
-full_set_array = [* token_hash]
+full_set_value = [* token_hash]
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-cddl-definition-of-full_set" class="selfRef">CDDL definition of 'full_set_array'</a>
+<a href="#name-cddl-definition-of-full_set" class="selfRef">CDDL definition of 'full_set_value'</a>
         </figcaption></figure>
 </div>
 <p id="section-6-5"><a href="#response-full" class="xref">Figure 5</a> shows an example of response from the Authorization Server, following a Full Query request to the TRL endpoint. Full token hashes are omitted for brevity.<a href="#section-6-5" class="pilcrow">¶</a></p>
@@ -1646,12 +1678,12 @@ Payload:
       </h2>
 <p id="section-7-1">In order to produce a (notification) response to a GET request asking for a diff query of the TRL, the Authorization Server performs the following actions.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7-2">
-<li id="section-7-2.1">The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than a pre-defined positive integer N_MAX, then NUM takes the value of N_MAX. Otherwise, NUM takes N.<a href="#section-7-2.1" class="pilcrow">¶</a>
+<li id="section-7-2.1">The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than the pre-defined positive integer N_MAX (see <a href="#sec-trl-endpoint-supporting-diff-queries" class="xref">Section 5.2</a>), then NUM takes the value of N_MAX. Otherwise, NUM takes N.<a href="#section-7-2.1" class="pilcrow">¶</a>
 </li>
         <li id="section-7-2.2">
           <p id="section-7-2.2.1">The Authorization Server prepares U = min(NUM, SIZE) diff entries, where SIZE &lt;= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server. Note that SIZE = 0 yields U = 0, in which case no diff entries are prepared.<a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-7-2.2.2">
-The prepared diff entries are related to the U most recent TRL updates pertaining to the requester. In particular, the first entry refers to the most recent of such updates, the second entry refers to the second from last of such updates, and so on.<a href="#section-7-2.2.2" class="pilcrow">¶</a></p>
+The prepared diff entries are related to the U most recent TRL updates pertaining to the requester, as maintained in the update collection for that requester (see <a href="#sec-trl-endpoint-supporting-diff-queries" class="xref">Section 5.2</a>). In particular, the first diff entry refers to the most recent of such updates, the second diff entry refers to the second from last of such updates, and so on.<a href="#section-7-2.2.2" class="pilcrow">¶</a></p>
 <p id="section-7-2.2.3">
 Each diff entry is a CBOR array 'diff_entry', which includes the following two elements.<a href="#section-7-2.2.3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1667,9 +1699,9 @@ The order of the token hashes in the CBOR arrays 'removed' and 'added' is irrele
           <p id="section-7-2.3.1">The Authorization Server prepares a 2.05 (Content) response for the requester. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.<a href="#section-7-2.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7-2.3.2.1">
-              <p id="section-7-2.3.2.1.1">The 'diff_set' paramenter MUST be present and specifies a CBOR array 'diff_set_array' of U elements. Each element of 'diff_set_array' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case 'diff_set_array' is the empty CBOR array.<a href="#section-7-2.3.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-7-2.3.2.1.1">The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of U elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case 'diff_set_value' is the empty CBOR array.<a href="#section-7-2.3.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-7-2.3.2.1.2">
-Within 'diff_set_array', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_array' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set_array' relates to the second from last most recent update to that portion, and so on.<a href="#section-7-2.3.2.1.2" class="pilcrow">¶</a></p>
+Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set_value' relates to the second from last most recent update to that portion, and so on.<a href="#section-7-2.3.2.1.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-7-2.3.2.2">
               <p id="section-7-2.3.2.2.1">The 'cursor' parameter and the 'more' parameters are included if the Authorization Server supports both the diff queries and the related cursor extension (see <a href="#ssec-trl-diff-query-cursor" class="xref">Section 7.1</a>). If included, these parameters provide the requester with information for performing diff queries using the cursor extension, according to what is defined later in <a href="#ssec-trl-diff-query-cursor" class="xref">Section 7.1</a>.<a href="#section-7-2.3.2.2.1" class="pilcrow">¶</a></p>
@@ -1679,7 +1711,7 @@ If the Authorization Server does not support both diff queries and the cursor ex
           </ul>
 </li>
       </ol>
-<p id="section-7-3"><a href="#cddl-diff" class="xref">Figure 6</a> provides the CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'diff_set_array' specified in the response from the Authorization Server, as value of the 'diff_set' parameter.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-3"><a href="#cddl-diff" class="xref">Figure 6</a> provides the CDDL definition <span>[<a href="#RFC8610" class="xref">RFC8610</a>]</span> of the CBOR array 'diff_set_value' specified in the response from the Authorization Server, as value of the 'diff_set' parameter.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <span id="name-cddl-definition-of-diff_set"></span><div id="cddl-diff">
 <figure id="figure-6">
         <div class="alignLeft art-CDDL art-text artwork" id="section-7-4.1">
@@ -1687,11 +1719,11 @@ If the Authorization Server does not support both diff queries and the cursor ex
    token_hash = bytes
    trl_patch = [* token_hash]
    diff_entry = [removed: trl_patch, added: trl_patch]
-   diff_set_array = [* diff_entry]
+   diff_set_value = [* diff_entry]
 </pre>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-cddl-definition-of-diff_set" class="selfRef">CDDL definition of 'diff_set_array'</a>
+<a href="#name-cddl-definition-of-diff_set" class="selfRef">CDDL definition of 'diff_set_value'</a>
         </figcaption></figure>
 </div>
 <p id="section-7-5"><a href="#response-diff" class="xref">Figure 7</a> shows an example of response from the Authorization Server, following a Diff Query request to the TRL endpoint, where U = 3 diff entries are specified. Full token hashes are omitted for brevity.<a href="#section-7-5" class="pilcrow">¶</a></p>
@@ -1724,17 +1756,7 @@ Payload:
 <a href="#name-example-of-response-followin" class="selfRef">Example of response following a Diff Query request to the TRL endpoint</a>
         </figcaption></figure>
 </div>
-<p id="section-7-7">If the Authorization Server supports diff queries:<a href="#section-7-7" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7-8.1">The Authorization Server MUST keep track of N_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method used to achieve this is implementation-specific.<a href="#section-7-8.1" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-7-8.2">When SIZE is equal to N_MAX, and a new TRL update occurs as pertaining to a registered device, the Authorization Server MUST first delete the oldest stored update for that device, before storing this latest update as the most recent one for that device.<a href="#section-7-8.2" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-7-8.3">The Authorization Server SHOULD provide registered devices and administrators with the value of N_MAX, upon their registration (see <a href="#sec-registration" class="xref">Section 8</a>).<a href="#section-7-8.3" class="pilcrow">¶</a>
-</li>
-      </ul>
-<p id="section-7-9"><a href="#sec-series-pattern" class="xref">Appendix A</a> discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-9" class="pilcrow">¶</a></p>
-<p id="section-7-10"><a href="#sec-cursor-pattern" class="xref">Appendix B</a> discusses how the execution of a diff query of the TRL can be further improved by using the "Cursor" pattern defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-t2trg-stp-03#section-3.3" class="relref">Section 3.3</a> of [<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-10" class="pilcrow">¶</a></p>
+<p id="section-7-7"><a href="#sec-series-pattern" class="xref">Appendix A</a> discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-7" class="pilcrow">¶</a></p>
 <div id="ssec-trl-diff-query-cursor">
 <section id="section-7.1">
         <h3 id="name-using-the-cursor-extension">
@@ -1756,7 +1778,7 @@ Payload:
 </li>
         <li class="normal" id="section-8-2.2">The hash function used to compute token hashes. This is specified as an integer or a text string, taking value from the "ID" or "Hash Name String" column of the "Named Information Hash Algorithm" Registry <span>[<a href="#Named.Information.Hash.Algorithm" class="xref">Named.Information.Hash.Algorithm</a>]</span>, respectively.<a href="#section-8-2.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-8-2.3">Optionally, a positive integer N_MAX, if the Authorization Server supports diff queries of the TRL resource (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>).<a href="#section-8-2.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-8-2.3">Optionally, a positive integer N_MAX, if the Authorization Server supports diff queries of the TRL resource (see <a href="#sec-trl-endpoint-supporting-diff-queries" class="xref">Section 5.2</a> and <a href="#ssec-trl-diff-query" class="xref">Section 7</a>).<a href="#section-8-2.3" class="pilcrow">¶</a>
 </li>
       </ul>
 <p id="section-8-3">After the registration procedure is finished, the administrator or registered device can send a GET request to the TRL resource, including the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource at the Authorization Server as per <span><a href="https://rfc-editor.org/rfc/rfc7641#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7641" class="xref">RFC7641</a>]</span>. The GET request can express the wish for a full query (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>) of the TRL.<a href="#section-8-3" class="pilcrow">¶</a></p>
@@ -2412,22 +2434,11 @@ registry has been created to use the "Expert Review" registration procedure <spa
       <h2 id="name-on-using-the-series-transfe">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-on-using-the-series-transfe" class="section-name selfRef">On using the Series Transfer Pattern</a>
       </h2>
-<p id="appendix-A-1">Performing a diff query of the TRL as specified in <a href="#ssec-trl-diff-query" class="xref">Section 7</a> is a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U &lt;= N_MAX diff entries as the U most recent  updates to the portion of the TRL pertaining to a registered device.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
-<p id="appendix-A-3">For each registered device, the Authorization Server maintains an update collection of maximum N_MAX items. Each time the TRL changes, the Authorization Server performs the following operations for each registered device.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="appendix-A-4">
-<li id="appendix-A-4.1">The Authorization Server considers the portion of the TRL pertaining to that registered device. If the TRL portion is not affected by this TRL update, the Authorization Server stops the processing for that registered device.<a href="#appendix-A-4.1" class="pilcrow">¶</a>
-</li>
-        <li id="appendix-A-4.2">Otherwise, the Authorization Server creates two sets 'trl_patch' of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.<a href="#appendix-A-4.2" class="pilcrow">¶</a>
-</li>
-        <li id="appendix-A-4.3">The Authorization Server fills the two sets with the token hashes of the removed and added Access Tokens, respectively, from/to the TRL portion from step 1.<a href="#appendix-A-4.3" class="pilcrow">¶</a>
-</li>
-        <li id="appendix-A-4.4">The Authorization Server creates a new series item including the two sets from step 3, and adds the series item to the update collection associated with the registered device.<a href="#appendix-A-4.4" class="pilcrow">¶</a>
-</li>
-      </ol>
-<p id="appendix-A-5">When responding to a diff query request from a registered device (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>), 'diff_set' is a subset of the collection associated with the requester, where each 'diff_entry' record is a series item from that collection. Note that 'diff_set' specifies the whole current collection when the value of U is equal to SIZE, i.e., the current number of series items in the collection.<a href="#appendix-A-5" class="pilcrow">¶</a></p>
-<p id="appendix-A-6">The value N of the query parameter 'diff' in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.<a href="#appendix-A-6" class="pilcrow">¶</a></p>
-<p id="appendix-A-7">Since the collection associated with each registered device includes up to N_MAX series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the collection, due to a new TRL update pertaining to that registered device. This addresses the question "When can the server decide to no longer retain older items?" in <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-t2trg-stp-03#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#appendix-A-7" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">Performing a diff query of the TRL as specified in <a href="#ssec-trl-diff-query" class="xref">Section 7</a> is in fact a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U &lt;= N_MAX diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">When responding to a diff query request from a requester (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">The value N of the query parameter 'diff' in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-5">Since the update collection associated with each requester includes up to N_MAX series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see <a href="#sec-trl-endpoint-supporting-diff-queries" class="xref">Section 5.2</a>). This addresses the question "When can the server decide to no longer retain older items?" raised in <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-t2trg-stp-03#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.bormann-t2trg-stp" class="xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-cursor-pattern">
@@ -2635,11 +2646,13 @@ If 'more' has value "true", the requester can send a follow-up diff query reques
 <ul class="normal">
 <li class="normal" id="appendix-C.1-1.1">Earlier mentioning of error cases.<a href="#appendix-C.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.2">Both success and error responses have a CBOR map as payload.<a href="#appendix-C.1-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.2">Clearer distinction between maintaining the history of TRL updates and preparing the response to a diff query.<a href="#appendix-C.1-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.3">Corner cases of message processing explained more explcitly.<a href="#appendix-C.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.3">Both success and error responses have a CBOR map as payload.<a href="#appendix-C.1-1.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-C.1-1.4">Clarifications and editorial improvements.<a href="#appendix-C.1-1.4" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.4">Corner cases of message processing explained more explcitly.<a href="#appendix-C.1-1.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-C.1-1.5">Clarifications and editorial improvements.<a href="#appendix-C.1-1.5" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
