@@ -295,6 +295,8 @@ The TRL endpoint supports only the GET method, and allows two types of query of 
 
    The Authorization Server MAY support this type of query. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
 
+## Query Parameters # {#sec-trl-endpoint-query-parameters}
+
 The TRL endpoint allows the following query parameters in a GET request. The Authorization Server MUST silently ignore unknown query parameters.
 
 * 'pmax': if included, it follows the semantics defined in {{Section 3.2.2 of I-D.ietf-core-conditional-attributes}}. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.
@@ -454,7 +456,7 @@ Further details about the registration process at the Authorization Server are o
 
 When the TRL is updated (see {{ssec-trl-update}}), the Authorization Server sends Observe Notifications to the observers of the TRL resource. Observe Notifications are sent as per {{Section 4.2 of RFC7641}}.
 
-If the 'pmax' query parameter was specified in the Observation Request starting an observation (see {{sec-trl-endpoint}}), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.
+If the 'pmax' query parameter was specified in the Observation Request starting an observation (see {{sec-trl-endpoint-query-parameters}}), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.
 
 The payload of each Observe Notification is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the original Observation Request yielded the execution of a full query or a diff query of the TRL, respectively.
 
