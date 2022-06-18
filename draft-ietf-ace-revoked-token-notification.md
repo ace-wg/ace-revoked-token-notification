@@ -293,7 +293,7 @@ The TRL endpoint supports only the GET method, and allows two types of query of 
 
    The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked Access Tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
 
-   The Authorization Server MAY support this type of query. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
+   The Authorization Server MAY support this type of query. In such a case, the Authorization Server maintains the history of updates to the TRL resource as defined in {{sec-trl-endpoint-supporting-diff-queries}}. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
@@ -315,6 +315,32 @@ The TRL endpoint allows the following query parameters in a GET request. The Aut
 
    Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in case the query parameter 'diff' of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.
 
+## Supporting Diff Queries # {#sec-trl-endpoint-supporting-diff-queries}
+
+If the Authorization Server supports diff queries, it is able to transfer a list of diff entries, as a series of TRL updates. That is, when replying to a diff query performed by a requester, the Authorization Server specifies the most recent updates to the portion of the TRL pertaining to that requester.
+
+The following defines how the Authorization Server builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
+
+For each requester, the Authorization Server maintains an update collection of maximum N\_MAX series items, where N\_MAX is a pre-defined positive integer. The Authorization Server MUST keep track of the N\_MAX most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of N\_MAX, upon their registration (see {{sec-registration}}).
+
+The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, the current first (last) series item is the least (most) recently series item added to the update collection. The particular method used to achieve this is implementation-specific.
+
+Each time the TRL changes, the Authorization Server performs the following operations for each requester.
+
+1. The Authorization Server considers the portion of the TRL pertaining to that requester. If the TRL portion is not affected by this TRL update, the Authorization Server stops the processing for that requester.
+
+2. Otherwise, the Authorization Server creates two sets "trl_patch" of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.
+
+3. The Authorization Server fills the two sets with the token hashes of the removed and added Access Tokens, respectively, from/to the TRL portion considered at step 1.
+
+4. The Authorization Server creates a new series item, which includes the two sets from step 3.
+
+5. If the update collection associated with the requester currently includes N\_MAX series items, the Authorization Server MUST delete the oldest series item in the update collection.
+
+   This occurs when the number of TRL updates pertaining to the requester and currently stored at the Authorization Server is equal to N\_MAX.
+
+6. The Authorization Server adds the series item to the update collection associated with the requester, as the most recent one.
+
 # Full Query of the TRL ## {#ssec-trl-full-query}
 
 In order to produce a (notification) response to a GET request asking for a full query of the TRL, the Authorization Server performs the following actions.
@@ -327,7 +353,7 @@ In order to produce a (notification) response to a GET request asking for a full
 
 2. The Authorization Server sends a 2.05 (Content) response to the requester. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.
 
-   * The 'full_set' parameter MUST be included and specifies a CBOR array 'full_set_array'. Each element of 'full_set_array' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.
+   * The 'full_set' parameter MUST be included and specifies a CBOR array 'full_set_value'. Each element of 'full_set_value' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.
 
       The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.
 
@@ -335,13 +361,13 @@ In order to produce a (notification) response to a GET request asking for a full
 
       If the Authorization Server does not support both diff queries and the cursor extension, this parameter MUST NOT be included. In case the requester does not support both diff queries and the cursor extension, it MUST silently ignore the 'cursor' parameter if present.
 
-{{cddl-full}} provides the CDDL definition {{RFC8610}} of the CBOR array 'full_set_array' specified in the response from the Authorization Server, as value of the 'full_set' parameter.
+{{cddl-full}} provides the CDDL definition {{RFC8610}} of the CBOR array 'full_set_value' specified in the response from the Authorization Server, as value of the 'full_set' parameter.
 
 ~~~~~~~~~~~ CDDL
 token_hash = bytes
-full_set_array = [* token_hash]
+full_set_value = [* token_hash]
 ~~~~~~~~~~~
-{: #cddl-full title="CDDL definition of 'full_set_array'" artwork-align="left"}
+{: #cddl-full title="CDDL definition of 'full_set_value'" artwork-align="left"}
 
 {{response-full}} shows an example of response from the Authorization Server, following a Full Query request to the TRL endpoint. Full token hashes are omitted for brevity.
 
@@ -361,11 +387,11 @@ Payload:
 
 In order to produce a (notification) response to a GET request asking for a diff query of the TRL, the Authorization Server performs the following actions.
 
-1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than a pre-defined positive integer N\_MAX, then NUM takes the value of N_MAX. Otherwise, NUM takes N.
+1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than the pre-defined positive integer N\_MAX (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of N_MAX. Otherwise, NUM takes N.
 
 2. The Authorization Server prepares U = min(NUM, SIZE) diff entries, where SIZE <= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server. Note that SIZE = 0 yields U = 0, in which case no diff entries are prepared.
 
-    The prepared diff entries are related to the U most recent TRL updates pertaining to the requester. In particular, the first entry refers to the most recent of such updates, the second entry refers to the second from last of such updates, and so on.
+    The prepared diff entries are related to the U most recent TRL updates pertaining to the requester, as maintained in the update collection for that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). In particular, the first diff entry refers to the most recent of such updates, the second diff entry refers to the second from last of such updates, and so on.
 
     Each diff entry is a CBOR array 'diff_entry', which includes the following two elements.
 
@@ -377,23 +403,23 @@ In order to produce a (notification) response to a GET request asking for a diff
 
 3. The Authorization Server prepares a 2.05 (Content) response for the requester. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.
 
-   * The 'diff_set' paramenter MUST be present and specifies a CBOR array 'diff_set_array' of U elements. Each element of 'diff_set_array' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case 'diff_set_array' is the empty CBOR array.
+   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of U elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared at step 2 as diff entries. Note that U might have value 0, in which case 'diff_set_value' is the empty CBOR array.
 
-      Within 'diff_set_array', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_array' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set_array' relates to the second from last most recent update to that portion, and so on.
+      Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element of 'diff_set_value' relates to the second from last most recent update to that portion, and so on.
 
    * The 'cursor' parameter and the 'more' parameters are included if the Authorization Server supports both the diff queries and the related cursor extension (see {{ssec-trl-diff-query-cursor}}). If included, these parameters provide the requester with information for performing diff queries using the cursor extension, according to what is defined later in {{ssec-trl-diff-query-cursor}}.
 
       If the Authorization Server does not support both diff queries and the cursor extension, these parameters MUST NOT be included. In case the requester does not support both diff queries and the cursor extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.
 
-{{cddl-diff}} provides the CDDL definition {{RFC8610}} of the CBOR array 'diff_set_array' specified in the response from the Authorization Server, as value of the 'diff_set' parameter.
+{{cddl-diff}} provides the CDDL definition {{RFC8610}} of the CBOR array 'diff_set_value' specified in the response from the Authorization Server, as value of the 'diff_set' parameter.
 
 ~~~~~~~~~~~ CDDL
    token_hash = bytes
    trl_patch = [* token_hash]
    diff_entry = [removed: trl_patch, added: trl_patch]
-   diff_set_array = [* diff_entry]
+   diff_set_value = [* diff_entry]
 ~~~~~~~~~~~
-{: #cddl-diff title="CDDL definition of 'diff_set_array'" artwork-align="left"}
+{: #cddl-diff title="CDDL definition of 'diff_set_value'" artwork-align="left"}
 
 {{response-diff}} shows an example of response from the Authorization Server, following a Diff Query request to the TRL endpoint, where U = 3 diff entries are specified. Full token hashes are omitted for brevity.
 
@@ -420,17 +446,7 @@ Payload:
 ~~~~~~~~~~~
 {: #response-diff title="Example of response following a Diff Query request to the TRL endpoint" artwork-align="left"}
 
-If the Authorization Server supports diff queries:
-
-* The Authorization Server MUST keep track of N\_MAX most recent updates to the portion of the TRL that pertains to each caller of the TRL endpoint. The particular method used to achieve this is implementation-specific.
-
-* When SIZE is equal to N_MAX, and a new TRL update occurs as pertaining to a registered device, the Authorization Server MUST first delete the oldest stored update for that device, before storing this latest update as the most recent one for that device.
-
-* The Authorization Server SHOULD provide registered devices and administrators with the value of N_MAX, upon their registration (see {{sec-registration}}).
-
 {{sec-series-pattern}} discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
-
-{{sec-cursor-pattern}} discusses how the execution of a diff query of the TRL can be further improved by using the "Cursor" pattern defined in {{Section 3.3 of I-D.bormann-t2trg-stp}}.
 
 ## Using the Cursor Extension ## {#ssec-trl-diff-query-cursor}
 
@@ -444,7 +460,7 @@ During the registration process at the Authorization Server, an administrator or
 
 * The hash function used to compute token hashes. This is specified as an integer or a text string, taking value from the "ID" or "Hash Name String" column of the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}, respectively.
 
-* Optionally, a positive integer N\_MAX, if the Authorization Server supports diff queries of the TRL resource (see {{ssec-trl-diff-query}}).
+* Optionally, a positive integer N\_MAX, if the Authorization Server supports diff queries of the TRL resource (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
 
 After the registration procedure is finished, the administrator or registered device can send a GET request to the TRL resource, including the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource at the Authorization Server as per {{Section 3.1 of RFC7641}}. The GET request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
@@ -957,25 +973,15 @@ Expert reviewers should take into consideration the following points:
 
 # On using the Series Transfer Pattern # {#sec-series-pattern}
 
-Performing a diff query of the TRL as specified in {{ssec-trl-diff-query}} is a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
+Performing a diff query of the TRL as specified in {{ssec-trl-diff-query}} is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
 
-That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U <= N_MAX diff entries as the U most recent  updates to the portion of the TRL pertaining to a registered device.
+That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U <= N_MAX diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.
 
-For each registered device, the Authorization Server maintains an update collection of maximum N_MAX items. Each time the TRL changes, the Authorization Server performs the following operations for each registered device.
-
-1. The Authorization Server considers the portion of the TRL pertaining to that registered device. If the TRL portion is not affected by this TRL update, the Authorization Server stops the processing for that registered device.
-
-2. Otherwise, the Authorization Server creates two sets 'trl_patch' of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.
-
-3. The Authorization Server fills the two sets with the token hashes of the removed and added Access Tokens, respectively, from/to the TRL portion from step 1.
-
-4. The Authorization Server creates a new series item including the two sets from step 3, and adds the series item to the update collection associated with the registered device.
-
-When responding to a diff query request from a registered device (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the collection associated with the requester, where each 'diff_entry' record is a series item from that collection. Note that 'diff_set' specifies the whole current collection when the value of U is equal to SIZE, i.e., the current number of series items in the collection.
+When responding to a diff query request from a requester (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.
 
 The value N of the query parameter 'diff' in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.
 
-Since the collection associated with each registered device includes up to N_MAX series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the collection, due to a new TRL update pertaining to that registered device. This addresses the question "When can the server decide to no longer retain older items?" in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
+Since the update collection associated with each requester includes up to N_MAX series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
 
 # Usage of the "Cursor" Pattern # {#sec-cursor-pattern}
 
@@ -1124,6 +1130,8 @@ RFC EDITOR: Please remove this section.
 ## Version -01 to -02 ## {#sec-01-02}
 
 * Earlier mentioning of error cases.
+
+* Clearer distinction between maintaining the history of TRL updates and preparing the response to a diff query.
 
 * Both success and error responses have a CBOR map as payload.
 
