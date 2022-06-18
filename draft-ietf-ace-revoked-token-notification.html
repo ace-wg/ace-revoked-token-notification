@@ -1166,6 +1166,11 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-the-trl-endpoint" class="xref">The TRL Endpoint</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-query-parameters" class="xref">Query Parameters</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-full-query-of-the-trl" class="xref">Full Query of the TRL</a></p>
@@ -1536,29 +1541,36 @@ The entry associated with one of such updates contains a list of token hashes, s
 The Authorization Server MAY support this type of query. The processing of a diff query and the related response format are defined in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>.<a href="#section-5-4.2.3" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-5">The TRL endpoint allows the following query parameters in a GET request. The Authorization Server MUST silently ignore unknown query parameters.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<div id="sec-trl-endpoint-query-parameters">
+<section id="section-5.1">
+        <h3 id="name-query-parameters">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-query-parameters" class="section-name selfRef">Query Parameters</a>
+        </h3>
+<p id="section-5.1-1">The TRL endpoint allows the following query parameters in a GET request. The Authorization Server MUST silently ignore unknown query parameters.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-6.1">
-          <p id="section-5-6.1.1">'pmax': if included, it follows the semantics defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-conditional-attributes-04#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#I-D.ietf-core-conditional-attributes" class="xref">I-D.ietf-core-conditional-attributes</a>]</span>. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.<a href="#section-5-6.1.1" class="pilcrow">¶</a></p>
-<p id="section-5-6.1.2">
-If the Observation Request does not include the 'pmax' parameter, the maximum time to consider is up to the Authorization Server. If the Observation Request includes the 'pmax' parameter, its value MUST be greater than zero, otherwise the Authorization Server MUST return a 4.00 (Bad Request) response.<a href="#section-5-6.1.2" class="pilcrow">¶</a></p>
-<p id="section-5-6.1.3">
-If the GET request is not an Observation Request, the Authorization Server MUST ignore the 'pmax' parameter, in case this is included.<a href="#section-5-6.1.3" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1">'pmax': if included, it follows the semantics defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-core-conditional-attributes-04#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#I-D.ietf-core-conditional-attributes" class="xref">I-D.ietf-core-conditional-attributes</a>]</span>. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2.1.2">
+If the Observation Request does not include the 'pmax' parameter, the maximum time to consider is up to the Authorization Server. If the Observation Request includes the 'pmax' parameter, its value MUST be greater than zero, otherwise the Authorization Server MUST return a 4.00 (Bad Request) response.<a href="#section-5.1-2.1.2" class="pilcrow">¶</a></p>
+<p id="section-5.1-2.1.3">
+If the GET request is not an Observation Request, the Authorization Server MUST ignore the 'pmax' parameter, in case this is included.<a href="#section-5.1-2.1.3" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-6.2">
-          <p id="section-5-6.2.1">'diff': if included, it indicates to perform a diff query of the TRL (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>). Its value MUST be either:<a href="#section-5-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.1-2.2">
+            <p id="section-5.1-2.2.1">'diff': if included, it indicates to perform a diff query of the TRL (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>). Its value MUST be either:<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-6.2.2.1">the integer 0, indicating that a (notification) response should include as many diff entries as the Authorization Server can provide in the response; or<a href="#section-5-6.2.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-5.1-2.2.2.1">the integer 0, indicating that a (notification) response should include as many diff entries as the Authorization Server can provide in the response; or<a href="#section-5.1-2.2.2.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-5-6.2.2.2">a positive integer greater than 0, indicating the maximum number of diff entries that a (notification) response should include.<a href="#section-5-6.2.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-5.1-2.2.2.2">a positive integer greater than 0, indicating the maximum number of diff entries that a (notification) response should include.<a href="#section-5.1-2.2.2.2" class="pilcrow">¶</a>
 </li>
-          </ul>
-<p id="section-5-6.2.3">
-If the Authorization Server does not support diff queries, it ignores the query parameter 'diff' when present in the GET request and proceeds like when processing a full query of the TRL (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>).<a href="#section-5-6.2.3" class="pilcrow">¶</a></p>
-<p id="section-5-6.2.4">
-Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in case the query parameter 'diff' of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.<a href="#section-5-6.2.4" class="pilcrow">¶</a></p>
+            </ul>
+<p id="section-5.1-2.2.3">
+If the Authorization Server does not support diff queries, it ignores the query parameter 'diff' when present in the GET request and proceeds like when processing a full query of the TRL (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>).<a href="#section-5.1-2.2.3" class="pilcrow">¶</a></p>
+<p id="section-5.1-2.2.4">
+Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in case the query parameter 'diff' of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.<a href="#section-5.1-2.2.4" class="pilcrow">¶</a></p>
 </li>
-      </ul>
+        </ul>
+</section>
+</div>
 </section>
 </div>
 <div id="ssec-trl-full-query">
@@ -1758,7 +1770,7 @@ Payload:
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-notification-of-revoked-tok" class="section-name selfRef">Notification of Revoked Tokens</a>
       </h2>
 <p id="section-9-1">When the TRL is updated (see <a href="#ssec-trl-update" class="xref">Section 4.1</a>), the Authorization Server sends Observe Notifications to the observers of the TRL resource. Observe Notifications are sent as per <span><a href="https://rfc-editor.org/rfc/rfc7641#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC7641" class="xref">RFC7641</a>]</span>.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">If the 'pmax' query parameter was specified in the Observation Request starting an observation (see <a href="#sec-trl-endpoint" class="xref">Section 5</a>), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-2">If the 'pmax' query parameter was specified in the Observation Request starting an observation (see <a href="#sec-trl-endpoint-query-parameters" class="xref">Section 5.1</a>), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.<a href="#section-9-2" class="pilcrow">¶</a></p>
 <p id="section-9-3">The payload of each Observe Notification is formatted as defined in <a href="#ssec-trl-full-query" class="xref">Section 6</a> or in <a href="#ssec-trl-diff-query" class="xref">Section 7</a>, in case the original Observation Request yielded the execution of a full query or a diff query of the TRL, respectively.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">Furthermore, an administrator or a registered device can send additional GET requests to the TRL endpoint at any time, in order to retrieve the token hashes of the pertaining revoked Access Tokens. When doing so, the caller of the TRL endpoint can perform a full query (see <a href="#ssec-trl-full-query" class="xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="xref">Section 7</a>) of the TRL.<a href="#section-9-4" class="pilcrow">¶</a></p>
 <p id="section-9-5">When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.<a href="#section-9-5" class="pilcrow">¶</a></p>

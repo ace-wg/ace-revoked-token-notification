@@ -83,6 +83,7 @@ Table of Contents
    4.  The TRL Resource
      4.1.  Update of the TRL Resource
    5.  The TRL Endpoint
+     5.1.  Query Parameters
    6.  Full Query of the TRL
    7.  Diff Query of the TRL
      7.1.  Using the Cursor Extension
@@ -482,6 +483,8 @@ Table of Contents
       processing of a diff query and the related response format are
       defined in Section 7.
 
+5.1.  Query Parameters
+
    The TRL endpoint allows the following query parameters in a GET
    request.  The Authorization Server MUST silently ignore unknown query
    parameters.
@@ -789,7 +792,7 @@ Table of Contents
    Observe Notifications are sent as per Section 4.2 of [RFC7641].
 
    If the 'pmax' query parameter was specified in the Observation
-   Request starting an observation (see Section 5), the Authorization
+   Request starting an observation (see Section 5.1), the Authorization
    Server might accordingly send additional Observe Notifications to the
    associated observer.  That is, the Authorization Server ensures that
    no more than pmax seconds elapse between two consecutive
