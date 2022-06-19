@@ -5,13 +5,13 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                                L. Seitz
-Expires: 20 December 2022                                      Combitech
+Expires: 21 December 2022                                      Combitech
                                                             F. Palombini
                                                              Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                            18 June 2022
+                                                            19 June 2022
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 December 2022.
+   This Internet-Draft will expire on 21 December 2022.
 
 Copyright Notice
 
@@ -83,41 +83,39 @@ Table of Contents
    4.  The TRL Resource
      4.1.  Update of the TRL Resource
    5.  The TRL Endpoint
-     5.1.  Query Parameters
-     5.2.  Supporting Diff Queries
+     5.1.  Supporting Diff Queries
+       5.1.1.  Supporting the "Cursor" Extension
+     5.2.  Query Parameters
    6.  Full Query of the TRL
    7.  Diff Query of the TRL
-     7.1.  Using the Cursor Extension
-   8.  Upon Registration
-   9.  Notification of Revoked Tokens
-   10. Interaction Examples
-     10.1.  Full Query with Observation
-     10.2.  Diff Query with Observation
-     10.3.  Full Query with Observation and Additional Diff Query
-   11. ACE Token Revocation List Parameters
-   12. ACE Token Revocation List Error Identifiers
-   13. Security Considerations
-   14. IANA Considerations
-     14.1.  Media Type Registrations
-     14.2.  CoAP Content-Formats Registry
-     14.3.  ACE Token Revocation List Parameters Registry
-     14.4.  ACE Token Revocation List Errors
-     14.5.  Expert Review Instructions
-   15. References
-     15.1.  Normative References
-     15.2.  Informative References
+   8.  Using the "Cursor" Extension
+     8.1.  Response to Full Query
+     8.2.  Response to Diff Query
+     8.3.  Empty Collection
+     8.4.  Cursor Not Specified in the Diff Query Request
+     8.5.  Cursor Specified in the Diff Query Request
+   9.  Upon Registration
+   10. Notification of Revoked Tokens
+   11. Interaction Examples
+     11.1.  Full Query with Observation
+     11.2.  Diff Query with Observation
+     11.3.  Full Query with Observation and Additional Diff Query
+   12. ACE Token Revocation List Parameters
+   13. ACE Token Revocation List Error Identifiers
+   14. Security Considerations
+   15. IANA Considerations
+     15.1.  Media Type Registrations
+     15.2.  CoAP Content-Formats Registry
+     15.3.  ACE Token Revocation List Parameters Registry
+     15.4.  ACE Token Revocation List Errors
+     15.5.  Expert Review Instructions
+   16. References
+     16.1.  Normative References
+     16.2.  Informative References
    Appendix A.  On using the Series Transfer Pattern
-   Appendix B.  Usage of the "Cursor" Pattern
-     B.1.  Full Query Request
-     B.2.  Full Query Response
-     B.3.  Diff Query Request
-     B.4.  Diff Query Response
-       B.4.1.  Empty Collection
-       B.4.2.  Cursor Not Specified in the Diff Query Request
-       B.4.3.  Cursor Specified in the Diff Query Request
-   Appendix C.  Document Updates
-     C.1.  Version -01 to -02
-     C.2.  Version -00 to -01
+   Appendix B.  Document Updates
+     B.1.  Version -01 to -02
+     B.2.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -338,7 +336,7 @@ Table of Contents
 
                         Figure 1: Protocol Overview
 
-   Section 10 provides examples of the protocol flow and message
+   Section 11 provides examples of the protocol flow and message
    exchange between the Authorization Server and a registered device.
 
 3.  Token Hash
@@ -388,7 +386,7 @@ Table of Contents
 
        The Authorization Server specifies the used hash function to
        registered devices during their registration procedure (see
-       Section 8).
+       Section 9).
 
    2.01 Created
    Content-Format: application/ace+cbor
@@ -456,6 +454,12 @@ Table of Contents
    replay protected.  Furthermore, responses from the Authorization
    Server to the caller MUST be bound to the caller's request.
 
+   Following a request to the TRL endpoint, the messages defined in this
+   document that the Authorization Server sends as response use Content-
+   Format "application/ace-trl+cbor".  Their payload is formatted as a
+   CBOR map, and the CBOR values for the parameters included therein are
+   defined in Section 12.
+
    The Authorization Server MUST implement measures to prevent access to
    the TRL endpoint by entities other than registered devices and
    authorized administrators.
@@ -482,15 +486,124 @@ Table of Contents
 
       The Authorization Server MAY support this type of query.  In such
       a case, the Authorization Server maintains the history of updates
-      to the TRL resource as defined in Section 5.2.  The processing of
+      to the TRL resource as defined in Section 5.1.  The processing of
       a diff query and the related response format are defined in
       Section 7.
 
-5.1.  Query Parameters
+   If it supports diff queries, the Authorization Server MAY
+   additionally support its "Cursor" extension, which has two benefits.
+   First, the Authorization Server can avoid excessively big latencies
+   when several diff entries have to be transferred, by delivering one
+   adjacent subset at the time, in different diff query responses.
+   Second, a requester can retrieve diff entries associated with TRL
+   updates that, even if not the most recent ones, occurred after a TRL
+   update indicated as reference point.
 
-   The TRL endpoint allows the following query parameters in a GET
-   request.  The Authorization Server MUST silently ignore unknown query
-   parameters.
+   If it supports the "Cursor" extension, the Authorization Server
+   stores additional information when maintaining the history of updates
+   to the TRL resource, as defined in Section 5.1.1.  Also, the
+   processing of full query requests and diff query requests, as well as
+   the related response format, are further extended as defined in
+   Section 8.
+
+5.1.  Supporting Diff Queries
+
+   If the Authorization Server supports diff queries, it is able to
+   transfer a list of diff entries, as a series of TRL updates.  That
+   is, when replying to a diff query performed by a requester, the
+   Authorization Server specifies the most recent updates to the portion
+   of the TRL pertaining to that requester.
+
+   The following defines how the Authorization Server builds and
+   maintains consistent histories of TRL updates for each registered
+   device and administrator, hereafter referred to as requesters.
+
+   For each requester, the Authorization Server maintains an update
+   collection of maximum N_MAX series items, where N_MAX is a pre-
+   defined positive integer.  The Authorization Server MUST keep track
+   of the N_MAX most recent updates to the portion of the TRL that
+   pertains to each requester.  The Authorization Server SHOULD provide
+   requesters with the value of N_MAX, upon their registration (see
+   Section 9).
+
+   The series items in the update collection MUST be strictly ordered in
+   a chronological fashion.  That is, at any point in time, the current
+   first (last) series item is the least (most) recently series item
+   added to the update collection.  The particular method used to
+   achieve this is implementation-specific.
+
+   Each time the TRL changes, the Authorization Server performs the
+   following operations for each requester.
+
+   1.  The Authorization Server considers the portion of the TRL
+       pertaining to that requester.  If the TRL portion is not affected
+       by this TRL update, the Authorization Server stops the processing
+       for that requester.
+
+   2.  Otherwise, the Authorization Server creates two sets "trl_patch"
+       of token hashes, i.e., one "removed" set and one "added" set, as
+       related to this TRL update.
+
+   3.  The Authorization Server fills the two sets with the token hashes
+       of the removed and added Access Tokens, respectively, from/to the
+       TRL portion considered at step 1.
+
+   4.  The Authorization Server creates a new series item, which
+       includes the two sets from step 3.
+
+   5.  If the update collection associated with the requester currently
+       includes N_MAX series items, the Authorization Server MUST delete
+       the oldest series item in the update collection.
+
+       This occurs when the number of TRL updates pertaining to the
+       requester and currently stored at the Authorization Server is
+       equal to N_MAX.
+
+   6.  The Authorization Server adds the series item to the update
+       collection associated with the requester, as the most recent one.
+
+5.1.1.  Supporting the "Cursor" Extension
+
+   If it supports the "Cursor" extension for diff queries, the
+   Authorization Server performs also the following actions.
+
+   When maintaining the history of updates to the TRL resource, the
+   following applies for each update collection.
+
+   *  Each series item X in the update collection is also associated
+      with an unsigned integer 'index'.  The value of 'index' is the
+      absolute counter of series items added to that update collection
+      until and including X, minus 1.
+
+      That is, the first series item ever added to that update
+      collection has 'index' with value 0.  Also, after having added V
+      series item to the update collection, the last series item has
+      'index' with value (V - 1), independently of the maximum possible
+      size of the update collection (i.e., N_MAX).
+
+   *  The unsigned integer LAST_INDEX is also defined.  At every point
+      in time, the value of LAST_INDEX is the value of 'index' currently
+      associated with the latest added series item in the update
+      collection.
+
+      That is, the value of LAST_INDEX is the total number of series
+      items added so far to the update collection, minus 1.
+
+   When processing a diff query using the "Cursor" extension, the values
+   of 'index' are used as cursor information, as defined in Section 8.2.
+
+   Furthermore, the Authorization Server defines an unsigned integer
+   MAX_DIFF_BATCH <= N_MAX.  The value of MAX_DIFF_BATCH specifies the
+   maximum number of diff entries to be included in a single diff query
+   response.  If supporting the "Cursor" extension, the Authorization
+   Server SHOULD provide registered devices and administrators with the
+   value of MAX_DIFF_BATCH, upon their registration (see Section 9).
+
+5.2.  Query Parameters
+
+   The TRL endpoint allows the following query parameters to be present
+   in a GET request.  The Authorization Server MUST silently ignore
+   unknown query parameters.
 
    *  'pmax': if included, it follows the semantics defined in
       Section 3.2.2 of [I-D.ietf-core-conditional-attributes].  This
@@ -536,61 +649,47 @@ Table of Contents
       include the 'error_description' field to provide additional
       context.
 
-5.2.  Supporting Diff Queries
+   *  'cursor': if included, it indicates to perform a diff query of the
+      TRL together with the "Cursor" extension, as defined in
+      Section 8.2.  Its value MUST be either 0 or a positive integer.
 
-   If the Authorization Server supports diff queries, it is able to
-   transfer a list of diff entries, as a series of TRL updates.  That
-   is, when replying to a diff query performed by a requester, the
-   Authorization Server specifies the most recent updates to the portion
-   of the TRL pertaining to that requester.
+      If the Authorization Server does not support the "Cursor"
+      extension, it ignores the query parameter 'cursor' when present in
+      the GET request.  In such a case, the Authorization Server
+      proceeds: i) like when processing a diff query of the TRL (see
+      Section 7), if it supports diff queries and the query parameter
+      'diff' is present in the GET request, or ii) like when processing
+      a full query of the TRL (see Section 6) otherwise.
 
-   The following defines how the Authorization Server builds and
-   maintains consistent histories of TRL updates for each registered
-   device and administrator, hereafter referred to as requesters.
+      If the Authorization Server supports both diff queries and the
+      "Cursor" extension, and the GET request specifies the query
+      parameter 'cursor', then the Authorization Server MUST return a
+      4.00 (Bad Request) response in case any of the following
+      conditions holds.
 
-   For each requester, the Authorization Server maintains an update
-   collection of maximum N_MAX series items, where N_MAX is a pre-
-   defined positive integer.  The Authorization Server MUST keep track
-   of the N_MAX most recent updates to the portion of the TRL that
-   pertains to each requester.  The Authorization Server SHOULD provide
-   requesters with the value of N_MAX, upon their registration (see
-   Section 8).
+      The response MUST have Content-Format "application/ace-trl+cbor".
+      The payload of the response MUST be a CBOR map, which MUST include
+      the 'error' parameter and MAY include the 'error_description'
+      parameter to provide additional context.
 
-   The series items in the update collection MUST be strictly ordered in
-   a chronological fashion.  That is, the current first (last) series
-   item is the least (most) recently series item added to the update
-   collection.  The particular method used to achieve this is
-   implementation-specific.
+      -  The GET request does not specify the query parameter 'diff'.
+         The 'error' parameter within the CBOR map carried in the
+         response payload MUST have value 1 ("Invalid set of
+         parameters").
 
-   Each time the TRL changes, the Authorization Server performs the
-   following operations for each requester.
+      -  The query parameter 'cursor' has a value other than 0 or than a
+         positive integer.  The 'error' parameter within the CBOR map
+         carried in the response payload MUST have value 0 ("Invalid
+         parameter value").
 
-   1.  The Authorization Server considers the portion of the TRL
-       pertaining to that requester.  If the TRL portion is not affected
-       by this TRL update, the Authorization Server stops the processing
-       for that requester.
-
-   2.  Otherwise, the Authorization Server creates two sets "trl_patch"
-       of token hashes, i.e., one "removed" set and one "added" set, as
-       related to this TRL update.
-
-   3.  The Authorization Server fills the two sets with the token hashes
-       of the removed and added Access Tokens, respectively, from/to the
-       TRL portion considered at step 1.
-
-   4.  The Authorization Server creates a new series item, which
-       includes the two sets from step 3.
-
-   5.  If the update collection associated with the requester currently
-       includes N_MAX series items, the Authorization Server MUST delete
-       the oldest series item in the update collection.
-
-       This occurs when the number of TRL updates pertaining to the
-       requester and currently stored at the Authorization Server is
-       equal to N_MAX.
-
-   6.  The Authorization Server adds the series item to the update
-       collection associated with the requester, as the most recent one.
+      -  The query parameter 'cursor' has a value strictly greater than
+         the current LAST_INDEX for the update collection associated
+         with the requester (see Section 5.1.1).  The 'error' parameter
+         within the CBOR map carried in the response payload MUST have
+         value 2 ("Out of bound cursor value").  The CBOR map MUST also
+         include the 'cursor' parameter, which MUST specify the current
+         value of LAST_INDEX for the update collection associated with
+         the requester.
 
 6.  Full Query of the TRL
 
@@ -612,8 +711,8 @@ Table of Contents
 
    2.  The Authorization Server sends a 2.05 (Content) response to the
        requester.  The response MUST have Content-Format "application/
-       ace-trl+cbor" and its payload MUST be a CBOR map formatted as
-       follows.
+       ace-trl+cbor".  The payload of the response is a CBOR map, which
+       MUST be formatted as follows.
 
        *  The 'full_set' parameter MUST be included and specifies a CBOR
           array 'full_set_value'.  Each element of 'full_set_value'
@@ -625,18 +724,19 @@ Table of Contents
           i.e., the CBOR array MUST be treated as a set in which the
           order of elements has no significant meaning.
 
-       *  The 'cursor' parameter is included if the Authorization Server
-          supports both the diff queries and the related cursor
-          extension (see Section 7 and Section 7.1).  If included, this
-          parameter provides the requester with information for
-          performing diff queries using the cursor extension, according
-          to what is defined later in Section 7.1.
+       *  The 'cursor' parameter MUST be included if the Authorization
+          Server supports both the diff queries and the related "Cursor"
+          extension (see Section 5.1 and Section 5.1.1).  Its value is
+          specified according to what is defined in Section 8.1, and
+          provides the requester with information for performing a
+          follow-up diff query using the "Cursor" extension (see
+          Section 8.2).
 
           If the Authorization Server does not support both diff queries
-          and the cursor extension, this parameter MUST NOT be included.
-          In case the requester does not support both diff queries and
-          the cursor extension, it MUST silently ignore the 'cursor'
-          parameter if present.
+          and the "Cursor" extension, this parameter MUST NOT be
+          included.  In case the requester does not support both diff
+          queries and the "Cursor" extension, it MUST silently ignore
+          the 'cursor' parameter if present.
 
    Figure 4 provides the CDDL definition [RFC8610] of the CBOR array
    'full_set_value' specified in the response from the Authorization
@@ -648,7 +748,7 @@ Table of Contents
                Figure 4: CDDL definition of 'full_set_value'
 
    Figure 5 shows an example of response from the Authorization Server,
-   following a Full Query request to the TRL endpoint.  Full token
+   following a full query request to the TRL endpoint.  Full token
    hashes are omitted for brevity.
 
    2.05 Content
@@ -672,18 +772,20 @@ Table of Contents
    1.  The Authorization Server defines the positive integer NUM as
        follows.  If the value N specified in the query parameter 'diff'
        in the GET request is equal to 0 or greater than the pre-defined
-       positive integer N_MAX (see Section 5.2), then NUM takes the
+       positive integer N_MAX (see Section 5.1), then NUM takes the
        value of N_MAX.  Otherwise, NUM takes N.
 
-   2.  The Authorization Server prepares U = min(NUM, SIZE) diff
-       entries, where SIZE <= N_MAX is the number of TRL updates
-       pertaining to the requester and currently stored at the
-       Authorization Server.  Note that SIZE = 0 yields U = 0, in which
-       case no diff entries are prepared.
+   2.  The Authorization Server determines U = min(NUM, SIZE), where
+       SIZE <= N_MAX is the number of TRL updates pertaining to the
+       requester and currently stored at the Authorization Server.
+
+   3.  The Authorization Server prepares U diff entries.  If U is equal
+       to 0 (e.g., because SIZE is equal to 0 at step 2), then no diff
+       entries are prepared.
 
        The prepared diff entries are related to the U most recent TRL
        updates pertaining to the requester, as maintained in the update
-       collection for that requester (see Section 5.2).  In particular,
+       collection for that requester (see Section 5.1).  In particular,
        the first diff entry refers to the most recent of such updates,
        the second diff entry refers to the second from last of such
        updates, and so on.
@@ -708,39 +810,38 @@ Table of Contents
        'added' MUST be treated as a set in which the order of elements
        has no significant meaning.
 
-   3.  The Authorization Server prepares a 2.05 (Content) response for
+   4.  The Authorization Server prepares a 2.05 (Content) response for
        the requester.  The response MUST have Content-Format
-       "application/ace-trl+cbor" and its payload MUST be a CBOR map
-       formatted as follows.
+       "application/ace-trl+cbor".  The payload of the response is a
+       CBOR map, which MUST be formatted as follows.
 
        *  The 'diff_set' parameter MUST be present and specifies a CBOR
           array 'diff_set_value' of U elements.  Each element of
           'diff_set_value' specifies one of the CBOR arrays 'diff_entry'
-          prepared at step 2 as diff entries.  Note that U might have
-          value 0, in which case 'diff_set_value' is the empty CBOR
-          array.
+          prepared above as diff entry.  Note that U might have value 0,
+          in which case 'diff_set_value' is the empty CBOR array.
 
           Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be
           sorted to reflect the corresponding updates to the TRL in
           reverse chronological order.  That is, the first 'diff_entry'
           element of 'diff_set_value' relates to the most recent update
           to the portion of the TRL pertaining to the requester.  The
-          second 'diff_entry' element of 'diff_set_value' relates to the
-          second from last most recent update to that portion, and so
-          on.
+          second 'diff_entry' element relates to the second from last
+          most recent update to that portion, and so on.
 
-       *  The 'cursor' parameter and the 'more' parameters are included
-          if the Authorization Server supports both the diff queries and
-          the related cursor extension (see Section 7.1).  If included,
-          these parameters provide the requester with information for
-          performing diff queries using the cursor extension, according
-          to what is defined later in Section 7.1.
+       *  The 'cursor' parameter and the 'more' parameters MUST be
+          included if the Authorization Server supports both the diff
+          queries and the related "Cursor" extension (see
+          Section 5.1.1).  Their values are specified according to what
+          is defined in Section 8.2, and provide the requester with
+          information for performing a follow-up query to the TRL
+          endpoint (see Section 8.2).
 
           If the Authorization Server does not support both diff queries
-          and the cursor extension, these parameters MUST NOT be
+          and the "Cursor" extension, these parameters MUST NOT be
           included.  In case the requester does not support both diff
-          queries and the cursor extension, it MUST silently ignore the
-          'cursor' parameter and the 'more' parameter if present.
+          queries and the "Cursor" extension, it MUST silently ignore
+          the 'cursor' parameter and the 'more' parameter if present.
 
    Figure 6 provides the CDDL definition [RFC8610] of the CBOR array
    'diff_set_value' specified in the response from the Authorization
@@ -768,10 +869,10 @@ Table of Contents
         ],
         [
           [ h'0144dd12 ... ', h'01231fff ... '],
-          [ h'01fcd111 ... ', h'010a2b3e ... ']
+          []
         ],
         [
-          [ h'01ccc321 ... ', h'01032b8d ... '],
+          [],
           [ h'01ca986f ... ', h'01fe1a2b ... ']
         ]
       ]
@@ -784,11 +885,230 @@ Table of Contents
    fact a usage example of the Series Transfer Pattern defined in
    [I-D.bormann-t2trg-stp].
 
-7.1.  Using the Cursor Extension
+8.  Using the "Cursor" Extension
 
-   TBD
+   If it supports both diff queries and the "Cursor" extension, the
+   Authorization Server composes a response to a full query request or
+   diff query request as defined in Section 8.1 and Section 8.2,
+   respectively.
 
-8.  Upon Registration
+   The exact format of the response depends on the request being a full
+   query or diff query request, on the presence of the query parameter
+   'cursor' in the diff query request, and on the current status of the
+   update collection associated with the requester.
+
+8.1.  Response to Full Query
+
+   When processing a full query request to the TRL endpoint, the
+   Authorization Server composes a response as defined in Section 6.
+
+   In particular, the 'cursor' parameter included in the CBOR map
+   carried in the response payload specifies either the CBOR simple
+   value "null" (0xf6) or a CBOR unsigned integer.
+
+   The 'cursor' parameter MUST specify the CBOR simple value "null" in
+   case there are currently no TRL updates pertinent to the requester,
+   i.e., the update collection for that requester is empty.  This is the
+   case from when the requester registers at the Authorization Server
+   until a first update pertaining to that requester occurs to the TRL.
+
+   Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned
+   integer.  This MUST take the 'index' value of the last series item in
+   the update collection associated with the request (see
+   Section 5.1.1), as corresponding to the most recent update pertaining
+   to the requester occurred to the TRL.
+
+8.2.  Response to Diff Query
+
+   When processing a diff query request to the TRL endpoint, the
+   Authorization Server composes a response as defined in the following.
+
+8.3.  Empty Collection
+
+   If the update collection associated with the requester has no
+   elements, the Authorization Server returns a 2.05 (Content) response.
+   The response MUST have Content-Format "application/ace-trl+cbor" and
+   its payload MUST be a CBOR map formatted as follows.
+
+   *  The 'diff_set' parameter MUST be included and specifies the empty
+      CBOR array.
+
+   *  The 'cursor' parameter MUST be included and specifies the CBOR
+      simple value "null" (0xf6).
+
+   *  The 'more' parameter MUST be included and specifies the CBOR
+      simple value "false" (0xf4).
+
+   Note that the above applies when the update collection associated
+   with the requester has no elements, regardeless whether the query
+   parameter 'cursor' is included or not in the diff query request.
+
+8.4.  Cursor Not Specified in the Diff Query Request
+
+   If the update collection associated with the requester is not empty
+   and the diff query request does not include the query parameter
+   'cursor', the Authorization Server performs the same actions defined
+   in Section 7, with the following differences.
+
+   *  At step 3, the Authorization Server considers the value
+      MAX_DIFF_BATCH (see Section 5.1.1), and prepares L = min(U,
+      MAX_DIFF_BATCH) diff entries.  If L is equal to 0 (e.g., because U
+      is equal to 0), then no diff entries are prepared.
+
+      If U <= MAX_DIFF_BATCH, the prepared diff entries are the last
+      series items in the update collection associated with the
+      requester, corresponding to the L most recent TRL updates
+      pertaining to the requester.
+
+      If U > MAX_DIFF_BATCH, the prepared diff entries are the eldest of
+      the last U series items in the update collection associated with
+      the requester, as corresponding to the first L of the U most
+      recent TRL updates pertaining to the requester.
+
+   *  At step 4, the CBOR map to carry in the payload of the 2.05
+      (Content) response MUST be formatted as follows.
+
+      -  The 'diff_set' parameter MUST be present and specifies a CBOR
+         array 'diff_set_value' of L elements.  Each element of
+         'diff_set_value' specifies one of the CBOR arrays 'diff_entry'
+         prepared as diff entry.  Note that L might have value 0, in
+         which case 'diff_set_value' is the empty CBOR array.
+
+      -  The 'cursor' parameter MUST be present and specifies a CBOR
+         unsigned integer.  This MUST take the 'index' value of the
+         series item of the update collection included as first diff
+         entry in the 'diff_set_value' CBOR array, which is specified by
+         the 'diff_set' parameter.  That is, the 'cursor' parameter
+         takes the 'index' value of the series item in the update
+         collection corresponding to the most recent update pertaining
+         to the requester and returned in this diff query response.
+
+         Note that the 'cursor' parameter takes the same 'index' value
+         of the last series item in the update collection when U <=
+         MAX_DIFF_BATCH.
+
+      -  The 'more' parameter MUST be present and MUST specify the CBOR
+         simple value "false" (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR
+         simple value "true" (0xf5) otherwise.
+
+         If the 'more' parameter has value "true", the requester can
+         send a follow-up diff query request including the query
+         parameter 'cursor', with the same value of the 'cursor'
+         parameter specified in this diff query response.  As defined in
+         Section 8.5, this would result in the Authorization Server
+         transferring the following subset of series items as diff
+         entries, thus resuming from where interrupted in the previous
+         transfer.
+
+8.5.  Cursor Specified in the Diff Query Request
+
+   If the update collection associated with the requester is not empty
+   and the diff query request includes the query parameter 'cursor' with
+   value P, the Authorization Server proceeds as follows, depending on
+   which of the following two cases hold.
+
+   *  Case A - The series item X with 'index' having value P and the
+      series item Y with 'index' having value P+1 are both not found in
+      the update collection associated with the requester.  This occurs
+      when the item Y (and possibly further ones after it) has been
+      previously removed from the history of updates for that requester
+      (see step 5 at Section 5.1).
+
+      In this case, the Authorization Server returns a 2.05 (Content)
+      response.  The response MUST have Content-Format "application/ace-
+      trl+cbor" and its payload MUST be a CBOR map formatted as follows.
+
+      -  The 'diff_set' parameter MUST be included and specifies the
+         empty CBOR array.
+
+      -  The 'cursor' parameter MUST be included and specifies the CBOR
+         simple value "null" (0xf6).
+
+      -  The 'more' parameter MUST be included and specifies the CBOR
+         simple value "true" (0xf5).
+
+      With the combination ('cursor', 'more') = ("null", "true"), the
+      Authorization Server is signaling that the update collection is in
+      fact not empty, but that one or more series items have been lost
+      due to their removal.  These include the item with 'index' value
+      P+1, that the requester wished to obtain as the first one
+      following the specified reference point with 'index' value P.
+
+      When receiving this diff query response, the requester should send
+      a new full query request to the Authorization Server, in order to
+      fully retrieve the current pertaining portion of the TRL.
+
+   *  Case B - The series item X with 'index' having value P is found in
+      the update collection associated with the requester; or the series
+      item X is not found and the series item Y with 'index' having
+      value P+1 is found in the update collection associated with the
+      requester.
+
+      In this case, the Authorization Server performs the same actions
+      defined in Section 7, with the following differences.
+
+      -  At step 3, the Authorization Server considers the value
+         MAX_DIFF_BATCH (see Section 5.1.1), and prepares L = min(SUB_U,
+         MAX_DIFF_BATCH) diff entries, where SUB_U = min(NUM, SUB_SIZE),
+         and SUB_SIZE is the number of series items in the update
+         collection following the series item X.  If L is equal to 0
+         (e.g., because SUB_U is equal to 0), then no diff entries are
+         prepared.
+
+         If SUB_U <= MAX_DIFF_BATCH, the prepared diff entries are the
+         last series items in the update collection associated with the
+         requester, corresponding to the L most recent TRL updates
+         pertaining to the requester.
+
+         If SUB_U > MAX_DIFF_BATCH, the prepared diff entries are the
+         eldest of the last SUB_U series items in the update collection
+         associated with the requester, corresponding to the first L of
+         the SUB_U most recent TRL updates pertaining to the requester.
+
+      -  At step 4, the CBOR map to carry in the payload of the 2.05
+         (Content) response MUST be formatted as follows.
+
+         o  The 'diff_set' parameter MUST be present and specifies a
+            CBOR array 'diff_set_value' of L elements.  Each element of
+            'diff_set_value' specifies one of the CBOR arrays
+            'diff_entry' prepared as diff entry.  Note that L might have
+            value 0, in which case 'diff_set_value' is the empty CBOR
+            array.
+
+         o  The 'cursor' parameter MUST be present and MUST specify a
+            CBOR unsigned integer.  In particular:
+
+            +  If L is equal to 0, i.e., the series item X is the last
+               one in the update collection, then the 'cursor' parameter
+               MUST take the same 'index' value of the last series item
+               in the update collection.
+
+            +  If L is different than 0, then the 'cursor' parameter
+               MUST take the 'index' value of the series element of the
+               update collection included as first diff entry in the
+               'diff_set' CBOR array.  That is, the 'cursor' parameter
+               takes the 'index' value of the series item in the update
+               collection corresponding to the most recent update
+               pertaining to the requester and returned in this diff
+               query response.
+
+            Note that the 'cursor' parameter takes the same 'index'
+            value of the last series item in the update collection when
+            SUB_U <= MAX_DIFF_BATCH.
+
+         o  The 'more' parameter MUST be present and MUST specify the
+            CBOR simple value "false" (0xf4) if SUB_U <= MAX_DIFF_BATCH,
+            or the CBOR simple value "true" (0xf5) otherwise.
+
+            If 'more' has value "true", the requester can send a follow-
+            up diff query request including the query parameter
+            'cursor', with the same value of the 'cursor' parameter
+            specified in this diff query response.  This would result in
+            the Authorization Server transferring the following subset
+            of series items as diff entries, thus resuming from where
+            interrupted in the previous transfer.
+
+9.  Upon Registration
 
    During the registration process at the Authorization Server, an
    administrator or a registered device receives the following
@@ -803,8 +1123,13 @@ Table of Contents
       respectively.
 
    *  Optionally, a positive integer N_MAX, if the Authorization Server
-      supports diff queries of the TRL resource (see Section 5.2 and
+      supports diff queries of the TRL resource (see Section 5.1 and
       Section 7).
+
+   *  Optionally, a positive integer MAX_DIFF_BATCH, if the
+      Authorization Server supports diff queries of the TRL resource as
+      well as the related "Cursor" extension (see Section 5.1.1 and
+      Section 8).
 
    After the registration procedure is finished, the administrator or
    registered device can send a GET request to the TRL resource,
@@ -827,14 +1152,14 @@ Table of Contents
    for Authentication and Authorization (see Section 5.5 of
    [I-D.ietf-ace-oauth-authz]).
 
-9.  Notification of Revoked Tokens
+10.  Notification of Revoked Tokens
 
    When the TRL is updated (see Section 4.1), the Authorization Server
    sends Observe Notifications to the observers of the TRL resource.
    Observe Notifications are sent as per Section 4.2 of [RFC7641].
 
    If the 'pmax' query parameter was specified in the Observation
-   Request starting an observation (see Section 5.1), the Authorization
+   Request starting an observation (see Section 5.2), the Authorization
    Server might accordingly send additional Observe Notifications to the
    associated observer.  That is, the Authorization Server ensures that
    no more than pmax seconds elapse between two consecutive
@@ -885,7 +1210,7 @@ Table of Contents
       posted to the Authorization Information Endpoint, if the
       corresponding token hash th1 is among the stored ones.
 
-10.  Interaction Examples
+11.  Interaction Examples
 
    This section provides examples of interactions between a Resource
    Server RS as a registered device and an Authorization Server AS.  The
@@ -918,7 +1243,7 @@ Table of Contents
    representations of the token hashes for the Access Tokens t1 and t2,
    respectively.
 
-10.1.  Full Query with Observation
+11.1.  Full Query with Observation
 
    Figure 8 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
@@ -1007,7 +1332,7 @@ Table of Contents
 
            Figure 8: Interaction for Full Query with Observation
 
-10.2.  Diff Query with Observation
+11.2.  Diff Query with Observation
 
    Figure 9 shows an interaction example considering a CoAP observation
    and a diff query of the TRL.
@@ -1111,7 +1436,7 @@ Table of Contents
 
            Figure 9: Interaction for Diff Query with Observation
 
-10.3.  Full Query with Observation and Additional Diff Query
+11.3.  Full Query with Observation and Additional Diff Query
 
    Figure 10 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
@@ -1231,12 +1556,12 @@ Table of Contents
 
    Figure 10: Interaction for Full Query with Observation and Diff Query
 
-11.  ACE Token Revocation List Parameters
+12.  ACE Token Revocation List Parameters
 
    This specification defines a number of parameters that can be
    transported in the response from the TRL endpoint, when the response
    payload is a CBOR map.  Note that such a response MUST use the
-   Content-Format "application/ace-trl+cbor" defined in Section 14.2 of
+   Content-Format "application/ace-trl+cbor" defined in Section 15.2 of
    this specification.
 
    The table below summarizes them, and specifies the CBOR value to use
@@ -1263,7 +1588,7 @@ Table of Contents
       Figure 11: CBOR abbreviations for the ACE Token Revocation List
                                  parameters
 
-12.  ACE Token Revocation List Error Identifiers
+13.  ACE Token Revocation List Error Identifiers
 
    This specification defines a number of values that the Authorization
    Server can include as error identifiers, in the 'error' field of an
@@ -1283,7 +1608,7 @@ Table of Contents
 
            Figure 12: ACE Token Revocation List Error Identifiers
 
-13.  Security Considerations
+14.  Security Considerations
 
    Security considerations are inherited from the ACE framework for
    Authentication and Authorization [I-D.ietf-ace-oauth-authz], from
@@ -1330,14 +1655,14 @@ Table of Contents
    information about revoked Access Tokens, by sending GET requests to
    the TRL endpoint according to a related application policy.
 
-14.  IANA Considerations
+15.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-14.1.  Media Type Registrations
+15.1.  Media Type Registrations
 
    IANA is asked to register the media type "application/ace-trl+cbor"
    for messages of the protocols defined in this document encoded in
@@ -1355,7 +1680,7 @@ Table of Contents
    Encoding considerations: Must be encoded as CBOR map containing the
    protocol parameters defined in [RFC-XXXX].
 
-   Security considerations: See Section 13 of this document.
+   Security considerations: See Section 14 of this document.
 
    Interoperability considerations: N/A
 
@@ -1382,7 +1707,7 @@ Table of Contents
 
    Change controller: IESG
 
-14.2.  CoAP Content-Formats Registry
+15.2.  CoAP Content-Formats Registry
 
    IANA is asked to add the following entry to the "CoAP Content-
    Formats" registry within the "CoRE Parameters" registry group.
@@ -1395,12 +1720,12 @@ Table of Contents
 
    Reference: [RFC-XXXX]
 
-14.3.  ACE Token Revocation List Parameters Registry
+15.3.  ACE Token Revocation List Parameters Registry
 
    This specification establishes the "ACE Token Revocation List
    Parameters" IANA registry.  The registry has been created to use the
    "Expert Review" registration procedure [RFC8126].  Expert Review
-   guidelines are provided in Section 14.5.  It should be noted that, in
+   guidelines are provided in Section 15.5.  It should be noted that, in
    addition to the Expert Review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
    well.
@@ -1429,15 +1754,15 @@ Table of Contents
       the item.
 
    This registry has been initially populated by the values in
-   Section 11.  The "Reference" column for all of these entries refers
+   Section 12.  The "Reference" column for all of these entries refers
    to this document.
 
-14.4.  ACE Token Revocation List Errors
+15.4.  ACE Token Revocation List Errors
 
    This specification establishes the "ACE Token Revocation List Errors"
    IANA registry.  The registry has been created to use the "Expert
    Review" registration procedure [RFC8126].  Expert Review guidelines
-   are provided in Section 14.5.  It should be noted that, in addition
+   are provided in Section 15.5.  It should be noted that, in addition
    to the Expert Review, some portions of the registry require a
    specification, potentially a Standards Track RFC, to be supplied as
    well.
@@ -1458,10 +1783,10 @@ Table of Contents
       specification defining the error, if one exists.
 
    This registry has been initially populated by the values in
-   Section 12.  The "Reference" column for all of these entries refers
+   Section 13.  The "Reference" column for all of these entries refers
    to this document.
 
-14.5.  Expert Review Instructions
+15.5.  Expert Review Instructions
 
    The IANA registries established in this document is defined as Expert
    Review.  This section gives some general guidelines for what the
@@ -1497,9 +1822,9 @@ Table of Contents
       used on, and the number of code points left that encode to that
       size.
 
-15.  References
+16.  References
 
-15.1.  Normative References
+16.1.  Normative References
 
    [I-D.ietf-ace-oauth-authz]
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
@@ -1585,7 +1910,7 @@ Table of Contents
               DOI 10.17487/RFC8949, December 2020,
               <https://www.rfc-editor.org/rfc/rfc8949>.
 
-15.2.  Informative References
+16.2.  Informative References
 
    [I-D.bormann-t2trg-stp]
               Bormann, C. and K. Hartke, "The Series Transfer Pattern
@@ -1626,319 +1951,28 @@ Appendix A.  On using the Series Transfer Pattern
    up to N_MAX series item, the Authorization Server deletes the oldest
    series item when a new one is generated and added to the end of the
    update collection, due to a new TRL update pertaining to that
-   requester (see Section 5.2).  This addresses the question "When can
+   requester (see Section 5.1).  This addresses the question "When can
    the server decide to no longer retain older items?" raised in
    Section 3.2 of [I-D.bormann-t2trg-stp].
 
-Appendix B.  Usage of the "Cursor" Pattern
-
-   This section defines how the execution of a diff query of the TRL
-   specified in Section 7 can be extended, by using the "Cursor" pattern
-   of the Series Transfer Pattern (see Section 3.3 of
+   Furthermore, performing a diff query of the TRL together with the
+   "Cursor" extension as specified in Section 8 in fact relies on the
+   "Cursor" pattern of the Series Transfer Pattern (see Section 3.3 of
    [I-D.bormann-t2trg-stp]).
 
-   [ TODO
-
-   Merge what is defined below into the document body.
-
-   *  What is defined below for "Full Query Response" becomes part of
-      the full query processing in the document body.  The successful
-      response payload is a CBOR map if the AS supports both the "Diff
-      Query" mode and the "Cursor" pattern, or just the CBOR array
-      full_set otherwise.
-
-   *  The diff-query processing in the document body becomes as defined
-      below for "Diff Query Request" and "Diff Query Response".  The
-      successful response payload is a CBOR map if the AS supports both
-      the "Diff Query" mode and the "Cursor" pattern, or just the CBOR
-      array diff_set otherwise.
-
-   *  An example using also the "Cursor" pattern can be added in
-      "Interaction Examples".
-
-   ]
-
-   This has two benefits.  First, the Authorization Server can avoid
-   excessively big latencies when several diff entries have to be
-   transferred, by delivering one adjacent subset at the time, in
-   different diff query responses.  Second, a requester can retrieve
-   diff entries associated with TRL updates that, even if not the most
-   recent ones, occurred after a TRL update indicated as reference
-   point.
-
-   To this end, each series item X in an update collection is also
-   associated with an unsigned integer 'index', with value the absolute
-   counter of series items added to that collection until and including
-   X, minus 1.  That is, the first series item added to a collection has
-   'index' with value 0.  Then, the values of 'index' are used as cursor
-   information.
-
-   Within an update collection, the unsigned integer LAST_INDEX denotes
-   the value of 'index' associated with the latest added series item,
-   i.e., the total number of series items added to the collection minus
-   1.
-
-   Furthermore, the Authorization Server defines an unsigned integer
-   MAX_DIFF_BATCH <= N_MAX, specifying the maximum number of diff
-   entries to be included in a single diff query response.  If
-   supporting diff queries, the Authorization Server SHOULD provide
-   registered devices and administrators with the value of
-   MAX_DIFF_BATCH, upon their registration (see Section 8).
-
-   Finally, the full query and diff query exchanges defined in Section 6
-   and Section 7 are extended as follows.
-
-   In particular, successful responses from the TRL endpoint MUST use
-   the Content-Format "application/ace-trl+cbor" defined in Section 14.2
-   of this specification.
-
-B.1.  Full Query Request
-
-   No changes apply to what is defined in Section 6.
-
-B.2.  Full Query Response
-
-   When sending a 2.05 (Content) response to a full query request (see
-   Appendix B.1), the response payload includes a CBOR map with the
-   following fields, whose CBOR labels are defined in Section 11.
-
-   *  'full_set': this field MUST include a CBOR array of token hashes.
-      The CBOR array is populated and formatted as defined for the CBOR
-      array 'full_set' in Section 6.
-
-   *  'cursor': this field MUST include either the CBOR simple value
-      "null" (0xf6) or a CBOR unsigned integer.
-
-      The CBOR simple value "null" MUST be used to indicate that there
-      are currently no TRL updates pertinent to the requester, i.e., the
-      update collection for that requester is empty.  This is the case
-      from when the requester registers at the Authorization Server
-      until a first update pertaining that requester occurs to the TRL.
-
-      Otherwise, the field MUST include a CBOR unsigned integer,
-      encoding the 'index' value of the last series item in the
-      collection, as corresponding to the most recent update pertaining
-      to the requester occurred to the TRL.
-
-B.3.  Diff Query Request
-
-   In addition to the query parameter 'diff' (see Section 7), the
-   requester can specify a query parameter 'cursor', with value an
-   unsigned integer.
-
-   The Authorization Server MUST return a 4.00 (Bad Request) response in
-   case the query parameter 'cursor' is present but the query parameter
-   'diff' is not present.  The response MUST have Content-Format
-   "application/ace-trl+cbor".  The payload of the response is a CBOR
-   map, which MUST include the 'error' field with value 1 ("Invalid set
-   of parameters") and MAY include the 'error_description' field to
-   provide additional context.
-
-B.4.  Diff Query Response
-
-   The Authorization Server composes a response to a diff query request
-   (see Appendix B.3) as follows, depending on the parameters specified
-   in the request and on the current status of the update collection for
-   the requester.
-
-B.4.1.  Empty Collection
-
-   If the collection associated with the requester has no elements, the
-   Authorization Server returns a 2.05 (Content) diff query response.
-
-   The response payload includes a CBOR map with the following fields,
-   whose CBOR labels are defined in Section 11.
-
-   *  'diff_set': this field MUST include an empty CBOR array.
-
-   *  'cursor': this field MUST include the CBOR simple value "null"
-      (0xf6).
-
-   *  'more': this field MUST include the CBOR simple value "false"
-      (0xf4).
-
-B.4.2.  Cursor Not Specified in the Diff Query Request
-
-   If the update collection associated with the requester is not empty
-   and the diff query request does not include the query parameter
-   'cursor', the Authorization Server returns a 2.05 (Content) diff
-   query response.
-
-   The response payload includes a CBOR map with the following fields,
-   whose CBOR labels are defined in Section 11.
-
-   *  'diff_set': this field MUST include a CBOR array, containing L =
-      min(U, MAX_DIFF_BATCH) diff entries.  In particular, the CBOR
-      array is populated as follows.
-
-      -  If U <= MAX_DIFF_BATCH, these diff entries are the last series
-         items in the collection associated with the requester,
-         corresponding to the L most recent TRL updates pertaining to
-         the requester.
-
-      -  If U > MAX_DIFF_BATCH, these diff entries are the eldest of the
-         last U series items in the collection associated with the
-         requester, as corresponding to the first L of the U most recent
-         TRL updates pertaining to the requester.
-
-      The 'diff_set' CBOR array as well as the individual diff entries
-      have the same format specified in Figure 6 and used for the
-      response payload defined in Section 7.
-
-   *  'cursor': this field MUST include a CBOR unsigned integer.  This
-      takes the 'index' value of the series element of the collection
-      included as first diff entry in the 'diff_set' CBOR array.  That
-      is, it takes the 'index' value of the series item in the
-      collection corresponding to the most recent update pertaining to
-      the requester and returned in this diff query response.
-
-      Note that 'cursor' takes the same 'index' value of the last series
-      item in the collection when U <= MAX_DIFF_BATCH.
-
-   *  'more': this field MUST include the CBOR simple value "false"
-      (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR simple value "true"
-      (0xf5) otherwise.
-
-      If 'more' has value "true", the requester can send a follow-up
-      diff query request including the query parameter 'cursor', with
-      the same value of the 'cursor' field included in this diff query
-      response.  As defined in Appendix B.4.3, this would result in the
-      Authorization Server transferring the following subset of series
-      items as diff entries, i.e., resuming from where interrupted in
-      the previous transfer.
-
-B.4.3.  Cursor Specified in the Diff Query Request
-
-   If the update collection associated with the requester is not empty
-   and the diff query request includes the query parameter 'cursor' with
-   value P, the Authorization Server proceeds as follows.
-
-   *  The Authorization Server MUST return a 4.00 (Bad Request) response
-      in case the query parameter 'cursor' specifies a value other than
-      0 or than a positive integer.
-
-      The response MUST have Content-Format "application/ace-trl+cbor".
-      The payload of the response is a CBOR map, which MUST include the
-      'error' field with value 0 ("Invalid parameter value") and MAY
-      include the 'error_description' field to provide additional
-      context.
-
-   *  The Authorization Server MUST return a 4.00 (Bad Request) response
-      in case the 'cursor' parameter specifies a value strictly greater
-      than the current LAST_INDEX for the update collection associated
-      with the requester.
-
-      The response MUST have Content-Format "application/ace-trl+cbor".
-      The payload of the response is a CBOR map, which MUST include the
-      'error' field with value 2 ("Out of bound cursor value") and the
-      'cursor' field with value the current LAST_INDEX for the update
-      collection associated with the requester.  The CBOR map MAY also
-      include the 'error_description' field to provide additional
-      context.
-
-   *  The Authorization Server returns a 2.05 (Content) diff query
-      response formatted as follows, in case the series item X with
-      'index' having value P and the series item Y with 'index' having
-      value P+1 are both not found in the collection associated with the
-      requester.  This occurs when the item Y (and possibly further ones
-      after it) has been previously removed from the history of updates
-      for that requester (see Appendix A).
-
-      The response payload includes a CBOR map with the following
-      fields, whose CBOR labels are defined in Section 11.
-
-      -  'diff_set': this field MUST include an empty CBOR array.
-
-      -  'cursor': this field MUST include the CBOR simple value "null"
-         (0xf6).
-
-      -  'more': this field MUST include the CBOR simple value "true"
-         (0xf5).
-
-      With the combination ('cursor', 'more') = ("null", "true"), the
-      Authorization Server is signaling that the update collection is in
-      fact not empty, but that one or more series items have been lost
-      due to their removal.  These include the item with 'index' value
-      P+1, that the requester wished to obtain as the first one
-      following the specified reference point with 'index' value P.
-
-      When receiving this diff query response, the requester should send
-      a new full query request to the Authorization Server, in order to
-      fully retrieve the current pertaining portion of the TRL.
-
-   *  The Authorization Server returns a 2.05 (Content) diff query
-      response formatted as follows, in case i) the series item X with
-      'index' having value P is found in the collection associated with
-      the requester; or ii) the series item X is not found and the
-      series item Y with 'index' having value P+1 is found in the
-      collection associated with the requester.
-
-      The response payload includes a CBOR map with the following
-      fields, whose CBOR labels are defined in Section 11.
-
-      -  'diff_set': this field MUST include a CBOR array, containing L
-         = min(SUB_U, MAX_DIFF_BATCH) diff entries, where SUB_U =
-         min(NUM, SUB_SIZE), and SUB_SIZE is the number of series items
-         in the collection following the series item X.
-
-         That is, these are the L updates pertaining to the requester
-         that immediately follow the series item X indicated as
-         reference point.  In particular, the CBOR array is populated as
-         follows.
-
-         o  If SUB_U <= MAX_DIFF_BATCH, these diff entries are the last
-            series items in the collection associated with the
-            requester, corresponding to the L most recent TRL updates
-            pertaining to the requester.
-
-         o  If SUB_U > MAX_DIFF_BATCH, these diff entries are the eldest
-            of the last SUB_U series items in the collection associated
-            with the requester, corresponding to the first L of the
-            SUB_U most recent TRL updates pertaining to the requester.
-
-         The 'diff_set' CBOR array as well as the individual diff
-         entries have the same format specified in Figure 6 and used for
-         the response payload defined in Section 7.
-
-      -  'cursor': this field MUST include a CBOR unsigned integer.  In
-         particular:
-
-         o  If L is equal to 0, i.e., the series item X is the last one
-            in the collection, 'cursor' takes the same 'index' value of
-            the last series item in the collection.
-
-         o  If L is different than 0, 'cursor' takes the 'index' value
-            of the series element of the collection included as first
-            diff entry in the 'diff_set' CBOR array.  That is, it takes
-            the 'index' value of the series item in the collection
-            corresponding to the most recent update pertaining to the
-            requester and returned in this diff query response.
-
-         Note that 'cursor' takes the same 'index' value of the last
-         series item in the collection when SUB_U <= MAX_DIFF_BATCH.
-
-      -  'more': this field MUST include the CBOR simple value "false"
-         (0xf4) if SUB_U <= MAX_DIFF_BATCH, or the CBOR simple value
-         "true" (0xf5) otherwise.
-
-         If 'more' has value "true", the requester can send a follow-up
-         diff query request including the query parameter 'cursor', with
-         the same value of the 'cursor' field specified in this diff
-         query response.  This would result in the Authorization Server
-         transferring the following subset of series items as diff
-         entries, i.e., resuming from where interrupted in the previous
-         transfer.
-
-Appendix C.  Document Updates
+Appendix B.  Document Updates
 
    RFC EDITOR: Please remove this section.
 
-C.1.  Version -01 to -02
+B.1.  Version -01 to -02
 
    *  Earlier mentioning of error cases.
 
    *  Clearer distinction between maintaining the history of TRL updates
       and preparing the response to a diff query.
+
+   *  Defined the use of "cursor" in the document body, as an extension
+      of diff queries.
 
    *  Both success and error responses have a CBOR map as payload.
 
@@ -1946,7 +1980,7 @@ C.1.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-C.2.  Version -00 to -01
+B.2.  Version -00 to -01
 
    *  Added actions to perform upon receiving responses from the TRL
       endpoint.
