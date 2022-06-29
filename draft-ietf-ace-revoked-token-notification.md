@@ -508,7 +508,7 @@ Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUS
 
 When processing a diff query request to the TRL endpoint, the Authorization Server composes a response as defined in the following.
 
-## Empty Collection {#sec-using-cursor-diff-query-response-empty}
+### Empty Collection {#sec-using-cursor-diff-query-response-empty}
 
 If the update collection associated with the requester has no elements, the Authorization Server returns a 2.05 (Content) response. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.
 
@@ -520,7 +520,7 @@ If the update collection associated with the requester has no elements, the Auth
 
 Note that the above applies when the update collection associated with the requester has no elements, regardeless whether the query parameter 'cursor' is included or not in the diff query request.
 
-## Cursor Not Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-no-cursor}
+### Cursor Not Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-no-cursor}
 
 If the update collection associated with the requester is not empty and the diff query request does not include the query parameter 'cursor', the Authorization Server performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
 
@@ -542,7 +542,7 @@ If the update collection associated with the requester is not empty and the diff
 
       If the 'more' parameter has value "true", the requester can send a follow-up diff query request including the query parameter 'cursor', with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this would result in the Authorization Server transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
-## Cursor Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-cursor}
+### Cursor Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-cursor}
 
 If the update collection associated with the requester is not empty and the diff query request includes the query parameter 'cursor' with value P, the Authorization Server proceeds as follows, depending on which of the following two cases hold.
 
