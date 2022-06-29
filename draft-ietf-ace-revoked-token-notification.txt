@@ -5,13 +5,13 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                                L. Seitz
-Expires: 21 December 2022                                      Combitech
+Expires: 31 December 2022                                      Combitech
                                                             F. Palombini
                                                              Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                            19 June 2022
+                                                            29 June 2022
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 December 2022.
+   This Internet-Draft will expire on 31 December 2022.
 
 Copyright Notice
 
@@ -91,9 +91,9 @@ Table of Contents
    8.  Using the "Cursor" Extension
      8.1.  Response to Full Query
      8.2.  Response to Diff Query
-     8.3.  Empty Collection
-     8.4.  Cursor Not Specified in the Diff Query Request
-     8.5.  Cursor Specified in the Diff Query Request
+       8.2.1.  Empty Collection
+       8.2.2.  Cursor Not Specified in the Diff Query Request
+       8.2.3.  Cursor Specified in the Diff Query Request
    9.  Upon Registration
    10. Notification of Revoked Tokens
    11. Interaction Examples
@@ -923,7 +923,7 @@ Table of Contents
    When processing a diff query request to the TRL endpoint, the
    Authorization Server composes a response as defined in the following.
 
-8.3.  Empty Collection
+8.2.1.  Empty Collection
 
    If the update collection associated with the requester has no
    elements, the Authorization Server returns a 2.05 (Content) response.
@@ -943,7 +943,7 @@ Table of Contents
    with the requester has no elements, regardeless whether the query
    parameter 'cursor' is included or not in the diff query request.
 
-8.4.  Cursor Not Specified in the Diff Query Request
+8.2.2.  Cursor Not Specified in the Diff Query Request
 
    If the update collection associated with the requester is not empty
    and the diff query request does not include the query parameter
@@ -995,12 +995,12 @@ Table of Contents
          send a follow-up diff query request including the query
          parameter 'cursor', with the same value of the 'cursor'
          parameter specified in this diff query response.  As defined in
-         Section 8.5, this would result in the Authorization Server
+         Section 8.2.3, this would result in the Authorization Server
          transferring the following subset of series items as diff
          entries, thus resuming from where interrupted in the previous
          transfer.
 
-8.5.  Cursor Specified in the Diff Query Request
+8.2.3.  Cursor Specified in the Diff Query Request
 
    If the update collection associated with the requester is not empty
    and the diff query request includes the query parameter 'cursor' with
