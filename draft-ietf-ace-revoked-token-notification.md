@@ -309,9 +309,7 @@ The following defines how the Authorization Server builds and maintains consiste
 
 For each requester, the Authorization Server maintains an update collection of maximum N\_MAX series items, where N\_MAX is a pre-defined positive integer. The Authorization Server MUST keep track of the N\_MAX most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of N\_MAX, upon their registration (see {{sec-registration}}).
 
-The series items in the update collection MUST be strictly ordered in a chronological fashion.
-
-That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the Authorization Server, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
+The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the Authorization Server, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
 Each time the TRL changes, the Authorization Server performs the following operations for each requester.
 
