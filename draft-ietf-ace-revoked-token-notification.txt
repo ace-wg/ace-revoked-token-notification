@@ -527,13 +527,12 @@ Table of Contents
    Section 9).
 
    The series items in the update collection MUST be strictly ordered in
-   a chronological fashion.
-
-   That is, at any point in time, the current first series item is the
-   one least recently added to the update collection and still retained
-   by the Authorization Server, while the current last series item is
-   the one most recently added to the update collection.  The particular
-   method used to achieve this is implementation-specific.
+   a chronological fashion.  That is, at any point in time, the current
+   first series item is the one least recently added to the update
+   collection and still retained by the Authorization Server, while the
+   current last series item is the one most recently added to the update
+   collection.  The particular method used to achieve this is
+   implementation-specific.
 
    Each time the TRL changes, the Authorization Server performs the
    following operations for each requester.
