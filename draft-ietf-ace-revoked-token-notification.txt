@@ -5,13 +5,13 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                                L. Seitz
-Expires: 31 December 2022                                      Combitech
+Expires: 3 January 2023                                        Combitech
                                                             F. Palombini
                                                              Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                            29 June 2022
+                                                             2 July 2022
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 December 2022.
+   This Internet-Draft will expire on 3 January 2023.
 
 Copyright Notice
 
@@ -280,8 +280,8 @@ Table of Contents
       of pertaining revoked Access Tokens (see Section 6); or the most
       recent TRL updates occurred over the list of pertaining revoked
       Access Tokens (see Section 7).  In either case, the registered
-      device may especially rely on an Observation Request for
-      subscribing to the TRL resource as discussed above.
+      device may also rely on an Observation Request for subscribing to
+      the TRL resource as discussed above.
 
    *  When an Access Token is revoked, the Authorization Server adds the
       corresponding token hash to the TRL.  Also, when a revoked Access
@@ -527,10 +527,13 @@ Table of Contents
    Section 9).
 
    The series items in the update collection MUST be strictly ordered in
-   a chronological fashion.  That is, at any point in time, the current
-   first (last) series item is the least (most) recently series item
-   added to the update collection.  The particular method used to
-   achieve this is implementation-specific.
+   a chronological fashion.
+
+   That is, at any point in time, the current first series item is the
+   one least recently added to the update collection and still retained
+   by the Authorization Server, while the current last series item is
+   the one most recently added to the update collection.  The particular
+   method used to achieve this is implementation-specific.
 
    Each time the TRL changes, the Authorization Server performs the
    following operations for each requester.
@@ -667,11 +670,6 @@ Table of Contents
       4.00 (Bad Request) response in case any of the following
       conditions holds.
 
-      The response MUST have Content-Format "application/ace-trl+cbor".
-      The payload of the response MUST be a CBOR map, which MUST include
-      the 'error' parameter and MAY include the 'error_description'
-      parameter to provide additional context.
-
       -  The GET request does not specify the query parameter 'diff'.
          The 'error' parameter within the CBOR map carried in the
          response payload MUST have value 1 ("Invalid set of
@@ -690,6 +688,11 @@ Table of Contents
          include the 'cursor' parameter, which MUST specify the current
          value of LAST_INDEX for the update collection associated with
          the requester.
+
+      The 4.00 (Bad Request) response MUST have Content-Format
+      "application/ace-trl+cbor".  The payload of the response MUST be a
+      CBOR map, which MUST include the 'error' parameter and MAY include
+      the 'error_description' parameter to provide additional context.
 
 6.  Full Query of the TRL
 
