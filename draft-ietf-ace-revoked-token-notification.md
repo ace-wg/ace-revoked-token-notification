@@ -359,7 +359,7 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    - the integer 0, indicating that a (notification) response should include as many diff entries as the Authorization Server can provide in the response; or
 
-   - a positive integer greater than 0, indicating the maximum number of diff entries that a (notification) response should include.
+   - a positive integer strictly greater than 0, indicating the maximum number of diff entries that a (notification) response should include.
 
    If the Authorization Server does not support diff queries, it ignores the query parameter 'diff' when present in the GET request and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
