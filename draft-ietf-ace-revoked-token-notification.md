@@ -407,7 +407,7 @@ full_set_value = [* token_hash]
 ~~~~~~~~~~~
 {: #cddl-full title="CDDL definition of 'full_set_value'" artwork-align="left"}
 
-{{response-full}} shows an example of response from the Authorization Server, following a full query request to the TRL endpoint. Full token hashes are omitted for brevity.
+{{response-full}} shows an example of response from the Authorization Server, following a full query request to the TRL endpoint. In this example, the Authorization Server does not support the "Cursor" extension (if it supports diff queries at all), hence the 'cursor' parameter is not included in the payload of the response. Also, full token hashes are omitted for brevity.
 
 ~~~~~~~~~~~
 2.05 Content
@@ -447,7 +447,7 @@ In order to produce a (notification) response to a GET request asking for a diff
 
       Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element relates to the second from last most recent update to that portion, and so on.
 
-   * The 'cursor' parameter and the 'more' parameters MUST be included if the Authorization Server supports both the diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query to the TRL endpoint (see {{sec-using-cursor-diff-query-response}}).
+   * The 'cursor' parameter and the 'more' parameter MUST be included if the Authorization Server supports both the diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query to the TRL endpoint (see {{sec-using-cursor-diff-query-response}}).
 
       If the Authorization Server does not support both diff queries and the "Cursor" extension, these parameters MUST NOT be included. In case the requester does not support both diff queries and the "Cursor" extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.
 
@@ -461,7 +461,7 @@ In order to produce a (notification) response to a GET request asking for a diff
 ~~~~~~~~~~~
 {: #cddl-diff title="CDDL definition of 'diff_set_value'" artwork-align="left"}
 
-{{response-diff}} shows an example of response from the Authorization Server, following a Diff Query request to the TRL endpoint, where U = 3 diff entries are specified. Full token hashes are omitted for brevity.
+{{response-diff}} shows an example of response from the Authorization Server, following a Diff Query request to the TRL endpoint, where U = 3 diff entries are specified. In this example, the Authorization Server does not support the "Cursor" extension, hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the response. Also, full token hashes are omitted for brevity.
 
 ~~~~~~~~~~~
 2.05 Content
@@ -648,6 +648,8 @@ Furthermore, 'h(x)' refers to the hash function used to compute the token hashes
 
 {{fig-RS-AS}} shows an interaction example considering a CoAP observation and a full query of the TRL.
 
+In this example, the Authorization Server does not support the "Cursor" extension (if it supports diff queries at all). Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.
+
 ~~~~~~~~~~~
 RS                                                 AS
 |                                                   |
@@ -738,6 +740,8 @@ RS                                                 AS
 {{fig-RS-AS-2}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
 The Resource Server indicates N=3 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
+
+In this example, the Authorization Server does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
 ~~~~~~~~~~~
 RS                                                 AS
@@ -842,6 +846,8 @@ RS                                                 AS
 The example also considers one of the notifications from the Authorization Server to get lost in transmission, and thus not reaching the Resource Server.
 
 When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the Authorization Server, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
+
+In this example, the Authorization Server does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
 ~~~~~~~~~~~
 RS                                                 AS
@@ -1127,7 +1133,9 @@ RFC EDITOR: Please remove this section.
 
 ## Version -02 to -03 ## {#sec-02-03}
 
-* Clarifications and editorial improvements.
+* Clarified parameter semantics, message content and examples.
+
+* Editorial improvements.
 
 ## Version -01 to -02 ## {#sec-01-02}
 
