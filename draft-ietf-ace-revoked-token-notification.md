@@ -70,7 +70,6 @@ author:
         email: glewis@sei.cmu.edu
 
 normative:
-  I-D.ietf-ace-oauth-authz:
   I-D.ietf-core-conditional-attributes:
   RFC2119:
   RFC6749:
@@ -85,6 +84,7 @@ normative:
   RFC8392:
   RFC8610:
   RFC8949:
+  RFC9200:
   Named.Information.Hash.Algorithm:
     author:
       org: IANA
@@ -107,15 +107,15 @@ This document specifies a method of the Authentication and Authorization for Con
 
 # Introduction # {#intro}
 
-Authentication and Authorization for Constrained Environments (ACE) {{I-D.ietf-ace-oauth-authz}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server and become a registered device. Once registered, a Client can send a request to the Authorization Server, to obtain an Access Token for a Resource Server. For a Client to access the Resource Server, the Client must present the issued Access Token at the Resource Server, which then validates it before storing it (see {{Section 5.10.1.1 of I-D.ietf-ace-oauth-authz}}).
+Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server and become a registered device. Once registered, a Client can send a request to the Authorization Server, to obtain an Access Token for a Resource Server. For a Client to access the Resource Server, the Client must present the issued Access Token at the Resource Server, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
 
 Even though Access Tokens have expiration times, there are circumstances by which an Access Token may need to be revoked before its expiration time, such as: (1) a registered device has been compromised, or is suspected of being compromised; (2) a registered device is decommissioned; (3) there has been a change in the ACE profile for a registered device; (4) there has been a change in access policies for a registered device; and (5) there has been a change in the outcome of policy evaluation for a registered device (e.g., if policy assessment depends on dynamic conditions in the execution environment, the user context, or the resource utilization).
 
-As discussed in {{Section 6.1 of I-D.ietf-ace-oauth-authz}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that Access Tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need Access Tokens with relatively long lifetimes.
+As discussed in {{Section 6.1 of RFC9200}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that Access Tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need Access Tokens with relatively long lifetimes.
 
 This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) resource on the Authorization Server, in order to obtain an updated list of revoked, but yet not expired, pertaining Access Tokens. In particular, registered devices can subscribe to the TRL at the Authorization Server by using resource observation {{RFC7641}} for the Constrained Application Protocol (CoAP) {{RFC7252}}.
 
-Unlike in the case of token introspection (see {{Section 5.9 of I-D.ietf-ace-oauth-authz}}), a registered device does not provide an owned Access Token to the Authorization Server for inquiring about its current state. Instead, registered devices simply obtain an updated list of revoked, but yet not expired, pertaining Access Tokens, as efficiently identified by corresponding hash values.
+Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned Access Token to the Authorization Server for inquiring about its current state. Instead, registered devices simply obtain an updated list of revoked, but yet not expired, pertaining Access Tokens, as efficiently identified by corresponding hash values.
 
 The benefits of this method are that it complements token introspection, and it does not require any additional endpoints on the registered devices. The only additional requirements for registered devices are a request/response interaction with the Authorization Server to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
 
@@ -123,7 +123,7 @@ The benefits of this method are that it complements token introspection, and it 
 
 {::boilerplate bcp14}
 
-Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{I-D.ietf-ace-oauth-authz}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}}, and JSON Web Tokens (JWTs) {{RFC7519}}. The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server, and Authorization Server.
+Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}}, and JSON Web Tokens (JWTs) {{RFC7519}}. The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server, and Authorization Server.
 
 Readers are also expected to be familiar with the terms and concepts related to CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
@@ -206,7 +206,7 @@ At a high level, the steps of this protocol are as follows.
 
 The token hash of an Access Token is computed as follows.
 
-1. The Authorization Server defines ENCODED\_TOKEN, as the content of the 'access\_token' parameter in the Authorization Server response (see {{Section 5.8.2 of I-D.ietf-ace-oauth-authz}}), where the Access Token was included and provided to the requesting Client.
+1. The Authorization Server defines ENCODED\_TOKEN, as the content of the 'access\_token' parameter in the Authorization Server response (see {{Section 5.8.2 of RFC9200}}), where the Access Token was included and provided to the requesting Client.
 
     Note that the content of the 'access\_token' parameter is either:
 
@@ -279,7 +279,7 @@ The Authorization Server updates the TRL in the following two cases.
 
 # The TRL Endpoint # {#sec-trl-endpoint}
 
-Consistent with {{Section 6.5 of I-D.ietf-ace-oauth-authz}}, all communications between a caller of the TRL endpoint and the Authorization Server MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the Authorization Server to the caller MUST be bound to the caller's request.
+Consistent with {{Section 6.5 of RFC9200}}, all communications between a caller of the TRL endpoint and the Authorization Server MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the Authorization Server to the caller MUST be bound to the caller's request.
 
 Following a request to the TRL endpoint, the messages defined in this document that the Authorization Server sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
 
@@ -602,7 +602,7 @@ After the registration procedure is finished, the administrator or registered de
 
 In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content) and including the CoAP Observe Option. The payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request yielded the execution of a full query or a diff query of the TRL, respectively.
 
-Further details about the registration process at the Authorization Server are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of I-D.ietf-ace-oauth-authz}}).
+Further details about the registration process at the Authorization Server are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of RFC9200}}).
 
 # Notification of Revoked Tokens # {#sec-notification}
 
@@ -616,7 +616,7 @@ Furthermore, an administrator or a registered device can send additional GET req
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.
 
-When a Resource Server RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
+When a Resource Server RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
 
 Thus, in order to ensure that no revoked Access Tokens are accepted and stored, the RS performs the following actions.
 
@@ -997,7 +997,7 @@ This specification defines a number of values that the Authorization Server can 
 
 # Security Considerations # {#sec-security-considerations}
 
-Security considerations are inherited from the ACE framework for Authentication and Authorization {{I-D.ietf-ace-oauth-authz}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to resource naming through hashes. The following considerations also apply.
+Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to resource naming through hashes. The following considerations also apply.
 
 The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association that they use to communicate.
 
@@ -1124,6 +1124,10 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: Please remove this section.
+
+## Version -02 to -03 ## {#sec-02-03}
+
+* Clarifications and editorial improvements.
 
 ## Version -01 to -02 ## {#sec-01-02}
 
