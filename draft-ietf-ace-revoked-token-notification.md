@@ -558,7 +558,7 @@ If the update collection associated with the requester is not empty and the diff
 
    With the combination ('cursor', 'more') = ("null", "true"), the Authorization Server is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value P+1, that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
-   When receiving this diff query response, the requester should send a new full query request to the Authorization Server, in order to fully retrieve the current pertaining portion of the TRL.
+   When receiving this diff query response, the requester should send a new full query request to the Authorization Server. A successful response provides the requester with the full, current pertaining portion of the TRL, as well as with a valid value of cursor (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
 * Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value P+1 is found in the update collection associated with the requester.
 
