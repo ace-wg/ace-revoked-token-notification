@@ -488,7 +488,7 @@ Payload:
 
 {{sec-series-pattern}} discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
 
-# Using the "Cursor" Extension ## {#sec-using-cursor}
+# Response Messages Using the "Cursor" Extension ## {#sec-using-cursor}
 
 If it supports both diff queries and the "Cursor" extension, the Authorization Server composes a response to a full query request or diff query request as defined in {{sec-using-cursor-full-query-response}} and {{sec-using-cursor-diff-query-response}}, respectively.
 
