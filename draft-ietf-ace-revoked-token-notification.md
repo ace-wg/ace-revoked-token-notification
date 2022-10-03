@@ -335,13 +335,24 @@ The Authorization Server refers to the pre-defined, positive integer MAX\_INDEX 
 
 When maintaining the history of updates to the TRL resource, the following applies for each update collection.
 
-* Each series item X in the update collection is also associated with an unsigned integer 'index', whose maximum value is equal to MAX\_INDEX. The value of 'index' is the absolute counter of series items added to that update collection until and including X, minus 1.
+* Each series item X in the update collection is also associated with an unsigned integer 'index', whose minimum value is 0 and whose maximum value is MAX\_INDEX. The first series item ever added to the update collection MUST have 'index' with value 0.
 
-   That is, the first series item ever added to that update collection has 'index' with value 0. Also, after having added V series item to the update collection, the last series item has 'index' with value (V - 1), independently of the maximum possible size of the update collection (i.e., N\_MAX).
+   If i_X is the value of 'index' associated with a series item X, then the following series item Y will take 'index' with value i_Y = (i_X + 1) % (MAX\_INDEX + 1). That is, after having added a series item whose associated 'index' has value MAX\_INDEX, the next added series item will result in a wrap-around of the 'index' value, and will thus take 'index' with value 0.
 
-* The unsigned integer LAST_INDEX is also defined. At every point in time, the value of LAST_INDEX is the value of 'index' currently associated with the latest added series item in the update collection.
+   For example, assuming N\_MAX = 3, the values of 'index' in the update collection chronologically evolve as follows, as new series items are added and old series items are deleted.
 
-   That is, the value of LAST_INDEX is the total number of series items added so far to the update collection, minus 1.
+   - ...
+   - ( i_A = MAX\_INDEX - 2, i_B = MAX\_INDEX - 1, i_C = MAX\_INDEX )
+   - ( i_B = MAX\_INDEX - 1, i_C = MAX\_INDEX, i_D = 0 )
+   - ( i_C = MAX\_INDEX, i_D = 0, i_E = 1 )
+   - ( i_D = 0, i_E = 1, i_F = 2 )
+   - ...
+
+* The unsigned integer LAST_INDEX is also defined, with minimum value 0 and maximum value MAX\_INDEX. At any point in time, LAST_INDEX has the value of 'index' currently associated with the latest added series item in the update collection.
+
+   That is, after having added V series items to the update collection, the last and most recently added series item has 'index' with value LAST_INDEX = (V - 1) % (MAX_INDEX + 1).
+
+   As long as a wrap-around of the 'index' value has not occurred, the value of LAST_INDEX is the absolute counter of series items added to that update collection until and including V, minus 1.
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
@@ -377,7 +388,9 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    * The query parameter 'cursor' has a value other than 0 or than a positive integer. The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value").
 
-   * The query parameter 'cursor' has a value strictly greater than the current LAST_INDEX for the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}). The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of LAST_INDEX for the update collection associated with the requester.
+   * The query parameter ’cursor’ has a value strictly greater than the current LAST_INDEX for the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}) and no wrap-around of the 'index' value has occurred for that update collection.
+
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of LAST_INDEX for the update collection associated with the requester.
 
    The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
@@ -548,7 +561,7 @@ If the update collection associated with the requester is not empty and the diff
 
 If the update collection associated with the requester is not empty and the diff query request includes the query parameter 'cursor' with value P, the Authorization Server proceeds as follows, depending on which of the following two cases hold.
 
-* Case A - The series item X with 'index' having value P and the series item Y with 'index' having value P+1 are both not found in the update collection associated with the requester. This occurs when the item Y (and possibly further ones after it) has been previously removed from the history of updates for that requester (see step 5 at {{sec-trl-endpoint-supporting-diff-queries}}).
+* Case A - The series item X with 'index' having value P and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) are both not found in the update collection associated with the requester. This occurs when the item Y (and possibly further ones after it) has been previously removed from the history of updates for that requester (see step 5 at {{sec-trl-endpoint-supporting-diff-queries}}).
 
    In this case, the Authorization Server returns a 2.05 (Content) response. The response MUST have Content-Format "application/ace-trl+cbor" and its payload MUST be a CBOR map formatted as follows.
 
@@ -558,15 +571,15 @@ If the update collection associated with the requester is not empty and the diff
 
     * The 'more' parameter MUST be included and specifies the CBOR simple value "true" (0xf5).
 
-   With the combination ('cursor', 'more') = ("null", "true"), the Authorization Server is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value P+1, that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
+   With the combination ('cursor', 'more') = ("null", "true"), the Authorization Server is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
    When receiving this diff query response, the requester should send a new full query request to the Authorization Server. A successful response provides the requester with the full, current pertaining portion of the TRL, as well as with a valid value of cursor (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
-* Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value P+1 is found in the update collection associated with the requester.
+* Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.
 
    In this case, the Authorization Server performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
 
-   * At step 3, the Authorization Server considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(SUB_U, MAX_DIFF_BATCH) diff entries, where SUB_U = min(NUM, SUB_SIZE), and SUB_SIZE is the number of series items in the update collection following the series item X. If L is equal to 0 (e.g., because SUB_U is equal to 0), then no diff entries are prepared.
+   * At step 3, the Authorization Server considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(SUB_U, MAX_DIFF_BATCH) diff entries, where SUB_U = min(NUM, SUB_SIZE), and SUB_SIZE is the number of series items in the update collection starting from and including the series item added immediately after X. If L is equal to 0 (e.g., because SUB_U is equal to 0), then no diff entries are prepared.
 
       If SUB_U <= MAX_DIFF_BATCH, the prepared diff entries are the last series items in the update collection associated with the requester, corresponding to the L most recent TRL updates pertaining to the requester.
 
@@ -1136,6 +1149,8 @@ RFC EDITOR: Please remove this section.
 ## Version -02 to -03 ## {#sec-02-03}
 
 * Definition of MAX_INDEX for the "Cursor" extension.
+
+* Handling wrap-around of 'index' when using the "Cursor" extension.
 
 * Clarified parameter semantics, message content and examples.
 
