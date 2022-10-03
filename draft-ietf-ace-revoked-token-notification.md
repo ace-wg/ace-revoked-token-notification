@@ -384,9 +384,17 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    If the Authorization Server supports both diff queries and the "Cursor" extension, and the GET request specifies the query parameter 'cursor', then the Authorization Server MUST return a 4.00 (Bad Request) response in case any of the following conditions holds.
 
-   * The GET request does not specify the query parameter 'diff'. The 'error' parameter within the CBOR map carried in the response payload MUST have value 1 ("Invalid set of parameters").
+   * The GET request does not specify the query parameter 'diff'.
 
-   * The query parameter 'cursor' has a value other than 0 or than a positive integer. The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value").
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 1 ("Invalid set of parameters").
+
+   * The query parameter 'cursor' has a value other than 0 or than a positive integer.
+
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value").
+
+   * The query parameter 'cursor' has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
+
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null", if the update collection associated with the requester is empty; or the corresponding current value of LAST_INDEX otherwise.
 
    * The query parameter ’cursor’ has a value strictly greater than the current LAST_INDEX for the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}) and no wrap-around of the 'index' value has occurred for that update collection.
 
@@ -1151,6 +1159,8 @@ RFC EDITOR: Please remove this section.
 * Definition of MAX_INDEX for the "Cursor" extension.
 
 * Handling wrap-around of 'index' when using the "Cursor" extension.
+
+* Error handling for the case where 'cursor' > MAX_INDEX.
 
 * Clarified parameter semantics, message content and examples.
 
