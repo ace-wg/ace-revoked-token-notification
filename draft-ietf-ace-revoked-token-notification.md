@@ -394,7 +394,7 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    * The query parameter 'cursor' has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null", if the update collection associated with the requester is empty; or the corresponding current value of LAST_INDEX otherwise.
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of LAST_INDEX otherwise.
 
    * The query parameter ’cursor’ has a value strictly greater than the current LAST_INDEX for the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}) and no wrap-around of the 'index' value has occurred for that update collection.
 
