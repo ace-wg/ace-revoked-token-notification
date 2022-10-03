@@ -331,7 +331,7 @@ Each time the TRL changes, the Authorization Server performs the following opera
 
 If it supports the "Cursor" extension for diff queries, the Authorization Server performs also the following actions.
 
-The Authorization Server refers to the pre-defined, positive integer MAX\_INDEX <= (2^64) - 1. The value of MAX\_INDEX is RECOMMENDED to be at least (2^32) - 1.
+The Authorization Server refers to the pre-defined, positive integer MAX\_INDEX <= ((2^64) - 1). The value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2^32) - 1).
 
 When maintaining the history of updates to the TRL resource, the following applies for each update collection.
 
