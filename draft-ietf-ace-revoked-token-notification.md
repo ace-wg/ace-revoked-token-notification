@@ -398,7 +398,7 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    * The query parameter ’cursor’ has a value strictly greater than the current LAST_INDEX for the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}) and no wrap-around of the 'index' value has occurred for that update collection.
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of LAST_INDEX for the update collection associated with the requester.
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of LAST_INDEX otherwise.
 
    The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
@@ -1161,6 +1161,8 @@ RFC EDITOR: Please remove this section.
 * Handling wrap-around of 'index' when using the "Cursor" extension.
 
 * Error handling for the case where 'cursor' > MAX_INDEX.
+
+* Improved error handling in case 'index' is out-of-bound.
 
 * Clarified parameter semantics, message content and examples.
 
