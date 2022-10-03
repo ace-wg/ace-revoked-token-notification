@@ -333,7 +333,7 @@ If it supports the "Cursor" extension for diff queries, the Authorization Server
 
 The Authorization Server defines the constant, unsigned integer MAX\_INDEX <= ((2^64) - 1). The value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than N\_MAX.
 
-When maintaining the history of updates to the TRL resource, the following applies for each update collection.
+When maintaining the history of updates to the TRL resource, the following applies separately for each update collection.
 
 * Each series item X in the update collection is also associated with an unsigned integer 'index', whose minimum value is 0 and whose maximum value is MAX\_INDEX. The first series item ever added to the update collection MUST have 'index' with value 0.
 
@@ -402,7 +402,7 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the query parameter 'cursor' has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of 'last_index' for the update collection associated with the requester.
 
    The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
@@ -521,6 +521,8 @@ If it supports both diff queries and the "Cursor" extension, the Authorization S
 
 The exact format of the response depends on the request being a full query or diff query request, on the presence of the query parameter 'cursor' in the diff query request, and on the current status of the update collection associated with the requester.
 
+Error handling and the possible resulting error responses are as defined in {{sec-trl-endpoint-query-parameters}}.
+
 ## Response to Full Query {#sec-using-cursor-full-query-response}
 
 When processing a full query request to the TRL endpoint, the Authorization Server composes a response as defined in {{ssec-trl-full-query}}.
@@ -585,7 +587,7 @@ If the update collection associated with the requester is not empty and the diff
 
    With the combination ('cursor', 'more') = ("null", "true"), the Authorization Server is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
-   When receiving this diff query response, the requester should send a new full query request to the Authorization Server. A successful response provides the requester with the full, current pertaining portion of the TRL, as well as with a valid value of cursor (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
+   When receiving this diff query response, the requester should send a new full query request to the Authorization Server. A successful response provides the requester with the full, current pertaining portion of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
 * Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.
 
