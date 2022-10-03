@@ -348,13 +348,13 @@ When maintaining the history of updates to the TRL resource, the following appli
    - ( i_D = 0, i_E = 1, i_F = 2 )
    - ...
 
-* The unsigned integer LAST_INDEX is also defined, with minimum value 0 and maximum value MAX\_INDEX.
+* The unsigned integer 'last_index' is also defined, with minimum value 0 and maximum value MAX\_INDEX.
 
-   If the update collection is empty (i.e., no series items have been added yet), the value of LAST_INDEX is not defined. If the update collection is not empty, LAST_INDEX has the value of 'index' currently associated with the latest added series item in the update collection.
+   If the update collection is empty (i.e., no series items have been added yet), the value of 'last_index' is not defined. If the update collection is not empty, 'last_index' has the value of 'index' currently associated with the latest added series item in the update collection.
 
-   That is, after having added V series items to the update collection, the last and most recently added series item has 'index' with value LAST_INDEX = (V - 1) % (MAX_INDEX + 1).
+   That is, after having added V series items to the update collection, the last and most recently added series item has 'index' with value 'last_index' = (V - 1) % (MAX_INDEX + 1).
 
-   As long as a wrap-around of the 'index' value has not occurred, the value of LAST_INDEX is the absolute counter of series items added to that update collection until and including V, minus 1.
+   As long as a wrap-around of the 'index' value has not occurred, the value of 'last_index' is the absolute counter of series items added to that update collection until and including V, minus 1.
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
@@ -398,11 +398,11 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    * The query parameter 'cursor' has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of LAST_INDEX otherwise.
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
-   * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the query parameter 'cursor' has a value strictly greater than the current LAST_INDEX on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
+   * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the query parameter 'cursor' has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of LAST_INDEX otherwise.
+      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
    The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
