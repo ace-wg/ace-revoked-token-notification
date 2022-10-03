@@ -307,7 +307,7 @@ If the Authorization Server supports diff queries, it is able to transfer a list
 
 The following defines how the Authorization Server builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
-For each requester, the Authorization Server maintains an update collection of maximum N\_MAX series items, where N\_MAX is a pre-defined positive integer. The Authorization Server MUST keep track of the N\_MAX most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of N\_MAX, upon their registration (see {{sec-registration}}).
+For each requester, the Authorization Server maintains an update collection of maximum N\_MAX series items, where N\_MAX is a pre-defined, constant positive integer. The Authorization Server MUST keep track of the N\_MAX most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of N\_MAX, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the Authorization Server, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
@@ -331,7 +331,7 @@ Each time the TRL changes, the Authorization Server performs the following opera
 
 If it supports the "Cursor" extension for diff queries, the Authorization Server performs also the following actions.
 
-The Authorization Server refers to the pre-defined, positive integer MAX\_INDEX <= ((2^64) - 1). The value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than N\_MAX.
+The Authorization Server defines the constant, unsigned integer MAX\_INDEX <= ((2^64) - 1). The value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than N\_MAX.
 
 When maintaining the history of updates to the TRL resource, the following applies for each update collection.
 
@@ -358,7 +358,7 @@ When maintaining the history of updates to the TRL resource, the following appli
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
-Furthermore, the Authorization Server defines an unsigned integer MAX_DIFF_BATCH <= N_MAX. The value of MAX_DIFF_BATCH specifies the maximum number of diff entries to be included in a single diff query response. If supporting the "Cursor" extension, the Authorization Server SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
+For each update collection, the Authorization Server also defines a constant, positive integer MAX_DIFF_BATCH <= N_MAX, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the Authorization Server SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
