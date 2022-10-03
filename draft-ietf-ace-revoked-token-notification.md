@@ -331,9 +331,11 @@ Each time the TRL changes, the Authorization Server performs the following opera
 
 If it supports the "Cursor" extension for diff queries, the Authorization Server performs also the following actions.
 
+The Authorization Server refers to the pre-defined, positive integer MAX\_INDEX <= (2^64) - 1. The value of MAX\_INDEX is RECOMMENDED to be at least (2^32) - 1.
+
 When maintaining the history of updates to the TRL resource, the following applies for each update collection.
 
-* Each series item X in the update collection is also associated with an unsigned integer 'index'. The value of 'index' is the absolute counter of series items added to that update collection until and including X, minus 1.
+* Each series item X in the update collection is also associated with an unsigned integer 'index', whose maximum value is equal to MAX\_INDEX. The value of 'index' is the absolute counter of series items added to that update collection until and including X, minus 1.
 
    That is, the first series item ever added to that update collection has 'index' with value 0. Also, after having added V series item to the update collection, the last series item has 'index' with value (V - 1), independently of the maximum possible size of the update collection (i.e., N\_MAX).
 
@@ -1132,6 +1134,8 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 RFC EDITOR: Please remove this section.
 
 ## Version -02 to -03 ## {#sec-02-03}
+
+* Definition of MAX_INDEX for the "Cursor" extension.
 
 * Clarified parameter semantics, message content and examples.
 
