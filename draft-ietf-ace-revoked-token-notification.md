@@ -543,7 +543,7 @@ If the update collection associated with the requester has no elements, the Auth
 
 * The 'more' parameter MUST be included and specifies the CBOR simple value "false" (0xf4).
 
-Note that the above applies when the update collection associated with the requester has no elements, regardless whether the query parameter 'cursor' is included or not in the diff query request, and irrespective of its specified value if present.
+Note that the above applies when the update collection associated with the requester has no elements, regardless whether the query parameter 'cursor' is included or not in the diff query request, and irrespective of the specified unsigned integer value if present.
 
 ### Cursor Not Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-no-cursor}
 
