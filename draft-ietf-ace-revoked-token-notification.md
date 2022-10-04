@@ -331,7 +331,7 @@ Each time the TRL changes, the Authorization Server performs the following opera
 
 If it supports the "Cursor" extension for diff queries, the Authorization Server performs also the following actions.
 
-The Authorization Server defines the constant, unsigned integer MAX\_INDEX <= ((2^64) - 1). The value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than N\_MAX.
+The Authorization Server defines the constant, unsigned integer MAX\_INDEX <= ((2 \*\* 64) - 1), where " \*\* " is the exponentiation operator. In particular, the value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2 \*\* 32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than N\_MAX.
 
 When maintaining the history of updates to the TRL resource, the following applies separately for each update collection.
 
