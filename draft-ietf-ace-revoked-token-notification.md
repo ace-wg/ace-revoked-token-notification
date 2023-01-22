@@ -452,6 +452,8 @@ Payload:
 
 In order to produce a (notification) response to a GET request asking for a diff query of the TRL, the Authorization Server performs the following actions.
 
+Note that, if the Authorization Server supports both diff queries and the related "Cursor" extension, the steps 3 and 4 defined below are extended as defined in {{sec-using-cursor-diff-query-response}}.
+
 1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than the pre-defined positive integer N\_MAX (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of N_MAX. Otherwise, NUM takes N.
 
 2. The Authorization Server determines U = min(NUM, SIZE), where SIZE <= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server.
