@@ -1006,9 +1006,9 @@ The table below summarizes them, and specifies the CBOR value to use as abbrevia
 | more              |  3         | simple value "false" / |
 |                   |            | simple value "true"    |
 +-------------------+------------+------------------------+
-| error             | -1         | int                    |
+| error             |  4         | integer                |
 +-------------------+------------+------------------------+
-| error_description | -2         | tstr                   |
+| error_description |  5         | text string            |
 +-------------------+------------+------------------------+
 ~~~~~~~~~~~
 {: #fig-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" artwork-align="center"}
@@ -1164,9 +1164,11 @@ RFC EDITOR: Please remove this section.
 
 ## Version -03 to -04 ## {#sec-03-04}
 
+* Positive integers as CBOR abbreviations for all parameters.
+
 * Fixed details in IANA considerations.
 
-* Editorial improvements.
+* Clarifications and editorial improvements.
 
 ## Version -02 to -03 ## {#sec-02-03}
 
