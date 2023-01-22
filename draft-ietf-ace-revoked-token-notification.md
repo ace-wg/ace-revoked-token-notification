@@ -313,9 +313,9 @@ The series items in the update collection MUST be strictly ordered in a chronolo
 
 Each time the TRL changes, the Authorization Server performs the following operations for each requester.
 
-1. The Authorization Server considers the portion of the TRL pertaining to that requester. If the TRL portion is not affected by this TRL update, the Authorization Server stops the processing for that requester.
+1. The Authorization Server considers the portion of the TRL pertaining to that requester. If the TRL portion is not affected by this TRL update, the Authorization Server stops the processing for that requester. Otherwise, the Authorization Server moves to step 2.
 
-2. Otherwise, the Authorization Server creates two sets "trl_patch" of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.
+2. The Authorization Server creates two sets "trl_patch" of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.
 
 3. The Authorization Server fills the two sets with the token hashes of the removed and added Access Tokens, respectively, from/to the TRL portion considered at step 1.
 
@@ -384,7 +384,7 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    If included, the query parameter 'cursor' specifies an unsigned integer value that was provided by the Authorization Server in a previous response from the TRL endpoint (see {{sec-using-cursor-full-query-response}}, {{sec-using-cursor-diff-query-response-no-cursor}} and {{sec-using-cursor-diff-query-response-cursor}}).
 
-   If the Authorization Server does not support the "Cursor" extension, it ignores the query parameter 'cursor' when present in the GET request. In such a case, the Authorization Server proceeds: i) like when processing a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the query parameter 'diff' is present in the GET request, or ii) like when processing a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
+   If the Authorization Server does not support the "Cursor" extension, it ignores the query parameter 'cursor' when present in the GET request. In such a case, the Authorization Server proceeds: i) like when processing a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the query parameter 'diff' is present in the GET request; or ii) like when processing a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
 
    If the Authorization Server supports both diff queries and the "Cursor" extension, and the GET request specifies the query parameter 'cursor', then the Authorization Server MUST return a 4.00 (Bad Request) response in case any of the following conditions holds.
 
@@ -422,7 +422,7 @@ In order to produce a (notification) response to a GET request asking for a full
 
       The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.
 
-   * The 'cursor' parameter MUST be included if the Authorization Server supports both the diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}). Its value is specified according to what is defined in {{sec-using-cursor-full-query-response}}, and provides the requester with information for performing a follow-up diff query using the "Cursor" extension (see {{sec-using-cursor-diff-query-response}}).
+   * The 'cursor' parameter MUST be included if the Authorization Server supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}). Its value is specified according to what is defined in {{sec-using-cursor-full-query-response}}, and provides the requester with information for performing a follow-up diff query using the "Cursor" extension (see {{sec-using-cursor-diff-query-response}}).
 
       If the Authorization Server does not support both diff queries and the "Cursor" extension, this parameter MUST NOT be included. In case the requester does not support both diff queries and the "Cursor" extension, it MUST silently ignore the 'cursor' parameter if present.
 
@@ -474,7 +474,7 @@ In order to produce a (notification) response to a GET request asking for a diff
 
       Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element relates to the second from last most recent update to that portion, and so on.
 
-   * The 'cursor' parameter and the 'more' parameter MUST be included if the Authorization Server supports both the diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query to the TRL endpoint (see {{sec-using-cursor-diff-query-response}}).
+   * The 'cursor' parameter and the 'more' parameter MUST be included if the Authorization Server supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query to the TRL endpoint (see {{sec-using-cursor-diff-query-response}}).
 
       If the Authorization Server does not support both diff queries and the "Cursor" extension, these parameters MUST NOT be included. In case the requester does not support both diff queries and the "Cursor" extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.
 
@@ -1032,7 +1032,7 @@ This specification defines a number of values that the Authorization Server can 
 
 # Security Considerations # {#sec-security-considerations}
 
-Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to resource naming through hashes. The following considerations also apply.
+Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
 
 The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association that they use to communicate.
 
@@ -1061,7 +1061,7 @@ Required parameters: N/A
 
 Optional parameters: N/A
 
-Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in {{&SELF}}.
+Encoding considerations: Must be encoded as a CBOR map containing the protocol parameters defined in {{&SELF}}.
 
 Security considerations: See {{sec-security-considerations}} of this document.
 
@@ -1130,7 +1130,7 @@ This registry has been initially populated by the values in {{error-types}}. The
 
 ## Expert Review Instructions {#review}
 
-The IANA registries established in this document is defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
+The IANA registries established in this document are defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
 
 Expert reviewers should take into consideration the following points:
 
@@ -1159,6 +1159,10 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: Please remove this section.
+
+## Version -03 to -04 ## {#sec-03-04}
+
+* Editorial improvements.
 
 ## Version -02 to -03 ## {#sec-02-03}
 
