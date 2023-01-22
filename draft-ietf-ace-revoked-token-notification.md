@@ -210,9 +210,9 @@ The token hash of an Access Token is computed as follows.
 
     Note that the content of the 'access\_token' parameter is either:
 
-    * A CBOR byte string, if the Access Token was transported using CBOR. With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then ENCODED\_TOKEN takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the parameter 'access\_token'.
+    * A CBOR byte string, if the Access Token was transported using CBOR. With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then ENCODED\_TOKEN takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access\_token' parameter.
 
-   * A text string, if the Access Token was transported using JSON. With reference to the example in {{fig-as-response-json}}, ENCODED\_TOKEN takes "2YotnFZFEjr1zCsicMWpAA", i.e., the raw content of the parameter 'access\_token'.
+   * A text string, if the Access Token was transported using JSON. With reference to the example in {{fig-as-response-json}}, ENCODED\_TOKEN takes "2YotnFZFEjr1zCsicMWpAA", i.e., the raw content of the 'access\_token' parameter.
 
 2. The Authorization Server defines HASH\_INPUT as follows.
 
@@ -364,11 +364,11 @@ For each update collection, the Authorization Server also defines a constant, po
 
 The TRL endpoint allows the following query parameters to be present in a GET request. The Authorization Server MUST silently ignore unknown query parameters.
 
-* 'pmax': if included, it follows the semantics defined in {{Section 3.2.2 of I-D.ietf-core-conditional-attributes}}. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.
+* 'pmax': if included, it follows the semantics defined in {{Section 3.2.2 of I-D.ietf-core-conditional-attributes}}. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this query parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.
 
-   If the Observation Request does not include the 'pmax' parameter, the maximum time to consider is up to the Authorization Server. If the Observation Request includes the 'pmax' parameter, its value MUST be greater than zero, otherwise the Authorization Server MUST return a 4.00 (Bad Request) response.
+   If the Observation Request does not include the 'pmax' query parameter, the maximum time to consider is up to the Authorization Server. If the Observation Request includes the 'pmax' query parameter, its value MUST be greater than zero, otherwise the Authorization Server MUST return a 4.00 (Bad Request) response.
 
-   If the GET request is not an Observation Request, the Authorization Server MUST ignore the 'pmax' parameter, in case this is included.
+   If the GET request is not an Observation Request, the Authorization Server MUST ignore the 'pmax' query parameter, in case this is included.
 
 * 'diff': if included, it indicates to perform a diff query of the TRL (see {{ssec-trl-diff-query}}). Its value MUST be either:
 
@@ -376,31 +376,31 @@ The TRL endpoint allows the following query parameters to be present in a GET re
 
    - a positive integer strictly greater than 0, indicating the maximum number of diff entries that a (notification) response should include.
 
-   If the Authorization Server does not support diff queries, it ignores the query parameter 'diff' when present in the GET request and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
+   If the Authorization Server does not support diff queries, it ignores the 'diff' query parameter when present in the GET request, and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
-   Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in case the query parameter 'diff' of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' field with value 0 ("Invalid parameter value") and MAY include the 'error_description' field to provide additional context.
+   Otherwise, the Authorization Server MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
 
 * 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer.
 
-   If included, the query parameter 'cursor' specifies an unsigned integer value that was provided by the Authorization Server in a previous response from the TRL endpoint (see {{sec-using-cursor-full-query-response}}, {{sec-using-cursor-diff-query-response-no-cursor}} and {{sec-using-cursor-diff-query-response-cursor}}).
+   If included, the 'cursor' query parameter specifies an unsigned integer value that was provided by the Authorization Server in a previous response from the TRL endpoint (see {{sec-using-cursor-full-query-response}}, {{sec-using-cursor-diff-query-response-no-cursor}} and {{sec-using-cursor-diff-query-response-cursor}}).
 
-   If the Authorization Server does not support the "Cursor" extension, it ignores the query parameter 'cursor' when present in the GET request. In such a case, the Authorization Server proceeds: i) like when processing a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the query parameter 'diff' is present in the GET request; or ii) like when processing a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
+   If the Authorization Server does not support the "Cursor" extension, it ignores the 'cursor' query parameter when present in the GET request. In such a case, the Authorization Server proceeds: i) like when processing a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the 'diff' query parameter is present in the GET request; or ii) like when processing a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
 
-   If the Authorization Server supports both diff queries and the "Cursor" extension, and the GET request specifies the query parameter 'cursor', then the Authorization Server MUST return a 4.00 (Bad Request) response in case any of the following conditions holds.
+   If the Authorization Server supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the Authorization Server MUST return a 4.00 (Bad Request) response in case any of the following conditions holds.
 
-   * The GET request does not specify the query parameter 'diff'.
+   * The GET request does not specify the 'diff' query parameter.
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 1 ("Invalid set of parameters").
 
-   * The query parameter 'cursor' has a value other than 0 or than a positive integer.
+   * The 'cursor' query parameter has a value other than 0 or than a positive integer.
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value").
 
-   * The query parameter 'cursor' has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
+   * The 'cursor' query parameter has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
-   * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the query parameter 'cursor' has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
+   * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the 'cursor' query parameter has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of 'last_index' for the update collection associated with the requester.
 
@@ -454,7 +454,7 @@ In order to produce a (notification) response to a GET request asking for a diff
 
 Note that, if the Authorization Server supports both diff queries and the related "Cursor" extension, the steps 3 and 4 defined below are extended as defined in {{sec-using-cursor-diff-query-response}}.
 
-1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the query parameter 'diff' in the GET request is equal to 0 or greater than the pre-defined positive integer N\_MAX (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of N_MAX. Otherwise, NUM takes N.
+1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the 'diff' query parameter in the GET request is equal to 0 or greater than the pre-defined positive integer N\_MAX (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of N_MAX. Otherwise, NUM takes N.
 
 2. The Authorization Server determines U = min(NUM, SIZE), where SIZE <= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server.
 
@@ -521,7 +521,7 @@ Payload:
 
 If it supports both diff queries and the "Cursor" extension, the Authorization Server composes a response to a full query request or diff query request as defined in {{sec-using-cursor-full-query-response}} and {{sec-using-cursor-diff-query-response}}, respectively.
 
-The exact format of the response depends on the request being a full query or diff query request, on the presence of the query parameter 'cursor' in the diff query request, and on the current status of the update collection associated with the requester.
+The exact format of the response depends on the request being a full query or diff query request, on the presence of the 'cursor' query parameter in the diff query request, and on the current status of the update collection associated with the requester.
 
 Error handling and the possible resulting error responses are as defined in {{sec-trl-endpoint-query-parameters}}.
 
@@ -549,11 +549,11 @@ If the update collection associated with the requester has no elements, the Auth
 
 * The 'more' parameter MUST be included and specifies the CBOR simple value "false" (0xf4).
 
-Note that the above applies when the update collection associated with the requester has no elements, regardless whether the query parameter 'cursor' is included or not in the diff query request, and irrespective of the specified unsigned integer value if present.
+Note that the above applies when the update collection associated with the requester has no elements, regardless whether the 'cursor' query parameter is included or not in the diff query request, and irrespective of the specified unsigned integer value if present.
 
 ### Cursor Not Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-no-cursor}
 
-If the update collection associated with the requester is not empty and the diff query request does not include the query parameter 'cursor', the Authorization Server performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
+If the update collection associated with the requester is not empty and the diff query request does not include the 'cursor' query parameter, the Authorization Server performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
 
 * At step 3, the Authorization Server considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(U, MAX_DIFF_BATCH) diff entries. If L is equal to 0 (e.g., because U is equal to 0), then no diff entries are prepared.
 
@@ -571,11 +571,11 @@ If the update collection associated with the requester is not empty and the diff
 
    * The 'more' parameter MUST be present and MUST specify the CBOR simple value "false" (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR simple value "true" (0xf5) otherwise.
 
-      If the 'more' parameter has value "true", the requester can send a follow-up diff query request including the query parameter 'cursor', with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this would result in the Authorization Server transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
+      If the 'more' parameter has value "true", the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this would result in the Authorization Server transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
 ### Cursor Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-cursor}
 
-If the update collection associated with the requester is not empty and the diff query request includes the query parameter 'cursor' with value P, the Authorization Server proceeds as follows, depending on which of the following two cases hold.
+If the update collection associated with the requester is not empty and the diff query request includes the 'cursor' query parameter with value P, the Authorization Server proceeds as follows, depending on which of the following two cases hold.
 
 * Case A - The series item X with 'index' having value P and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) are both not found in the update collection associated with the requester. This occurs when the item Y (and possibly further ones after it) has been previously removed from the history of updates for that requester (see step 5 at {{sec-trl-endpoint-supporting-diff-queries}}).
 
@@ -615,7 +615,7 @@ If the update collection associated with the requester is not empty and the diff
 
       * The 'more' parameter MUST be present and MUST specify the CBOR simple value "false" (0xf4) if SUB_U <= MAX_DIFF_BATCH, or the CBOR simple value "true" (0xf5) otherwise.
 
-         If 'more' has value "true", the requester can send a follow-up diff query request including the query parameter 'cursor', with the same value of the 'cursor' parameter specified in this diff query response. This would result in the Authorization Server transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
+         If 'more' has value "true", the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. This would result in the Authorization Server transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
 # Upon Registration # {#sec-registration}
 
@@ -665,11 +665,11 @@ The details of the registration process are omitted, but it is assumed that the 
 
 The payload of the registration response is a CBOR map, which includes the following entries:
 
-* a "trl_path" parameter, specifying the path of the TRL resource;
+* a 'trl_path' parameter, specifying the path of the TRL resource;
 
-* a "trl_hash" parameter, specifying the hash function used to computed token hashes as defined in {{sec-token-name}};
+* a 'trl_hash' parameter, specifying the hash function used to computed token hashes as defined in {{sec-token-name}};
 
-* an "n_max" parameter, specifying the value of N_MAX, i.e., the maximum number of TRL updates pertaining to each registered device that the Authorization Server retains for that device (see {{ssec-trl-diff-query}});
+* an 'n_max' parameter, specifying the value of N_MAX, i.e., the maximum number of TRL updates pertaining to each registered device that the Authorization Server retains for that device (see {{ssec-trl-diff-query}});
 
 * possible further parameters related to the registration process.
 
@@ -770,7 +770,7 @@ RS                                                 AS
 
 {{fig-RS-AS-2}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
-The Resource Server indicates N=3 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
+The Resource Server indicates N=3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
 
 In this example, the Authorization Server does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
@@ -876,7 +876,7 @@ RS                                                 AS
 
 The example also considers one of the notifications from the Authorization Server to get lost in transmission, and thus not reaching the Resource Server.
 
-When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the Authorization Server, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the query parameter 'diff', i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
+When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the Authorization Server, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the Authorization Server.
 
 In this example, the Authorization Server does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
@@ -1016,7 +1016,7 @@ The table below summarizes them, and specifies the CBOR value to use as abbrevia
 
 # ACE Token Revocation List Error Identifiers {#error-types}
 
-This specification defines a number of values that the Authorization Server can include as error identifiers, in the 'error' field of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
+This specification defines a number of values that the Authorization Server can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
 
 ~~~~~~~~~~~
 +-------+---------------------------+
@@ -1106,13 +1106,13 @@ registry has been created to use the "Expert Review" registration procedure {{RF
 
 The columns of this registry are:
 
-* Name: This is a descriptive name that enables easier reference to the item. The name MUST be unique. It is not used in the encoding.
+* Name: This field contains a descriptive name that enables easier reference to the item. The name MUST be unique. It is not used in the encoding.
 
-* CBOR Value: This is the value used as CBOR abbreviation of the item. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
+* CBOR Value: This field contains the value used as CBOR abbreviation of the item. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
 
-* CBOR Type: This contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
+* CBOR Type: This field contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
 
-* Reference: This contains a pointer to the public specification for the item.
+* Reference: This field contains a pointer to the public specification for the item.
 
 This registry has been initially populated by the values in {{trl-registry-parameters}}. The "Reference" column for all of these entries refers to this document.
 
@@ -1122,7 +1122,7 @@ This specification establishes the "ACE Token Revocation List Errors" IANA regis
 
 The columns of this registry are:
 
-* Value: The value to be used to identify the error. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
+* Value: The field contains the value to be used to identify the error. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
 
 * Description: This field contains a brief description of the error.
 
@@ -1152,7 +1152,7 @@ That is, a diff query enables the transfer of a series of TRL updates, with the 
 
 When responding to a diff query request from a requester (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.
 
-The value N of the query parameter 'diff' in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.
+The value N of the 'diff' query parameter in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.
 
 Since the update collection associated with each requester includes up to N_MAX series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
 
