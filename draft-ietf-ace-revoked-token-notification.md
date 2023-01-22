@@ -1131,7 +1131,7 @@ This registry has been initially populated by the values in {{error-types}}. The
 
 ## Expert Review Instructions {#review}
 
-The IANA registries established in this document are+ defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
+The IANA registries established in this document are defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
 
 Expert reviewers should take into consideration the following points:
 
