@@ -617,7 +617,7 @@ If the update collection associated with the requester is not empty and the diff
 
          If 'more' has value "true", the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. This would result in the Authorization Server transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
-# Upon Registration # {#sec-registration}
+# Registration at the Authorization Server # {#sec-registration}
 
 During the registration process at the Authorization Server, an administrator or a registered device receives the following information as part of the registration response.
 
@@ -629,21 +629,20 @@ During the registration process at the Authorization Server, an administrator or
 
 * Optionally, a positive integer MAX\_DIFF\_BATCH, if the Authorization Server supports diff queries of the TRL resource as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
-After the registration procedure is finished, the administrator or registered device can send a GET request to the TRL resource, including the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource at the Authorization Server as per {{Section 3.1 of RFC7641}}. The GET request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
-
-In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content) and including the CoAP Observe Option. The payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request yielded the execution of a full query or a diff query of the TRL, respectively.
-
 Further details about the registration process at the Authorization Server are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of RFC9200}}).
 
 # Notification of Revoked Tokens # {#sec-notification}
+
+Once completed the registration procedure at the Authorization Server, the administrator or registered device can send a GET request to the TRL resource at the Authorization Server. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource as per {{Section 3.1 of RFC7641}}.
+
+In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the Authorization Server does not support both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request yielded the execution of a full query or of a diff query of the TRL, respectively.
+Instead, if the Authorization Server supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
 When the TRL is updated (see {{ssec-trl-update}}), the Authorization Server sends Observe Notifications to the observers of the TRL resource. Observe Notifications are sent as per {{Section 4.2 of RFC7641}}.
 
 If the 'pmax' query parameter was specified in the Observation Request starting an observation (see {{sec-trl-endpoint-query-parameters}}), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.
 
-The payload of each Observe Notification is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the original Observation Request yielded the execution of a full query or a diff query of the TRL, respectively.
-
-Furthermore, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, in order to retrieve the token hashes of the pertaining revoked Access Tokens. When doing so, the caller of the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
+Following a first exchange with the Authorization Server, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the caller of the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.
 
@@ -655,7 +654,7 @@ Thus, in order to ensure that no revoked Access Tokens are accepted and stored, 
 
       This can happen when receiving a subsequent response from the TRL endpoint (i.e., indicating that the token hash th1 is not in the TRL portion pertaining to the RS anymore), or when the Access Token t1 is posted to the Authorization Information Endpoint and is found to be expired based on its 'exp' claim {{RFC7519}}, if included.
 
-   * The RS MUST NOT accept as valid and store an Access Token t1 posted to the Authorization Information Endpoint, if the corresponding token hash th1 is among the stored ones.
+   * The RS MUST NOT accept as valid and store an Access Token t1 posted to the Authorization Information Endpoint, if the corresponding token hash th1 is among the currently stored ones.
 
 # Interaction Examples # {#sec-RS-examples}
 
@@ -1163,6 +1162,8 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 RFC EDITOR: Please remove this section.
 
 ## Version -03 to -04 ## {#sec-03-04}
+
+* Improved presentation of pre- and post-registration operations.
 
 * Removed moot processing cases with the "Cursor" extension.
 
