@@ -659,7 +659,7 @@ Thus, in order to ensure that no revoked Access Tokens are accepted and stored, 
 
 # Interaction Examples # {#sec-RS-examples}
 
-This section provides examples of interactions between a Resource Server RS as a registered device and an Authorization Server AS. The Authorization Server supports both full query and diff query of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
+This section provides examples of interactions between a Resource Server RS as a registered device and an Authorization Server AS. The Authorization Server supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
 
 The details of the registration process are omitted, but it is assumed that the Resource Server sends an unspecified payload to the Authorization Server, which replies with a 2.01 (Created) response.
 
@@ -679,7 +679,7 @@ Furthermore, 'h(x)' refers to the hash function used to compute the token hashes
 
 {{fig-RS-AS}} shows an interaction example considering a CoAP observation and a full query of the TRL.
 
-In this example, the Authorization Server does not support the "Cursor" extension (if it supports diff queries at all). Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.
+In this example, the Authorization Server does not support the "Cursor" extension. Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.
 
 ~~~~~~~~~~~
 RS                                                 AS
