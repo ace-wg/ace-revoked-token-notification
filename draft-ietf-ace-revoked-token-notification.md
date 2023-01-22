@@ -555,7 +555,7 @@ Note that the above applies when the update collection associated with the reque
 
 If the update collection associated with the requester is not empty and the diff query request does not include the 'cursor' query parameter, the Authorization Server performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
 
-* At step 3, the Authorization Server considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(U, MAX_DIFF_BATCH) diff entries. If L is equal to 0 (e.g., because U is equal to 0), then no diff entries are prepared.
+* At step 3, the Authorization Server considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(U, MAX_DIFF_BATCH) diff entries.
 
    If U <= MAX_DIFF_BATCH, the prepared diff entries are the last series items in the update collection associated with the requester, corresponding to the L most recent TRL updates pertaining to the requester.
 
@@ -563,7 +563,7 @@ If the update collection associated with the requester is not empty and the diff
 
 * At step 4, the CBOR map to carry in the payload of the 2.05 (Content) response MUST be formatted as follows.
 
-   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of L elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared as diff entry. Note that L might have value 0, in which case 'diff_set_value' is the empty CBOR array.
+   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of L elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared as diff entry.
 
    * The 'cursor' parameter MUST be present and specifies a CBOR unsigned integer. This MUST take the 'index' value of the series item of the update collection included as first diff entry in the 'diff_set_value' CBOR array, which is specified by the 'diff_set' parameter. That is, the 'cursor' parameter takes the 'index' value of the series item in the update collection corresponding to the most recent update pertaining to the requester and returned in this diff query response.
 
@@ -1163,6 +1163,8 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 RFC EDITOR: Please remove this section.
 
 ## Version -03 to -04 ## {#sec-03-04}
+
+* Removed moot processing cases with the "Cursor" extension.
 
 * Positive integers as CBOR abbreviations for all parameters.
 
