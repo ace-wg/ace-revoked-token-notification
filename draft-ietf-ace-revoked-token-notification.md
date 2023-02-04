@@ -910,87 +910,87 @@ Furthermore, 'h(x)' refers to the hash function used to compute the token hashes
 In this example, the Authorization Server does not support the "Cursor" extension. Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.
 
 ~~~~~~~~~~~
-RS                                                 AS
-|                                                   |
-| Registration: POST                                |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|                   2.01 CREATED                    |
-|                     Payload: {                    |
-|                        ...                        |
-|                        "trl_path" : "revoke/trl", |
-|                        "trl_hash" : "sha-256",    |
-|                        "max_n" : 10               |
-|                     }                             |
-|                                                   |
-| GET Observe: 0                                    |
-|  coap://as.example.com/revoke/trl/                |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 42                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : []                         |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|          (Access Tokens t1 and t2 issued          |
-|          and successfully submitted to RS)        |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|                                                   |
-|            (Access Token t1 is revoked)           |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 53                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : [bstr.h(t1)]               |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|            (Access Token t2 is revoked)           |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 64                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : [bstr.h(t1), bstr.h(t2)]   |
-|        }                                          |
-|                                                   |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|             (Access Token t1 expires)             |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 75                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : [bstr.h(t2)]               |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|            (Access Token t2 expires)              |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 86                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : []                         |
-|         }                                         |
-|                                                   |
+RS                                                  AS
+|                                                    |
+|  Registration: POST                                |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|                    2.01 CREATED                    |
+|                      Payload: {                    |
+|                        ...                         |
+|                        "trl_path" : "revoke/trl",  |
+|                        "trl_hash" : "sha-256",     |
+|                           "max_n" : 10             |
+|                      }                             |
+|                                                    |
+|  GET Observe: 0                                    |
+|    coap://as.example.com/revoke/trl/               |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 42                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : []                           |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|          (Access Tokens t1 and t2 issued           |
+|          and successfully submitted to RS)         |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|                                                    |
+|             (Access Token t1 is revoked)           |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 53                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : [bstr.h(t1)]                 |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|             (Access Token t2 is revoked)           |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 64                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+|        }                                           |
+|                                                    |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|             (Access Token t1 expires)              |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 75                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : [bstr.h(t2)]                 |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|             (Access Token t2 expires)              |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 86                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : []                           |
+|        }                                           |
+|                                                    |
 ~~~~~~~~~~~
 {: #fig-RS-AS title="Interaction for Full Query with Observe" artwork-align="center"}
 
@@ -1003,98 +1003,98 @@ The Resource Server indicates N=3 as value of the 'diff' query parameter, i.e., 
 In this example, the Authorization Server does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
 ~~~~~~~~~~~
-RS                                                 AS
-|                                                   |
-| Registration: POST                                |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|                    2.01 CREATED                   |
-|                     Payload: {                    |
-|                        ...                        |
-|                        "trl_path" : "revoke/trl", |
-|                        "trl_hash" : "sha-256",    |
-|                        "max_n" : 10               |
-|                     }                             |
-|                                                   |
-| GET Observe: 0                                    |
-|  coap://as.example.com/revoke/trl?diff=3          |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 42                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "diff_set" : []                         |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|          (Access Tokens t1 and t2 issued          |
-|          and successfully submitted to RS)        |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|            (Access Token t1 is revoked)           |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 53                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "diff_set" : [                          |
-|                          [ [], [bstr.h(t1)] ]     |
-|                        ]                          |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|            (Access Token t2 is revoked)           |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 64                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "diff_set" : [                          |
-|                          [ [], [bstr.h(t2)] ],    |
-|                          [ [], [bstr.h(t1)] ]     |
-|                        ]                          |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|              (Access Token t1 expires)            |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 75                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "diff_set" : [                          |
-|                          [ [bstr.h(t1)], [] ],    |
-|                          [ [], [bstr.h(t2)] ],    |
-|                          [ [], [bstr.h(t1)] ]     |
-|                        ]                          |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|              (Access Token t2 expires)            |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 86                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "diff_set" : [                          |
-|                          [ [bstr.h(t2)], [] ],    |
-|                          [ [bstr.h(t1)], [] ],    |
-|                          [ [], [bstr.h(t2)] ]     |
-|                        ]                          |
-|         }                                         |
-|                                                   |
+RS                                                  AS
+|                                                    |
+|  Registration: POST                                |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|                   2.01 CREATED                     |
+|                     Payload: {                     |
+|                       ...                          |
+|                       "trl_path" : "revoke/trl",   |
+|                       "trl_hash" : "sha-256",      |
+|                          "max_n" : 10              |
+|                     }                              |
+|                                                    |
+|  GET Observe: 0                                    |
+|    coap://as.example.com/revoke/trl?diff=3         |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 42                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "diff_set" : []                           |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|          (Access Tokens t1 and t2 issued           |
+|          and successfully submitted to RS)         |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|            (Access Token t1 is revoked)            |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 53                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "diff_set" : [                            |
+|                         [ [], [bstr.h(t1)] ]       |
+|                       ]                            |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|            (Access Token t2 is revoked)            |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 64                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "diff_set" : [                            |
+|                         [ [], [bstr.h(t2)] ],      |
+|                         [ [], [bstr.h(t1)] ]       |
+|                       ]                            |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|              (Access Token t1 expires)             |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 75                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "diff_set" : [                            |
+|                         [ [bstr.h(t1)], [] ],      |
+|                         [ [], [bstr.h(t2)] ],      |
+|                         [ [], [bstr.h(t1)] ]       |
+|                       ]                            |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|              (Access Token t2 expires)             |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 86                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "diff_set" : [                            |
+|                         [ [bstr.h(t2)], [] ],      |
+|                         [ [bstr.h(t1)], [] ],      |
+|                         [ [], [bstr.h(t2)] ]       |
+|                       ]                            |
+|        }                                           |
+|                                                    |
 ~~~~~~~~~~~
 {: #fig-RS-AS-2 title="Interaction for Diff Query with Observe" artwork-align="center"}
 
@@ -1109,107 +1109,107 @@ When this happens, and after a waiting time defined by the application has elaps
 In this example, the Authorization Server does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
 ~~~~~~~~~~~
-RS                                                 AS
-|                                                   |
-| Registration: POST                                |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|                    2.01 CREATED                   |
-|                     Payload: {                    |
-|                        ...                        |
-|                        "trl_path" : "revoke/trl", |
-|                        "trl_hash" : "sha-256",    |
-|                        "max_n" : 10               |
-|                     }                             |
-|                                                   |
-| GET Observe: 0                                    |
-|  coap://as.example.com/revoke/trl/                |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 42                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : []                         |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|          (Access Tokens t1 and t2 issued          |
-|          and successfully submitted to RS)        |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|            (Access Token t1 is revoked)           |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 53                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : [bstr.h(t1)]               |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|            (Access Token t2 is revoked)           |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 64                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : [bstr.h(t1), bstr.h(t2)]   |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|             (Access Token t1 expires)             |
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT Observe: 75                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : [bstr.h(t2)]               |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|             (Access Token t2 expires)             |
-|                                                   |
-|    X<---------------------------------------------+
-|        2.05 CONTENT Observe: 86                   |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "full_set" : []                         |
-|         }                                         |
-|                         .                         |
-|                         .                         |
-|                         .                         |
-|                                                   |
-|           (Enough time has passed since           |
-|         the latest received notification)         |
-|                                                   |
-| GET                                               |
-|  coap://as.example.com/revoke/trl?diff=8          |
-+-------------------------------------------------->|
-|                                                   |
-|<--------------------------------------------------+
-|        2.05 CONTENT                               |
-|        Content-Format: "application/ace-trl+cbor" |
-|         Payload: {                                |
-|           "diff_set" : [                          |
-|                          [ [bstr.h(t2)], [] ],    |
-|                          [ [bstr.h(t1)], [] ],    |
-|                          [ [], [bstr.h(t2)] ],    |
-|                          [ [], [bstr.h(t1)] ]     |
-|                        ]                          |
-|         }                                         |
-|                                                   |
+RS                                                  AS
+|                                                    |
+|  Registration: POST                                |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|                   2.01 CREATED                     |
+|                     Payload: {                     |
+|                       ...                          |
+|                       "trl_path" : "revoke/trl",   |
+|                       "trl_hash" : "sha-256",      |
+|                          "max_n" : 10              |
+|                     }                              |
+|                                                    |
+|  GET Observe: 0                                    |
+|    coap://as.example.com/revoke/trl/               |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 42                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : []                           |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|          (Access Tokens t1 and t2 issued           |
+|          and successfully submitted to RS)         |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|            (Access Token t1 is revoked)            |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 53                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : [bstr.h(t1)]                 |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|            (Access Token t2 is revoked)            |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 64                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|             (Access Token t1 expires)              |
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT Observe: 75                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : [bstr.h(t2)]                 |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|             (Access Token t2 expires)              |
+|                                                    |
+|  X<------------------------------------------------+
+|      2.05 CONTENT Observe: 86                      |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "full_set" : []                           |
+|        }                                           |
+|                         .                          |
+|                         .                          |
+|                         .                          |
+|                                                    |
+|           (Enough time has passed since            |
+|         the latest received notification)          |
+|                                                    |
+|  GET                                               |
+|    coap://as.example.com/revoke/trl?diff=8         |
++--------------------------------------------------->|
+|                                                    |
+|<---------------------------------------------------+
+|      2.05 CONTENT                                  |
+|        Content-Format: "application/ace-trl+cbor"  |
+|        Payload: {                                  |
+|          "diff_set" : [                            |
+|                         [ [bstr.h(t2)], [] ],      |
+|                         [ [bstr.h(t1)], [] ],      |
+|                         [ [], [bstr.h(t2)] ],      |
+|                         [ [], [bstr.h(t1)] ]       |
+|                       ]                            |
+|        }                                           |
+|                                                    |
 ~~~~~~~~~~~
 {: #fig-RS-AS-3 title="Interaction for Full Query with Observe plus Diff Query" artwork-align="center"}
 
@@ -1470,7 +1470,7 @@ RS                                                             AS
 |                                                               |
 |                   (Access Token t2 expires)                   |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 86                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1483,7 +1483,7 @@ RS                                                             AS
 |                                                               |
 |                  (Access Token t3 is revoked)                 |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 88                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1496,7 +1496,7 @@ RS                                                             AS
 |                                                               |
 |                  (Access Token t4 is revoked)                 |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 89                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1509,7 +1509,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access Token t3 expires)                  |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 90                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1522,7 +1522,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access Token t4 expires)                  |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 91                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1535,7 +1535,7 @@ RS                                                             AS
 |                                                               |
 |              (Access Tokens t5 and t6 are revoked)            |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 92                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1548,7 +1548,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access Token t5 expires)                  |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 93                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1561,7 +1561,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access Token t6 expires)                  |
 |                                                               |
-|    X<---------------------------------------------------------+
+|  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 94                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
