@@ -1213,8 +1213,6 @@ For each parameter, the columns of the table specify the following information. 
 ~~~~~~~~~~~
 {: #fig-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" artwork-align="center"}
 
-YYY
-
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: Please remove this section.
