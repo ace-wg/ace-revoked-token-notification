@@ -1141,6 +1141,8 @@ Expert reviewers should take into consideration the following points:
 
 * Experts should take into account the expected usage of fields when approving point assignment. The fact that there is a range for Standards Track documents does not mean that a Standards Track document cannot have points assigned outside of that range. The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.
 
+* Even for "Expert Review", specifications are recommended. When specifications are not provided for a request where "Expert Review" is the assignment policy, the description provided needs to have sufficient information to verify the code points above.
+
 --- back
 
 # On using the Series Transfer Pattern # {#sec-series-pattern}
