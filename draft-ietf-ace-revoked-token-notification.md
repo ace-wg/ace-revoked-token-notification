@@ -301,6 +301,8 @@ If it supports diff queries, the Authorization Server MAY additionally support i
 
 If it supports the "Cursor" extension, the Authorization Server stores additional information when maintaining the history of updates to the TRL resource, as defined in {{sec-trl-endpoint-supporting-cursor}}. Also, the processing of full query requests and diff query requests, as well as the related response format, are further extended as defined in {{sec-using-cursor}}.
 
+{{sec-trl-parameteters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the Authorization Server supports diff queries and the "Cursor" extension.
+
 ## Supporting Diff Queries # {#sec-trl-endpoint-supporting-diff-queries}
 
 If the Authorization Server supports diff queries, it is able to transfer a list of diff entries, as a series of TRL updates. That is, when replying to a diff query performed by a requester, the Authorization Server specifies the most recent updates to the portion of the TRL pertaining to that requester.
@@ -1159,6 +1161,60 @@ Since the update collection associated with each requester includes up to N_MAX 
 
 Furthermore, performing a diff query of the TRL together with the "Cursor" extension as specified in {{sec-using-cursor}} in fact relies on the "Cursor" pattern of the Series Transfer Pattern (see {{Section 3.3 of I-D.bormann-t2trg-stp}}).
 
+
+# Parameters of the TRL Endpoint # {#sec-trl-parameteters}
+
+{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the Authorization Server supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
+
+Except for N_MAX defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the Authorization Server supports the "Cursor" extension.
+
+For each parameter, the columns of the table specify the following information. Both a registered device and an administrator are referred to as "requester".
+
+* Name: parameter name. A name with letters in uppercase denotes a parameter whose value does not change after its initialization.
+
+* Single instance: "Y", if there is a single parameter instance associated with the TRL resource; or "N", if there is one parameter instance per update collection (i.e., per requester).
+
+* Description: short parameter description.
+
+* Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "\*\*" is the exponentiation operator.
+
+~~~~~~~~~~~
++----------------+----------+--------------------+--------------------+
+| Name           | Single   | Description        | Value              |
+|                | instance |                    |                    |
++----------------+----------+--------------------+--------------------+
+| N_MAX          | Y        | Max number of TRL  | LB = 1             |
+|                |          | updates stored per |                    |
+|                |          | requester          | If supporting      |
+|                |          |                    | "Cursor", then     |
+|                |          |                    | UB = (MAX_INDEX+1) |
++----------------+----------+--------------------+--------------------+
+| MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
+|                |          | entries included   |                    |
+|                |          | in a diff query    | UB = N_MAX         |
+|                |          | response when      |                    |
+|                |          | using "Cursor"     |                    |
++----------------+----------+--------------------+--------------------+
+| MAX_INDEX      | Y        | Max value of each  | LB = (N_MAX-1)     |
+|                |          | instance of the    |                    |
+|                |          | 'index' parameter  | UB = ((2**64)-1)   |
++----------------+----------+--------------------+--------------------+
+| index          | N        | Value associated   | LB = 0             |
+|                |          | with a series item |                    |
+|                |          | of an updated      | UB = MAX_INDEX     |
+|                |          | collection         |                    |
++----------------+----------+--------------------+--------------------+
+| last_index     | N        | The 'index' value  | LB = 0             |
+|                |          | of the most        |                    |
+|                |          | recently added     | UB = MAX_INDEX     |
+|                |          | series item in an  |                    |
+|                |          | update collection  |                    |
++----------------+----------+--------------------+--------------------+
+~~~~~~~~~~~
+{: #fig-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" artwork-align="center"}
+
+YYY
+
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: Please remove this section.
@@ -1170,6 +1226,8 @@ RFC EDITOR: Please remove this section.
 * Removed moot processing cases with the "Cursor" extension.
 
 * Positive integers as CBOR abbreviations for all parameters.
+
+* New appendix overviewing parameters of the TRL endpoint.
 
 * Fixed details in IANA considerations.
 
