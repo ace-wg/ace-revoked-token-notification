@@ -658,6 +658,233 @@ Thus, in order to ensure that no revoked Access Tokens are accepted and stored, 
 
    * The RS MUST NOT accept as valid and store an Access Token t1 posted to the Authorization Information Endpoint, if the corresponding token hash th1 is among the currently stored ones.
 
+
+# ACE Token Revocation List Parameters # {#trl-registry-parameters}
+
+This specification defines a number of parameters that can be transported in the response from the TRL endpoint, when the response payload is a CBOR map. Note that such a response MUST use the Content-Format "application/ace-trl+cbor" defined in {{iana-content-type}} of this specification.
+
+The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
+
+~~~~~~~~~~~
++-------------------+------------+------------------------+
+| Name              | CBOR Value | CBOR Type              |
++-------------------+------------+------------------------+
+| full_set          |  0         | array                  |
++-------------------+------------+------------------------+
+| diff_set          |  1         | array                  |
++-------------------+------------+------------------------+
+| cursor            |  2         | unsigned integer /     |
+|                   |            | simple value "null"    |
++-------------------+------------+------------------------+
+| more              |  3         | simple value "false" / |
+|                   |            | simple value "true"    |
++-------------------+------------+------------------------+
+| error             |  4         | integer                |
++-------------------+------------+------------------------+
+| error_description |  5         | text string            |
++-------------------+------------+------------------------+
+~~~~~~~~~~~
+{: #fig-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" artwork-align="center"}
+
+
+# ACE Token Revocation List Error Identifiers {#error-types}
+
+This specification defines a number of values that the Authorization Server can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
+
+~~~~~~~~~~~
++-------+---------------------------+
+| Value | Description               |
++-------+---------------------------+
+|   0   | Invalid parameter value   |
++-------+---------------------------+
+|   1   | Invalid set of parameters |
++-------+---------------------------+
+|   2   | Out of bound cursor value |
++-------+---------------------------+
+~~~~~~~~~~~
+{: #fig-ACE-TRL-Error Identifiers title="ACE Token Revocation List Error Identifiers" artwork-align="center"}
+
+
+# Security Considerations # {#sec-security-considerations}
+
+Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
+
+The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association that they use to communicate.
+
+Disclosing any information about revoked Access Tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the Authorization Server MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the Authorization Server may rely on an access control list or similar.
+
+If a registered device has many non-expired Access Tokens associated with itself that are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL resource (see {{ssec-trl-full-query}}). This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of a TRL, but an Authorization Server SHOULD take measures to limit this size.
+
+Most of the communication about revoked Access Tokens presented in this specification relies on CoAP Observe Notifications sent from the Authorization Server to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked. In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the Authorization Server for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+
+# IANA Considerations # {#iana}
+
+This document has the following actions for IANA.
+
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with
+the RFC number of this specification and delete this paragraph.
+
+## Media Type Registrations {#iana-media-type}
+
+IANA is asked to register the media type "application/ace-trl+cbor" for messages of the protocols defined in this document encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
+
+Type name: application
+
+Subtype name: ace-trl+cbor
+
+Required parameters: N/A
+
+Optional parameters: N/A
+
+Encoding considerations: Must be encoded as a CBOR map containing the protocol parameters defined in {{&SELF}}.
+
+Security considerations: See {{sec-security-considerations}} of this document.
+
+Interoperability considerations: N/A
+
+Published specification: {{&SELF}}
+
+Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked Access Tokens, according to a Token Revocation List maintained by the Authorization Server as specified in {{&SELF}}.
+
+Fragment identifier considerations: N/A
+
+Additional information: N/A
+
+Person & email address to contact for further information: \<iesg@ietf.org\>
+
+Intended usage: COMMON
+
+Restrictions on usage: None
+
+Author: Marco Tiloca \<marco.tiloca@ri.se>
+
+Change controller: IESG
+
+## CoAP Content-Formats Registry {#iana-content-type}
+
+IANA is asked to add the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
+
+Media Type: application/ace-trl+cbor
+
+Encoding: -
+
+ID: TBD
+
+Reference: {{&SELF}}
+
+## ACE Token Revocation List Parameters Registry ## {#iana-token-revocation-list}
+
+This specification establishes the "ACE Token Revocation List Parameters" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group. The
+registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+
+The columns of this registry are:
+
+* Name: This field contains a descriptive name that enables easier reference to the item. The name MUST be unique. It is not used in the encoding.
+
+* CBOR Value: This field contains the value used as CBOR abbreviation of the item. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
+
+* CBOR Type: This field contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
+
+* Reference: This field contains a pointer to the public specification for the item.
+
+This registry has been initially populated by the values in {{trl-registry-parameters}}. The "Reference" column for all of these entries refers to this document.
+
+## ACE Token Revocation List Errors {#iana-token-revocation-list-errors}
+
+This specification establishes the "ACE Token Revocation List Errors" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+
+The columns of this registry are:
+
+* Value: The field contains the value to be used to identify the error. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
+
+* Description: This field contains a brief description of the error.
+
+* Reference: This field contains a pointer to the public specification defining the error, if one exists.
+
+This registry has been initially populated by the values in {{error-types}}. The "Reference" column for all of these entries refers to this document.
+
+## Expert Review Instructions {#review}
+
+The IANA registries established in this document are defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
+
+Expert reviewers should take into consideration the following points:
+
+* Point squatting should be discouraged. Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. The zones tagged as private use are intended for testing purposes and closed environments. Code points in other ranges should not be assigned for testing.
+
+* Specifications are required for the Standards Track range of point assignment. Specifications should exist for Specification Required ranges, but early assignment before a specification is available is considered to be permissible. Specifications are needed for the Expert Review range if they are expected to be used outside of closed environments in an interoperable way. When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.
+
+* Experts should take into account the expected usage of fields when approving point assignment. The fact that there is a range for Standards Track documents does not mean that a Standards Track document cannot have points assigned outside of that range. The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.
+
+* Even for "Expert Review", specifications are recommended. When specifications are not provided for a request where "Expert Review" is the assignment policy, the description provided needs to have sufficient information to verify the code points above.
+
+--- back
+
+# On using the Series Transfer Pattern # {#sec-series-pattern}
+
+Performing a diff query of the TRL as specified in {{ssec-trl-diff-query}} is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
+
+That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U <= MAX_N diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.
+
+When responding to a diff query request from a requester (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.
+
+The value N of the 'diff' query parameter in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.
+
+Since the update collection associated with each requester includes up to MAX_N series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
+
+Furthermore, performing a diff query of the TRL together with the "Cursor" extension as specified in {{sec-using-cursor}} in fact relies on the "Cursor" pattern of the Series Transfer Pattern (see {{Section 3.3 of I-D.bormann-t2trg-stp}}).
+
+
+# Parameters of the TRL Endpoint # {#sec-trl-parameteters}
+
+{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the Authorization Server supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
+
+Except for MAX_N defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the Authorization Server supports the "Cursor" extension.
+
+For each parameter, the columns of the table specify the following information. Both a registered device and an administrator are referred to as "requester".
+
+* Name: parameter name. A name with letters in uppercase denotes a parameter whose value does not change after its initialization.
+
+* Single instance: "Y", if there is a single parameter instance associated with the TRL resource; or "N", if there is one parameter instance per update collection (i.e., per requester).
+
+* Description: short parameter description.
+
+* Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "\*\*" is the exponentiation operator.
+
+~~~~~~~~~~~
++----------------+----------+--------------------+--------------------+
+| Name           | Single   | Description        | Value              |
+|                | instance |                    |                    |
++----------------+----------+--------------------+--------------------+
+| MAX_N          | Y        | Max number of TRL  | LB = 1             |
+|                |          | updates stored per |                    |
+|                |          | requester          | If supporting      |
+|                |          |                    | "Cursor", then     |
+|                |          |                    | UB = (MAX_INDEX+1) |
++----------------+----------+--------------------+--------------------+
+| MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
+|                |          | entries included   |                    |
+|                |          | in a diff query    | UB = MAX_N         |
+|                |          | response when      |                    |
+|                |          | using "Cursor"     |                    |
++----------------+----------+--------------------+--------------------+
+| MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
+|                |          | instance of the    |                    |
+|                |          | 'index' parameter  | UB = ((2**64)-1)   |
++----------------+----------+--------------------+--------------------+
+| index          | N        | Value associated   | LB = 0             |
+|                |          | with a series item |                    |
+|                |          | of an updated      | UB = MAX_INDEX     |
+|                |          | collection         |                    |
++----------------+----------+--------------------+--------------------+
+| last_index     | N        | The 'index' value  | LB = 0             |
+|                |          | of the most        |                    |
+|                |          | recently added     | UB = MAX_INDEX     |
+|                |          | series item in an  |                    |
+|                |          | update collection  |                    |
++----------------+----------+--------------------+--------------------+
+~~~~~~~~~~~
+{: #fig-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" artwork-align="center"}
+
 # Interaction Examples # {#sec-RS-examples}
 
 This section provides examples of interactions between a Resource Server RS as a registered device and an Authorization Server AS. The Authorization Server supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
@@ -986,233 +1213,6 @@ RS                                                 AS
 ~~~~~~~~~~~
 {: #fig-RS-AS-3 title="Interaction for Full Query with Observation and Diff Query" artwork-align="center"}
 
-
-# ACE Token Revocation List Parameters # {#trl-registry-parameters}
-
-This specification defines a number of parameters that can be transported in the response from the TRL endpoint, when the response payload is a CBOR map. Note that such a response MUST use the Content-Format "application/ace-trl+cbor" defined in {{iana-content-type}} of this specification.
-
-The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
-
-~~~~~~~~~~~
-+-------------------+------------+------------------------+
-| Name              | CBOR Value | CBOR Type              |
-+-------------------+------------+------------------------+
-| full_set          |  0         | array                  |
-+-------------------+------------+------------------------+
-| diff_set          |  1         | array                  |
-+-------------------+------------+------------------------+
-| cursor            |  2         | unsigned integer /     |
-|                   |            | simple value "null"    |
-+-------------------+------------+------------------------+
-| more              |  3         | simple value "false" / |
-|                   |            | simple value "true"    |
-+-------------------+------------+------------------------+
-| error             |  4         | integer                |
-+-------------------+------------+------------------------+
-| error_description |  5         | text string            |
-+-------------------+------------+------------------------+
-~~~~~~~~~~~
-{: #fig-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" artwork-align="center"}
-
-
-# ACE Token Revocation List Error Identifiers {#error-types}
-
-This specification defines a number of values that the Authorization Server can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
-
-~~~~~~~~~~~
-+-------+---------------------------+
-| Value | Description               |
-+-------+---------------------------+
-|   0   | Invalid parameter value   |
-+-------+---------------------------+
-|   1   | Invalid set of parameters |
-+-------+---------------------------+
-|   2   | Out of bound cursor value |
-+-------+---------------------------+
-~~~~~~~~~~~
-{: #fig-ACE-TRL-Error Identifiers title="ACE Token Revocation List Error Identifiers" artwork-align="center"}
-
-
-# Security Considerations # {#sec-security-considerations}
-
-Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
-
-The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association that they use to communicate.
-
-Disclosing any information about revoked Access Tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the Authorization Server MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the Authorization Server may rely on an access control list or similar.
-
-If a registered device has many non-expired Access Tokens associated with itself that are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL resource (see {{ssec-trl-full-query}}). This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of a TRL, but an Authorization Server SHOULD take measures to limit this size.
-
-Most of the communication about revoked Access Tokens presented in this specification relies on CoAP Observe Notifications sent from the Authorization Server to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked. In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the Authorization Server for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.
-
-# IANA Considerations # {#iana}
-
-This document has the following actions for IANA.
-
-Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with
-the RFC number of this specification and delete this paragraph.
-
-## Media Type Registrations {#iana-media-type}
-
-IANA is asked to register the media type "application/ace-trl+cbor" for messages of the protocols defined in this document encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
-
-Type name: application
-
-Subtype name: ace-trl+cbor
-
-Required parameters: N/A
-
-Optional parameters: N/A
-
-Encoding considerations: Must be encoded as a CBOR map containing the protocol parameters defined in {{&SELF}}.
-
-Security considerations: See {{sec-security-considerations}} of this document.
-
-Interoperability considerations: N/A
-
-Published specification: {{&SELF}}
-
-Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked Access Tokens, according to a Token Revocation List maintained by the Authorization Server as specified in {{&SELF}}.
-
-Fragment identifier considerations: N/A
-
-Additional information: N/A
-
-Person & email address to contact for further information: \<iesg@ietf.org\>
-
-Intended usage: COMMON
-
-Restrictions on usage: None
-
-Author: Marco Tiloca \<marco.tiloca@ri.se>
-
-Change controller: IESG
-
-## CoAP Content-Formats Registry {#iana-content-type}
-
-IANA is asked to add the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
-
-Media Type: application/ace-trl+cbor
-
-Encoding: -
-
-ID: TBD
-
-Reference: {{&SELF}}
-
-## ACE Token Revocation List Parameters Registry ## {#iana-token-revocation-list}
-
-This specification establishes the "ACE Token Revocation List Parameters" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group. The
-registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
-
-The columns of this registry are:
-
-* Name: This field contains a descriptive name that enables easier reference to the item. The name MUST be unique. It is not used in the encoding.
-
-* CBOR Value: This field contains the value used as CBOR abbreviation of the item. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
-
-* CBOR Type: This field contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
-
-* Reference: This field contains a pointer to the public specification for the item.
-
-This registry has been initially populated by the values in {{trl-registry-parameters}}. The "Reference" column for all of these entries refers to this document.
-
-## ACE Token Revocation List Errors {#iana-token-revocation-list-errors}
-
-This specification establishes the "ACE Token Revocation List Errors" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
-
-The columns of this registry are:
-
-* Value: The field contains the value to be used to identify the error. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
-
-* Description: This field contains a brief description of the error.
-
-* Reference: This field contains a pointer to the public specification defining the error, if one exists.
-
-This registry has been initially populated by the values in {{error-types}}. The "Reference" column for all of these entries refers to this document.
-
-## Expert Review Instructions {#review}
-
-The IANA registries established in this document are defined as Expert Review. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
-
-Expert reviewers should take into consideration the following points:
-
-* Point squatting should be discouraged. Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. The zones tagged as private use are intended for testing purposes and closed environments. Code points in other ranges should not be assigned for testing.
-
-* Specifications are required for the Standards Track range of point assignment. Specifications should exist for Specification Required ranges, but early assignment before a specification is available is considered to be permissible. Specifications are needed for the Expert Review range if they are expected to be used outside of closed environments in an interoperable way. When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.
-
-* Experts should take into account the expected usage of fields when approving point assignment. The fact that there is a range for Standards Track documents does not mean that a Standards Track document cannot have points assigned outside of that range. The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.
-
-* Even for "Expert Review", specifications are recommended. When specifications are not provided for a request where "Expert Review" is the assignment policy, the description provided needs to have sufficient information to verify the code points above.
-
---- back
-
-# On using the Series Transfer Pattern # {#sec-series-pattern}
-
-Performing a diff query of the TRL as specified in {{ssec-trl-diff-query}} is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
-
-That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U <= MAX_N diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.
-
-When responding to a diff query request from a requester (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.
-
-The value N of the 'diff' query parameter in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.
-
-Since the update collection associated with each requester includes up to MAX_N series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
-
-Furthermore, performing a diff query of the TRL together with the "Cursor" extension as specified in {{sec-using-cursor}} in fact relies on the "Cursor" pattern of the Series Transfer Pattern (see {{Section 3.3 of I-D.bormann-t2trg-stp}}).
-
-
-# Parameters of the TRL Endpoint # {#sec-trl-parameteters}
-
-{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the Authorization Server supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
-
-Except for MAX_N defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the Authorization Server supports the "Cursor" extension.
-
-For each parameter, the columns of the table specify the following information. Both a registered device and an administrator are referred to as "requester".
-
-* Name: parameter name. A name with letters in uppercase denotes a parameter whose value does not change after its initialization.
-
-* Single instance: "Y", if there is a single parameter instance associated with the TRL resource; or "N", if there is one parameter instance per update collection (i.e., per requester).
-
-* Description: short parameter description.
-
-* Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "\*\*" is the exponentiation operator.
-
-~~~~~~~~~~~
-+----------------+----------+--------------------+--------------------+
-| Name           | Single   | Description        | Value              |
-|                | instance |                    |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_N          | Y        | Max number of TRL  | LB = 1             |
-|                |          | updates stored per |                    |
-|                |          | requester          | If supporting      |
-|                |          |                    | "Cursor", then     |
-|                |          |                    | UB = (MAX_INDEX+1) |
-+----------------+----------+--------------------+--------------------+
-| MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
-|                |          | entries included   |                    |
-|                |          | in a diff query    | UB = MAX_N         |
-|                |          | response when      |                    |
-|                |          | using "Cursor"     |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
-|                |          | instance of the    |                    |
-|                |          | 'index' parameter  | UB = ((2**64)-1)   |
-+----------------+----------+--------------------+--------------------+
-| index          | N        | Value associated   | LB = 0             |
-|                |          | with a series item |                    |
-|                |          | of an updated      | UB = MAX_INDEX     |
-|                |          | collection         |                    |
-+----------------+----------+--------------------+--------------------+
-| last_index     | N        | The 'index' value  | LB = 0             |
-|                |          | of the most        |                    |
-|                |          | recently added     | UB = MAX_INDEX     |
-|                |          | series item in an  |                    |
-|                |          | update collection  |                    |
-+----------------+----------+--------------------+--------------------+
-~~~~~~~~~~~
-{: #fig-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" artwork-align="center"}
-
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: Please remove this section.
@@ -1228,6 +1228,8 @@ RFC EDITOR: Please remove this section.
 * Renamed N_MAX as MAX_N.
 
 * New appendix overviewing parameters of the TRL endpoint.
+
+* Examples of message exchange moved to an appendix.
 
 * Fixed details in IANA considerations.
 
