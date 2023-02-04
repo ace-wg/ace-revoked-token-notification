@@ -309,7 +309,7 @@ If the Authorization Server supports diff queries, it is able to transfer a list
 
 The following defines how the Authorization Server builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
-For each requester, the Authorization Server maintains an update collection of maximum N\_MAX series items, where N\_MAX is a pre-defined, constant positive integer. The Authorization Server MUST keep track of the N\_MAX most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of N\_MAX, upon their registration (see {{sec-registration}}).
+For each requester, the Authorization Server maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. The Authorization Server MUST keep track of the MAX\_N most recent updates to the portion of the TRL that pertains to each requester. The Authorization Server SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the Authorization Server, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
@@ -323,9 +323,9 @@ Each time the TRL changes, the Authorization Server performs the following opera
 
 4. The Authorization Server creates a new series item, which includes the two sets from step 3.
 
-5. If the update collection associated with the requester currently includes N\_MAX series items, the Authorization Server MUST delete the oldest series item in the update collection.
+5. If the update collection associated with the requester currently includes MAX\_N series items, the Authorization Server MUST delete the oldest series item in the update collection.
 
-   This occurs when the number of TRL updates pertaining to the requester and currently stored at the Authorization Server is equal to N\_MAX.
+   This occurs when the number of TRL updates pertaining to the requester and currently stored at the Authorization Server is equal to MAX\_N.
 
 6. The Authorization Server adds the series item to the update collection associated with the requester, as the most recent one.
 
@@ -333,7 +333,7 @@ Each time the TRL changes, the Authorization Server performs the following opera
 
 If it supports the "Cursor" extension for diff queries, the Authorization Server performs also the following actions.
 
-The Authorization Server defines the constant, unsigned integer MAX\_INDEX <= ((2 \*\* 64) - 1), where "\*\*" is the exponentiation operator. In particular, the value of MAX\_INDEX is REQUIRED to be at least (N\_MAX - 1), and is RECOMMENDED to be at least ((2 \*\* 32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than N\_MAX.
+The Authorization Server defines the constant, unsigned integer MAX\_INDEX <= ((2 \*\* 64) - 1), where "\*\*" is the exponentiation operator. In particular, the value of MAX\_INDEX is REQUIRED to be at least (MAX\_N - 1), and is RECOMMENDED to be at least ((2 \*\* 32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than MAX\_N.
 
 When maintaining the history of updates to the TRL resource, the following applies separately for each update collection.
 
@@ -341,7 +341,7 @@ When maintaining the history of updates to the TRL resource, the following appli
 
    If i_X is the value of 'index' associated with a series item X, then the following series item Y will take 'index' with value i_Y = (i_X + 1) % (MAX\_INDEX + 1). That is, after having added a series item whose associated 'index' has value MAX\_INDEX, the next added series item will result in a wrap-around of the 'index' value, and will thus take 'index' with value 0.
 
-   For example, assuming N\_MAX = 3, the values of 'index' in the update collection chronologically evolve as follows, as new series items are added and old series items are deleted.
+   For example, assuming MAX\_N = 3, the values of 'index' in the update collection chronologically evolve as follows, as new series items are added and old series items are deleted.
 
    - ...
    - ( i_A = MAX\_INDEX - 2, i_B = MAX\_INDEX - 1, i_C = MAX\_INDEX )
@@ -360,7 +360,7 @@ When maintaining the history of updates to the TRL resource, the following appli
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
-For each update collection, the Authorization Server also defines a constant, positive integer MAX_DIFF_BATCH <= N_MAX, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the Authorization Server SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
+For each update collection, the Authorization Server also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the Authorization Server SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
@@ -456,9 +456,9 @@ In order to produce a (notification) response to a GET request asking for a diff
 
 Note that, if the Authorization Server supports both diff queries and the related "Cursor" extension, the steps 3 and 4 defined below are extended as defined in {{sec-using-cursor-diff-query-response}}.
 
-1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the 'diff' query parameter in the GET request is equal to 0 or greater than the pre-defined positive integer N\_MAX (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of N_MAX. Otherwise, NUM takes N.
+1. The Authorization Server defines the positive integer NUM as follows. If the value N specified in the 'diff' query parameter in the GET request is equal to 0 or greater than the pre-defined positive integer MAX\_N (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of MAX_N. Otherwise, NUM takes N.
 
-2. The Authorization Server determines U = min(NUM, SIZE), where SIZE <= N_MAX is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server.
+2. The Authorization Server determines U = min(NUM, SIZE), where SIZE <= MAX_N is the number of TRL updates pertaining to the requester and currently stored at the Authorization Server.
 
 3. The Authorization Server prepares U diff entries. If U is equal to 0 (e.g., because SIZE is equal to 0 at step 2), then no diff entries are prepared.
 
@@ -627,7 +627,7 @@ During the registration process at the Authorization Server, an administrator or
 
 * The hash function used to compute token hashes. This is specified as an integer or a text string, taking value from the "ID" or "Hash Name String" column of the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}, respectively.
 
-* Optionally, a positive integer N\_MAX, if the Authorization Server supports diff queries of the TRL resource (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
+* Optionally, a positive integer MAX\_N, if the Authorization Server supports diff queries of the TRL resource (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
 
 * Optionally, a positive integer MAX\_DIFF\_BATCH, if the Authorization Server supports diff queries of the TRL resource as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
@@ -670,7 +670,7 @@ The payload of the registration response is a CBOR map, which includes the follo
 
 * a 'trl_hash' parameter, specifying the hash function used to computed token hashes as defined in {{sec-token-name}};
 
-* an 'n_max' parameter, specifying the value of N_MAX, i.e., the maximum number of TRL updates pertaining to each registered device that the Authorization Server retains for that device (see {{ssec-trl-diff-query}});
+* an 'max_n' parameter, specifying the value of MAX_N, i.e., the maximum number of TRL updates pertaining to each registered device that the Authorization Server retains for that device (see {{ssec-trl-diff-query}});
 
 * possible further parameters related to the registration process.
 
@@ -694,7 +694,7 @@ RS                                                 AS
 |                        ...                        |
 |                        "trl_path" : "revoke/trl", |
 |                        "trl_hash" : "sha-256",    |
-|                        "n_max" : 10               |
+|                        "max_n" : 10               |
 |                     }                             |
 |                                                   |
 | GET Observe: 0                                    |
@@ -787,7 +787,7 @@ RS                                                 AS
 |                        ...                        |
 |                        "trl_path" : "revoke/trl", |
 |                        "trl_hash" : "sha-256",    |
-|                        "n_max" : 10               |
+|                        "max_n" : 10               |
 |                     }                             |
 |                                                   |
 | GET Observe: 0                                    |
@@ -893,7 +893,7 @@ RS                                                 AS
 |                        ...                        |
 |                        "trl_path" : "revoke/trl", |
 |                        "trl_hash" : "sha-256",    |
-|                        "n_max" : 10               |
+|                        "max_n" : 10               |
 |                     }                             |
 |                                                   |
 | GET Observe: 0                                    |
@@ -1151,13 +1151,13 @@ Expert reviewers should take into consideration the following points:
 
 Performing a diff query of the TRL as specified in {{ssec-trl-diff-query}} is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
 
-That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U <= N_MAX diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.
+That is, a diff query enables the transfer of a series of TRL updates, with the Authorization Server specifying U <= MAX_N diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.
 
 When responding to a diff query request from a requester (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.
 
 The value N of the 'diff' query parameter in the GET request allows the requester and the Authorization Server to trade the amount of provided information with the latency of the information transfer.
 
-Since the update collection associated with each requester includes up to N_MAX series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
+Since the update collection associated with each requester includes up to MAX_N series item, the Authorization Server deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
 
 Furthermore, performing a diff query of the TRL together with the "Cursor" extension as specified in {{sec-using-cursor}} in fact relies on the "Cursor" pattern of the Series Transfer Pattern (see {{Section 3.3 of I-D.bormann-t2trg-stp}}).
 
@@ -1166,7 +1166,7 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 
 {{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the Authorization Server supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
 
-Except for N_MAX defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the Authorization Server supports the "Cursor" extension.
+Except for MAX_N defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the Authorization Server supports the "Cursor" extension.
 
 For each parameter, the columns of the table specify the following information. Both a registered device and an administrator are referred to as "requester".
 
@@ -1183,7 +1183,7 @@ For each parameter, the columns of the table specify the following information. 
 | Name           | Single   | Description        | Value              |
 |                | instance |                    |                    |
 +----------------+----------+--------------------+--------------------+
-| N_MAX          | Y        | Max number of TRL  | LB = 1             |
+| MAX_N          | Y        | Max number of TRL  | LB = 1             |
 |                |          | updates stored per |                    |
 |                |          | requester          | If supporting      |
 |                |          |                    | "Cursor", then     |
@@ -1191,11 +1191,11 @@ For each parameter, the columns of the table specify the following information. 
 +----------------+----------+--------------------+--------------------+
 | MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
 |                |          | entries included   |                    |
-|                |          | in a diff query    | UB = N_MAX         |
+|                |          | in a diff query    | UB = MAX_N         |
 |                |          | response when      |                    |
 |                |          | using "Cursor"     |                    |
 +----------------+----------+--------------------+--------------------+
-| MAX_INDEX      | Y        | Max value of each  | LB = (N_MAX-1)     |
+| MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
 |                |          | instance of the    |                    |
 |                |          | 'index' parameter  | UB = ((2**64)-1)   |
 +----------------+----------+--------------------+--------------------+
@@ -1224,6 +1224,8 @@ RFC EDITOR: Please remove this section.
 * Removed moot processing cases with the "Cursor" extension.
 
 * Positive integers as CBOR abbreviations for all parameters.
+
+* Renamed N_MAX as MAX_N.
 
 * New appendix overviewing parameters of the TRL endpoint.
 
