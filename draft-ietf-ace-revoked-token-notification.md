@@ -147,7 +147,7 @@ This specification also refers to the following terminology.
 
    - With reference to an administrator, an Access Token issued by the Authorization Server.
 
-   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the Authorization Server has issued the Access Token and provided it to that Client. An Access Token pertains to a Resource Server if the Authorization Server has issued the Access Token to be consumed by that Resource Server.
+   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the Authorization Server has issued the Access Token for that Client following its request. An Access Token pertains to a Resource Server if the Authorization Server has issued the Access Token to be consumed by that Resource Server.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
