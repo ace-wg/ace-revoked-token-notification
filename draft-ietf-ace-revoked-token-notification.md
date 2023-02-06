@@ -70,7 +70,6 @@ author:
         email: glewis@sei.cmu.edu
 
 normative:
-  I-D.ietf-core-conditional-attributes:
   RFC2119:
   RFC6749:
   RFC6838:
@@ -94,6 +93,7 @@ normative:
 
 informative:
   RFC7009:
+  I-D.ietf-core-conditional-attributes:
   I-D.bormann-t2trg-stp:
 
 entity:
@@ -364,13 +364,7 @@ For each update collection, the Authorization Server also defines a constant, po
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
-The TRL endpoint allows the following query parameters to be present in a GET request. The Authorization Server MUST silently ignore unknown query parameters.
-
-* 'pmax': if included, it follows the semantics defined in {{Section 3.2.2 of I-D.ietf-core-conditional-attributes}}. This query parameter is relevant only in case the GET request is specifically an Observation Request, i.e., if it includes the CoAP Observe Option set to 0 (register). In such a case, this query parameter indicates the maximum time, in seconds, between two consecutive notifications for the observation in question, regardless whether the TRL resource has changed or not.
-
-   If the Observation Request does not include the 'pmax' query parameter, the maximum time to consider is up to the Authorization Server. If the Observation Request includes the 'pmax' query parameter, its value MUST be greater than zero, otherwise the Authorization Server MUST return a 4.00 (Bad Request) response.
-
-   If the GET request is not an Observation Request, the Authorization Server MUST ignore the 'pmax' query parameter, in case this is included.
+A GET request to the TRL endpoint can include the following query parameters. The Authorization Server MUST silently ignore unknown query parameters.
 
 * 'diff': if included, it indicates to perform a diff query of the TRL (see {{ssec-trl-diff-query}}). Its value MUST be either:
 
@@ -637,12 +631,10 @@ Further details about the registration process at the Authorization Server are o
 
 Once completed the registration procedure at the Authorization Server, the administrator or registered device can send a GET request to the TRL resource at the Authorization Server. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource as per {{Section 3.1 of RFC7641}}.
 
-In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the Authorization Server does not support both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request yielded the execution of a full query or of a diff query of the TRL, respectively.
+In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the Authorization Server does not support both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively.
 Instead, if the Authorization Server supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
-When the TRL is updated (see {{ssec-trl-update}}), the Authorization Server sends Observe Notifications to the observers of the TRL resource. Observe Notifications are sent as per {{Section 4.2 of RFC7641}}.
-
-If the 'pmax' query parameter was specified in the Observation Request starting an observation (see {{sec-trl-endpoint-query-parameters}}), the Authorization Server might accordingly send additional Observe Notifications to the associated observer. That is, the Authorization Server ensures that no more than pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not. If the 'pmax' query parameter was not specified in the Observation Request, a possible maximum time to consider is up to the Authorization Server.
+When the TRL is updated (see {{ssec-trl-update}}), the Authorization Server sends Observe Notifications to the observers whose pertaining portion of the TRL has changed. Observe Notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the Authorization Server, an observer may configure the behavior according to which the Authorization Server sends those Observe Notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not.
 
 Following a first exchange with the Authorization Server, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the caller of the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
@@ -1628,6 +1620,8 @@ RFC EDITOR: Please remove this section.
 * Positive integers as CBOR abbreviations for all parameters.
 
 * Renamed N_MAX as MAX_N.
+
+* The use of the "c.pmax" conditional attribute is just an example.
 
 * New appendix overviewing parameters of the TRL endpoint.
 
