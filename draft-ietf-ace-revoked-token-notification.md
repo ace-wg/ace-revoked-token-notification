@@ -131,7 +131,7 @@ Note that, unless otherwise indicated, the term "endpoint" is used here followin
 
 This specification also refers to the following terminology.
 
-* Token hash: identifier of an Access Token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the "cti" (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
+* Token hash: identifier of an Access Token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
 
 * Token Revocation List (TRL): a collection of token hashes such that the corresponding Access Tokens have been revoked but are not expired yet.
 
