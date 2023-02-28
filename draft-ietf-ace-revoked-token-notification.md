@@ -141,15 +141,15 @@ This specification also refers to the following terminology.
 
 * TRL endpoint: an endpoint at the AS associated with the TRL resource. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.
 
-* Registered device: a device registered at the AS, i.e., as a Client, or a RS, or both. A registered device acts as a caller of the TRL endpoint.
+* Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a caller of the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting Access Tokens or a RS consuming Access Tokens. How the administrator authorization is established and verified is out of the scope of this specification.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting Access Tokens or an RS consuming Access Tokens. How the administrator authorization is established and verified is out of the scope of this specification.
 
 * Pertaining Access Token:
 
    - With reference to an administrator, an Access Token issued by the AS.
 
-   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the AS has issued the Access Token for that Client following its request. An Access Token pertains to a RS if the AS has issued the Access Token to be consumed by that RS.
+   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the AS has issued the Access Token for that Client following its request. An Access Token pertains to an RS if the AS has issued the Access Token to be consumed by that RS.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
@@ -641,7 +641,7 @@ Following a first exchange with the AS, an administrator or a registered device 
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.
 
-When a RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
+When an RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
 
 Thus, in order to ensure that no revoked Access Tokens are accepted and stored, the RS performs the following actions.
 
@@ -736,7 +736,7 @@ That is, the Client might gain knowledge about the revocation of an Access Token
 
 This makes the RS vulnerable during a time interval that starts when the Client gains knowledge of the revoked Access Token and ends when the RS expunges the Access Token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the RS, if this still retains the Access Token without knowing about its revocation yet.
 
-In order to mitigate the risk of such an abuse, if a RS relies solely on polling through individual requests to the TRL resource, the RS SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
+In order to mitigate the risk of such an abuse, if an RS relies solely on polling through individual requests to the TRL resource, the RS SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
 # IANA Considerations # {#iana}
 
@@ -907,7 +907,7 @@ For each parameter, the columns of the table specify the following information. 
 
 # Interaction Examples # {#sec-RS-examples}
 
-This section provides examples of interactions between a RS as a registered device and an AS. The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
+This section provides examples of interactions between an RS as a registered device and an AS. The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
 
 The details of the registration process are omitted, but it is assumed that the RS sends an unspecified payload to the AS, which replies with a 2.01 (Created) response.
 
