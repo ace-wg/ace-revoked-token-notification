@@ -639,18 +639,37 @@ When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifica
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the caller of the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
-When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.
+## Handling of Access Tokens and Token Hashes
 
-When an RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully uploaded to the RS (e.g., through the Authorization Information Endpoint, see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
+When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response. In case the registered device is an RS, it MUST store the token hash.
 
-Thus, in order to ensure that no revoked Access Tokens are accepted and stored, the RS performs the following actions.
+An RS MUST NOT accept and store an Access Token, if the corresponding token hash is among the currently stored ones.
 
-   * The RS MUST store the token hash th1, until gaining knowledge that the associated revoked Access Token t1 is also expired.
+An RS stores a token hash th1 corresponding to an Access Token t1 until both the following conditions hold.
 
-      This can happen when receiving a subsequent response from the TRL endpoint (i.e., indicating that the token hash th1 is not in the TRL portion pertaining to the RS anymore), or when the Access Token t1 is uploaded to the RS and is found to be expired based on its 'exp' claim {{RFC7519}}, if included.
+* The RS has received and seen t1, irrespective of having accepted and stored it.
 
-   * The RS MUST NOT accept as valid and store an uploaded Access Token t1, if the corresponding token hash th1 is among the currently stored ones.
+* The RS has gained knowledge that t1 has expired. This can be achieved, e.g., through the following means.
 
+   - A response from the TRL endpoint indicating that t1 has expired.
+
+   - The value of the 'exp' claim specified in t1 indicates that t1 has expired.
+
+   - The locally determined expiration time for t1 has passed, based on the time at the RS when t1 was first accepted and on the value of its 'exi' claim.
+
+   - The result of token introspection performed on t1 (see {{Section 5.9 of RFC9200}}), if supported by both the RS and the AS.
+
+The RS MUST NOT delete the stored token hashes whose corresponding Access Tokens do not fulfill the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
+
+Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining Access Token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim not greater than the highest sequence number among the expired Access Tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired Access Token as long as it stores the corresponding token hash.
+
+In order to further limit such a risk, when receiving an Access Token that specifies the 'exi' claim and for which a corresponding token hash is not stored, the RS can introspect the Access Token (see {{Section 5.9 of RFC9200}}), if token introspection is implemented by both the RS and the AS.
+
+When, due to the stored and corresponding token hash th2, an Access Token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2 as per the two conditions specified above, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
+
+When deleting any token hash, the RS checks whether the token hash is associated with a sequence number sn\_th. In such a case, the RS checks whether sn\_th is greater than the highest sequence number sn\* among the expired Access Tokens specifying the 'exi' claim for the RS. If that is the case, sn\* MUST take the value of sn\_th.
+
+By virtue of what is defined in {{Section 5.10.3 of RFC9200}}, this ensures that, following the deletion of the token hash associated with an Access Token specifying the 'exi' claim and uploaded for the first time after it has been revoked and later expired, the RS will not accept the Access Token at that point in time or in the future.
 
 # ACE Token Revocation List Parameters # {#trl-registry-parameters}
 
@@ -1655,6 +1674,8 @@ RFC EDITOR: Please remove this section.
 * Access Tokens are not necessarily uploaded through /authz-info.
 
 * The use of the "c.pmax" conditional attribute is just an example.
+
+* Revised handling of token hashes at the RS.
 
 * Extended and improved security considerations.
 
