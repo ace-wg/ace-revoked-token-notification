@@ -167,15 +167,15 @@ At a high level, the steps of this protocol are as follows.
 
 * When an Access Token is revoked, the Authorization Server adds the corresponding token hash to the TRL. Also, when a revoked Access Token eventually expires, the Authorization Server removes the corresponding token hash from the TRL.
 
-   In either case, after updating the TRL, the Authorization Server sends Observe Notifications as per {{RFC7641}}. That is, an Observe Notification is sent to each registered device subscribed to the TRL resource and to which the Access Token pertains.
+   In either case, after updating the TRL, the Authorization Server sends Observe notifications as per {{RFC7641}}. That is, an Observe notification is sent to each registered device subscribed to the TRL resource and to which the Access Token pertains.
 
    Depending on the specific subscription established through the observation request, the notification provides the current updated list of revoked Access Tokens in the portion of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked Access Tokens (see {{ssec-trl-diff-query}}).
 
-   Further Observe Notifications may be sent, consistently with ongoing additional observations of the TRL resource.
+   Further Observe notifications may be sent, consistently with ongoing additional observations of the TRL resource.
 
 * An administrator can access and subscribe to the TRL like a registered device, while getting the full updated representation of the TRL.
 
-{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. In particular, it shows the Observe Notifications sent by the Authorization Server to one administrator and four registered devices, upon revocation of the issued Access Tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively. Each dotted line associated with a pair of registered devices indicates the Access Token that they both own.
+{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. In particular, it shows the Observe notifications sent by the Authorization Server to one administrator and four registered devices, upon revocation of the issued Access Tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively. Each dotted line associated with a pair of registered devices indicates the Access Token that they both own.
 
 ~~~~~~~~~~~
                     +----------------------+
@@ -634,7 +634,7 @@ Once completed the registration procedure at the Authorization Server, the admin
 In case the request is successfully processed, the Authorization Server replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the Authorization Server does not support both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively.
 Instead, if the Authorization Server supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
-When the TRL is updated (see {{ssec-trl-update}}), the Authorization Server sends Observe Notifications to the observers whose pertaining portion of the TRL has changed. Observe Notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the Authorization Server, an observer may configure the behavior according to which the Authorization Server sends those Observe Notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not.
+When the TRL is updated (see {{ssec-trl-update}}), the Authorization Server sends Observe notifications to the observers whose pertaining portion of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the Authorization Server, an observer may configure the behavior according to which the Authorization Server sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL resource has changed or not.
 
 Following a first exchange with the Authorization Server, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the caller of the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
