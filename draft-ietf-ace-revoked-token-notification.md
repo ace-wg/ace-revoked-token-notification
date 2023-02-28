@@ -701,20 +701,47 @@ This specification defines a number of values that the Authorization Server can 
 
 Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
 
+## Content Retrieval from the TRL Resource
+
 The Authorization Server MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the Authorization Server can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the Authorization Server can securely relate to the registered device and the secure association that they use to communicate.
 
 Disclosing any information about revoked Access Tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the Authorization Server MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the Authorization Server may rely on an access control list or similar.
 
-If a registered device has many non-expired Access Tokens associated with itself that are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL resource (see {{ssec-trl-full-query}}). This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of a TRL, but an Authorization Server SHOULD take measures to limit this size.
+## Size of the TRL Resource
 
-The communication about revoked Access Tokens presented in this specification is expected to especially rely on CoAP Observe Notifications sent from the Authorization Server to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked. In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the Authorization Server for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+If many non-expired Access Tokens associated with a registered device are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL resource (see {{ssec-trl-full-query}}).
+
+This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of a TRL, but an Authorization Server SHOULD take measures to limit this size.
+
+### Communication Patterns
+
+The communication about revoked Access Tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the Authorization Server to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked.
+
+In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the Authorization Server for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+
+## Request of New Access Tokens
+
+If a Client stores an Access Token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client migth still receive an unprotected 4.01 (Unauthorized) response from the RS.
+
+This can be due to different reasons. For example, the Access Token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the Access Token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
+
+In either case, if the Client believes that the Access Token is still valid, it SHOULD NOT immediately ask for a new Access Token to the Autherization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL resource at the Authorization Server, in order to assert whether the Access Token is still valid. If this is the case, the Client SHOULD NOT ask for a new Access Token.
+
+## Dishonest Clients
+
+A dishonest Client may attempt to exploit its early knowledge about a revoked Access Token, in order to illegitimately continue accessing a protected resource at the Resource Server beyond the Access Token revocation.
+
+That is, the Client might gain knowledge about the revocation of an Access Token considerably earlier than the Resource Server, e.g., if the Client relies on CoAP Observe to access the TRL resource at the Authorization Server, while the Resource Server relies only on polling through individual requests.
+
+This makes the Resource Server vulnerable during a time interval that starts when the Client gains knowledge of the revoked Access Token and ends when the Resource Server expunges the Access Token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the Resource Server, if this still retains the Access Token without knowing about its revocation yet.
+
+In order to mitigate the risk of such an abuse, if a Resource Server relies solely on polling through individual requests to the TRL resource, the Resource Server SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
 # IANA Considerations # {#iana}
 
 This document has the following actions for IANA.
 
-Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with
-the RFC number of this specification and delete this paragraph.
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 ## Media Type Registrations {#iana-media-type}
 
@@ -1623,13 +1650,15 @@ RFC EDITOR: Please remove this section.
 
 * The use of the "c.pmax" conditional attribute is just an example.
 
+* Extended and improved security considerations.
+
+* Fixed details in IANA considerations.
+
 * New appendix overviewing parameters of the TRL endpoint.
 
 * Examples of message exchange moved to an appendix.
 
 * Added examples of message exchange with the "Cursor" extension.
-
-* Fixed details in IANA considerations.
 
 * Clarifications and editorial improvements.
 
