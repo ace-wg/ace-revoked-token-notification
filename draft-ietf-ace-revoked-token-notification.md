@@ -107,7 +107,7 @@ This document specifies a method of the Authentication and Authorization for Con
 
 # Introduction # {#intro}
 
-Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an Access Token for a Resource Server. For a Client to access the Resource Server, the Client must present the issued Access Token at the Resource Server, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
+Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an Access Token for a Resource Server (RS). For a Client to access the RS, the Client must present the issued Access Token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
 
 Even though Access Tokens have expiration times, there are circumstances by which an Access Token may need to be revoked before its expiration time, such as: (1) a registered device has been compromised, or is suspected of being compromised; (2) a registered device is decommissioned; (3) there has been a change in the ACE profile for a registered device; (4) there has been a change in access policies for a registered device; and (5) there has been a change in the outcome of policy evaluation for a registered device (e.g., if policy assessment depends on dynamic conditions in the execution environment, the user context, or the resource utilization).
 
@@ -129,7 +129,7 @@ The terminology for entities in the considered architecture is defined in OAuth 
 
 Readers are also expected to be familiar with the terms and concepts related to CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
-Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the Resource Server. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
+Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
 This specification also refers to the following terminology.
 
@@ -141,15 +141,15 @@ This specification also refers to the following terminology.
 
 * TRL endpoint: an endpoint at the AS associated with the TRL resource. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.
 
-* Registered device: a device registered at the AS, i.e., as a Client, or a Resource Server, or both. A registered device acts as a caller of the TRL endpoint.
+* Registered device: a device registered at the AS, i.e., as a Client, or a RS, or both. A registered device acts as a caller of the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting Access Tokens or a Resource Server consuming Access Tokens. How the administrator authorization is established and verified is out of the scope of this specification.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting Access Tokens or a RS consuming Access Tokens. How the administrator authorization is established and verified is out of the scope of this specification.
 
 * Pertaining Access Token:
 
    - With reference to an administrator, an Access Token issued by the AS.
 
-   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the AS has issued the Access Token for that Client following its request. An Access Token pertains to a Resource Server if the AS has issued the Access Token to be consumed by that Resource Server.
+   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the AS has issued the Access Token for that Client following its request. An Access Token pertains to a RS if the AS has issued the Access Token to be consumed by that RS.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
@@ -641,7 +641,7 @@ Following a first exchange with the AS, an administrator or a registered device 
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.
 
-When a Resource Server RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
+When a RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
 
 Thus, in order to ensure that no revoked Access Tokens are accepted and stored, the RS performs the following actions.
 
@@ -730,13 +730,13 @@ In either case, if the Client believes that the Access Token is still valid, it 
 
 ## Dishonest Clients
 
-A dishonest Client may attempt to exploit its early knowledge about a revoked Access Token, in order to illegitimately continue accessing a protected resource at the Resource Server beyond the Access Token revocation.
+A dishonest Client may attempt to exploit its early knowledge about a revoked Access Token, in order to illegitimately continue accessing a protected resource at the RS beyond the Access Token revocation.
 
-That is, the Client might gain knowledge about the revocation of an Access Token considerably earlier than the Resource Server, e.g., if the Client relies on CoAP Observe to access the TRL resource at the AS, while the Resource Server relies only on polling through individual requests.
+That is, the Client might gain knowledge about the revocation of an Access Token considerably earlier than the RS, e.g., if the Client relies on CoAP Observe to access the TRL resource at the AS, while the RS relies only on polling through individual requests.
 
-This makes the Resource Server vulnerable during a time interval that starts when the Client gains knowledge of the revoked Access Token and ends when the Resource Server expunges the Access Token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the Resource Server, if this still retains the Access Token without knowing about its revocation yet.
+This makes the RS vulnerable during a time interval that starts when the Client gains knowledge of the revoked Access Token and ends when the RS expunges the Access Token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the RS, if this still retains the Access Token without knowing about its revocation yet.
 
-In order to mitigate the risk of such an abuse, if a Resource Server relies solely on polling through individual requests to the TRL resource, the Resource Server SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
+In order to mitigate the risk of such an abuse, if a RS relies solely on polling through individual requests to the TRL resource, the RS SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
 # IANA Considerations # {#iana}
 
@@ -907,9 +907,9 @@ For each parameter, the columns of the table specify the following information. 
 
 # Interaction Examples # {#sec-RS-examples}
 
-This section provides examples of interactions between a Resource Server RS as a registered device and an AS. The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
+This section provides examples of interactions between a RS as a registered device and an AS. The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
 
-The details of the registration process are omitted, but it is assumed that the Resource Server sends an unspecified payload to the AS, which replies with a 2.01 (Created) response.
+The details of the registration process are omitted, but it is assumed that the RS sends an unspecified payload to the AS, which replies with a 2.01 (Created) response.
 
 The payload of the registration response is a CBOR map, which includes the following entries:
 
@@ -1018,7 +1018,7 @@ RS                                                  AS
 
 {{fig-RS-AS-2}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
-The Resource Server indicates N=3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
+The RS indicates N=3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
 
 In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
@@ -1122,9 +1122,9 @@ RS                                                  AS
 
 {{fig-RS-AS-3}} shows an interaction example considering a CoAP observation and a full query of the TRL.
 
-The example also considers one of the notifications from the AS to get lost in transmission, and thus not reaching the Resource Server.
+The example also considers one of the notifications from the AS to get lost in transmission, and thus not reaching the RS.
 
-When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. The Resource Server indicates N=8 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
+When this happens, and after a waiting time defined by the application has elapsed, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. The RS indicates N=8 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
 
 In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
@@ -1235,13 +1235,13 @@ RS                                                  AS
 
 ## Diff Query with Observe and \"Cursor\" # {#sec-RS-example-2-3}
 
-In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query from this Resource Server.
+In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query from this RS.
 
 {{fig-RS-AS-4}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
-The Resource Server specifies the query parameter 'diff' with value 3, i.e., the maximum number of diff entries to be specified in a response from the AS.
+The RS specifies the query parameter 'diff' with value 3, i.e., the maximum number of diff entries to be specified in a response from the AS.
 
-After the Resource Server has not received a notification from the AS for a waiting time defined by the application, the Resource Server sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL.
+After the RS has not received a notification from the AS for a waiting time defined by the application, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL.
 
 This is followed up by a further diff query request that specifies the query parameter 'cursor'. Note that the payload of the corresponding response differs from the payload of the response to the previous diff query request.
 
@@ -1390,21 +1390,21 @@ RS                                                      AS
 
 ## Full Query with Observe plus Diff Query with \"Cursor\" # {#sec-RS-example-5}
 
-In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query from this Resource Server.
+In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query from this RS.
 
 {{fig-RS-AS-5}} shows an interaction example considering a CoAP observation and a full query of the TRL.
 
-The example also considers some of the notifications from the AS to get lost in transmission, and thus not reaching the Resource Server.
+The example also considers some of the notifications from the AS to get lost in transmission, and thus not reaching the RS.
 
-When this happens, and after a waiting time defined by the application has elapsed, the Resource Server sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. In particular, the Resource Server specifies:
+When this happens, and after a waiting time defined by the application has elapsed, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. In particular, the RS specifies:
 
 * The query parameter 'diff' with value 8, i.e., the maximum number of diff entries to be specified in a response from the AS.
 
-* The query parameter 'cursor' with value 2, thus requesting from the update collection the series items following the one with 'index' value equal to 2 (i.e., following the last series item that the Resource Server successfully received in an earlier notification response).
+* The query parameter 'cursor' with value 2, thus requesting from the update collection the series items following the one with 'index' value equal to 2 (i.e., following the last series item that the RS successfully received in an earlier notification response).
 
-The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items from the update collection corresponding to the Resource Server. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to "true". Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.
+The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items from the update collection corresponding to the RS. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to "true". Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.
 
-After that, the Resource Server follows up with a further diff query request specifying the query parameter 'cursor' with value 7, in order to retrieve the next and last batch of series items from the update collection.
+After that, the RS follows up with a further diff query request specifying the query parameter 'cursor' with value 7, in order to retrieve the next and last batch of series items from the update collection.
 
 ~~~~~~~~~~~
 RS                                                             AS
