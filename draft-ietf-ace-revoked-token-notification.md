@@ -641,15 +641,15 @@ Following a first exchange with the AS, an administrator or a registered device 
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response.
 
-When an RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully posted to the Authorization Information Endpoint at the RS (see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
+When an RS receives a response from the TRL endpoint specifying the token hash th1 associated with a revoked Access Token t1, the RS might not have received and stored that Access Token yet. This occurs if the Access Token is revoked before it is successfully uploaded to the RS (e.g., through the Authorization Information Endpoint, see {{Section 5.10.1 of RFC9200}}). Such a delay can be due, for example, to messages that get lost in transmission, or rather to the Client experiencing failures in sending the Access Token to the RS, or deliberately holding the Access Token back.
 
 Thus, in order to ensure that no revoked Access Tokens are accepted and stored, the RS performs the following actions.
 
    * The RS MUST store the token hash th1, until gaining knowledge that the associated revoked Access Token t1 is also expired.
 
-      This can happen when receiving a subsequent response from the TRL endpoint (i.e., indicating that the token hash th1 is not in the TRL portion pertaining to the RS anymore), or when the Access Token t1 is posted to the Authorization Information Endpoint and is found to be expired based on its 'exp' claim {{RFC7519}}, if included.
+      This can happen when receiving a subsequent response from the TRL endpoint (i.e., indicating that the token hash th1 is not in the TRL portion pertaining to the RS anymore), or when the Access Token t1 is uploaded to the RS and is found to be expired based on its 'exp' claim {{RFC7519}}, if included.
 
-   * The RS MUST NOT accept as valid and store an Access Token t1 posted to the Authorization Information Endpoint, if the corresponding token hash th1 is among the currently stored ones.
+   * The RS MUST NOT accept as valid and store an uploaded Access Token t1, if the corresponding token hash th1 is among the currently stored ones.
 
 
 # ACE Token Revocation List Parameters # {#trl-registry-parameters}
@@ -1648,6 +1648,8 @@ RFC EDITOR: Please remove this section.
 * Positive integers as CBOR abbreviations for all parameters.
 
 * Renamed N_MAX as MAX_N.
+
+* Access Tokens are not necessarily uploaded through /authz-info.
 
 * The use of the "c.pmax" conditional attribute is just an example.
 
