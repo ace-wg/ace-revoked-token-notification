@@ -629,7 +629,7 @@ During the registration process at the AS, an administrator or a registered devi
 
 Further details about the registration process at the AS are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of RFC9200}}).
 
-# Notification of Revoked Tokens # {#sec-notification}
+# Notification of Revoked Access Tokens # {#sec-notification}
 
 Once completed the registration procedure at the AS, the administrator or registered device can send a GET request to the TRL resource at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL resource as per {{Section 3.1 of RFC7641}}.
 
@@ -746,7 +746,7 @@ Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC n
 
 ## Media Type Registrations {#iana-media-type}
 
-IANA is asked to register the media type "application/ace-trl+cbor" for messages of the protocols defined in this document encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
+IANA is asked to register the media type "application/ace-trl+cbor" for messages of the protocol defined in this document encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
 
 Type name: application
 
