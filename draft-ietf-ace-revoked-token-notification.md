@@ -733,7 +733,7 @@ If many non-expired Access Tokens associated with a registered device are revoke
 
 This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of a TRL, but an AS SHOULD take measures to limit this size.
 
-### Communication Patterns
+## Communication Patterns
 
 The communication about revoked Access Tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked.
 
