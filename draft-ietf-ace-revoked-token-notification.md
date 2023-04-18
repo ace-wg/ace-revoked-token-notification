@@ -735,7 +735,7 @@ If a Client stores an Access Token that it still believes to be valid, and it ac
 
 This can be due to different reasons. For example, the Access Token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the Access Token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
 
-In either case, if the Client believes that the Access Token is still valid, it SHOULD NOT immediately ask for a new Access Token to the Autherization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL resource at the AS, in order to assert whether the Access Token is still valid. If this is the case, the Client SHOULD NOT ask for a new Access Token.
+In either case, if the Client believes that the Access Token is still valid, it SHOULD NOT immediately ask for a new Access Token to the Autherization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL resource at the AS. If the Client gains knowledge that the Access Token is not valid anymore, the Client expunges the Access Token and can ask for a new one. Otherwise, the Client can try again to upload the same Access Token to the RS, or instead to request a new one.
 
 ## Dishonest Clients
 
@@ -1656,6 +1656,8 @@ RFC EDITOR: Please remove this section.
 * Improved error handling.
 
 * Revised examples.
+
+* More precise security considerations.
 
 * Clarifications and editorial improvements.
 
