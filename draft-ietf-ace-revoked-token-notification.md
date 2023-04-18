@@ -33,15 +33,6 @@ author:
         country: Sweden
         email: marco.tiloca@ri.se
       -
-        ins: L. Seitz
-        name: Ludwig Seitz
-        org: Combitech
-        street: Djaeknegatan 31
-        city: Malmoe
-        code: SE-21135
-        country: Sweden
-        email: ludwig.seitz@combitech.com
-      -
         ins: F. Palombini
         name: Francesca Palombini
         org: Ericsson AB
@@ -1661,6 +1652,10 @@ RS                                                             AS
 
 RFC EDITOR: Please remove this section.
 
+## Version -04 to -05 ## {#sec-04-05}
+
+* Update author list.
+
 ## Version -03 to -04 ## {#sec-03-04}
 
 * Improved presentation of pre- and post-registration operations.
@@ -1733,6 +1728,8 @@ RFC EDITOR: Please remove this section.
 
 # Acknowledgments # {#acknowldegment}
 {: numbered="no"}
+
+{{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
 The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}} and {{{Travis Spencer}}} for their comments and feedback.
 
