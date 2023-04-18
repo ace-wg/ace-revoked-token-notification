@@ -466,7 +466,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
    * The 'cursor' parameter and the 'more' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query to the TRL endpoint (see {{sec-using-cursor-diff-query-response}}).
 
-      If the AS does not support both diff queries and the "Cursor" extension, these parameters MUST NOT be included. In case the requester does not support both diff queries and the "Cursor" extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.
+      In case the AS supports diff queries but not the "Cursor" extension, these parameters MUST NOT be included. In case the requester supports diff queries but not the "Cursor" extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.
 
 {{cddl-diff}} provides the CDDL definition {{RFC8610}} of the CBOR array 'diff_set_value' specified in the response from the AS, as value of the 'diff_set' parameter.
 
