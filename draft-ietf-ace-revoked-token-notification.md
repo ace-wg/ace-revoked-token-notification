@@ -731,11 +731,11 @@ In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP O
 
 ## Request of New Access Tokens
 
-If a Client stores an Access Token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client migth still receive an unprotected 4.01 (Unauthorized) response from the RS.
+If a Client stores an Access Token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client migth anyway receive an unprotected 4.01 (Unauthorized) response from the RS.
 
 This can be due to different reasons. For example, the Access Token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the Access Token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
 
-In either case, if the Client believes that the Access Token is still valid, it SHOULD NOT immediately ask for a new Access Token to the Autherization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL resource at the AS. If the Client gains knowledge that the Access Token is not valid anymore, the Client expunges the Access Token and can ask for a new one. Otherwise, the Client can try again to upload the same Access Token to the RS, or instead to request a new one.
+In either case, if the Client believes that the Access Token is still valid, it SHOULD NOT immediately ask for a new Access Token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL resource at the AS. If the Client gains knowledge that the Access Token is not valid anymore, the Client expunges the Access Token and can ask for a new one. Otherwise, the Client can try again to upload the same Access Token to the RS, or instead to request a new one.
 
 ## Dishonest Clients
 
@@ -861,7 +861,7 @@ When responding to a diff query request from a requester (see {{ssec-trl-diff-qu
 
 The value N of the 'diff' query parameter in the GET request allows the requester and the AS to trade the amount of provided information with the latency of the information transfer.
 
-Since the update collection associated with each requester includes up to MAX_N series item, the AS deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
+Since the update collection associated with each requester includes up to MAX_N series items, the AS deletes the oldest series item when a new one is generated and added to the end of the update collection, due to a new TRL update pertaining to that requester (see {{sec-trl-endpoint-supporting-diff-queries}}). This addresses the question "When can the server decide to no longer retain older items?" raised in {{Section 3.2 of I-D.bormann-t2trg-stp}}.
 
 Furthermore, performing a diff query of the TRL together with the "Cursor" extension as specified in {{sec-using-cursor}} in fact relies on the "Cursor" pattern of the Series Transfer Pattern (see {{Section 3.3 of I-D.bormann-t2trg-stp}}).
 
@@ -927,9 +927,9 @@ The payload of the registration response is a CBOR map, which includes the follo
 
 * a 'trl_path' parameter, specifying the path of the TRL resource;
 
-* a 'trl_hash' parameter, specifying the hash function used to computed token hashes as defined in {{sec-token-name}};
+* a 'trl_hash' parameter, specifying the hash function used to compute token hashes as defined in {{sec-token-name}};
 
-* an 'max_n' parameter, specifying the value of MAX_N, i.e., the maximum number of TRL updates pertaining to each registered device that the AS retains for that device (see {{ssec-trl-diff-query}});
+* a 'max_n' parameter, specifying the value of MAX_N, i.e., the maximum number of TRL updates pertaining to each registered device that the AS retains for that device (see {{ssec-trl-diff-query}});
 
 * possible further parameters related to the registration process.
 
@@ -1030,7 +1030,7 @@ RS                                                  AS
 
 {{fig-RS-AS-2}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
-The RS indicates N=3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
+The RS indicates N = 3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
 
 In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
@@ -1136,7 +1136,7 @@ RS                                                  AS
 
 The example also considers one of the notifications from the AS to get lost in transmission, and thus not reaching the RS.
 
-When this happens, and after a waiting time defined by the application has elapsed, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. The RS indicates N=8 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
+When this happens, and after a waiting time defined by the application has elapsed, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. The RS indicates N = 8 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.
 
 In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
@@ -1247,7 +1247,7 @@ RS                                                  AS
 
 ## Diff Query with Observe and \"Cursor\" # {#sec-RS-example-2-3}
 
-In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query from this RS.
+In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query request from this RS.
 
 {{fig-RS-AS-4}} shows an interaction example considering a CoAP observation and a diff query of the TRL.
 
@@ -1402,7 +1402,7 @@ RS                                                      AS
 
 ## Full Query with Observe plus Diff Query with \"Cursor\" # {#sec-RS-example-5}
 
-In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query from this RS.
+In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query request from this RS.
 
 {{fig-RS-AS-5}} shows an interaction example considering a CoAP observation and a full query of the TRL.
 
