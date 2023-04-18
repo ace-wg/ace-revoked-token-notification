@@ -246,8 +246,7 @@ Cache-Control: no-store
 Pragma: no-cache
 Payload:
 {
-   "access_token" : "2YotnFZFEjr1zCsicMWpAA ...
-    (remainder of the Access Token omitted for brevity) ...",
+   "access_token" : "2YotnFZFEjr1zCsicMWpAA",
    "token_type" : "pop",
    "expires_in" : 86400,
    "profile" : "coap_dtls",
