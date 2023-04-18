@@ -521,7 +521,7 @@ In particular, the 'cursor' parameter included in the CBOR map carried in the re
 
 The 'cursor' parameter MUST specify the CBOR simple value "null" in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until a first update pertaining to that requester occurs to the TRL.
 
-Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester occurred to the TRL.
+Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.
 
 ## Response to Diff Query {#sec-using-cursor-diff-query-response}
 
@@ -595,7 +595,7 @@ If the update collection associated with the requester is not empty and the diff
 
       * The 'cursor' parameter MUST be present and MUST specify a CBOR unsigned integer. In particular:
 
-         - If L is equal to 0, i.e., the series item X is the last one in the update collection, then the 'cursor' parameter MUST take the same 'index' value of the last series item in the update collection.
+         - If L is equal to 0, i.e., the series item X is the last one in the update collection, then the 'cursor' parameter MUST take the same 'index' value of the last series item in the update collection. Such a value is in fact the current value of 'last_index' for the update collection.
 
          - If L is different than 0, then the 'cursor' parameter MUST take the 'index' value of the series element of the update collection included as first diff entry in the 'diff_set' CBOR array. That is, the 'cursor' parameter takes the 'index' value of the series item in the update collection corresponding to the most recent update pertaining to the requester and returned in this diff query response.
 
