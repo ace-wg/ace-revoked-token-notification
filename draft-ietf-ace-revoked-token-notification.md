@@ -378,7 +378,9 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS does not support the "Cursor" extension, it ignores the 'cursor' query parameter when present in the GET request. In such a case, the AS proceeds: i) like when processing a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the 'diff' query parameter is present in the GET request; or ii) like when processing a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
 
-   If the AS supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the AS MUST return a 4.00 (Bad Request) response in case any of the following conditions holds.
+   If the AS supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the AS MUST return a 4.00 (Bad Request) response in case any of the conditions below holds.
+
+   The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
    * The GET request does not specify the 'diff' query parameter, irrespective of the value of the 'cursor' parameter.
 
@@ -391,8 +393,6 @@ A GET request to the TRL endpoint can include the following query parameters. Th
    * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the 'cursor' query parameter has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of 'last_index' for the update collection associated with the requester.
-
-   The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
 # Full Query of the TRL ## {#ssec-trl-full-query}
 
