@@ -384,11 +384,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 1 ("Invalid set of parameters").
 
-   * The 'cursor' query parameter has a value other than 0 or than a positive integer.
-
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value").
-
-   * The 'cursor' query parameter has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
+   * The 'cursor' query parameter has a value other than 0 or than a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
@@ -1656,6 +1652,8 @@ RS                                                             AS
 RFC EDITOR: Please remove this section.
 
 ## Version -04 to -05 ## {#sec-04-05}
+
+* Improved error handling.
 
 * Revised examples.
 
