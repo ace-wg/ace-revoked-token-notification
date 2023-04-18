@@ -104,9 +104,9 @@ Even though Access Tokens have expiration times, there are circumstances by whic
 
 As discussed in {{Section 6.1 of RFC9200}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that Access Tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need Access Tokens with relatively long lifetimes.
 
-This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) resource on the AS, in order to obtain an updated list of revoked, but yet not expired, pertaining Access Tokens. In particular, registered devices can subscribe to the TRL at the AS by using resource observation {{RFC7641}} for the Constrained Application Protocol (CoAP) {{RFC7252}}.
+This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) resource on the AS, in order to obtain updated information about pertaining Access Tokens that were revoked prior to their expiration. In particular, registered devices can subscribe to the TRL at the AS by using resource observation {{RFC7641}} for the Constrained Application Protocol (CoAP) {{RFC7252}}.
 
-Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned Access Token to the AS for inquiring about its current state. Instead, registered devices simply obtain an updated list of revoked, but yet not expired, pertaining Access Tokens, as efficiently identified by corresponding hash values.
+Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned Access Token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining Access Tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
 
 The benefits of this method are that it complements token introspection, and it does not require any additional endpoints on the registered devices. The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
 
@@ -1653,6 +1653,8 @@ RS                                                             AS
 RFC EDITOR: Please remove this section.
 
 ## Version -04 to -05 ## {#sec-04-05}
+
+* Clarifications and editorial improvements.
 
 * Update author list.
 
