@@ -370,7 +370,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS does not support diff queries, it ignores the 'diff' query parameter when present in the GET request, and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
-   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
+   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
 
 * 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer.
 
@@ -380,7 +380,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the AS MUST return a 4.00 (Bad Request) response in case any of the following conditions holds.
 
-   * The GET request does not specify the 'diff' query parameter.
+   * The GET request does not specify the 'diff' query parameter, irrespective of the value of the 'cursor' parameter.
 
       The 'error' parameter within the CBOR map carried in the response payload MUST have value 1 ("Invalid set of parameters").
 
@@ -509,7 +509,7 @@ Payload:
 
 If it supports both diff queries and the "Cursor" extension, the AS composes a response to a full query request or diff query request as defined in {{sec-using-cursor-full-query-response}} and {{sec-using-cursor-diff-query-response}}, respectively.
 
-The exact format of the response depends on the request being a full query or diff query request, on the presence of the 'cursor' query parameter in the diff query request, and on the current status of the update collection associated with the requester.
+The exact format of the response depends on the request being a full query or diff query request, on the presence of the 'diff' and 'cursor' query parameters and their values in the diff query request, and on the current status of the update collection associated with the requester.
 
 Error handling and the possible resulting error responses are as defined in {{sec-trl-endpoint-query-parameters}}.
 
