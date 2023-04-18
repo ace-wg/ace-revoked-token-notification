@@ -919,7 +919,9 @@ For each parameter, the columns of the table specify the following information. 
 
 # Interaction Examples # {#sec-RS-examples}
 
-This section provides examples of interactions between an RS as a registered device and an AS. The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
+This section provides examples of interactions between an RS as a registered device and an AS. In the examples, all the Access Tokens issued by the AS are intended to be consumed by the considered RS.
+
+The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
 
 The details of the registration process are omitted, but it is assumed that the RS sends an unspecified payload to the AS, which replies with a 2.01 (Created) response.
 
