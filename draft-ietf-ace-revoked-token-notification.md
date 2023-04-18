@@ -380,19 +380,19 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the AS MUST return a 4.00 (Bad Request) response in case any of the conditions below holds.
 
-   The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
+   The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
 
    * The GET request does not specify the 'diff' query parameter, irrespective of the value of the 'cursor' parameter.
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 1 ("Invalid set of parameters").
+      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 1 ("Invalid set of parameters").
 
    * The 'cursor' query parameter has a value other than 0 or than a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
+      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
    * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the 'cursor' query parameter has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the response payload MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of 'last_index' for the update collection associated with the requester.
+      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of 'last_index' for the update collection associated with the requester.
 
 # Full Query of the TRL ## {#ssec-trl-full-query}
 
