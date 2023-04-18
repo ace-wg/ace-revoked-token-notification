@@ -156,7 +156,7 @@ At a high level, the steps of this protocol are as follows.
 
    After the registration procedure is finished, the registered device can send an Observation Request to the TRL resource as described in {{RFC7641}}, i.e., a GET request including the CoAP Observe Option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL resource, as interested to receive notifications about its update. Upon receiving the request, the AS adds the registered device to the list of observers of the TRL resource.
 
-   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked Access Tokens (see {{ssec-trl-full-query}}); or the most recent TRL updates occurred over the list of pertaining revoked Access Tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL resource as discussed above.
+   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked Access Tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked Access Tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL resource as discussed above.
 
 * When an Access Token is revoked, the AS adds the corresponding token hash to the TRL. Also, when a revoked Access Token eventually expires, the AS removes the corresponding token hash from the TRL.
 
