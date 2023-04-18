@@ -271,6 +271,8 @@ The AS updates the TRL in the following two cases.
 
 * When a revoked Access Token expires, the token hash of the Access Token is removed from the TRL resource representation. That is, the CBOR byte string with the token hash as its value is removed from the CBOR array used as TRL resource representation.
 
+The AS MAY perform a single update to the TRL resource such that one or more token hashes are added or removed at once. For example, this can be the caes if multiple Access Tokens are revoked or expire at the same time, or within an acceptably narrow time window.
+
 # The TRL Endpoint # {#sec-trl-endpoint}
 
 Consistent with {{Section 6.5 of RFC9200}}, all communications between a caller of the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the caller MUST be bound to the caller's request.
