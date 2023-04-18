@@ -1663,7 +1663,7 @@ RFC EDITOR: Please remove this section.
 
 * Clarifications and editorial improvements.
 
-* Update author list.
+* Updated author list.
 
 ## Version -03 to -04 ## {#sec-03-04}
 
