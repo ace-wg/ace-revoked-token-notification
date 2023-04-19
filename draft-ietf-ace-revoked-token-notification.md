@@ -652,7 +652,7 @@ Retaining the stored token hashes as specified above limits the impact from a (d
 
 In order to further limit such a risk, when receiving an access token that specifies the 'exi' claim and for which a corresponding token hash is not stored, the RS can introspect the access token (see {{Section 5.9 of RFC9200}}), if token introspection is implemented by both the RS and the AS.
 
-When, due to the stored and corresponding token hash th2, an access token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2 as per the two conditions specified above, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
+When, due to the stored and corresponding token hash th2, an access token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
 
 When deleting any token hash, the RS checks whether the token hash is associated with a sequence number sn\_th. In such a case, the RS checks whether sn\_th is greater than the highest sequence number sn\* among the expired access tokens specifying the 'exi' claim for the RS. If that is the case, sn\* MUST take the value of sn\_th.
 
