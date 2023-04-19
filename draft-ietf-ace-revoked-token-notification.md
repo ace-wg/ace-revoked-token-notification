@@ -419,7 +419,7 @@ full_set_value = [* token_hash]
 ~~~~~~~~~~~
 {: #cddl-full title="CDDL definition of 'full_set_value'" artwork-align="left"}
 
-{{response-full}} shows an example of response from the AS, following a full query request to the TRL endpoint. In this example, the AS does not support the "Cursor" extension (if it supports diff queries at all), hence the 'cursor' parameter is not included in the payload of the response. Also, full token hashes are omitted for brevity.
+{{response-full}} shows an example of response from the AS, following a full query request to the TRL endpoint. In this example, the AS does not support diff queries nor the "Cursor" extension, hence the 'cursor' parameter is not included in the payload of the response. Also, full token hashes are omitted for brevity.
 
 ~~~~~~~~~~~
 2.05 Content
