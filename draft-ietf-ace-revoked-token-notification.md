@@ -1724,7 +1724,7 @@ RFC EDITOR: Please remove this section.
 
 * Both success and error responses have a CBOR map as payload.
 
-* Corner cases of message processing explained more explcitly.
+* Corner cases of message processing explained more explicitly.
 
 * Clarifications and editorial improvements.
 
