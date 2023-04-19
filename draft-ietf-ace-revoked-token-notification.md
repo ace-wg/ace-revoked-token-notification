@@ -256,7 +256,7 @@ Payload:
 
 Upon startup, the AS creates a single Token Revocation List (TRL), encoded as a CBOR array.
 
-Each element of the array is a CBOR byte string, with value the token hash of an access token. The order of the token hashes in the CBOR array is irrelevant, and the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.
+Each element of the array is a CBOR byte string, with value the token hash of an access token. The CBOR array MUST be treated as a set, i.e., the order of its elements has no meaning.
 
 The TRL is initialized as empty, i.e., its initial content MUST be the empty CBOR array. The TRL is accessible through the TRL endpoint on the AS.
 
@@ -405,7 +405,7 @@ In order to produce a (notification) response to a GET request asking for a full
 
    * The 'full_set' parameter MUST be included and specifies a CBOR array 'full_set_value'. Each element of 'full_set_value' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.
 
-      The order of the token hashes in the CBOR array is irrelevant, i.e., the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.
+      The CBOR array MUST be treated as a set, i.e., the order of its elements has no meaning.
 
    * The 'cursor' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}). Its value is specified according to what is defined in {{sec-using-cursor-full-query-response}}, and provides the requester with information for performing a follow-up diff query using the "Cursor" extension (see {{sec-using-cursor-diff-query-response}}).
 
@@ -453,7 +453,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
     * The second element is a CBOR array 'added'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertains to the requester; and it was added to the TRL during the update associated with the diff entry.
 
-    The order of the token hashes in the CBOR arrays 'removed' and 'added' is irrelevant. That is, the CBOR arrays 'removed' and 'added' MUST be treated as a set in which the order of elements has no significant meaning.
+    The CBOR arrays 'removed' and 'added' MUST be treated as sets, i.e., the order of their elements has no meaning.
 
 4. The AS prepares a 2.05 (Content) response for the requester. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST be formatted as follows.
 
