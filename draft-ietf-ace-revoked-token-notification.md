@@ -534,7 +534,7 @@ If the update collection associated with the requester has no elements, the AS r
 
 * The 'more' parameter MUST be included and specifies the CBOR simple value "false" (0xf4).
 
-Note that the above applies when the update collection associated with the requester has no elements, regardless whether the 'cursor' query parameter is included or not in the diff query request, and irrespective of the specified unsigned integer value if present.
+Note that the above applies when the update collection associated with the requester has no elements, regardless of whether the 'cursor' query parameter is included or not in the diff query request, and irrespective of the specified unsigned integer value if present.
 
 ### Cursor Not Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-no-cursor}
 
@@ -622,7 +622,7 @@ Once completed the registration procedure at the AS, the administrator or regist
 
 In case the request is successfully processed, the AS replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the AS supports diff queries but not the "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively. Instead, if the AS supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
-When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL has changed or not.
+When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless of whether the TRL has changed or not.
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
