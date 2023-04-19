@@ -92,7 +92,7 @@ entity:
 
 --- abstract
 
-This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked Access Tokens. The method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server, with the possible additional use of resource observation for the Constrained Application Protocol (CoAP). Resulting (unsolicited) notifications of revoked Access Tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers.
+This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked Access Tokens. As specified in this document, the method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked Access Tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers.
 
 --- middle
 
@@ -104,7 +104,7 @@ Even though Access Tokens have expiration times, there are circumstances by whic
 
 As discussed in {{Section 6.1 of RFC9200}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that Access Tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need Access Tokens with relatively long lifetimes.
 
-This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) resource on the AS, in order to obtain updated information about pertaining Access Tokens that were revoked prior to their expiration. In particular, registered devices can subscribe to the TRL at the AS by using resource observation {{RFC7641}} for the Constrained Application Protocol (CoAP) {{RFC7252}}.
+This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) resource on the AS, in order to obtain updated information about pertaining Access Tokens that were revoked prior to their expiration. As specified in this document, the registered devices use the Constrained Application Protocol (CoAP) {{RFC7252}} to communicate with the AS and with one another, and can subscribe to the TRL resource on the AS by using resource observation for CoAP {{RFC7641}}. Other underlying protocols than CoAP are not prohibited from being supported in the future, if they are defined to use in the ACE framework for Authentication and Authorization.
 
 Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned Access Token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining Access Tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
 
@@ -1654,6 +1654,8 @@ RS                                                             AS
 RFC EDITOR: Please remove this section.
 
 ## Version -04 to -05 ## {#sec-04-05}
+
+* Explicit focus on CoAP in the abstract and introduction.
 
 * Improved error handling.
 
