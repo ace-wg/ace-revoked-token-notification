@@ -9,7 +9,7 @@ docname: draft-ietf-ace-revoked-token-notification-latest
 # stand_alone: true
 
 ipr: trust200902
-area: Internet
+area: Security
 wg: ACE Working Group
 kw: Internet-Draft
 cat: std
