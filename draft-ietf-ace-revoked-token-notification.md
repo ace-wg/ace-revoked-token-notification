@@ -160,7 +160,7 @@ At a high level, the steps of this protocol are as follows.
 
    In either case, after updating the TRL, the AS sends Observe notifications as per {{RFC7641}}. That is, an Observe notification is sent to each registered device subscribed to the TRL and to which the access token pertains.
 
-   Depending on the specific subscription established through the observation request, the notification provides the current updated list of revoked access tokens in the portion of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
+   Depending on the specific subscription established through the observation request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
 
    Further Observe notifications may be sent, consistently with ongoing additional observations of the TRL endpoint.
 
@@ -285,7 +285,7 @@ The TRL endpoint supports only the GET method, and allows two types of query of 
 
    The AS MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
 
-* Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the portion of the TRL pertaining to the requester.
+* Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the subset of the TRL pertaining to the requester.
 
    The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
 
@@ -299,21 +299,21 @@ If it supports the "Cursor" extension, the AS stores additional information when
 
 ## Supporting Diff Queries # {#sec-trl-endpoint-supporting-diff-queries}
 
-If the AS supports diff queries, it is able to transfer a list of diff entries, as a series of TRL updates. That is, when replying to a diff query performed by a requester, the AS specifies the most recent updates to the portion of the TRL pertaining to that requester.
+If the AS supports diff queries, it is able to transfer a list of diff entries, as a series of TRL updates. That is, when replying to a diff query performed by a requester, the AS specifies the most recent updates to the subset of the TRL pertaining to that requester.
 
 The following defines how the AS builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
-For each requester, the AS maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. The AS MUST keep track of the MAX\_N most recent updates to the portion of the TRL that pertains to each requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
+For each requester, the AS maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. The AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to each requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the AS, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
 Each time the TRL changes, the AS performs the following operations for each requester.
 
-1. The AS considers the portion of the TRL pertaining to that requester. If the TRL portion is not affected by this TRL update, the AS stops the processing for that requester. Otherwise, the AS moves to step 2.
+1. The AS considers the subset of the TRL pertaining to that requester. If the TRL subset is not affected by this TRL update, the AS stops the processing for that requester. Otherwise, the AS moves to step 2.
 
 2. The AS creates two sets "trl_patch" of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.
 
-3. The AS fills the two sets with the token hashes of the removed and added access tokens, respectively, from/to the TRL portion considered at step 1.
+3. The AS fills the two sets with the token hashes of the removed and added access tokens, respectively, from/to the TRL subset considered at step 1.
 
 4. The AS creates a new series item, which includes the two sets from step 3.
 
@@ -460,7 +460,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
    * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of U elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared above as diff entry. Note that U might have value 0, in which case 'diff_set_value' is the empty CBOR array.
 
-      Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the portion of the TRL pertaining to the requester. The second 'diff_entry' element relates to the second from last most recent update to that portion, and so on.
+      Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the subset of the TRL pertaining to the requester. The second 'diff_entry' element relates to the second from last most recent update to that subset, and so on.
 
    * The 'cursor' parameter and the 'more' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query of the TRL (see {{sec-using-cursor-diff-query-response}}).
 
@@ -575,7 +575,7 @@ If the update collection associated with the requester is not empty and the diff
 
    With the combination ('cursor', 'more') = ("null", "true"), the AS is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
-   When receiving this diff query response, the requester should send a new full query request to the AS. A successful response provides the requester with the full, current pertaining portion of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
+   When receiving this diff query response, the requester should send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
 * Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.
 
@@ -623,7 +623,7 @@ Once completed the registration procedure at the AS, the administrator or regist
 
 In case the request is successfully processed, the AS replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the AS supports diff queries but not the "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively. Instead, if the AS supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
-When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining portion of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL has changed or not.
+When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL has changed or not.
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
@@ -711,13 +711,13 @@ Security considerations are inherited from the ACE framework for Authentication 
 
 ## Content Retrieval from the TRL
 
-The AS MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the AS can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
+The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-Disclosing any information about revoked access tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
+Disclosing any information about revoked access tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
 
 ## Size of the TRL
 
-If many non-expired access tokens associated with a registered device are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
+If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
 
 This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing access tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.
 
@@ -853,7 +853,7 @@ Expert reviewers should take into consideration the following points:
 
 Performing a diff query of the TRL as specified in {{ssec-trl-diff-query}} is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
 
-That is, a diff query enables the transfer of a series of TRL updates, with the AS specifying U <= MAX_N diff entries as the U most recent updates to the portion of the TRL pertaining to a requester, i.e., a registered device or an administrator.
+That is, a diff query enables the transfer of a series of TRL updates, with the AS specifying U <= MAX_N diff entries as the U most recent updates to the subset of the TRL pertaining to a requester, i.e., a registered device or an administrator.
 
 When responding to a diff query request from a requester (see {{ssec-trl-diff-query}}), 'diff_set' is a subset of the update collection associated with the requester, where each 'diff_entry' record is a series item from that update collection. Note that 'diff_set' specifies the whole current update collection when the value of U is equal to SIZE, i.e., the current number of series items in the update collection.
 
@@ -1658,6 +1658,8 @@ RFC EDITOR: Please remove this section.
 * Removed terminology aliasing ("TRL endpoint" vs. "TRL resource").
 
 * Use "requester" instead of "caller".
+
+* Use "subset" instead of "portion".
 
 * Improved error handling.
 
