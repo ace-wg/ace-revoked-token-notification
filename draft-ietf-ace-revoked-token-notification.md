@@ -130,9 +130,9 @@ This specification also refers to the following terminology.
 
 * TRL endpoint: an endpoint on the AS with a TRL as its representation. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.
 
-* Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a caller of the TRL endpoint.
+* Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens. How the administrator authorization is established and verified is out of the scope of this specification.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens. How the administrator authorization is established and verified is out of the scope of this specification.
 
 * Pertaining access token:
 
@@ -273,7 +273,7 @@ The AS MAY perform a single update to the TRL such that one or more token hashes
 
 # The TRL Endpoint # {#sec-trl-endpoint}
 
-Consistent with {{Section 6.5 of RFC9200}}, all communications between a caller of the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the caller MUST be bound to the caller's request.
+Consistent with {{Section 6.5 of RFC9200}}, all communications between a requester towards the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the requester MUST be bound to the corresponding requests.
 
 Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
 
@@ -625,7 +625,7 @@ In case the request is successfully processed, the AS replies with a response sp
 
 When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining portion of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless whether the TRL has changed or not.
 
-Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the caller of the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
+Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
 
 ## Handling of Access Tokens and Token Hashes
 
@@ -1656,6 +1656,8 @@ RFC EDITOR: Please remove this section.
 * Explicit focus on CoAP in the abstract and introduction.
 
 * Removed terminology aliasing ("TRL endpoint" vs. "TRL resource").
+
+* Use "requester" instead of "caller".
 
 * Improved error handling.
 
