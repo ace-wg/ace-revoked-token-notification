@@ -199,21 +199,20 @@ Consistently, the AS adds the three token hashes to the TRL at once, and sends O
 
 The token hash of an access token is computed as follows.
 
-1. The AS defines ENCODED\_TOKEN, as the content of the 'access\_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the access token was included and provided to the requesting Client.
 
-    Note that the content of the 'access\_token' parameter is either:
+1. The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the Access Token was included and provided to the requesting Client.
 
-    * A CBOR byte string, if the access token was transported using CBOR. With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then ENCODED\_TOKEN takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access\_token' parameter.
+2. The AS defines HASH_INPUT as follows.
 
-   * A text string, if the access token was transported using JSON. With reference to the example in {{fig-as-response-json}}, ENCODED\_TOKEN takes "2YotnFZFEjr1zCsicMWpAA", i.e., the raw content of the 'access\_token' parameter.
+   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).
 
-2. The AS defines HASH\_INPUT as follows.
+      With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access_token' parameter.
 
-   * If CBOR was used to transport the access token (as a CWT or JWT), HASH\_INPUT takes the same value of ENCODED\_TOKEN.
+   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).
 
-   * If JSON was used to transport the access token (as a CWT or JWT), HASH\_INPUT takes the serialization of ENCODED\_TOKEN.
+      With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.
 
-      In either case, HASH\_INPUT results in the binary representation of the content of the 'access\_token' parameter from the AS-to-Client response.
+   In either case, HASH_INPUT results in the binary representation of the raw content of the 'access_token' parameter from the AS-to-Client response.
 
 3. The AS generates a hash value of HASH\_INPUT as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
 
@@ -1660,6 +1659,8 @@ RFC EDITOR: Please remove this section.
 * Use "requester" instead of "caller".
 
 * Use "subset" instead of "portion".
+
+* Revised presentation of how token hashes are computed.
 
 * Improved error handling.
 
