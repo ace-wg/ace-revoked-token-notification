@@ -449,9 +449,9 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
     Each diff entry is a CBOR array 'diff_entry', which includes the following two elements.
 
-    * The first element is a CBOR array 'removed'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertained to the requester; and it was removed from the TRL during the update associated with the diff entry.
+    * The first element is a "trl_patch" set of token hashes, encoded as a CBOR array 'removed'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertained to the requester; and it was removed from the TRL during the update associated with the diff entry.
 
-    * The second element is a CBOR array 'added'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertains to the requester; and it was added to the TRL during the update associated with the diff entry.
+    * The second element is a "trl_patch" set of token hashes, encoded as a CBOR array 'added'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertains to the requester; and it was added to the TRL during the update associated with the diff entry.
 
     The CBOR arrays 'removed' and 'added' MUST be treated as sets, i.e., the order of their elements has no meaning.
 
