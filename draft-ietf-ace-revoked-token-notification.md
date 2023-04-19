@@ -92,21 +92,21 @@ entity:
 
 --- abstract
 
-This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked Access Tokens. As specified in this document, the method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked Access Tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers.
+This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked access tokens. As specified in this document, the method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked access tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers.
 
 --- middle
 
 # Introduction # {#intro}
 
-Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an Access Token for a Resource Server (RS). For a Client to access the RS, the Client must present the issued Access Token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
+Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an access token for a Resource Server (RS). For a Client to access the RS, the Client must present the issued access token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
 
-Even though Access Tokens have expiration times, there are circumstances by which an Access Token may need to be revoked before its expiration time, such as: (1) a registered device has been compromised, or is suspected of being compromised; (2) a registered device is decommissioned; (3) there has been a change in the ACE profile for a registered device; (4) there has been a change in access policies for a registered device; and (5) there has been a change in the outcome of policy evaluation for a registered device (e.g., if policy assessment depends on dynamic conditions in the execution environment, the user context, or the resource utilization).
+Even though access tokens have expiration times, there are circumstances by which an access token may need to be revoked before its expiration time, such as: (1) a registered device has been compromised, or is suspected of being compromised; (2) a registered device is decommissioned; (3) there has been a change in the ACE profile for a registered device; (4) there has been a change in access policies for a registered device; and (5) there has been a change in the outcome of policy evaluation for a registered device (e.g., if policy assessment depends on dynamic conditions in the execution environment, the user context, or the resource utilization).
 
-As discussed in {{Section 6.1 of RFC9200}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that Access Tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need Access Tokens with relatively long lifetimes.
+As discussed in {{Section 6.1 of RFC9200}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that access tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need access tokens with relatively long lifetimes.
 
-This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) on the AS, in order to obtain updated information about pertaining Access Tokens that were revoked prior to their expiration. As specified in this document, the registered devices use the Constrained Application Protocol (CoAP) {{RFC7252}} to communicate with the AS and with one another, and can subscribe to the TRL on the AS by using resource observation for CoAP {{RFC7641}}. Other underlying protocols than CoAP are not prohibited from being supported in the future, if they are defined to use in the ACE framework for Authentication and Authorization.
+This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) on the AS, in order to obtain updated information about pertaining access tokens that were revoked prior to their expiration. As specified in this document, the registered devices use the Constrained Application Protocol (CoAP) {{RFC7252}} to communicate with the AS and with one another, and can subscribe to the TRL on the AS by using resource observation for CoAP {{RFC7641}}. Other underlying protocols than CoAP are not prohibited from being supported in the future, if they are defined to use in the ACE framework for Authentication and Authorization.
 
-Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned Access Token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining Access Tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
+Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned access token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining access tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
 
 The benefits of this method are that it complements token introspection, and it does not require any additional endpoints on the registered devices. The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
 
@@ -124,51 +124,51 @@ Note that, unless otherwise indicated, the term "endpoint" is used here followin
 
 This specification also refers to the following terminology.
 
-* Token hash: identifier of an Access Token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
+* Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
 
-* Token Revocation List (TRL): a collection of token hashes such that the corresponding Access Tokens have been revoked but are not expired yet.
+* Token Revocation List (TRL): a collection of token hashes such that the corresponding access tokens have been revoked but are not expired yet.
 
 * TRL endpoint: an endpoint on the AS with a TRL as its representation. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.
 
 * Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a caller of the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting Access Tokens or an RS consuming Access Tokens. How the administrator authorization is established and verified is out of the scope of this specification.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a caller of the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens. How the administrator authorization is established and verified is out of the scope of this specification.
 
-* Pertaining Access Token:
+* Pertaining access token:
 
-   - With reference to an administrator, an Access Token issued by the AS.
+   - With reference to an administrator, an access token issued by the AS.
 
-   - With reference to a registered device, an Access Token intended to be owned by that device. An Access Token pertains to a Client if the AS has issued the Access Token for that Client following its request. An Access Token pertains to an RS if the AS has issued the Access Token to be consumed by that RS.
+   - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
 # Protocol Overview # {#sec-overview}
 
-This protocol defines how a CoAP-based Authorization Server informs Clients and Resource Servers, i.e., registered devices, about pertaining revoked Access Tokens. How the relationship between a registered device and the AS is established is out of the scope of this specification.
+This protocol defines how a CoAP-based Authorization Server informs Clients and Resource Servers, i.e., registered devices, about pertaining revoked access tokens. How the relationship between a registered device and the AS is established is out of the scope of this specification.
 
 At a high level, the steps of this protocol are as follows.
 
-* Upon startup, the AS creates a single TRL accessible through the TRL endpoint. At any point in time, the TRL represents the list of all revoked Access Tokens issued by the AS that are not expired yet.
+* Upon startup, the AS creates a single TRL accessible through the TRL endpoint. At any point in time, the TRL represents the list of all revoked access tokens issued by the AS that are not expired yet.
 
 * When a device registers at the AS, it also receives the url-path to the TRL endpoint.
 
    After the registration procedure is finished, the registered device can send an Observation Request to the TRL endpoint as described in {{RFC7641}}, i.e., a GET request including the CoAP Observe Option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL, as interested to receive notifications about its update. Upon receiving the request, the AS adds the registered device to the list of observers of the TRL endpoint.
 
-   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked Access Tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked Access Tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL as discussed above.
+   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL as discussed above.
 
-* When an Access Token is revoked, the AS adds the corresponding token hash to the TRL. Also, when a revoked Access Token eventually expires, the AS removes the corresponding token hash from the TRL.
+* When an access token is revoked, the AS adds the corresponding token hash to the TRL. Also, when a revoked access token eventually expires, the AS removes the corresponding token hash from the TRL.
 
-   In either case, after updating the TRL, the AS sends Observe notifications as per {{RFC7641}}. That is, an Observe notification is sent to each registered device subscribed to the TRL and to which the Access Token pertains.
+   In either case, after updating the TRL, the AS sends Observe notifications as per {{RFC7641}}. That is, an Observe notification is sent to each registered device subscribed to the TRL and to which the access token pertains.
 
-   Depending on the specific subscription established through the observation request, the notification provides the current updated list of revoked Access Tokens in the portion of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked Access Tokens (see {{ssec-trl-diff-query}}).
+   Depending on the specific subscription established through the observation request, the notification provides the current updated list of revoked access tokens in the portion of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
 
    Further Observe notifications may be sent, consistently with ongoing additional observations of the TRL endpoint.
 
 * An administrator can access and subscribe to the TRL like a registered device, while getting the full updated content of the TRL.
 
-{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three Access Tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
+{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
 
-Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the Access Token that they both own.
+Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.
 
 ~~~~~~~~~~~
                     +----------------------+
@@ -197,21 +197,21 @@ Consistently, the AS adds the three token hashes to the TRL at once, and sends O
 
 # Token Hash # {#sec-token-name}
 
-The token hash of an Access Token is computed as follows.
+The token hash of an access token is computed as follows.
 
-1. The AS defines ENCODED\_TOKEN, as the content of the 'access\_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the Access Token was included and provided to the requesting Client.
+1. The AS defines ENCODED\_TOKEN, as the content of the 'access\_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the access token was included and provided to the requesting Client.
 
     Note that the content of the 'access\_token' parameter is either:
 
-    * A CBOR byte string, if the Access Token was transported using CBOR. With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then ENCODED\_TOKEN takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access\_token' parameter.
+    * A CBOR byte string, if the access token was transported using CBOR. With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then ENCODED\_TOKEN takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access\_token' parameter.
 
-   * A text string, if the Access Token was transported using JSON. With reference to the example in {{fig-as-response-json}}, ENCODED\_TOKEN takes "2YotnFZFEjr1zCsicMWpAA", i.e., the raw content of the 'access\_token' parameter.
+   * A text string, if the access token was transported using JSON. With reference to the example in {{fig-as-response-json}}, ENCODED\_TOKEN takes "2YotnFZFEjr1zCsicMWpAA", i.e., the raw content of the 'access\_token' parameter.
 
 2. The AS defines HASH\_INPUT as follows.
 
-   * If CBOR was used to transport the Access Token (as a CWT or JWT), HASH\_INPUT takes the same value of ENCODED\_TOKEN.
+   * If CBOR was used to transport the access token (as a CWT or JWT), HASH\_INPUT takes the same value of ENCODED\_TOKEN.
 
-   * If JSON was used to transport the Access Token (as a CWT or JWT), HASH\_INPUT takes the serialization of ENCODED\_TOKEN.
+   * If JSON was used to transport the access token (as a CWT or JWT), HASH\_INPUT takes the serialization of ENCODED\_TOKEN.
 
       In either case, HASH\_INPUT results in the binary representation of the content of the 'access\_token' parameter from the AS-to-Client response.
 
@@ -228,7 +228,7 @@ Max-Age: 85800
 Payload:
 {
    "access_token" : h'd08344a1 ...
-    (remainder of the Access Token omitted for brevity) ...',
+    (remainder of the access token omitted for brevity) ...',
    "token_type" : pop,
    "expires_in" : 86400,
    "profile" : coap_dtls,
@@ -257,7 +257,7 @@ Payload:
 
 Upon startup, the AS creates a single Token Revocation List (TRL), encoded as a CBOR array.
 
-Each element of the array is a CBOR byte string, with value the token hash of an Access Token. The order of the token hashes in the CBOR array is irrelevant, and the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.
+Each element of the array is a CBOR byte string, with value the token hash of an access token. The order of the token hashes in the CBOR array is irrelevant, and the CBOR array MUST be treated as a set in which the order of elements has no significant meaning.
 
 The TRL is initialized as empty, i.e., its initial content MUST be the empty CBOR array. The TRL is accessible through the TRL endpoint on the AS.
 
@@ -265,11 +265,11 @@ The TRL is initialized as empty, i.e., its initial content MUST be the empty CBO
 
 The AS updates the TRL in the following two cases.
 
-* When a non-expired Access Token is revoked, the token hash of the Access Token is added to the TRL. That is, a CBOR byte string with the token hash as its value is added to the CBOR array encoding the TRL.
+* When a non-expired access token is revoked, the token hash of the access token is added to the TRL. That is, a CBOR byte string with the token hash as its value is added to the CBOR array encoding the TRL.
 
-* When a revoked Access Token expires, the token hash of the Access Token is removed from the TRL. That is, the CBOR byte string with the token hash as its value is removed from the CBOR array encoding the TRL.
+* When a revoked access token expires, the token hash of the access token is removed from the TRL. That is, the CBOR byte string with the token hash as its value is removed from the CBOR array encoding the TRL.
 
-The AS MAY perform a single update to the TRL such that one or more token hashes are added or removed at once. For example, this can be the case if multiple Access Tokens are revoked or expire at the same time, or within an acceptably narrow time window.
+The AS MAY perform a single update to the TRL such that one or more token hashes are added or removed at once. For example, this can be the case if multiple access tokens are revoked or expire at the same time, or within an acceptably narrow time window.
 
 # The TRL Endpoint # {#sec-trl-endpoint}
 
@@ -281,13 +281,13 @@ The AS MUST implement measures to prevent access to the TRL endpoint by entities
 
 The TRL endpoint supports only the GET method, and allows two types of query of the TRL.
 
-* Full query: the AS returns the token hashes of the revoked Access Tokens currently in the TRL and pertaining to the requester.
+* Full query: the AS returns the token hashes of the revoked access tokens currently in the TRL and pertaining to the requester.
 
    The AS MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
 
 * Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the portion of the TRL pertaining to the requester.
 
-   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked Access Tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
+   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
 
    The AS MAY support this type of query. In such a case, the AS maintains the history of updates to the TRL as defined in {{sec-trl-endpoint-supporting-diff-queries}}. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
 
@@ -313,7 +313,7 @@ Each time the TRL changes, the AS performs the following operations for each req
 
 2. The AS creates two sets "trl_patch" of token hashes, i.e., one  "removed" set and one "added" set, as related to this TRL update.
 
-3. The AS fills the two sets with the token hashes of the removed and added Access Tokens, respectively, from/to the TRL portion considered at step 1.
+3. The AS fills the two sets with the token hashes of the removed and added access tokens, respectively, from/to the TRL portion considered at step 1.
 
 4. The AS creates a new series item, which includes the two sets from step 3.
 
@@ -398,7 +398,7 @@ In order to produce a (notification) response to a GET request asking for a full
 
 1. From the TRL, the AS builds a set HASHES such that:
 
-    * If the requester is a registered device, HASHES specifies the token hashes currently in the TRL and associated with the Access Tokens pertaining to that registered device. The AS can use the authenticated identity of the registered device to perform the necessary filtering on the TRL content.
+    * If the requester is a registered device, HASHES specifies the token hashes currently in the TRL and associated with the access tokens pertaining to that registered device. The AS can use the authenticated identity of the registered device to perform the necessary filtering on the TRL content.
 
     * If the requester is an administrator, HASHES specifies all the token hashes currently in the TRL.
 
@@ -450,9 +450,9 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
     Each diff entry is a CBOR array 'diff_entry', which includes the following two elements.
 
-    * The first element is a CBOR array 'removed'. Each element of the array is a CBOR byte string, with value the token hash of an Access Token such that: it pertained to the requester; and it was removed from the TRL during the update associated with the diff entry.
+    * The first element is a CBOR array 'removed'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertained to the requester; and it was removed from the TRL during the update associated with the diff entry.
 
-    * The second element is a CBOR array 'added'. Each element of the array is a CBOR byte string, with value the token hash of an Access Token such that: it pertains to the requester; and it was added to the TRL during the update associated with the diff entry.
+    * The second element is a CBOR array 'added'. Each element of the array is a CBOR byte string, with value the token hash of an access token such that: it pertains to the requester; and it was added to the TRL during the update associated with the diff entry.
 
     The order of the token hashes in the CBOR arrays 'removed' and 'added' is irrelevant. That is, the CBOR arrays 'removed' and 'added' MUST be treated as a set in which the order of elements has no significant meaning.
 
@@ -629,11 +629,11 @@ Following a first exchange with the AS, an administrator or a registered device 
 
 ## Handling of Access Tokens and Token Hashes
 
-When receiving a response from the TRL endpoint, a registered device MUST expunge every stored Access Token associated with a token hash specified in the response. In case the registered device is an RS, it MUST store the token hash.
+When receiving a response from the TRL endpoint, a registered device MUST expunge every stored access token associated with a token hash specified in the response. In case the registered device is an RS, it MUST store the token hash.
 
-An RS MUST NOT accept and store an Access Token, if the corresponding token hash is among the currently stored ones.
+An RS MUST NOT accept and store an access token, if the corresponding token hash is among the currently stored ones.
 
-An RS stores a token hash th1 corresponding to an Access Token t1 until both the following conditions hold.
+An RS stores a token hash th1 corresponding to an access token t1 until both the following conditions hold.
 
 * The RS has received and seen t1, irrespective of having accepted and stored it.
 
@@ -647,17 +647,17 @@ An RS stores a token hash th1 corresponding to an Access Token t1 until both the
 
    - The result of token introspection performed on t1 (see {{Section 5.9 of RFC9200}}), if supported by both the RS and the AS.
 
-The RS MUST NOT delete the stored token hashes whose corresponding Access Tokens do not fulfill the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
+The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
 
-Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining Access Token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim not greater than the highest sequence number among the expired Access Tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired Access Token as long as it stores the corresponding token hash.
+Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim not greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
 
-In order to further limit such a risk, when receiving an Access Token that specifies the 'exi' claim and for which a corresponding token hash is not stored, the RS can introspect the Access Token (see {{Section 5.9 of RFC9200}}), if token introspection is implemented by both the RS and the AS.
+In order to further limit such a risk, when receiving an access token that specifies the 'exi' claim and for which a corresponding token hash is not stored, the RS can introspect the access token (see {{Section 5.9 of RFC9200}}), if token introspection is implemented by both the RS and the AS.
 
-When, due to the stored and corresponding token hash th2, an Access Token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2 as per the two conditions specified above, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
+When, due to the stored and corresponding token hash th2, an access token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2 as per the two conditions specified above, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
 
-When deleting any token hash, the RS checks whether the token hash is associated with a sequence number sn\_th. In such a case, the RS checks whether sn\_th is greater than the highest sequence number sn\* among the expired Access Tokens specifying the 'exi' claim for the RS. If that is the case, sn\* MUST take the value of sn\_th.
+When deleting any token hash, the RS checks whether the token hash is associated with a sequence number sn\_th. In such a case, the RS checks whether sn\_th is greater than the highest sequence number sn\* among the expired access tokens specifying the 'exi' claim for the RS. If that is the case, sn\* MUST take the value of sn\_th.
 
-By virtue of what is defined in {{Section 5.10.3 of RFC9200}}, this ensures that, following the deletion of the token hash associated with an Access Token specifying the 'exi' claim and uploaded for the first time after it has been revoked and later expired, the RS will not accept the Access Token at that point in time or in the future.
+By virtue of what is defined in {{Section 5.10.3 of RFC9200}}, this ensures that, following the deletion of the token hash associated with an access token specifying the 'exi' claim and uploaded for the first time after it has been revoked and later expired, the RS will not accept the access token at that point in time or in the future.
 
 # ACE Token Revocation List Parameters # {#trl-registry-parameters}
 
@@ -713,35 +713,35 @@ Security considerations are inherited from the ACE framework for Authentication 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining portion of the TRL. To this end, the AS can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-Disclosing any information about revoked Access Tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
+Disclosing any information about revoked access tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining portion of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
 
 ## Size of the TRL
 
-If many non-expired Access Tokens associated with a registered device are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
+If many non-expired access tokens associated with a registered device are revoked, the pertaining portion of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
 
-This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing Access Tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.
+This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing access tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.
 
 ## Communication Patterns
 
-The communication about revoked Access Tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining Access Tokens have been revoked.
+The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining access tokens have been revoked.
 
-In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the AS for the most current information about revoked Access Tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint according to a related application policy.
 
 ## Request of New Access Tokens
 
-If a Client stores an Access Token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client migth anyway receive an unprotected 4.01 (Unauthorized) response from the RS.
+If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client migth anyway receive an unprotected 4.01 (Unauthorized) response from the RS.
 
-This can be due to different reasons. For example, the Access Token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the Access Token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
+This can be due to different reasons. For example, the access token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the access token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
 
-In either case, if the Client believes that the Access Token is still valid, it SHOULD NOT immediately ask for a new Access Token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the Access Token is not valid anymore, the Client expunges the Access Token and can ask for a new one. Otherwise, the Client can try again to upload the same Access Token to the RS, or instead to request a new one.
+In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.
 
 ## Dishonest Clients
 
-A dishonest Client may attempt to exploit its early knowledge about a revoked Access Token, in order to illegitimately continue accessing a protected resource at the RS beyond the Access Token revocation.
+A dishonest Client may attempt to exploit its early knowledge about a revoked access token, in order to illegitimately continue accessing a protected resource at the RS beyond the access token revocation.
 
-That is, the Client might gain knowledge about the revocation of an Access Token considerably earlier than the RS, e.g., if the Client relies on CoAP Observe to access the TRL at the AS, while the RS relies only on polling through individual requests.
+That is, the Client might gain knowledge about the revocation of an access token considerably earlier than the RS, e.g., if the Client relies on CoAP Observe to access the TRL at the AS, while the RS relies only on polling through individual requests.
 
-This makes the RS vulnerable during a time interval that starts when the Client gains knowledge of the revoked Access Token and ends when the RS expunges the Access Token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the RS, if this still retains the Access Token without knowing about its revocation yet.
+This makes the RS vulnerable during a time interval that starts when the Client gains knowledge of the revoked access token and ends when the RS expunges the access token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the RS, if this still retains the access token without knowing about its revocation yet.
 
 In order to mitigate the risk of such an abuse, if an RS relies solely on polling through individual requests to the TRL endpoint, the RS SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
@@ -771,7 +771,7 @@ Interoperability considerations: N/A
 
 Published specification: {{&SELF}}
 
-Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked Access Tokens, according to a Token Revocation List maintained by the Authorization Server as specified in {{&SELF}}.
+Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked access tokens, according to a Token Revocation List maintained by the Authorization Server as specified in {{&SELF}}.
 
 Fragment identifier considerations: N/A
 
@@ -917,7 +917,7 @@ For each parameter, the columns of the table specify the following information. 
 
 # Interaction Examples # {#sec-RS-examples}
 
-This section provides examples of interactions between an RS as a registered device and an AS. In the examples, all the Access Tokens issued by the AS are intended to be consumed by the considered RS.
+This section provides examples of interactions between an RS as a registered device and an AS. In the examples, all the access tokens issued by the AS are intended to be consumed by the considered RS.
 
 The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
 
@@ -933,7 +933,7 @@ The payload of the registration response is a CBOR map, which includes the follo
 
 * possible further parameters related to the registration process.
 
-Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the byte-string representations of the token hashes for the Access Tokens t1 and t2, respectively.
+Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the byte-string representations of the token hashes for the access tokens t1 and t2, respectively.
 
 ## Full Query with Observe # {#sec-RS-example-1}
 
@@ -970,14 +970,14 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|          (Access Tokens t1 and t2 issued           |
+|          (Access tokens t1 and t2 issued           |
 |          and successfully submitted to RS)         |
 |                         .                          |
 |                         .                          |
 |                         .                          |
 |                                                    |
 |                                                    |
-|             (Access Token t1 is revoked)           |
+|             (Access token t1 is revoked)           |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 53                      |
@@ -989,7 +989,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|             (Access Token t2 is revoked)           |
+|             (Access token t2 is revoked)           |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 64                      |
@@ -1002,7 +1002,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|             (Access Token t1 expires)              |
+|             (Access token t1 expires)              |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 75                      |
@@ -1014,7 +1014,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|             (Access Token t2 expires)              |
+|             (Access token t2 expires)              |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 86                      |
@@ -1063,13 +1063,13 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|          (Access Tokens t1 and t2 issued           |
+|          (Access tokens t1 and t2 issued           |
 |          and successfully submitted to RS)         |
 |                         .                          |
 |                         .                          |
 |                         .                          |
 |                                                    |
-|            (Access Token t1 is revoked)            |
+|            (Access token t1 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 53                      |
@@ -1083,7 +1083,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|            (Access Token t2 is revoked)            |
+|            (Access token t2 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 64                      |
@@ -1098,7 +1098,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|              (Access Token t1 expires)             |
+|              (Access token t1 expires)             |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 75                      |
@@ -1114,7 +1114,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|              (Access Token t2 expires)             |
+|              (Access token t2 expires)             |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 86                      |
@@ -1169,13 +1169,13 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|          (Access Tokens t1 and t2 issued           |
+|          (Access tokens t1 and t2 issued           |
 |          and successfully submitted to RS)         |
 |                         .                          |
 |                         .                          |
 |                         .                          |
 |                                                    |
-|            (Access Token t1 is revoked)            |
+|            (Access token t1 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 53                      |
@@ -1187,7 +1187,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|            (Access Token t2 is revoked)            |
+|            (Access token t2 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 64                      |
@@ -1199,7 +1199,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|             (Access Token t1 expires)              |
+|             (Access token t1 expires)              |
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 CONTENT Observe: 75                      |
@@ -1211,7 +1211,7 @@ RS                                                  AS
 |                         .                          |
 |                         .                          |
 |                                                    |
-|             (Access Token t2 expires)              |
+|             (Access token t2 expires)              |
 |                                                    |
 |  X<------------------------------------------------+
 |      2.05 CONTENT Observe: 86                      |
@@ -1289,13 +1289,13 @@ RS                                                      AS
 |                           .                            |
 |                           .                            |
 |                                                        |
-|            (Access Tokens t1 and t2 issued             |
+|            (Access tokens t1 and t2 issued             |
 |            and successfully submitted to RS)           |
 |                           .                            |
 |                           .                            |
 |                           .                            |
 |                                                        |
-|              (Access Token t1 is revoked)              |
+|              (Access token t1 is revoked)              |
 |                                                        |
 |<-------------------------------------------------------+
 |          2.05 CONTENT Observe: 53                      |
@@ -1311,7 +1311,7 @@ RS                                                      AS
 |                           .                            |
 |                           .                            |
 |                                                        |
-|              (Access Token t2 is revoked)              |
+|              (Access token t2 is revoked)              |
 |                                                        |
 |<-------------------------------------------------------+
 |          2.05 CONTENT Observe: 64                      |
@@ -1328,7 +1328,7 @@ RS                                                      AS
 |                           .                            |
 |                           .                            |
 |                                                        |
-|              (Access Token t1 expires)                 |
+|              (Access token t1 expires)                 |
 |                                                        |
 |<-------------------------------------------------------+
 |          2.05 CONTENT Observe: 75                      |
@@ -1346,7 +1346,7 @@ RS                                                      AS
 |                           .                            |
 |                           .                            |
 |                                                        |
-|              (Access Token t2 expires)                 |
+|              (Access token t2 expires)                 |
 |                                                        |
 |<-------------------------------------------------------+
 |          2.05 CONTENT Observe: 86                      |
@@ -1449,19 +1449,19 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|               (Access Tokens t1, t2, t3 issued                |
+|               (Access tokens t1, t2, t3 issued                |
 |                and successfully submitted to RS)              |
 |                               .                               |
 |                               .                               |
 |                               .                               |
 |                                                               |
-|               (Access Tokens t4, t5, t6 issued                |
+|               (Access tokens t4, t5, t6 issued                |
 |               and successfully submitted to RS)               |
 |                               .                               |
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                  (Access Token t1 is revoked)                 |
+|                  (Access token t1 is revoked)                 |
 |                                                               |
 |<--------------------------------------------------------------+
 |                 2.05 CONTENT Observe: 53                      |
@@ -1474,7 +1474,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                  (Access Token t2 is revoked)                 |
+|                  (Access token t2 is revoked)                 |
 |                                                               |
 |<--------------------------------------------------------------+
 |                 2.05 CONTENT Observe: 64                      |
@@ -1487,7 +1487,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                   (Access Token t1 expires)                   |
+|                   (Access token t1 expires)                   |
 |                                                               |
 |<--------------------------------------------------------------+
 |                 2.05 CONTENT Observe: 75                      |
@@ -1500,7 +1500,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                   (Access Token t2 expires)                   |
+|                   (Access token t2 expires)                   |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 86                      |
@@ -1513,7 +1513,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                  (Access Token t3 is revoked)                 |
+|                  (Access token t3 is revoked)                 |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 88                      |
@@ -1526,7 +1526,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                  (Access Token t4 is revoked)                 |
+|                  (Access token t4 is revoked)                 |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 89                      |
@@ -1539,7 +1539,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                    (Access Token t3 expires)                  |
+|                    (Access token t3 expires)                  |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 90                      |
@@ -1552,7 +1552,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                    (Access Token t4 expires)                  |
+|                    (Access token t4 expires)                  |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 91                      |
@@ -1565,7 +1565,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|              (Access Tokens t5 and t6 are revoked)            |
+|              (Access tokens t5 and t6 are revoked)            |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 92                      |
@@ -1578,7 +1578,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                    (Access Token t5 expires)                  |
+|                    (Access token t5 expires)                  |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 93                      |
@@ -1591,7 +1591,7 @@ RS                                                             AS
 |                               .                               |
 |                               .                               |
 |                                                               |
-|                    (Access Token t6 expires)                  |
+|                    (Access token t6 expires)                  |
 |                                                               |
 |  X<-----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 94                      |
@@ -1677,7 +1677,7 @@ RFC EDITOR: Please remove this section.
 
 * Renamed N_MAX as MAX_N.
 
-* Access Tokens are not necessarily uploaded through /authz-info.
+* Access tokens are not necessarily uploaded through /authz-info.
 
 * The use of the "c.pmax" conditional attribute is just an example.
 
