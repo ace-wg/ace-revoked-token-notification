@@ -638,7 +638,7 @@ An RS stores a token hash th1 corresponding to an access token t1 until both the
 
 * The RS has gained knowledge that t1 has expired. This can be achieved, e.g., through the following means.
 
-   - A response from the TRL endpoint indicating that t1 has expired. As an example, following a diff query of the TRL, the response from the AS indicates that the token hash th1 has been removed from the TRL (see {{ssec-trl-diff-query}}).
+   - A response from the TRL endpoint indicating that t1 has expired after its earlier revocation, i.e., the token hash th1 has been removed from the TRL. This can be indicated, for instance, in a response from the TRL endpoint following a diff query of the TRL (see {{ssec-trl-diff-query}}).
 
    - The value of the 'exp' claim specified in t1 indicates that t1 has expired.
 
