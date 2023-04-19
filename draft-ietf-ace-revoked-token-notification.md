@@ -278,7 +278,7 @@ Following a request to the TRL endpoint, the messages defined in this document t
 
 The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
 
-The TRL endpoint supports only the GET method, and allows two types of query of the TRL.
+The TRL endpoint supports only the GET method, and allows two types of queries of the TRL.
 
 * Full query: the AS returns the token hashes of the revoked access tokens currently in the TRL and pertaining to the requester.
 
