@@ -1614,11 +1614,11 @@ Table of Contents
       for "Specification Required" ranges, but early assignment before a
       specification is available is considered to be permissible.  For
       the "Expert Review" range of point assignment, specifications are
-      generally recommended, but they are needed if they are expected to
-      be used outside of closed environments in an interoperable way.
-      When specifications are not provided, the description provided
-      needs to have sufficient information to identify what the point is
-      being used for.
+      recommended, and are needed if they are expected to be used
+      outside of closed environments in an interoperable way.  When
+      specifications are not provided, the description provided needs to
+      have sufficient information to identify what the point is being
+      used for.
 
    *  Experts should take into account the expected usage of fields when
       approving point assignment.  The fact that there is a range for
