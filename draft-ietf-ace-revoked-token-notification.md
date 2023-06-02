@@ -840,11 +840,9 @@ Expert reviewers should take into consideration the following points:
 
 * Point squatting should be discouraged. Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. The zones tagged as private use are intended for testing purposes and closed environments. Code points in other ranges should not be assigned for testing.
 
-* Specifications are required for the "Standards Action With Expert Review" range of point assignment. Specifications should exist for "Specification Required" ranges, but early assignment before a specification is available is considered to be permissible. Specifications are needed for the "Expert Review" range if they are expected to be used outside of closed environments in an interoperable way. When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.
+* Specifications are required for the "Standards Action With Expert Review" range of point assignment. Specifications should exist for "Specification Required" ranges, but early assignment before a specification is available is considered to be permissible. For the "Expert Review" range of point assignment, specifications are generally recommended, but they are needed if they are expected to be used outside of closed environments in an interoperable way. When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.
 
 * Experts should take into account the expected usage of fields when approving point assignment. The fact that there is a range for Standards Track documents does not mean that a Standards Track document cannot have points assigned outside of that range. The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.
-
-* Even for "Expert Review", specifications are recommended. When specifications are not provided for a request where "Expert Review" is the assignment policy, the description provided needs to have sufficient information to verify the code points above.
 
 --- back
 
@@ -1649,6 +1647,10 @@ RS                                                             AS
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: Please remove this section.
+
+## Version -05 to -06 ## {#sec-05-06}
+
+* Clarified instructions for Expert Review in the IANA considerations.
 
 ## Version -04 to -05 ## {#sec-04-05}
 
