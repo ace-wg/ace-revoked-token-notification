@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 21 October 2023                                     Ericsson AB
+Expires: 4 December 2023                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           19 April 2023
+                                                             2 June 2023
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 October 2023.
+   This Internet-Draft will expire on 4 December 2023.
 
 Copyright Notice
 
@@ -122,11 +122,12 @@ Table of Contents
      C.4.  Diff Query with Observe and "Cursor"
      C.5.  Full Query with Observe plus Diff Query with "Cursor"
    Appendix D.  Document Updates
-     D.1.  Version -04 to -05
-     D.2.  Version -03 to -04
-     D.3.  Version -02 to -03
-     D.4.  Version -01 to -02
-     D.5.  Version -00 to -01
+     D.1.  Version -05 to -06
+     D.2.  Version -04 to -05
+     D.3.  Version -03 to -04
+     D.4.  Version -02 to -03
+     D.5.  Version -01 to -02
+     D.6.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -1611,12 +1612,13 @@ Table of Contents
    *  Specifications are required for the "Standards Action With Expert
       Review" range of point assignment.  Specifications should exist
       for "Specification Required" ranges, but early assignment before a
-      specification is available is considered to be permissible.
-      Specifications are needed for the "Expert Review" range if they
-      are expected to be used outside of closed environments in an
-      interoperable way.  When specifications are not provided, the
-      description provided needs to have sufficient information to
-      identify what the point is being used for.
+      specification is available is considered to be permissible.  For
+      the "Expert Review" range of point assignment, specifications are
+      recommended, and are needed if they are expected to be used
+      outside of closed environments in an interoperable way.  When
+      specifications are not provided, the description provided needs to
+      have sufficient information to identify what the point is being
+      used for.
 
    *  Experts should take into account the expected usage of fields when
       approving point assignment.  The fact that there is a range for
@@ -1626,11 +1628,6 @@ Table of Contents
       code points of that length are left, the size of device it will be
       used on, and the number of code points left that encode to that
       size.
-
-   *  Even for "Expert Review", specifications are recommended.  When
-      specifications are not provided for a request where "Expert
-      Review" is the assignment policy, the description provided needs
-      to have sufficient information to verify the code points above.
 
 15.  References
 
@@ -2628,7 +2625,12 @@ Appendix D.  Document Updates
 
    RFC EDITOR: Please remove this section.
 
-D.1.  Version -04 to -05
+D.1.  Version -05 to -06
+
+   *  Clarified instructions for Expert Review in the IANA
+      considerations.
+
+D.2.  Version -04 to -05
 
    *  Explicit focus on CoAP in the abstract and introduction.
 
@@ -2650,7 +2652,7 @@ D.1.  Version -04 to -05
 
    *  Updated author list.
 
-D.2.  Version -03 to -04
+D.3.  Version -03 to -04
 
    *  Improved presentation of pre- and post-registration operations.
 
@@ -2678,7 +2680,7 @@ D.2.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-D.3.  Version -02 to -03
+D.4.  Version -02 to -03
 
    *  Definition of MAX_INDEX for the "Cursor" extension.
 
@@ -2692,7 +2694,7 @@ D.3.  Version -02 to -03
 
    *  Editorial improvements.
 
-D.4.  Version -01 to -02
+D.5.  Version -01 to -02
 
    *  Earlier mentioning of error cases.
 
@@ -2708,7 +2710,7 @@ D.4.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-D.5.  Version -00 to -01
+D.6.  Version -00 to -01
 
    *  Added actions to perform upon receiving responses from the TRL
       endpoint.
