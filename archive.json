@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-06-01T01:52:38.459019+00:00",
+  "timestamp": "2023-06-04T01:48:04.249876+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -78,6 +78,55 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOG4P0p85SADWi",
+      "title": "Clarified instructions for Expert Review in the IANA considerations.",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/2",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-06-02T13:02:04Z",
+      "updatedAt": "2023-06-02T13:57:04Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "467db225db44b2f0f9e2d3aefd11440b16fd46a3",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "iana-expert-instructions",
+      "headRefOid": "3b3137185a313e6c97a6eec313768105411eabb2",
+      "closedAt": "2023-06-02T13:39:28Z",
+      "mergedAt": "2023-06-02T13:39:28Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "46405ab29d4883a5423841c20b5154bf252a3fe9"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p85W3skf",
+          "commit": {
+            "abbreviatedOid": "38dba72"
+          },
+          "author": "gselander",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-06-02T13:25:17Z",
+          "updatedAt": "2023-06-02T13:25:17Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "OLD\r\n> For the \"Expert Review\" range of point assignment, specifications are generally recommended, but they are needed if they are expected to be used outside of closed environments in an interoperable way.\r\n\r\nNEW\r\nFor the \"Expert Review\" range of point assignment, specifications are recommended, and are needed if they are expected to be used outside of closed environments in an interoperable way.",
+              "createdAt": "2023-06-02T13:25:17Z",
+              "updatedAt": "2023-06-02T13:25:17Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
