@@ -790,9 +790,9 @@ Provisional registration: No
 
 IANA is asked to add the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
 
-Media Type: application/ace-trl+cbor
+Content Type: application/ace-trl+cbor
 
-Encoding: -
+Content Coding: -
 
 ID: TBD
 
