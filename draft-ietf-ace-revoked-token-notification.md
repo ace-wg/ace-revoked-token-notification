@@ -65,6 +65,7 @@ normative:
   RFC6749:
   RFC6838:
   RFC6920:
+  RFC7120:
   RFC7252:
   RFC7641:
   RFC8259:
@@ -802,7 +803,9 @@ Reference: {{&SELF}}
 
 IANA is asked to establish the "ACE Token Revocation List Parameters" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
 
-The registry uses the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+As registration policy, the registry uses either "Standards Action with Expert Review", or "Specification Required" per {{Section 4.6 of RFC8126}}, or "Expert Review" per {{Section 4.5 of RFC8126}}. Expert Review guidelines are provided in {{review}}.
+
+All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per {{Section 4.9 of RFC8126}}, with Expert Review additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of Standards Track code points defined in {{RFC7120}} also applies. When such a procedure is used, review and approval by the designated expert are also required, in order for the WG chairs to determine that the conditions for early allocation are met (see step 2 in {{Section 3.1 of RFC7120}}).
 
 The columns of this registry are:
 
@@ -820,7 +823,9 @@ This registry has been initially populated by the values in {{trl-registry-param
 
 IANA is asked to establish the "ACE Token Revocation List Errors" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
 
-The registry uses the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+As registration policy, the registry uses either "Standards Action with Expert Review", or "Specification Required" per {{Section 4.6 of RFC8126}}, or "Expert Review" per {{Section 4.5 of RFC8126}}. Expert Review guidelines are provided in {{review}}.
+
+All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per {{Section 4.9 of RFC8126}}, with Expert Review additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of Standards Track code points defined in {{RFC7120}} also applies. When such a procedure is used, review and approval by the designated expert are also required, in order for the WG chairs to determine that the conditions for early allocation are met (see step 2 in {{Section 3.1 of RFC7120}}).
 
 The columns of this registry are:
 
