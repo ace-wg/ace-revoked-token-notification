@@ -776,15 +776,15 @@ Fragment identifier considerations: N/A
 
 Additional information: N/A
 
-Person & email address to contact for further information: \<iesg@ietf.org\>
+Person & email address to contact for further information: ACE WG mailing list (ace@ietf.org) or IETF Applications and Real-Time Area (art@ietf.org)
 
 Intended usage: COMMON
 
 Restrictions on usage: None
 
-Author: Marco Tiloca \<marco.tiloca@ri.se>
+Author/Change controller: IETF
 
-Change controller: IESG
+Provisional registration: No
 
 ## CoAP Content-Formats Registry {#iana-content-type}
 
