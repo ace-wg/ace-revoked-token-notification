@@ -718,7 +718,7 @@ Disclosing any information about revoked access tokens to entities other than th
 
 If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
 
-This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing access tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.
+This could be exploited by attackers to negatively affect the behavior of a registered device. Therefore, in order to help reduce the size of the TRL, the AS SHOULD refrain from issuing access tokens with a too long expiration time.
 
 ## Communication Patterns
 
