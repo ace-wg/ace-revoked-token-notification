@@ -1526,11 +1526,20 @@ Table of Contents
    IANA registry within the "Authentication and Authorization for
    Constrained Environments (ACE)" registry group.
 
-   The registry uses the "Expert Review" registration procedure
-   [RFC8126].  Expert Review guidelines are provided in Section 14.5.
-   It should be noted that, in addition to the Expert Review, some
-   portions of the registry require a specification, potentially a
-   Standards Track RFC, to be supplied as well.
+   As registration policy, the registry uses either "Standards Action
+   with Expert Review", or "Specification Required" per Section 4.6 of
+   [RFC8126], or "Expert Review" per Section 4.5 of [RFC8126].  Expert
+   Review guidelines are provided in Section 14.5.
+
+   All assignments according to "Standards Action with Expert Review"
+   are made on a "Standards Action" basis per Section 4.9 of [RFC8126],
+   with Expert Review additionally required per Section 4.5 of
+   [RFC8126].  The procedure for early IANA allocation of Standards
+   Track code points defined in [RFC7120] also applies.  When such a
+   procedure is used, review and approval by the designated expert are
+   also required, in order for the WG chairs to determine that the
+   conditions for early allocation are met (see step 2 in Section 3.1 of
+   [RFC7120]).
 
    The columns of this registry are:
 
@@ -1566,11 +1575,20 @@ Table of Contents
    IANA registry within the "Authentication and Authorization for
    Constrained Environments (ACE)" registry group.
 
-   The registry uses the "Expert Review" registration procedure
-   [RFC8126].  Expert Review guidelines are provided in Section 14.5.
-   It should be noted that, in addition to the Expert Review, some
-   portions of the registry require a specification, potentially a
-   Standards Track RFC, to be supplied as well.
+   As registration policy, the registry uses either "Standards Action
+   with Expert Review", or "Specification Required" per Section 4.6 of
+   [RFC8126], or "Expert Review" per Section 4.5 of [RFC8126].  Expert
+   Review guidelines are provided in Section 14.5.
+
+   All assignments according to "Standards Action with Expert Review"
+   are made on a "Standards Action" basis per Section 4.9 of [RFC8126],
+   with Expert Review additionally required per Section 4.5 of
+   [RFC8126].  The procedure for early IANA allocation of Standards
+   Track code points defined in [RFC7120] also applies.  When such a
+   procedure is used, review and approval by the designated expert are
+   also required, in order for the WG chairs to determine that the
+   conditions for early allocation are met (see step 2 in Section 3.1 of
+   [RFC7120]).
 
    The columns of this registry are:
 
@@ -1657,6 +1675,10 @@ Table of Contents
               Keranen, A., and P. Hallam-Baker, "Naming Things with
               Hashes", RFC 6920, DOI 10.17487/RFC6920, April 2013,
               <https://www.rfc-editor.org/rfc/rfc6920>.
+
+   [RFC7120]  Cotton, M., "Early IANA Allocation of Standards Track Code
+              Points", BCP 100, RFC 7120, DOI 10.17487/RFC7120, January
+              2014, <https://www.rfc-editor.org/rfc/rfc7120>.
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
