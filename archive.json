@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-07T01:09:23.210396+00:00",
+  "timestamp": "2024-04-09T01:04:31.619204+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -112,7 +112,7 @@
             "abbreviatedOid": "38dba72"
           },
           "author": "gselander",
-          "authorAssociation": "NONE",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2023-06-02T13:25:17Z",
@@ -127,6 +127,58 @@
           ]
         }
       ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOG4P0p85sCTJ2",
+      "title": "AD Review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/3",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the AD Review archived at https://mailarchive.ietf.org/arch/msg/ace/TvnxSbPuaf_2w59RYtAt-Wq3gEc/",
+      "createdAt": "2024-04-08T16:47:55Z",
+      "updatedAt": "2024-04-08T16:48:50Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "ad-review",
+      "headRefOid": "95e525f7edb995d39752bb40c8763227dd18babb",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOG4P0p85sCgTc",
+      "title": "IANA Review and Clarifications",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/4",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from IANA on version -06, and provides further improvements and clarifications in the \"IANA Considerations\" section.",
+      "createdAt": "2024-04-08T17:26:05Z",
+      "updatedAt": "2024-04-08T17:27:07Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "iana-review-and-clars",
+      "headRefOid": "2ffe6bdd5d7eabd52a4052b3399762e35721a77a",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
