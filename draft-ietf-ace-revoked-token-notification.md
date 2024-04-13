@@ -664,45 +664,24 @@ This specification defines a number of parameters that can be transported in the
 
 The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
 
-~~~~~~~~~~~
-+-------------------+------------+------------------------+
-| Name              | CBOR Value | CBOR Type              |
-+-------------------+------------+------------------------+
-| full_set          |  0         | array                  |
-+-------------------+------------+------------------------+
-| diff_set          |  1         | array                  |
-+-------------------+------------+------------------------+
-| cursor            |  2         | unsigned integer /     |
-|                   |            | simple value `null`    |
-+-------------------+------------+------------------------+
-| more              |  3         | simple value `false` / |
-|                   |            | simple value `true`    |
-+-------------------+------------+------------------------+
-| error             |  4         | integer                |
-+-------------------+------------+------------------------+
-| error_description |  5         | text string            |
-+-------------------+------------+------------------------+
-~~~~~~~~~~~
-{: #fig-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" artwork-align="center"}
-
+| Name              | CBOR Value | CBOR Type                                       |
+| full_set          |  0         | array                                           |
+| diff_set          |  1         | array                                           |
+| cursor            |  2         | unsigned integer / <br> simple value `null`     |
+| more              |  3         | simple value `false` / <br> simple value `true` |
+| error             |  4         | integer                                         |
+| error_description |  5         | text string                                     |
+{: #table-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" align="center"}
 
 # ACE Token Revocation List Error Identifiers {#error-types}
 
 This specification defines a number of values that the AS can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
 
-~~~~~~~~~~~
-+-------+---------------------------+
 | Value | Description               |
-+-------+---------------------------+
-|   0   | Invalid parameter value   |
-+-------+---------------------------+
-|   1   | Invalid set of parameters |
-+-------+---------------------------+
-|   2   | Out of bound cursor value |
-+-------+---------------------------+
-~~~~~~~~~~~
-{: #fig-ACE-TRL-Error Identifiers title="ACE Token Revocation List Error Identifiers" artwork-align="center"}
-
+| 0     | Invalid parameter value   |
+| 1     | Invalid set of parameters |
+| 2     | Out of bound cursor value |
+{: #table-ACE-TRL-Error Identifiers title="ACE Token Revocation List Error Identifiers" align="center"}
 
 # Security Considerations # {#sec-security-considerations}
 
@@ -863,7 +842,7 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 
 # Parameters of the TRL Endpoint # {#sec-trl-parameteters}
 
-{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
+{{table-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
 
 Except for MAX_N defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the AS supports the "Cursor" extension.
 
@@ -877,40 +856,13 @@ For each parameter, the columns of the table specify the following information. 
 
 * Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.
 
-~~~~~~~~~~~
-+----------------+----------+--------------------+--------------------+
-| Name           | Single   | Description        | Value              |
-|                | instance |                    |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_N          | Y        | Max number of TRL  | LB = 1             |
-|                |          | updates stored per |                    |
-|                |          | requester          | If supporting      |
-|                |          |                    | "Cursor", then     |
-|                |          |                    | UB = (MAX_INDEX+1) |
-+----------------+----------+--------------------+--------------------+
-| MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
-|                |          | entries included   |                    |
-|                |          | in a diff query    | UB = MAX_N         |
-|                |          | response when      |                    |
-|                |          | using "Cursor"     |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
-|                |          | instance of the    |                    |
-|                |          | 'index' parameter  | UB = ((2^64)-1)    |
-+----------------+----------+--------------------+--------------------+
-| index          | N        | Value associated   | LB = 0             |
-|                |          | with a series item |                    |
-|                |          | of an updated      | UB = MAX_INDEX     |
-|                |          | collection         |                    |
-+----------------+----------+--------------------+--------------------+
-| last_index     | N        | The 'index' value  | LB = 0             |
-|                |          | of the most        |                    |
-|                |          | recently added     | UB = MAX_INDEX     |
-|                |          | series item in an  |                    |
-|                |          | update collection  |                    |
-+----------------+----------+--------------------+--------------------+
-~~~~~~~~~~~
-{: #fig-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" artwork-align="center"}
+| Name           | Single <br> instance | Description                                                                                          | Value                                                               |
+| MAX_N          | Y                    | Max number of <br> TRL updates stored per <br> requester                                             | LB=1 <br><br> If supporting <br> "Cursor", then <br> UB=MAX_INDEX+1 |
+| MAX_DIFF_BATCH | N                    | Max number of diff entries <br> included in a <br> diff query <br> response when <br> using "Cursor" | LB=1 <br><br> UB=MAX_N                                              |
+| MAX_INDEX      | Y                    | Max value of each <br> instance of the <br> 'index' parameter                                        | LB=MAX_N-1 <br><br> UB=(2^64)-1                                     |
+| index          | N                    | Value associated <br> with a series item <br> of an update <br> collection                           | LB=0 <br><br> UB=MAX_INDEX                                          |
+| last_index     | N                    | The 'index' value <br> of the most <br> recently added <br> series item in an <br> update collection | LB=0 <br><br> UB=MAX_INDEX                                          |
+{: #table-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" align="center"}
 
 # Interaction Examples # {#sec-RS-examples}
 
