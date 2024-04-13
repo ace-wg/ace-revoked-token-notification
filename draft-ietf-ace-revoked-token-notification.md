@@ -140,7 +140,11 @@ This specification also refers to the following terminology.
 
    - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
-Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
+Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}} ("diagnostic notation"). Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
+
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'full_set': \[\], e'cursor': 3} stands for {0: \[\], 2: 3}.
+
+Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
 # Protocol Overview # {#sec-overview}
 
@@ -426,7 +430,7 @@ full_set_value = [* token_hash]
 Content-Format: application/ace-trl+cbor
 Payload:
 {
-   "full_set" : [
+   e'full_set' : [
      h'01fa51cc ... ', h'01748190 ... '
    ]
 }
@@ -482,7 +486,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 Content-Format: application/ace-trl+cbor
 Payload:
 {
-   "diff_set" : [
+   e'diff_set' : [
      [
        [ h'01fa51cc ... ', h'01748190 ... '],
        [ h'01cdf1ca ... ', h'01be41a6 ... ']
@@ -913,7 +917,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 42                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -932,7 +936,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 53                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1)]                 |
+|          e'full_set' : [bstr.h(t1)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -944,7 +948,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 64                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+|          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
 |        }                                           |
 |                                                    |
 |                         .                          |
@@ -957,7 +961,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 75                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t2)]                 |
+|          e'full_set' : [bstr.h(t2)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -969,7 +973,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 86                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
@@ -1006,7 +1010,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 42                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "diff_set" : []                           |
+|          e'diff_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1024,7 +1028,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 53                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [], [bstr.h(t1)] ]       |
 |                       ]                            |
 |        }                                           |
@@ -1038,7 +1042,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 64                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [], [bstr.h(t2)] ],      |
 |                         [ [], [bstr.h(t1)] ]       |
 |                       ]                            |
@@ -1053,7 +1057,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 75                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [bstr.h(t1)], [] ],      |
 |                         [ [], [bstr.h(t2)] ],      |
 |                         [ [], [bstr.h(t1)] ]       |
@@ -1069,7 +1073,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 86                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [bstr.h(t2)], [] ],      |
 |                         [ [bstr.h(t1)], [] ],      |
 |                         [ [], [bstr.h(t2)] ]       |
@@ -1112,7 +1116,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 42                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1130,7 +1134,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 53                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1)]                 |
+|          e'full_set' : [bstr.h(t1)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1142,7 +1146,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 64                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+|          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1154,7 +1158,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 75                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t2)]                 |
+|          e'full_set' : [bstr.h(t2)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1166,7 +1170,7 @@ RS                                                  AS
 |      2.05 CONTENT Observe: 86                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1183,7 +1187,7 @@ RS                                                  AS
 |      2.05 CONTENT                                  |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [bstr.h(t2)], [] ],      |
 |                         [ [bstr.h(t1)], [] ],      |
 |                         [ [], [bstr.h(t2)] ],      |
@@ -1230,9 +1234,9 @@ RS                                                      AS
 |          2.05 CONTENT Observe: 42                      |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [],                          |
-|                "cursor" : null,                        |
-|                  "more" : false                        |
+|              e'diff_set' : [],                         |
+|                e'cursor' : null,                       |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1250,11 +1254,11 @@ RS                                                      AS
 |          2.05 CONTENT Observe: 53                      |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [], [bstr.h(t1)] ]       |
 |                           ],                           |
-|                "cursor" : 0,                           |
-|                  "more" : false                        |
+|                e'cursor' : 0,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1266,12 +1270,12 @@ RS                                                      AS
 |          2.05 CONTENT Observe: 64                      |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [], [bstr.h(t2)] ],      |
 |                             [ [], [bstr.h(t1)] ]       |
 |                           ],                           |
-|                "cursor" : 1,                           |
-|                  "more" : false                        |
+|                e'cursor' : 1,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1283,13 +1287,13 @@ RS                                                      AS
 |          2.05 CONTENT Observe: 75                      |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [bstr.h(t1)], [] ],      |
 |                             [ [], [bstr.h(t2)] ],      |
 |                             [ [], [bstr.h(t1)] ]       |
 |                           ],                           |
-|                "cursor" : 2,                           |
-|                  "more" : false                        |
+|                e'cursor' : 2,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1301,13 +1305,13 @@ RS                                                      AS
 |          2.05 CONTENT Observe: 86                      |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [bstr.h(t2)], [] ],      |
 |                             [ [bstr.h(t1)], [] ],      |
 |                             [ [], [bstr.h(t2)] ]       |
 |                           ],                           |
-|                "cursor" : 3,                           |
-|                  "more" : false                        |
+|                e'cursor' : 3,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1324,13 +1328,13 @@ RS                                                      AS
 |          2.05 CONTENT                                  |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [bstr.h(t2)], [] ],      |
 |                             [ [bstr.h(t1)], [] ],      |
 |                             [ [], [bstr.h(t2)] ]       |
 |                           ],                           |
-|                "cursor" : 3,                           |
-|                  "more" : false                        |
+|                e'cursor' : 3,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                                                        |
 |  GET                                                   |
@@ -1341,9 +1345,9 @@ RS                                                      AS
 |          2.05 CONTENT                                  |
 |            Content-Format: "application/ace-trl+cbor"  |
 |            Payload: {                                  |
-|              "diff_set" : [],                          |
-|                "cursor" : 3,                           |
-|                  "more" : false                        |
+|              e'diff_set' : [],                         |
+|                e'cursor' : 3,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                                                        |
 ~~~~~~~~~~~
@@ -1391,8 +1395,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 42                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : null                         |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : null                        |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1416,8 +1420,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 53                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t1)],                |
-|                       "cursor" : 0                            |
+|                     e'full_set' : [bstr.h(t1)],               |
+|                       e'cursor' : 0                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1429,8 +1433,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 64                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t1), bstr.h(t2)],    |
-|                       "cursor" : 1                            |
+|                     e'full_set' : [bstr.h(t1), bstr.h(t2)],   |
+|                       e'cursor' : 1                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1442,8 +1446,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 75                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t2)],                |
-|                     "cursor"   : 2                            |
+|                     e'full_set' : [bstr.h(t2)],               |
+|                     e'cursor'   : 2                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1455,8 +1459,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 86                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : 3                            |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : 3                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1468,8 +1472,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 88                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t3)],                |
-|                       "cursor" : 4                            |
+|                     e'full_set' : [bstr.h(t3)],               |
+|                       e'cursor' : 4                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1481,8 +1485,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 89                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t3), bstr.h(t4)],    |
-|                       "cursor" : 5                            |
+|                     e'full_set' : [bstr.h(t3), bstr.h(t4)],   |
+|                       e'cursor' : 5                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1494,8 +1498,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 90                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t4)],                |
-|                       "cursor" : 6                            |
+|                     e'full_set' : [bstr.h(t4)],               |
+|                       e'cursor' : 6                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1507,8 +1511,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 91                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : 7                            |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : 7                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1520,8 +1524,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 92                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t5), bstr.h(t6)],    |
-|                     "cursor" : 8                              |
+|                     e'full_set' : [bstr.h(t5), bstr.h(t6)],   |
+|                     e'cursor' : 8                             |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1533,8 +1537,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 93                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t6)],                |
-|                     "cursor" : 9                              |
+|                     e'full_set' : [bstr.h(t6)],               |
+|                     e'cursor' : 9                             |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1546,8 +1550,8 @@ RS                                                             AS
 |                 2.05 CONTENT Observe: 94                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : 10                           |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : 10                          |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1564,15 +1568,15 @@ RS                                                             AS
 |                 2.05 CONTENT                                  |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
-|                     "diff_set" : [                            |
+|                     e'diff_set' : [                           |
 |                                    [ [bstr.h(t4)], [] ],      |
 |                                    [ [bstr.h(t3)], [] ],      |
 |                                    [ [], [bstr.h(t4)] ],      |
 |                                    [ [], [bstr.h(t3)] ],      |
 |                                    [ [bstr.h(t2)], [] ]       |
 |                                  ],                           |
-|                       "cursor" : 7,                           |
-|                         "more" : true                         |
+|                       e'cursor' : 7,                          |
+|                         e'more' : true                        |
 |                   }                                           |
 |                                                               |
 |  GET                                                          |
@@ -1583,17 +1587,29 @@ RS                                                             AS
 |        2.05 CONTENT                                           |
 |          Content-Format: "application/ace-trl+cbor"           |
 |          Payload: {                                           |
-|            "diff_set" : [                                     |
+|            e'diff_set' : [                                    |
 |                           [ [bstr.h(t6)], [] ],               |
 |                           [ [bstr.h(t5)], [] ],               |
 |                           [ [], [bstr.h(t5), bstr.h(t6)] ]    |
 |                         ],                                    |
-|              "cursor" : 10,                                   |
-|                "more" : false                                 |
+|              e'cursor' : 10,                                  |
+|                e'more' : false                                |
 |          }                                                    |
 |                                                               |
 ~~~~~~~~~~~
 {: #fig-RS-AS-5 title="Interaction for Full Query with Observe plus Diff Query with \"Cursor\"" artwork-align="center"}
+
+
+# CDDL Model # {#sec-cddl-model}
+{:removeinrfc}
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+full_set = 0
+diff_set = 1
+cursor = 2
+more = 3
+~~~~~~~~~~~~~~~~~~~~
+{: #fig-cddl-model title="CDDL model" artwork-align="left"}
 
 
 # Document Updates # {#sec-document-updates}
