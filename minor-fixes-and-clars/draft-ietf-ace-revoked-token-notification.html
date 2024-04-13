@@ -1567,12 +1567,12 @@ Content-Format: application/ace+cbor
 Max-Age: 85800
 Payload:
 {
-   "access_token" : h'd08344a1 ...
-    (remainder of the access token omitted for brevity) ...',
-   "token_type" : pop,
-   "expires_in" : 86400,
-   "profile" : coap_dtls,
-   (remainder of the response omitted for brevity)
+   / access_token / 1 : h'd08344a1/...
+    (remainder of the access token omitted for brevity)/',
+   / token_type /  34 : 2 / PoP /,
+   / expires_in /   2 : 86400,
+   / ace_profile / 38 : 1 / coap_dtls /,
+   / (remainder of the response omitted for brevity) /
 }
 </pre>
 </div>
@@ -1591,10 +1591,10 @@ Pragma: no-cache
 Payload:
 {
    "access_token" : "2YotnFZFEjr1zCsicMWpAA",
-   "token_type" : "pop",
-   "expires_in" : 86400,
-   "profile" : "coap_dtls",
-   (remainder of the response omitted for brevity)
+   "token_type"   : "pop",
+   "expires_in"   : 86400,
+   "ace_profile"  : "coap_dtls",
+   / (remainder of the response omitted for brevity) /
 }
 </pre>
 </div>
@@ -1853,7 +1853,10 @@ Content-Format: application/ace-trl+cbor
 Payload:
 {
    e'full_set' : [
-     h'01fa51cc ... ', h'01748190 ... '
+     h'01fa51cc/...
+       (remainder of the token hash omitted for brevity)/',
+     h'01748190/...
+       (remainder of the token hash omitted for brevity)/'
    ]
 }
 </pre>
@@ -1937,16 +1940,31 @@ Payload:
 {
    e'diff_set' : [
      [
-       [ h'01fa51cc ... ', h'01748190 ... '],
-       [ h'01cdf1ca ... ', h'01be41a6 ... ']
+       [ h'01fa51cc/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01748190/...
+           (remainder of the token hash omitted for brevity)/'],
+       [ h'01cdf1ca/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01be41a6/...
+           (remainder of the token hash omitted for brevity)/'
+       ]
      ],
      [
-       [ h'0144dd12 ... ', h'01231fff ... '],
+       [ h'0144dd12/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01231fff/...
+           (remainder of the token hash omitted for brevity)/'
+       ],
        []
      ],
      [
        [],
-       [ h'01ca986f ... ', h'01fe1a2b ... ']
+       [ h'01ca986f/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01fe1a2b/...
+           (remainder of the token hash omitted for brevity)/'
+       ]
      ]
    ]
 }
@@ -2662,23 +2680,23 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <figure id="figure-8">
           <div id="appendix-C.1-3.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.1-3.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1328" width="440" viewBox="0 0 440 1328" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,1312" fill="none" stroke="black"></path>
-                <path d="M 432,48 L 432,1312" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1408" width="440" viewBox="0 0 440 1408" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,1392" fill="none" stroke="black"></path>
+                <path d="M 432,48 L 432,1392" fill="none" stroke="black"></path>
                 <path d="M 8,80 L 424,80" fill="none" stroke="black"></path>
                 <path d="M 16,112 L 432,112" fill="none" stroke="black"></path>
                 <path d="M 8,288 L 424,288" fill="none" stroke="black"></path>
                 <path d="M 16,320 L 432,320" fill="none" stroke="black"></path>
-                <path d="M 16,624 L 432,624" fill="none" stroke="black"></path>
-                <path d="M 16,816 L 432,816" fill="none" stroke="black"></path>
-                <path d="M 16,1024 L 432,1024" fill="none" stroke="black"></path>
-                <path d="M 16,1216 L 432,1216" fill="none" stroke="black"></path>
+                <path d="M 16,640 L 432,640" fill="none" stroke="black"></path>
+                <path d="M 16,848 L 432,848" fill="none" stroke="black"></path>
+                <path d="M 16,1072 L 432,1072" fill="none" stroke="black"></path>
+                <path d="M 16,1280 L 432,1280" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="432,288 420,282.4 420,293.6" fill="black" transform="rotate(0,424,288)"></polygon>
                 <polygon class="arrowhead" points="432,80 420,74.4 420,85.6" fill="black" transform="rotate(0,424,80)"></polygon>
-                <polygon class="arrowhead" points="24,1216 12,1210.4 12,1221.6" fill="black" transform="rotate(180,16,1216)"></polygon>
-                <polygon class="arrowhead" points="24,1024 12,1018.4 12,1029.6" fill="black" transform="rotate(180,16,1024)"></polygon>
-                <polygon class="arrowhead" points="24,816 12,810.4 12,821.6" fill="black" transform="rotate(180,16,816)"></polygon>
-                <polygon class="arrowhead" points="24,624 12,618.4 12,629.6" fill="black" transform="rotate(180,16,624)"></polygon>
+                <polygon class="arrowhead" points="24,1280 12,1274.4 12,1285.6" fill="black" transform="rotate(180,16,1280)"></polygon>
+                <polygon class="arrowhead" points="24,1072 12,1066.4 12,1077.6" fill="black" transform="rotate(180,16,1072)"></polygon>
+                <polygon class="arrowhead" points="24,848 12,842.4 12,853.6" fill="black" transform="rotate(180,16,848)"></polygon>
+                <polygon class="arrowhead" points="24,640 12,634.4 12,645.6" fill="black" transform="rotate(180,16,640)"></polygon>
                 <polygon class="arrowhead" points="24,320 12,314.4 12,325.6" fill="black" transform="rotate(180,16,320)"></polygon>
                 <polygon class="arrowhead" points="24,112 12,106.4 12,117.6" fill="black" transform="rotate(180,16,112)"></polygon>
                 <g class="text">
@@ -2687,10 +2705,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
                   <text x="188" y="132">2.01</text>
-                  <text x="240" y="132">CREATED</text>
+                  <text x="240" y="132">Created</text>
                   <text x="220" y="148">Payload:</text>
                   <text x="264" y="148">{</text>
-                  <text x="216" y="164">...</text>
+                  <text x="208" y="164">/</text>
+                  <text x="232" y="164">...</text>
+                  <text x="256" y="164">/</text>
                   <text x="244" y="180">"trl_path"</text>
                   <text x="296" y="180">:</text>
                   <text x="360" y="180">"revoke/trl",</text>
@@ -2702,114 +2722,114 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="316" y="212">10</text>
                   <text x="192" y="228">}</text>
                   <text x="40" y="260">GET</text>
-                  <text x="92" y="260">Observe:</text>
-                  <text x="136" y="260">0</text>
-                  <text x="176" y="276">coap://as.example.com/revoke/trl/</text>
+                  <text x="192" y="260">coap://as.example.com/revoke/trl/</text>
+                  <text x="76" y="276">Observe:</text>
+                  <text x="120" y="276">0</text>
                   <text x="76" y="340">2.05</text>
-                  <text x="128" y="340">CONTENT</text>
-                  <text x="196" y="340">Observe:</text>
-                  <text x="244" y="340">42</text>
-                  <text x="136" y="356">Content-Format:</text>
-                  <text x="308" y="356">"application/ace-trl+cbor"</text>
-                  <text x="108" y="372">Payload:</text>
-                  <text x="152" y="372">{</text>
-                  <text x="136" y="388">e'full_set'</text>
-                  <text x="192" y="388">:</text>
-                  <text x="212" y="388">[]</text>
-                  <text x="80" y="404">}</text>
-                  <text x="216" y="420">.</text>
+                  <text x="128" y="340">Content</text>
+                  <text x="108" y="356">Observe:</text>
+                  <text x="156" y="356">42</text>
+                  <text x="136" y="372">Content-Format:</text>
+                  <text x="300" y="372">application/ace-trl+cbor</text>
+                  <text x="108" y="388">Payload:</text>
+                  <text x="152" y="388">{</text>
+                  <text x="136" y="404">e'full_set'</text>
+                  <text x="192" y="404">:</text>
+                  <text x="212" y="404">[]</text>
+                  <text x="80" y="420">}</text>
                   <text x="216" y="436">.</text>
                   <text x="216" y="452">.</text>
-                  <text x="120" y="484">(Access</text>
-                  <text x="180" y="484">tokens</text>
-                  <text x="220" y="484">t1</text>
-                  <text x="248" y="484">and</text>
-                  <text x="276" y="484">t2</text>
-                  <text x="316" y="484">issued</text>
-                  <text x="104" y="500">and</text>
-                  <text x="172" y="500">successfully</text>
-                  <text x="264" y="500">submitted</text>
-                  <text x="316" y="500">to</text>
-                  <text x="344" y="500">RS)</text>
-                  <text x="216" y="516">.</text>
+                  <text x="216" y="468">.</text>
+                  <text x="120" y="500">(Access</text>
+                  <text x="180" y="500">tokens</text>
+                  <text x="220" y="500">t1</text>
+                  <text x="248" y="500">and</text>
+                  <text x="276" y="500">t2</text>
+                  <text x="316" y="500">issued</text>
+                  <text x="104" y="516">and</text>
+                  <text x="172" y="516">successfully</text>
+                  <text x="264" y="516">submitted</text>
+                  <text x="316" y="516">to</text>
+                  <text x="344" y="516">RS)</text>
                   <text x="216" y="532">.</text>
                   <text x="216" y="548">.</text>
-                  <text x="144" y="596">(Access</text>
-                  <text x="200" y="596">token</text>
-                  <text x="236" y="596">t1</text>
-                  <text x="260" y="596">is</text>
-                  <text x="308" y="596">revoked)</text>
-                  <text x="76" y="644">2.05</text>
-                  <text x="128" y="644">CONTENT</text>
-                  <text x="196" y="644">Observe:</text>
-                  <text x="244" y="644">53</text>
-                  <text x="136" y="660">Content-Format:</text>
-                  <text x="308" y="660">"application/ace-trl+cbor"</text>
-                  <text x="108" y="676">Payload:</text>
-                  <text x="152" y="676">{</text>
-                  <text x="136" y="692">e'full_set'</text>
-                  <text x="192" y="692">:</text>
-                  <text x="252" y="692">[bstr.h(t1)]</text>
-                  <text x="80" y="708">}</text>
-                  <text x="216" y="724">.</text>
-                  <text x="216" y="740">.</text>
+                  <text x="216" y="564">.</text>
+                  <text x="144" y="612">(Access</text>
+                  <text x="200" y="612">token</text>
+                  <text x="236" y="612">t1</text>
+                  <text x="260" y="612">is</text>
+                  <text x="308" y="612">revoked)</text>
+                  <text x="76" y="660">2.05</text>
+                  <text x="128" y="660">Content</text>
+                  <text x="108" y="676">Observe:</text>
+                  <text x="156" y="676">53</text>
+                  <text x="136" y="692">Content-Format:</text>
+                  <text x="300" y="692">application/ace-trl+cbor</text>
+                  <text x="108" y="708">Payload:</text>
+                  <text x="152" y="708">{</text>
+                  <text x="136" y="724">e'full_set'</text>
+                  <text x="192" y="724">:</text>
+                  <text x="252" y="724">[bstr.h(t1)]</text>
+                  <text x="80" y="740">}</text>
                   <text x="216" y="756">.</text>
-                  <text x="144" y="788">(Access</text>
-                  <text x="200" y="788">token</text>
-                  <text x="236" y="788">t2</text>
-                  <text x="260" y="788">is</text>
-                  <text x="308" y="788">revoked)</text>
-                  <text x="76" y="836">2.05</text>
-                  <text x="128" y="836">CONTENT</text>
-                  <text x="196" y="836">Observe:</text>
-                  <text x="244" y="836">64</text>
-                  <text x="136" y="852">Content-Format:</text>
-                  <text x="308" y="852">"application/ace-trl+cbor"</text>
-                  <text x="108" y="868">Payload:</text>
-                  <text x="152" y="868">{</text>
-                  <text x="136" y="884">e'full_set'</text>
-                  <text x="192" y="884">:</text>
-                  <text x="252" y="884">[bstr.h(t1),</text>
-                  <text x="352" y="884">bstr.h(t2)]</text>
-                  <text x="80" y="900">}</text>
-                  <text x="216" y="932">.</text>
-                  <text x="216" y="948">.</text>
-                  <text x="216" y="964">.</text>
-                  <text x="144" y="996">(Access</text>
-                  <text x="200" y="996">token</text>
-                  <text x="236" y="996">t1</text>
-                  <text x="284" y="996">expires)</text>
-                  <text x="76" y="1044">2.05</text>
-                  <text x="128" y="1044">CONTENT</text>
-                  <text x="196" y="1044">Observe:</text>
-                  <text x="244" y="1044">75</text>
-                  <text x="136" y="1060">Content-Format:</text>
-                  <text x="308" y="1060">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1076">Payload:</text>
-                  <text x="152" y="1076">{</text>
-                  <text x="136" y="1092">e'full_set'</text>
-                  <text x="192" y="1092">:</text>
-                  <text x="252" y="1092">[bstr.h(t2)]</text>
-                  <text x="80" y="1108">}</text>
-                  <text x="216" y="1124">.</text>
-                  <text x="216" y="1140">.</text>
-                  <text x="216" y="1156">.</text>
-                  <text x="144" y="1188">(Access</text>
-                  <text x="200" y="1188">token</text>
-                  <text x="236" y="1188">t2</text>
-                  <text x="284" y="1188">expires)</text>
-                  <text x="76" y="1236">2.05</text>
-                  <text x="128" y="1236">CONTENT</text>
-                  <text x="196" y="1236">Observe:</text>
-                  <text x="244" y="1236">86</text>
-                  <text x="136" y="1252">Content-Format:</text>
-                  <text x="308" y="1252">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1268">Payload:</text>
-                  <text x="152" y="1268">{</text>
-                  <text x="136" y="1284">e'full_set'</text>
-                  <text x="192" y="1284">:</text>
-                  <text x="212" y="1284">[]</text>
-                  <text x="80" y="1300">}</text>
+                  <text x="216" y="772">.</text>
+                  <text x="216" y="788">.</text>
+                  <text x="144" y="820">(Access</text>
+                  <text x="200" y="820">token</text>
+                  <text x="236" y="820">t2</text>
+                  <text x="260" y="820">is</text>
+                  <text x="308" y="820">revoked)</text>
+                  <text x="76" y="868">2.05</text>
+                  <text x="128" y="868">Content</text>
+                  <text x="108" y="884">Observe:</text>
+                  <text x="156" y="884">64</text>
+                  <text x="136" y="900">Content-Format:</text>
+                  <text x="300" y="900">application/ace-trl+cbor</text>
+                  <text x="108" y="916">Payload:</text>
+                  <text x="152" y="916">{</text>
+                  <text x="136" y="932">e'full_set'</text>
+                  <text x="192" y="932">:</text>
+                  <text x="252" y="932">[bstr.h(t1),</text>
+                  <text x="352" y="932">bstr.h(t2)]</text>
+                  <text x="80" y="948">}</text>
+                  <text x="216" y="980">.</text>
+                  <text x="216" y="996">.</text>
+                  <text x="216" y="1012">.</text>
+                  <text x="144" y="1044">(Access</text>
+                  <text x="200" y="1044">token</text>
+                  <text x="236" y="1044">t1</text>
+                  <text x="284" y="1044">expires)</text>
+                  <text x="76" y="1092">2.05</text>
+                  <text x="128" y="1092">Content</text>
+                  <text x="108" y="1108">Observe:</text>
+                  <text x="156" y="1108">75</text>
+                  <text x="136" y="1124">Content-Format:</text>
+                  <text x="300" y="1124">application/ace-trl+cbor</text>
+                  <text x="108" y="1140">Payload:</text>
+                  <text x="152" y="1140">{</text>
+                  <text x="136" y="1156">e'full_set'</text>
+                  <text x="192" y="1156">:</text>
+                  <text x="252" y="1156">[bstr.h(t2)]</text>
+                  <text x="80" y="1172">}</text>
+                  <text x="216" y="1188">.</text>
+                  <text x="216" y="1204">.</text>
+                  <text x="216" y="1220">.</text>
+                  <text x="144" y="1252">(Access</text>
+                  <text x="200" y="1252">token</text>
+                  <text x="236" y="1252">t2</text>
+                  <text x="284" y="1252">expires)</text>
+                  <text x="76" y="1300">2.05</text>
+                  <text x="128" y="1300">Content</text>
+                  <text x="108" y="1316">Observe:</text>
+                  <text x="156" y="1316">86</text>
+                  <text x="136" y="1332">Content-Format:</text>
+                  <text x="300" y="1332">application/ace-trl+cbor</text>
+                  <text x="108" y="1348">Payload:</text>
+                  <text x="152" y="1348">{</text>
+                  <text x="136" y="1364">e'full_set'</text>
+                  <text x="192" y="1364">:</text>
+                  <text x="212" y="1364">[]</text>
+                  <text x="80" y="1380">}</text>
                 </g>
               </svg><a href="#appendix-C.1-3.1.1" class="pilcrow">¶</a>
 </div>
@@ -2832,23 +2852,23 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <figure id="figure-9">
           <div id="appendix-C.2-4.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.2-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1504" width="440" viewBox="0 0 440 1504" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,1488" fill="none" stroke="black"></path>
-                <path d="M 432,48 L 432,1488" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1584" width="440" viewBox="0 0 440 1584" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,1568" fill="none" stroke="black"></path>
+                <path d="M 432,48 L 432,1568" fill="none" stroke="black"></path>
                 <path d="M 8,80 L 424,80" fill="none" stroke="black"></path>
                 <path d="M 16,112 L 432,112" fill="none" stroke="black"></path>
                 <path d="M 8,288 L 424,288" fill="none" stroke="black"></path>
                 <path d="M 16,320 L 432,320" fill="none" stroke="black"></path>
-                <path d="M 16,608 L 432,608" fill="none" stroke="black"></path>
-                <path d="M 16,832 L 432,832" fill="none" stroke="black"></path>
-                <path d="M 16,1072 L 432,1072" fill="none" stroke="black"></path>
-                <path d="M 16,1328 L 432,1328" fill="none" stroke="black"></path>
+                <path d="M 16,624 L 432,624" fill="none" stroke="black"></path>
+                <path d="M 16,864 L 432,864" fill="none" stroke="black"></path>
+                <path d="M 16,1120 L 432,1120" fill="none" stroke="black"></path>
+                <path d="M 16,1392 L 432,1392" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="432,288 420,282.4 420,293.6" fill="black" transform="rotate(0,424,288)"></polygon>
                 <polygon class="arrowhead" points="432,80 420,74.4 420,85.6" fill="black" transform="rotate(0,424,80)"></polygon>
-                <polygon class="arrowhead" points="24,1328 12,1322.4 12,1333.6" fill="black" transform="rotate(180,16,1328)"></polygon>
-                <polygon class="arrowhead" points="24,1072 12,1066.4 12,1077.6" fill="black" transform="rotate(180,16,1072)"></polygon>
-                <polygon class="arrowhead" points="24,832 12,826.4 12,837.6" fill="black" transform="rotate(180,16,832)"></polygon>
-                <polygon class="arrowhead" points="24,608 12,602.4 12,613.6" fill="black" transform="rotate(180,16,608)"></polygon>
+                <polygon class="arrowhead" points="24,1392 12,1386.4 12,1397.6" fill="black" transform="rotate(180,16,1392)"></polygon>
+                <polygon class="arrowhead" points="24,1120 12,1114.4 12,1125.6" fill="black" transform="rotate(180,16,1120)"></polygon>
+                <polygon class="arrowhead" points="24,864 12,858.4 12,869.6" fill="black" transform="rotate(180,16,864)"></polygon>
+                <polygon class="arrowhead" points="24,624 12,618.4 12,629.6" fill="black" transform="rotate(180,16,624)"></polygon>
                 <polygon class="arrowhead" points="24,320 12,314.4 12,325.6" fill="black" transform="rotate(180,16,320)"></polygon>
                 <polygon class="arrowhead" points="24,112 12,106.4 12,117.6" fill="black" transform="rotate(180,16,112)"></polygon>
                 <g class="text">
@@ -2857,10 +2877,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
                   <text x="180" y="132">2.01</text>
-                  <text x="232" y="132">CREATED</text>
+                  <text x="232" y="132">Created</text>
                   <text x="212" y="148">Payload:</text>
                   <text x="256" y="148">{</text>
-                  <text x="208" y="164">...</text>
+                  <text x="200" y="164">/</text>
+                  <text x="224" y="164">...</text>
+                  <text x="248" y="164">/</text>
                   <text x="236" y="180">"trl_path"</text>
                   <text x="288" y="180">:</text>
                   <text x="352" y="180">"revoke/trl",</text>
@@ -2872,153 +2894,153 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="308" y="212">10</text>
                   <text x="184" y="228">}</text>
                   <text x="40" y="260">GET</text>
-                  <text x="92" y="260">Observe:</text>
-                  <text x="136" y="260">0</text>
-                  <text x="200" y="276">coap://as.example.com/revoke/trl?diff=3</text>
+                  <text x="216" y="260">coap://as.example.com/revoke/trl?diff=3</text>
+                  <text x="76" y="276">Observe:</text>
+                  <text x="120" y="276">0</text>
                   <text x="76" y="340">2.05</text>
-                  <text x="128" y="340">CONTENT</text>
-                  <text x="196" y="340">Observe:</text>
-                  <text x="244" y="340">42</text>
-                  <text x="136" y="356">Content-Format:</text>
-                  <text x="308" y="356">"application/ace-trl+cbor"</text>
-                  <text x="108" y="372">Payload:</text>
-                  <text x="152" y="372">{</text>
-                  <text x="136" y="388">e'diff_set'</text>
-                  <text x="192" y="388">:</text>
-                  <text x="212" y="388">[]</text>
-                  <text x="80" y="404">}</text>
-                  <text x="216" y="420">.</text>
+                  <text x="128" y="340">Content</text>
+                  <text x="108" y="356">Observe:</text>
+                  <text x="156" y="356">42</text>
+                  <text x="136" y="372">Content-Format:</text>
+                  <text x="300" y="372">application/ace-trl+cbor</text>
+                  <text x="108" y="388">Payload:</text>
+                  <text x="152" y="388">{</text>
+                  <text x="136" y="404">e'diff_set'</text>
+                  <text x="192" y="404">:</text>
+                  <text x="212" y="404">[]</text>
+                  <text x="80" y="420">}</text>
                   <text x="216" y="436">.</text>
                   <text x="216" y="452">.</text>
-                  <text x="120" y="484">(Access</text>
-                  <text x="180" y="484">tokens</text>
-                  <text x="220" y="484">t1</text>
-                  <text x="248" y="484">and</text>
-                  <text x="276" y="484">t2</text>
-                  <text x="316" y="484">issued</text>
-                  <text x="104" y="500">and</text>
-                  <text x="172" y="500">successfully</text>
-                  <text x="264" y="500">submitted</text>
-                  <text x="316" y="500">to</text>
-                  <text x="344" y="500">RS)</text>
-                  <text x="216" y="516">.</text>
+                  <text x="216" y="468">.</text>
+                  <text x="120" y="500">(Access</text>
+                  <text x="180" y="500">tokens</text>
+                  <text x="220" y="500">t1</text>
+                  <text x="248" y="500">and</text>
+                  <text x="276" y="500">t2</text>
+                  <text x="316" y="500">issued</text>
+                  <text x="104" y="516">and</text>
+                  <text x="172" y="516">successfully</text>
+                  <text x="264" y="516">submitted</text>
+                  <text x="316" y="516">to</text>
+                  <text x="344" y="516">RS)</text>
                   <text x="216" y="532">.</text>
                   <text x="216" y="548">.</text>
-                  <text x="136" y="580">(Access</text>
-                  <text x="192" y="580">token</text>
-                  <text x="228" y="580">t1</text>
-                  <text x="252" y="580">is</text>
-                  <text x="300" y="580">revoked)</text>
-                  <text x="76" y="628">2.05</text>
-                  <text x="128" y="628">CONTENT</text>
-                  <text x="196" y="628">Observe:</text>
-                  <text x="244" y="628">53</text>
-                  <text x="136" y="644">Content-Format:</text>
-                  <text x="308" y="644">"application/ace-trl+cbor"</text>
-                  <text x="108" y="660">Payload:</text>
-                  <text x="152" y="660">{</text>
-                  <text x="136" y="676">e'diff_set'</text>
-                  <text x="192" y="676">:</text>
-                  <text x="208" y="676">[</text>
-                  <text x="216" y="692">[</text>
-                  <text x="240" y="692">[],</text>
-                  <text x="308" y="692">[bstr.h(t1)]</text>
-                  <text x="368" y="692">]</text>
-                  <text x="200" y="708">]</text>
-                  <text x="80" y="724">}</text>
-                  <text x="216" y="740">.</text>
-                  <text x="216" y="756">.</text>
+                  <text x="216" y="564">.</text>
+                  <text x="136" y="596">(Access</text>
+                  <text x="192" y="596">token</text>
+                  <text x="228" y="596">t1</text>
+                  <text x="252" y="596">is</text>
+                  <text x="300" y="596">revoked)</text>
+                  <text x="76" y="644">2.05</text>
+                  <text x="128" y="644">Content</text>
+                  <text x="108" y="660">Observe:</text>
+                  <text x="156" y="660">53</text>
+                  <text x="136" y="676">Content-Format:</text>
+                  <text x="300" y="676">application/ace-trl+cbor</text>
+                  <text x="108" y="692">Payload:</text>
+                  <text x="152" y="692">{</text>
+                  <text x="136" y="708">e'diff_set'</text>
+                  <text x="192" y="708">:</text>
+                  <text x="208" y="708">[</text>
+                  <text x="216" y="724">[</text>
+                  <text x="240" y="724">[],</text>
+                  <text x="308" y="724">[bstr.h(t1)]</text>
+                  <text x="368" y="724">]</text>
+                  <text x="208" y="740">]</text>
+                  <text x="80" y="756">}</text>
                   <text x="216" y="772">.</text>
-                  <text x="136" y="804">(Access</text>
-                  <text x="192" y="804">token</text>
-                  <text x="228" y="804">t2</text>
-                  <text x="252" y="804">is</text>
-                  <text x="300" y="804">revoked)</text>
-                  <text x="76" y="852">2.05</text>
-                  <text x="128" y="852">CONTENT</text>
-                  <text x="196" y="852">Observe:</text>
-                  <text x="244" y="852">64</text>
-                  <text x="136" y="868">Content-Format:</text>
-                  <text x="308" y="868">"application/ace-trl+cbor"</text>
-                  <text x="108" y="884">Payload:</text>
-                  <text x="152" y="884">{</text>
-                  <text x="136" y="900">e'diff_set'</text>
-                  <text x="192" y="900">:</text>
-                  <text x="208" y="900">[</text>
-                  <text x="216" y="916">[</text>
-                  <text x="240" y="916">[],</text>
-                  <text x="308" y="916">[bstr.h(t2)]</text>
-                  <text x="372" y="916">],</text>
-                  <text x="216" y="932">[</text>
-                  <text x="240" y="932">[],</text>
-                  <text x="308" y="932">[bstr.h(t1)]</text>
-                  <text x="368" y="932">]</text>
-                  <text x="200" y="948">]</text>
-                  <text x="80" y="964">}</text>
-                  <text x="216" y="980">.</text>
-                  <text x="216" y="996">.</text>
-                  <text x="216" y="1012">.</text>
-                  <text x="152" y="1044">(Access</text>
-                  <text x="208" y="1044">token</text>
-                  <text x="244" y="1044">t1</text>
-                  <text x="292" y="1044">expires)</text>
-                  <text x="76" y="1092">2.05</text>
-                  <text x="128" y="1092">CONTENT</text>
-                  <text x="196" y="1092">Observe:</text>
-                  <text x="244" y="1092">75</text>
-                  <text x="136" y="1108">Content-Format:</text>
-                  <text x="308" y="1108">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1124">Payload:</text>
-                  <text x="152" y="1124">{</text>
-                  <text x="136" y="1140">e'diff_set'</text>
-                  <text x="192" y="1140">:</text>
-                  <text x="208" y="1140">[</text>
-                  <text x="216" y="1156">[</text>
-                  <text x="280" y="1156">[bstr.h(t1)],</text>
-                  <text x="348" y="1156">[]</text>
-                  <text x="372" y="1156">],</text>
-                  <text x="216" y="1172">[</text>
-                  <text x="240" y="1172">[],</text>
-                  <text x="308" y="1172">[bstr.h(t2)]</text>
-                  <text x="372" y="1172">],</text>
-                  <text x="216" y="1188">[</text>
-                  <text x="240" y="1188">[],</text>
-                  <text x="308" y="1188">[bstr.h(t1)]</text>
-                  <text x="368" y="1188">]</text>
-                  <text x="200" y="1204">]</text>
-                  <text x="80" y="1220">}</text>
-                  <text x="216" y="1236">.</text>
-                  <text x="216" y="1252">.</text>
-                  <text x="216" y="1268">.</text>
-                  <text x="152" y="1300">(Access</text>
-                  <text x="208" y="1300">token</text>
-                  <text x="244" y="1300">t2</text>
-                  <text x="292" y="1300">expires)</text>
-                  <text x="76" y="1348">2.05</text>
-                  <text x="128" y="1348">CONTENT</text>
-                  <text x="196" y="1348">Observe:</text>
-                  <text x="244" y="1348">86</text>
-                  <text x="136" y="1364">Content-Format:</text>
-                  <text x="308" y="1364">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1380">Payload:</text>
-                  <text x="152" y="1380">{</text>
-                  <text x="136" y="1396">e'diff_set'</text>
-                  <text x="192" y="1396">:</text>
-                  <text x="208" y="1396">[</text>
-                  <text x="216" y="1412">[</text>
-                  <text x="280" y="1412">[bstr.h(t2)],</text>
-                  <text x="348" y="1412">[]</text>
-                  <text x="372" y="1412">],</text>
-                  <text x="216" y="1428">[</text>
-                  <text x="280" y="1428">[bstr.h(t1)],</text>
-                  <text x="348" y="1428">[]</text>
-                  <text x="372" y="1428">],</text>
-                  <text x="216" y="1444">[</text>
-                  <text x="240" y="1444">[],</text>
-                  <text x="308" y="1444">[bstr.h(t2)]</text>
-                  <text x="368" y="1444">]</text>
-                  <text x="200" y="1460">]</text>
-                  <text x="80" y="1476">}</text>
+                  <text x="216" y="788">.</text>
+                  <text x="216" y="804">.</text>
+                  <text x="136" y="836">(Access</text>
+                  <text x="192" y="836">token</text>
+                  <text x="228" y="836">t2</text>
+                  <text x="252" y="836">is</text>
+                  <text x="300" y="836">revoked)</text>
+                  <text x="76" y="884">2.05</text>
+                  <text x="128" y="884">Content</text>
+                  <text x="108" y="900">Observe:</text>
+                  <text x="156" y="900">64</text>
+                  <text x="136" y="916">Content-Format:</text>
+                  <text x="300" y="916">application/ace-trl+cbor</text>
+                  <text x="108" y="932">Payload:</text>
+                  <text x="152" y="932">{</text>
+                  <text x="136" y="948">e'diff_set'</text>
+                  <text x="192" y="948">:</text>
+                  <text x="208" y="948">[</text>
+                  <text x="216" y="964">[</text>
+                  <text x="240" y="964">[],</text>
+                  <text x="308" y="964">[bstr.h(t2)]</text>
+                  <text x="372" y="964">],</text>
+                  <text x="216" y="980">[</text>
+                  <text x="240" y="980">[],</text>
+                  <text x="308" y="980">[bstr.h(t1)]</text>
+                  <text x="368" y="980">]</text>
+                  <text x="208" y="996">]</text>
+                  <text x="80" y="1012">}</text>
+                  <text x="216" y="1028">.</text>
+                  <text x="216" y="1044">.</text>
+                  <text x="216" y="1060">.</text>
+                  <text x="152" y="1092">(Access</text>
+                  <text x="208" y="1092">token</text>
+                  <text x="244" y="1092">t1</text>
+                  <text x="292" y="1092">expires)</text>
+                  <text x="76" y="1140">2.05</text>
+                  <text x="128" y="1140">Content</text>
+                  <text x="108" y="1156">Observe:</text>
+                  <text x="156" y="1156">75</text>
+                  <text x="136" y="1172">Content-Format:</text>
+                  <text x="300" y="1172">application/ace-trl+cbor</text>
+                  <text x="108" y="1188">Payload:</text>
+                  <text x="152" y="1188">{</text>
+                  <text x="136" y="1204">e'diff_set'</text>
+                  <text x="192" y="1204">:</text>
+                  <text x="208" y="1204">[</text>
+                  <text x="216" y="1220">[</text>
+                  <text x="280" y="1220">[bstr.h(t1)],</text>
+                  <text x="348" y="1220">[]</text>
+                  <text x="372" y="1220">],</text>
+                  <text x="216" y="1236">[</text>
+                  <text x="240" y="1236">[],</text>
+                  <text x="308" y="1236">[bstr.h(t2)]</text>
+                  <text x="372" y="1236">],</text>
+                  <text x="216" y="1252">[</text>
+                  <text x="240" y="1252">[],</text>
+                  <text x="308" y="1252">[bstr.h(t1)]</text>
+                  <text x="368" y="1252">]</text>
+                  <text x="208" y="1268">]</text>
+                  <text x="80" y="1284">}</text>
+                  <text x="216" y="1300">.</text>
+                  <text x="216" y="1316">.</text>
+                  <text x="216" y="1332">.</text>
+                  <text x="152" y="1364">(Access</text>
+                  <text x="208" y="1364">token</text>
+                  <text x="244" y="1364">t2</text>
+                  <text x="292" y="1364">expires)</text>
+                  <text x="76" y="1412">2.05</text>
+                  <text x="128" y="1412">Content</text>
+                  <text x="108" y="1428">Observe:</text>
+                  <text x="156" y="1428">86</text>
+                  <text x="136" y="1444">Content-Format:</text>
+                  <text x="300" y="1444">application/ace-trl+cbor</text>
+                  <text x="108" y="1460">Payload:</text>
+                  <text x="152" y="1460">{</text>
+                  <text x="136" y="1476">e'diff_set'</text>
+                  <text x="192" y="1476">:</text>
+                  <text x="208" y="1476">[</text>
+                  <text x="216" y="1492">[</text>
+                  <text x="280" y="1492">[bstr.h(t2)],</text>
+                  <text x="348" y="1492">[]</text>
+                  <text x="372" y="1492">],</text>
+                  <text x="216" y="1508">[</text>
+                  <text x="280" y="1508">[bstr.h(t1)],</text>
+                  <text x="348" y="1508">[]</text>
+                  <text x="372" y="1508">],</text>
+                  <text x="216" y="1524">[</text>
+                  <text x="240" y="1524">[],</text>
+                  <text x="308" y="1524">[bstr.h(t2)]</text>
+                  <text x="368" y="1524">]</text>
+                  <text x="208" y="1540">]</text>
+                  <text x="80" y="1556">}</text>
                 </g>
               </svg><a href="#appendix-C.2-4.1.1" class="pilcrow">¶</a>
 </div>
@@ -3042,27 +3064,28 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <figure id="figure-10">
           <div id="appendix-C.3-5.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.3-5.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1648" width="440" viewBox="0 0 440 1648" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,1632" fill="none" stroke="black"></path>
-                <path d="M 432,48 L 432,1632" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1728" width="440" viewBox="0 0 440 1728" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,848" fill="none" stroke="black"></path>
+                <path d="M 8,880 L 8,1712" fill="none" stroke="black"></path>
+                <path d="M 432,48 L 432,1712" fill="none" stroke="black"></path>
                 <path d="M 8,80 L 424,80" fill="none" stroke="black"></path>
                 <path d="M 16,112 L 432,112" fill="none" stroke="black"></path>
                 <path d="M 8,288 L 424,288" fill="none" stroke="black"></path>
                 <path d="M 16,320 L 432,320" fill="none" stroke="black"></path>
-                <path d="M 16,608 L 432,608" fill="none" stroke="black"></path>
-                <path d="M 16,800 L 432,800" fill="none" stroke="black"></path>
-                <path d="M 16,992 L 432,992" fill="none" stroke="black"></path>
-                <path d="M 48,1184 L 432,1184" fill="none" stroke="black"></path>
-                <path d="M 8,1424 L 424,1424" fill="none" stroke="black"></path>
-                <path d="M 16,1456 L 432,1456" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="432,1424 420,1418.4 420,1429.6" fill="black" transform="rotate(0,424,1424)"></polygon>
+                <path d="M 16,624 L 432,624" fill="none" stroke="black"></path>
+                <path d="M 16,832 L 432,832" fill="none" stroke="black"></path>
+                <path d="M 16,1040 L 432,1040" fill="none" stroke="black"></path>
+                <path d="M 48,1248 L 432,1248" fill="none" stroke="black"></path>
+                <path d="M 8,1504 L 424,1504" fill="none" stroke="black"></path>
+                <path d="M 16,1536 L 432,1536" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="432,1504 420,1498.4 420,1509.6" fill="black" transform="rotate(0,424,1504)"></polygon>
                 <polygon class="arrowhead" points="432,288 420,282.4 420,293.6" fill="black" transform="rotate(0,424,288)"></polygon>
                 <polygon class="arrowhead" points="432,80 420,74.4 420,85.6" fill="black" transform="rotate(0,424,80)"></polygon>
-                <polygon class="arrowhead" points="56,1184 44,1178.4 44,1189.6" fill="black" transform="rotate(180,48,1184)"></polygon>
-                <polygon class="arrowhead" points="24,1456 12,1450.4 12,1461.6" fill="black" transform="rotate(180,16,1456)"></polygon>
-                <polygon class="arrowhead" points="24,992 12,986.4 12,997.6" fill="black" transform="rotate(180,16,992)"></polygon>
-                <polygon class="arrowhead" points="24,800 12,794.4 12,805.6" fill="black" transform="rotate(180,16,800)"></polygon>
-                <polygon class="arrowhead" points="24,608 12,602.4 12,613.6" fill="black" transform="rotate(180,16,608)"></polygon>
+                <polygon class="arrowhead" points="56,1248 44,1242.4 44,1253.6" fill="black" transform="rotate(180,48,1248)"></polygon>
+                <polygon class="arrowhead" points="24,1536 12,1530.4 12,1541.6" fill="black" transform="rotate(180,16,1536)"></polygon>
+                <polygon class="arrowhead" points="24,1040 12,1034.4 12,1045.6" fill="black" transform="rotate(180,16,1040)"></polygon>
+                <polygon class="arrowhead" points="24,832 12,826.4 12,837.6" fill="black" transform="rotate(180,16,832)"></polygon>
+                <polygon class="arrowhead" points="24,624 12,618.4 12,629.6" fill="black" transform="rotate(180,16,624)"></polygon>
                 <polygon class="arrowhead" points="24,320 12,314.4 12,325.6" fill="black" transform="rotate(180,16,320)"></polygon>
                 <polygon class="arrowhead" points="24,112 12,106.4 12,117.6" fill="black" transform="rotate(180,16,112)"></polygon>
                 <g class="text">
@@ -3071,10 +3094,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
                   <text x="180" y="132">2.01</text>
-                  <text x="232" y="132">CREATED</text>
+                  <text x="232" y="132">Created</text>
                   <text x="212" y="148">Payload:</text>
                   <text x="256" y="148">{</text>
-                  <text x="208" y="164">...</text>
+                  <text x="200" y="164">/</text>
+                  <text x="224" y="164">...</text>
+                  <text x="248" y="164">/</text>
                   <text x="236" y="180">"trl_path"</text>
                   <text x="288" y="180">:</text>
                   <text x="352" y="180">"revoke/trl",</text>
@@ -3086,156 +3111,156 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="308" y="212">10</text>
                   <text x="184" y="228">}</text>
                   <text x="40" y="260">GET</text>
-                  <text x="92" y="260">Observe:</text>
-                  <text x="136" y="260">0</text>
-                  <text x="176" y="276">coap://as.example.com/revoke/trl/</text>
+                  <text x="192" y="260">coap://as.example.com/revoke/trl/</text>
+                  <text x="76" y="276">Observe:</text>
+                  <text x="120" y="276">0</text>
                   <text x="76" y="340">2.05</text>
-                  <text x="128" y="340">CONTENT</text>
-                  <text x="196" y="340">Observe:</text>
-                  <text x="244" y="340">42</text>
-                  <text x="136" y="356">Content-Format:</text>
-                  <text x="308" y="356">"application/ace-trl+cbor"</text>
-                  <text x="108" y="372">Payload:</text>
-                  <text x="152" y="372">{</text>
-                  <text x="136" y="388">e'full_set'</text>
-                  <text x="192" y="388">:</text>
-                  <text x="212" y="388">[]</text>
-                  <text x="80" y="404">}</text>
-                  <text x="216" y="420">.</text>
+                  <text x="128" y="340">Content</text>
+                  <text x="108" y="356">Observe:</text>
+                  <text x="156" y="356">42</text>
+                  <text x="136" y="372">Content-Format:</text>
+                  <text x="300" y="372">application/ace-trl+cbor</text>
+                  <text x="108" y="388">Payload:</text>
+                  <text x="152" y="388">{</text>
+                  <text x="136" y="404">e'full_set'</text>
+                  <text x="192" y="404">:</text>
+                  <text x="212" y="404">[]</text>
+                  <text x="80" y="420">}</text>
                   <text x="216" y="436">.</text>
                   <text x="216" y="452">.</text>
-                  <text x="120" y="484">(Access</text>
-                  <text x="180" y="484">tokens</text>
-                  <text x="220" y="484">t1</text>
-                  <text x="248" y="484">and</text>
-                  <text x="276" y="484">t2</text>
-                  <text x="316" y="484">issued</text>
-                  <text x="104" y="500">and</text>
-                  <text x="172" y="500">successfully</text>
-                  <text x="264" y="500">submitted</text>
-                  <text x="316" y="500">to</text>
-                  <text x="344" y="500">RS)</text>
-                  <text x="216" y="516">.</text>
+                  <text x="216" y="468">.</text>
+                  <text x="120" y="500">(Access</text>
+                  <text x="180" y="500">tokens</text>
+                  <text x="220" y="500">t1</text>
+                  <text x="248" y="500">and</text>
+                  <text x="276" y="500">t2</text>
+                  <text x="316" y="500">issued</text>
+                  <text x="104" y="516">and</text>
+                  <text x="172" y="516">successfully</text>
+                  <text x="264" y="516">submitted</text>
+                  <text x="316" y="516">to</text>
+                  <text x="344" y="516">RS)</text>
                   <text x="216" y="532">.</text>
                   <text x="216" y="548">.</text>
-                  <text x="136" y="580">(Access</text>
-                  <text x="192" y="580">token</text>
-                  <text x="228" y="580">t1</text>
-                  <text x="252" y="580">is</text>
-                  <text x="300" y="580">revoked)</text>
-                  <text x="76" y="628">2.05</text>
-                  <text x="128" y="628">CONTENT</text>
-                  <text x="196" y="628">Observe:</text>
-                  <text x="244" y="628">53</text>
-                  <text x="136" y="644">Content-Format:</text>
-                  <text x="308" y="644">"application/ace-trl+cbor"</text>
-                  <text x="108" y="660">Payload:</text>
-                  <text x="152" y="660">{</text>
-                  <text x="136" y="676">e'full_set'</text>
-                  <text x="192" y="676">:</text>
-                  <text x="252" y="676">[bstr.h(t1)]</text>
-                  <text x="80" y="692">}</text>
-                  <text x="216" y="708">.</text>
-                  <text x="216" y="724">.</text>
+                  <text x="216" y="564">.</text>
+                  <text x="136" y="596">(Access</text>
+                  <text x="192" y="596">token</text>
+                  <text x="228" y="596">t1</text>
+                  <text x="252" y="596">is</text>
+                  <text x="300" y="596">revoked)</text>
+                  <text x="76" y="644">2.05</text>
+                  <text x="128" y="644">Content</text>
+                  <text x="108" y="660">Observe:</text>
+                  <text x="156" y="660">53</text>
+                  <text x="136" y="676">Content-Format:</text>
+                  <text x="300" y="676">application/ace-trl+cbor</text>
+                  <text x="108" y="692">Payload:</text>
+                  <text x="152" y="692">{</text>
+                  <text x="136" y="708">e'full_set'</text>
+                  <text x="192" y="708">:</text>
+                  <text x="252" y="708">[bstr.h(t1)]</text>
+                  <text x="80" y="724">}</text>
                   <text x="216" y="740">.</text>
-                  <text x="136" y="772">(Access</text>
-                  <text x="192" y="772">token</text>
-                  <text x="228" y="772">t2</text>
-                  <text x="252" y="772">is</text>
-                  <text x="300" y="772">revoked)</text>
-                  <text x="76" y="820">2.05</text>
-                  <text x="128" y="820">CONTENT</text>
-                  <text x="196" y="820">Observe:</text>
-                  <text x="244" y="820">64</text>
-                  <text x="136" y="836">Content-Format:</text>
-                  <text x="308" y="836">"application/ace-trl+cbor"</text>
-                  <text x="108" y="852">Payload:</text>
-                  <text x="152" y="852">{</text>
-                  <text x="136" y="868">e'full_set'</text>
-                  <text x="192" y="868">:</text>
-                  <text x="252" y="868">[bstr.h(t1),</text>
-                  <text x="352" y="868">bstr.h(t2)]</text>
-                  <text x="80" y="884">}</text>
-                  <text x="216" y="900">.</text>
-                  <text x="216" y="916">.</text>
-                  <text x="216" y="932">.</text>
-                  <text x="144" y="964">(Access</text>
-                  <text x="200" y="964">token</text>
-                  <text x="236" y="964">t1</text>
-                  <text x="284" y="964">expires)</text>
-                  <text x="76" y="1012">2.05</text>
-                  <text x="128" y="1012">CONTENT</text>
-                  <text x="196" y="1012">Observe:</text>
-                  <text x="244" y="1012">75</text>
-                  <text x="136" y="1028">Content-Format:</text>
-                  <text x="308" y="1028">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1044">Payload:</text>
-                  <text x="152" y="1044">{</text>
-                  <text x="136" y="1060">e'full_set'</text>
-                  <text x="192" y="1060">:</text>
-                  <text x="252" y="1060">[bstr.h(t2)]</text>
-                  <text x="80" y="1076">}</text>
-                  <text x="216" y="1092">.</text>
-                  <text x="216" y="1108">.</text>
-                  <text x="216" y="1124">.</text>
-                  <text x="144" y="1156">(Access</text>
-                  <text x="200" y="1156">token</text>
-                  <text x="236" y="1156">t2</text>
-                  <text x="284" y="1156">expires)</text>
-                  <text x="32" y="1188">X</text>
-                  <text x="76" y="1204">2.05</text>
-                  <text x="128" y="1204">CONTENT</text>
-                  <text x="196" y="1204">Observe:</text>
-                  <text x="244" y="1204">86</text>
-                  <text x="136" y="1220">Content-Format:</text>
-                  <text x="308" y="1220">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1236">Payload:</text>
-                  <text x="152" y="1236">{</text>
-                  <text x="136" y="1252">e'full_set'</text>
-                  <text x="192" y="1252">:</text>
-                  <text x="212" y="1252">[]</text>
-                  <text x="80" y="1268">}</text>
-                  <text x="216" y="1284">.</text>
-                  <text x="216" y="1300">.</text>
-                  <text x="216" y="1316">.</text>
-                  <text x="128" y="1348">(Enough</text>
-                  <text x="180" y="1348">time</text>
-                  <text x="216" y="1348">has</text>
-                  <text x="260" y="1348">passed</text>
-                  <text x="312" y="1348">since</text>
-                  <text x="96" y="1364">the</text>
-                  <text x="140" y="1364">latest</text>
-                  <text x="204" y="1364">received</text>
-                  <text x="296" y="1364">notification)</text>
-                  <text x="40" y="1396">GET</text>
-                  <text x="200" y="1412">coap://as.example.com/revoke/trl?diff=8</text>
-                  <text x="76" y="1476">2.05</text>
-                  <text x="128" y="1476">CONTENT</text>
-                  <text x="136" y="1492">Content-Format:</text>
-                  <text x="308" y="1492">"application/ace-trl+cbor"</text>
-                  <text x="108" y="1508">Payload:</text>
-                  <text x="152" y="1508">{</text>
-                  <text x="136" y="1524">e'diff_set'</text>
-                  <text x="192" y="1524">:</text>
-                  <text x="208" y="1524">[</text>
-                  <text x="216" y="1540">[</text>
-                  <text x="280" y="1540">[bstr.h(t2)],</text>
-                  <text x="348" y="1540">[]</text>
-                  <text x="372" y="1540">],</text>
-                  <text x="216" y="1556">[</text>
-                  <text x="280" y="1556">[bstr.h(t1)],</text>
-                  <text x="348" y="1556">[]</text>
-                  <text x="372" y="1556">],</text>
-                  <text x="216" y="1572">[</text>
-                  <text x="240" y="1572">[],</text>
-                  <text x="308" y="1572">[bstr.h(t2)]</text>
-                  <text x="372" y="1572">],</text>
-                  <text x="216" y="1588">[</text>
-                  <text x="240" y="1588">[],</text>
-                  <text x="308" y="1588">[bstr.h(t1)]</text>
-                  <text x="368" y="1588">]</text>
-                  <text x="200" y="1604">]</text>
-                  <text x="80" y="1620">}</text>
+                  <text x="216" y="756">.</text>
+                  <text x="216" y="772">.</text>
+                  <text x="136" y="804">(Access</text>
+                  <text x="192" y="804">token</text>
+                  <text x="228" y="804">t2</text>
+                  <text x="252" y="804">is</text>
+                  <text x="300" y="804">revoked)</text>
+                  <text x="76" y="852">2.05</text>
+                  <text x="128" y="852">Content</text>
+                  <text x="108" y="868">Observe:</text>
+                  <text x="156" y="868">64</text>
+                  <text x="136" y="884">Content-Format:</text>
+                  <text x="300" y="884">application/ace-trl+cbor</text>
+                  <text x="108" y="900">Payload:</text>
+                  <text x="152" y="900">{</text>
+                  <text x="136" y="916">e'full_set'</text>
+                  <text x="192" y="916">:</text>
+                  <text x="252" y="916">[bstr.h(t1),</text>
+                  <text x="352" y="916">bstr.h(t2)]</text>
+                  <text x="80" y="932">}</text>
+                  <text x="216" y="948">.</text>
+                  <text x="216" y="964">.</text>
+                  <text x="216" y="980">.</text>
+                  <text x="144" y="1012">(Access</text>
+                  <text x="200" y="1012">token</text>
+                  <text x="236" y="1012">t1</text>
+                  <text x="284" y="1012">expires)</text>
+                  <text x="76" y="1060">2.05</text>
+                  <text x="128" y="1060">Content</text>
+                  <text x="108" y="1076">Observe:</text>
+                  <text x="156" y="1076">75</text>
+                  <text x="136" y="1092">Content-Format:</text>
+                  <text x="300" y="1092">application/ace-trl+cbor</text>
+                  <text x="108" y="1108">Payload:</text>
+                  <text x="152" y="1108">{</text>
+                  <text x="136" y="1124">e'full_set'</text>
+                  <text x="192" y="1124">:</text>
+                  <text x="252" y="1124">[bstr.h(t2)]</text>
+                  <text x="80" y="1140">}</text>
+                  <text x="216" y="1156">.</text>
+                  <text x="216" y="1172">.</text>
+                  <text x="216" y="1188">.</text>
+                  <text x="144" y="1220">(Access</text>
+                  <text x="200" y="1220">token</text>
+                  <text x="236" y="1220">t2</text>
+                  <text x="284" y="1220">expires)</text>
+                  <text x="32" y="1252">X</text>
+                  <text x="76" y="1268">2.05</text>
+                  <text x="128" y="1268">Content</text>
+                  <text x="108" y="1284">Observe:</text>
+                  <text x="156" y="1284">86</text>
+                  <text x="136" y="1300">Content-Format:</text>
+                  <text x="300" y="1300">application/ace-trl+cbor</text>
+                  <text x="108" y="1316">Payload:</text>
+                  <text x="152" y="1316">{</text>
+                  <text x="136" y="1332">e'full_set'</text>
+                  <text x="192" y="1332">:</text>
+                  <text x="212" y="1332">[]</text>
+                  <text x="80" y="1348">}</text>
+                  <text x="216" y="1364">.</text>
+                  <text x="216" y="1380">.</text>
+                  <text x="216" y="1396">.</text>
+                  <text x="128" y="1428">(Enough</text>
+                  <text x="180" y="1428">time</text>
+                  <text x="216" y="1428">has</text>
+                  <text x="260" y="1428">passed</text>
+                  <text x="312" y="1428">since</text>
+                  <text x="96" y="1444">the</text>
+                  <text x="140" y="1444">latest</text>
+                  <text x="204" y="1444">received</text>
+                  <text x="296" y="1444">notification)</text>
+                  <text x="40" y="1492">GET</text>
+                  <text x="216" y="1492">coap://as.example.com/revoke/trl?diff=8</text>
+                  <text x="76" y="1556">2.05</text>
+                  <text x="128" y="1556">Content</text>
+                  <text x="136" y="1572">Content-Format:</text>
+                  <text x="300" y="1572">application/ace-trl+cbor</text>
+                  <text x="108" y="1588">Payload:</text>
+                  <text x="152" y="1588">{</text>
+                  <text x="136" y="1604">e'diff_set'</text>
+                  <text x="192" y="1604">:</text>
+                  <text x="208" y="1604">[</text>
+                  <text x="216" y="1620">[</text>
+                  <text x="280" y="1620">[bstr.h(t2)],</text>
+                  <text x="348" y="1620">[]</text>
+                  <text x="372" y="1620">],</text>
+                  <text x="216" y="1636">[</text>
+                  <text x="280" y="1636">[bstr.h(t1)],</text>
+                  <text x="348" y="1636">[]</text>
+                  <text x="372" y="1636">],</text>
+                  <text x="216" y="1652">[</text>
+                  <text x="240" y="1652">[],</text>
+                  <text x="308" y="1652">[bstr.h(t2)]</text>
+                  <text x="372" y="1652">],</text>
+                  <text x="216" y="1668">[</text>
+                  <text x="240" y="1668">[],</text>
+                  <text x="308" y="1668">[bstr.h(t1)]</text>
+                  <text x="368" y="1668">]</text>
+                  <text x="200" y="1684">]</text>
+                  <text x="80" y="1700">}</text>
                 </g>
               </svg><a href="#appendix-C.3-5.1.1" class="pilcrow">¶</a>
 </div>
@@ -3260,31 +3285,31 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <figure id="figure-11">
           <div id="appendix-C.4-6.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.4-6.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2256" width="472" viewBox="0 0 472 2256" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,2240" fill="none" stroke="black"></path>
-                <path d="M 464,48 L 464,2240" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2320" width="472" viewBox="0 0 472 2320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,2304" fill="none" stroke="black"></path>
+                <path d="M 464,48 L 464,2304" fill="none" stroke="black"></path>
                 <path d="M 8,80 L 456,80" fill="none" stroke="black"></path>
                 <path d="M 16,112 L 464,112" fill="none" stroke="black"></path>
                 <path d="M 8,304 L 456,304" fill="none" stroke="black"></path>
                 <path d="M 16,336 L 464,336" fill="none" stroke="black"></path>
-                <path d="M 16,656 L 464,656" fill="none" stroke="black"></path>
-                <path d="M 16,912 L 464,912" fill="none" stroke="black"></path>
-                <path d="M 16,1184 L 464,1184" fill="none" stroke="black"></path>
-                <path d="M 16,1472 L 464,1472" fill="none" stroke="black"></path>
-                <path d="M 8,1808 L 456,1808" fill="none" stroke="black"></path>
-                <path d="M 16,1840 L 464,1840" fill="none" stroke="black"></path>
-                <path d="M 8,2080 L 456,2080" fill="none" stroke="black"></path>
-                <path d="M 16,2112 L 464,2112" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="464,2080 452,2074.4 452,2085.6" fill="black" transform="rotate(0,456,2080)"></polygon>
-                <polygon class="arrowhead" points="464,1808 452,1802.4 452,1813.6" fill="black" transform="rotate(0,456,1808)"></polygon>
+                <path d="M 16,672 L 464,672" fill="none" stroke="black"></path>
+                <path d="M 16,944 L 464,944" fill="none" stroke="black"></path>
+                <path d="M 16,1232 L 464,1232" fill="none" stroke="black"></path>
+                <path d="M 16,1536 L 464,1536" fill="none" stroke="black"></path>
+                <path d="M 8,1888 L 456,1888" fill="none" stroke="black"></path>
+                <path d="M 16,1920 L 464,1920" fill="none" stroke="black"></path>
+                <path d="M 8,2144 L 456,2144" fill="none" stroke="black"></path>
+                <path d="M 16,2176 L 464,2176" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="464,2144 452,2138.4 452,2149.6" fill="black" transform="rotate(0,456,2144)"></polygon>
+                <polygon class="arrowhead" points="464,1888 452,1882.4 452,1893.6" fill="black" transform="rotate(0,456,1888)"></polygon>
                 <polygon class="arrowhead" points="464,304 452,298.4 452,309.6" fill="black" transform="rotate(0,456,304)"></polygon>
                 <polygon class="arrowhead" points="464,80 452,74.4 452,85.6" fill="black" transform="rotate(0,456,80)"></polygon>
-                <polygon class="arrowhead" points="24,2112 12,2106.4 12,2117.6" fill="black" transform="rotate(180,16,2112)"></polygon>
-                <polygon class="arrowhead" points="24,1840 12,1834.4 12,1845.6" fill="black" transform="rotate(180,16,1840)"></polygon>
-                <polygon class="arrowhead" points="24,1472 12,1466.4 12,1477.6" fill="black" transform="rotate(180,16,1472)"></polygon>
-                <polygon class="arrowhead" points="24,1184 12,1178.4 12,1189.6" fill="black" transform="rotate(180,16,1184)"></polygon>
-                <polygon class="arrowhead" points="24,912 12,906.4 12,917.6" fill="black" transform="rotate(180,16,912)"></polygon>
-                <polygon class="arrowhead" points="24,656 12,650.4 12,661.6" fill="black" transform="rotate(180,16,656)"></polygon>
+                <polygon class="arrowhead" points="24,2176 12,2170.4 12,2181.6" fill="black" transform="rotate(180,16,2176)"></polygon>
+                <polygon class="arrowhead" points="24,1920 12,1914.4 12,1925.6" fill="black" transform="rotate(180,16,1920)"></polygon>
+                <polygon class="arrowhead" points="24,1536 12,1530.4 12,1541.6" fill="black" transform="rotate(180,16,1536)"></polygon>
+                <polygon class="arrowhead" points="24,1232 12,1226.4 12,1237.6" fill="black" transform="rotate(180,16,1232)"></polygon>
+                <polygon class="arrowhead" points="24,944 12,938.4 12,949.6" fill="black" transform="rotate(180,16,944)"></polygon>
+                <polygon class="arrowhead" points="24,672 12,666.4 12,677.6" fill="black" transform="rotate(180,16,672)"></polygon>
                 <polygon class="arrowhead" points="24,336 12,330.4 12,341.6" fill="black" transform="rotate(180,16,336)"></polygon>
                 <polygon class="arrowhead" points="24,112 12,106.4 12,117.6" fill="black" transform="rotate(180,16,112)"></polygon>
                 <g class="text">
@@ -3293,10 +3318,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
                   <text x="180" y="132">2.01</text>
-                  <text x="232" y="132">CREATED</text>
+                  <text x="232" y="132">Created</text>
                   <text x="212" y="148">Payload:</text>
                   <text x="256" y="148">{</text>
-                  <text x="248" y="164">...</text>
+                  <text x="240" y="164">/</text>
+                  <text x="264" y="164">...</text>
+                  <text x="288" y="164">/</text>
                   <text x="276" y="180">"trl_path"</text>
                   <text x="328" y="180">:</text>
                   <text x="392" y="180">"revoke/trl",</text>
@@ -3310,244 +3337,244 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="344" y="228">5</text>
                   <text x="184" y="244">}</text>
                   <text x="40" y="276">GET</text>
-                  <text x="92" y="276">Observe:</text>
-                  <text x="136" y="276">0</text>
-                  <text x="200" y="292">coap://as.example.com/revoke/trl?diff=3</text>
+                  <text x="216" y="276">coap://as.example.com/revoke/trl?diff=3</text>
+                  <text x="76" y="292">Observe:</text>
+                  <text x="120" y="292">0</text>
                   <text x="108" y="356">2.05</text>
-                  <text x="160" y="356">CONTENT</text>
-                  <text x="228" y="356">Observe:</text>
-                  <text x="276" y="356">42</text>
-                  <text x="168" y="372">Content-Format:</text>
-                  <text x="340" y="372">"application/ace-trl+cbor"</text>
-                  <text x="140" y="388">Payload:</text>
-                  <text x="184" y="388">{</text>
-                  <text x="168" y="404">e'diff_set'</text>
-                  <text x="224" y="404">:</text>
-                  <text x="248" y="404">[],</text>
-                  <text x="176" y="420">e'cursor'</text>
+                  <text x="160" y="356">Content</text>
+                  <text x="140" y="372">Observe:</text>
+                  <text x="188" y="372">42</text>
+                  <text x="168" y="388">Content-Format:</text>
+                  <text x="332" y="388">application/ace-trl+cbor</text>
+                  <text x="140" y="404">Payload:</text>
+                  <text x="184" y="404">{</text>
+                  <text x="168" y="420">e'diff_set'</text>
                   <text x="224" y="420">:</text>
-                  <text x="256" y="420">null,</text>
-                  <text x="184" y="436">e'more'</text>
+                  <text x="248" y="420">[],</text>
+                  <text x="176" y="436">e'cursor'</text>
                   <text x="224" y="436">:</text>
-                  <text x="256" y="436">false</text>
-                  <text x="112" y="452">}</text>
-                  <text x="232" y="468">.</text>
+                  <text x="256" y="436">null,</text>
+                  <text x="184" y="452">e'more'</text>
+                  <text x="224" y="452">:</text>
+                  <text x="256" y="452">false</text>
+                  <text x="112" y="468">}</text>
                   <text x="232" y="484">.</text>
                   <text x="232" y="500">.</text>
-                  <text x="136" y="532">(Access</text>
-                  <text x="196" y="532">tokens</text>
-                  <text x="236" y="532">t1</text>
-                  <text x="264" y="532">and</text>
-                  <text x="292" y="532">t2</text>
-                  <text x="332" y="532">issued</text>
-                  <text x="120" y="548">and</text>
-                  <text x="188" y="548">successfully</text>
-                  <text x="280" y="548">submitted</text>
-                  <text x="332" y="548">to</text>
-                  <text x="360" y="548">RS)</text>
-                  <text x="232" y="564">.</text>
+                  <text x="232" y="516">.</text>
+                  <text x="136" y="548">(Access</text>
+                  <text x="196" y="548">tokens</text>
+                  <text x="236" y="548">t1</text>
+                  <text x="264" y="548">and</text>
+                  <text x="292" y="548">t2</text>
+                  <text x="332" y="548">issued</text>
+                  <text x="120" y="564">and</text>
+                  <text x="188" y="564">successfully</text>
+                  <text x="280" y="564">submitted</text>
+                  <text x="332" y="564">to</text>
+                  <text x="360" y="564">RS)</text>
                   <text x="232" y="580">.</text>
                   <text x="232" y="596">.</text>
-                  <text x="152" y="628">(Access</text>
-                  <text x="208" y="628">token</text>
-                  <text x="244" y="628">t1</text>
-                  <text x="268" y="628">is</text>
-                  <text x="316" y="628">revoked)</text>
-                  <text x="108" y="676">2.05</text>
-                  <text x="160" y="676">CONTENT</text>
-                  <text x="228" y="676">Observe:</text>
-                  <text x="276" y="676">53</text>
-                  <text x="168" y="692">Content-Format:</text>
-                  <text x="340" y="692">"application/ace-trl+cbor"</text>
-                  <text x="140" y="708">Payload:</text>
-                  <text x="184" y="708">{</text>
-                  <text x="168" y="724">e'diff_set'</text>
-                  <text x="224" y="724">:</text>
-                  <text x="240" y="724">[</text>
-                  <text x="248" y="740">[</text>
-                  <text x="272" y="740">[],</text>
-                  <text x="340" y="740">[bstr.h(t1)]</text>
-                  <text x="400" y="740">]</text>
-                  <text x="236" y="756">],</text>
-                  <text x="176" y="772">e'cursor'</text>
-                  <text x="224" y="772">:</text>
-                  <text x="244" y="772">0,</text>
-                  <text x="184" y="788">e'more'</text>
-                  <text x="224" y="788">:</text>
-                  <text x="256" y="788">false</text>
-                  <text x="112" y="804">}</text>
-                  <text x="232" y="820">.</text>
-                  <text x="232" y="836">.</text>
+                  <text x="232" y="612">.</text>
+                  <text x="152" y="644">(Access</text>
+                  <text x="208" y="644">token</text>
+                  <text x="244" y="644">t1</text>
+                  <text x="268" y="644">is</text>
+                  <text x="316" y="644">revoked)</text>
+                  <text x="108" y="692">2.05</text>
+                  <text x="160" y="692">Content</text>
+                  <text x="140" y="708">Observe:</text>
+                  <text x="188" y="708">53</text>
+                  <text x="168" y="724">Content-Format:</text>
+                  <text x="332" y="724">application/ace-trl+cbor</text>
+                  <text x="140" y="740">Payload:</text>
+                  <text x="184" y="740">{</text>
+                  <text x="168" y="756">e'diff_set'</text>
+                  <text x="224" y="756">:</text>
+                  <text x="240" y="756">[</text>
+                  <text x="248" y="772">[</text>
+                  <text x="272" y="772">[],</text>
+                  <text x="340" y="772">[bstr.h(t1)]</text>
+                  <text x="400" y="772">]</text>
+                  <text x="244" y="788">],</text>
+                  <text x="176" y="804">e'cursor'</text>
+                  <text x="224" y="804">:</text>
+                  <text x="244" y="804">0,</text>
+                  <text x="184" y="820">e'more'</text>
+                  <text x="224" y="820">:</text>
+                  <text x="256" y="820">false</text>
+                  <text x="112" y="836">}</text>
                   <text x="232" y="852">.</text>
-                  <text x="152" y="884">(Access</text>
-                  <text x="208" y="884">token</text>
-                  <text x="244" y="884">t2</text>
-                  <text x="268" y="884">is</text>
-                  <text x="316" y="884">revoked)</text>
-                  <text x="108" y="932">2.05</text>
-                  <text x="160" y="932">CONTENT</text>
-                  <text x="228" y="932">Observe:</text>
-                  <text x="276" y="932">64</text>
-                  <text x="168" y="948">Content-Format:</text>
-                  <text x="340" y="948">"application/ace-trl+cbor"</text>
-                  <text x="140" y="964">Payload:</text>
-                  <text x="184" y="964">{</text>
-                  <text x="168" y="980">e'diff_set'</text>
-                  <text x="224" y="980">:</text>
-                  <text x="240" y="980">[</text>
-                  <text x="248" y="996">[</text>
-                  <text x="272" y="996">[],</text>
-                  <text x="340" y="996">[bstr.h(t2)]</text>
-                  <text x="404" y="996">],</text>
-                  <text x="248" y="1012">[</text>
-                  <text x="272" y="1012">[],</text>
-                  <text x="340" y="1012">[bstr.h(t1)]</text>
-                  <text x="400" y="1012">]</text>
-                  <text x="236" y="1028">],</text>
-                  <text x="176" y="1044">e'cursor'</text>
-                  <text x="224" y="1044">:</text>
-                  <text x="244" y="1044">1,</text>
-                  <text x="184" y="1060">e'more'</text>
-                  <text x="224" y="1060">:</text>
-                  <text x="256" y="1060">false</text>
-                  <text x="112" y="1076">}</text>
-                  <text x="232" y="1092">.</text>
-                  <text x="232" y="1108">.</text>
-                  <text x="232" y="1124">.</text>
-                  <text x="152" y="1156">(Access</text>
-                  <text x="208" y="1156">token</text>
-                  <text x="244" y="1156">t1</text>
-                  <text x="292" y="1156">expires)</text>
-                  <text x="108" y="1204">2.05</text>
-                  <text x="160" y="1204">CONTENT</text>
-                  <text x="228" y="1204">Observe:</text>
-                  <text x="276" y="1204">75</text>
-                  <text x="168" y="1220">Content-Format:</text>
-                  <text x="340" y="1220">"application/ace-trl+cbor"</text>
-                  <text x="140" y="1236">Payload:</text>
-                  <text x="184" y="1236">{</text>
-                  <text x="168" y="1252">e'diff_set'</text>
-                  <text x="224" y="1252">:</text>
-                  <text x="240" y="1252">[</text>
-                  <text x="248" y="1268">[</text>
-                  <text x="312" y="1268">[bstr.h(t1)],</text>
-                  <text x="380" y="1268">[]</text>
-                  <text x="404" y="1268">],</text>
-                  <text x="248" y="1284">[</text>
-                  <text x="272" y="1284">[],</text>
-                  <text x="340" y="1284">[bstr.h(t2)]</text>
-                  <text x="404" y="1284">],</text>
-                  <text x="248" y="1300">[</text>
-                  <text x="272" y="1300">[],</text>
-                  <text x="340" y="1300">[bstr.h(t1)]</text>
-                  <text x="400" y="1300">]</text>
-                  <text x="236" y="1316">],</text>
-                  <text x="176" y="1332">e'cursor'</text>
-                  <text x="224" y="1332">:</text>
-                  <text x="244" y="1332">2,</text>
-                  <text x="184" y="1348">e'more'</text>
-                  <text x="224" y="1348">:</text>
-                  <text x="256" y="1348">false</text>
-                  <text x="112" y="1364">}</text>
-                  <text x="232" y="1380">.</text>
-                  <text x="232" y="1396">.</text>
-                  <text x="232" y="1412">.</text>
-                  <text x="152" y="1444">(Access</text>
-                  <text x="208" y="1444">token</text>
-                  <text x="244" y="1444">t2</text>
-                  <text x="292" y="1444">expires)</text>
-                  <text x="108" y="1492">2.05</text>
-                  <text x="160" y="1492">CONTENT</text>
-                  <text x="228" y="1492">Observe:</text>
-                  <text x="276" y="1492">86</text>
-                  <text x="168" y="1508">Content-Format:</text>
-                  <text x="340" y="1508">"application/ace-trl+cbor"</text>
-                  <text x="140" y="1524">Payload:</text>
-                  <text x="184" y="1524">{</text>
-                  <text x="168" y="1540">e'diff_set'</text>
-                  <text x="224" y="1540">:</text>
-                  <text x="240" y="1540">[</text>
-                  <text x="248" y="1556">[</text>
-                  <text x="312" y="1556">[bstr.h(t2)],</text>
-                  <text x="380" y="1556">[]</text>
-                  <text x="404" y="1556">],</text>
-                  <text x="248" y="1572">[</text>
-                  <text x="312" y="1572">[bstr.h(t1)],</text>
-                  <text x="380" y="1572">[]</text>
-                  <text x="404" y="1572">],</text>
-                  <text x="248" y="1588">[</text>
-                  <text x="272" y="1588">[],</text>
-                  <text x="340" y="1588">[bstr.h(t2)]</text>
-                  <text x="400" y="1588">]</text>
-                  <text x="236" y="1604">],</text>
-                  <text x="176" y="1620">e'cursor'</text>
+                  <text x="232" y="868">.</text>
+                  <text x="232" y="884">.</text>
+                  <text x="152" y="916">(Access</text>
+                  <text x="208" y="916">token</text>
+                  <text x="244" y="916">t2</text>
+                  <text x="268" y="916">is</text>
+                  <text x="316" y="916">revoked)</text>
+                  <text x="108" y="964">2.05</text>
+                  <text x="160" y="964">Content</text>
+                  <text x="140" y="980">Observe:</text>
+                  <text x="188" y="980">64</text>
+                  <text x="168" y="996">Content-Format:</text>
+                  <text x="332" y="996">application/ace-trl+cbor</text>
+                  <text x="140" y="1012">Payload:</text>
+                  <text x="184" y="1012">{</text>
+                  <text x="168" y="1028">e'diff_set'</text>
+                  <text x="224" y="1028">:</text>
+                  <text x="240" y="1028">[</text>
+                  <text x="248" y="1044">[</text>
+                  <text x="272" y="1044">[],</text>
+                  <text x="340" y="1044">[bstr.h(t2)]</text>
+                  <text x="404" y="1044">],</text>
+                  <text x="248" y="1060">[</text>
+                  <text x="272" y="1060">[],</text>
+                  <text x="340" y="1060">[bstr.h(t1)]</text>
+                  <text x="400" y="1060">]</text>
+                  <text x="244" y="1076">],</text>
+                  <text x="176" y="1092">e'cursor'</text>
+                  <text x="224" y="1092">:</text>
+                  <text x="244" y="1092">1,</text>
+                  <text x="184" y="1108">e'more'</text>
+                  <text x="224" y="1108">:</text>
+                  <text x="256" y="1108">false</text>
+                  <text x="112" y="1124">}</text>
+                  <text x="232" y="1140">.</text>
+                  <text x="232" y="1156">.</text>
+                  <text x="232" y="1172">.</text>
+                  <text x="152" y="1204">(Access</text>
+                  <text x="208" y="1204">token</text>
+                  <text x="244" y="1204">t1</text>
+                  <text x="292" y="1204">expires)</text>
+                  <text x="108" y="1252">2.05</text>
+                  <text x="160" y="1252">Content</text>
+                  <text x="140" y="1268">Observe:</text>
+                  <text x="188" y="1268">75</text>
+                  <text x="168" y="1284">Content-Format:</text>
+                  <text x="332" y="1284">application/ace-trl+cbor</text>
+                  <text x="140" y="1300">Payload:</text>
+                  <text x="184" y="1300">{</text>
+                  <text x="168" y="1316">e'diff_set'</text>
+                  <text x="224" y="1316">:</text>
+                  <text x="240" y="1316">[</text>
+                  <text x="248" y="1332">[</text>
+                  <text x="312" y="1332">[bstr.h(t1)],</text>
+                  <text x="380" y="1332">[]</text>
+                  <text x="404" y="1332">],</text>
+                  <text x="248" y="1348">[</text>
+                  <text x="272" y="1348">[],</text>
+                  <text x="340" y="1348">[bstr.h(t2)]</text>
+                  <text x="404" y="1348">],</text>
+                  <text x="248" y="1364">[</text>
+                  <text x="272" y="1364">[],</text>
+                  <text x="340" y="1364">[bstr.h(t1)]</text>
+                  <text x="400" y="1364">]</text>
+                  <text x="244" y="1380">],</text>
+                  <text x="176" y="1396">e'cursor'</text>
+                  <text x="224" y="1396">:</text>
+                  <text x="244" y="1396">2,</text>
+                  <text x="184" y="1412">e'more'</text>
+                  <text x="224" y="1412">:</text>
+                  <text x="256" y="1412">false</text>
+                  <text x="112" y="1428">}</text>
+                  <text x="232" y="1444">.</text>
+                  <text x="232" y="1460">.</text>
+                  <text x="232" y="1476">.</text>
+                  <text x="152" y="1508">(Access</text>
+                  <text x="208" y="1508">token</text>
+                  <text x="244" y="1508">t2</text>
+                  <text x="292" y="1508">expires)</text>
+                  <text x="108" y="1556">2.05</text>
+                  <text x="160" y="1556">Content</text>
+                  <text x="140" y="1572">Observe:</text>
+                  <text x="188" y="1572">86</text>
+                  <text x="168" y="1588">Content-Format:</text>
+                  <text x="332" y="1588">application/ace-trl+cbor</text>
+                  <text x="140" y="1604">Payload:</text>
+                  <text x="184" y="1604">{</text>
+                  <text x="168" y="1620">e'diff_set'</text>
                   <text x="224" y="1620">:</text>
-                  <text x="244" y="1620">3,</text>
-                  <text x="184" y="1636">e'more'</text>
-                  <text x="224" y="1636">:</text>
-                  <text x="256" y="1636">false</text>
-                  <text x="112" y="1652">}</text>
-                  <text x="232" y="1668">.</text>
-                  <text x="232" y="1684">.</text>
-                  <text x="232" y="1700">.</text>
-                  <text x="136" y="1732">(Enough</text>
-                  <text x="188" y="1732">time</text>
-                  <text x="224" y="1732">has</text>
-                  <text x="268" y="1732">passed</text>
-                  <text x="320" y="1732">since</text>
-                  <text x="128" y="1748">the</text>
-                  <text x="172" y="1748">latest</text>
-                  <text x="236" y="1748">received</text>
-                  <text x="328" y="1748">notification)</text>
-                  <text x="40" y="1780">GET</text>
-                  <text x="200" y="1796">coap://as.example.com/revoke/trl?diff=3</text>
-                  <text x="108" y="1860">2.05</text>
-                  <text x="160" y="1860">CONTENT</text>
-                  <text x="168" y="1876">Content-Format:</text>
-                  <text x="340" y="1876">"application/ace-trl+cbor"</text>
-                  <text x="140" y="1892">Payload:</text>
-                  <text x="184" y="1892">{</text>
-                  <text x="168" y="1908">e'diff_set'</text>
-                  <text x="224" y="1908">:</text>
-                  <text x="240" y="1908">[</text>
-                  <text x="248" y="1924">[</text>
-                  <text x="312" y="1924">[bstr.h(t2)],</text>
-                  <text x="380" y="1924">[]</text>
-                  <text x="404" y="1924">],</text>
-                  <text x="248" y="1940">[</text>
-                  <text x="312" y="1940">[bstr.h(t1)],</text>
-                  <text x="380" y="1940">[]</text>
-                  <text x="404" y="1940">],</text>
-                  <text x="248" y="1956">[</text>
-                  <text x="272" y="1956">[],</text>
-                  <text x="340" y="1956">[bstr.h(t2)]</text>
-                  <text x="400" y="1956">]</text>
-                  <text x="236" y="1972">],</text>
-                  <text x="176" y="1988">e'cursor'</text>
+                  <text x="240" y="1620">[</text>
+                  <text x="248" y="1636">[</text>
+                  <text x="312" y="1636">[bstr.h(t2)],</text>
+                  <text x="380" y="1636">[]</text>
+                  <text x="404" y="1636">],</text>
+                  <text x="248" y="1652">[</text>
+                  <text x="312" y="1652">[bstr.h(t1)],</text>
+                  <text x="380" y="1652">[]</text>
+                  <text x="404" y="1652">],</text>
+                  <text x="248" y="1668">[</text>
+                  <text x="272" y="1668">[],</text>
+                  <text x="340" y="1668">[bstr.h(t2)]</text>
+                  <text x="400" y="1668">]</text>
+                  <text x="244" y="1684">],</text>
+                  <text x="176" y="1700">e'cursor'</text>
+                  <text x="224" y="1700">:</text>
+                  <text x="244" y="1700">3,</text>
+                  <text x="184" y="1716">e'more'</text>
+                  <text x="224" y="1716">:</text>
+                  <text x="256" y="1716">false</text>
+                  <text x="112" y="1732">}</text>
+                  <text x="232" y="1748">.</text>
+                  <text x="232" y="1764">.</text>
+                  <text x="232" y="1780">.</text>
+                  <text x="136" y="1812">(Enough</text>
+                  <text x="188" y="1812">time</text>
+                  <text x="224" y="1812">has</text>
+                  <text x="268" y="1812">passed</text>
+                  <text x="320" y="1812">since</text>
+                  <text x="128" y="1828">the</text>
+                  <text x="172" y="1828">latest</text>
+                  <text x="236" y="1828">received</text>
+                  <text x="328" y="1828">notification)</text>
+                  <text x="40" y="1876">GET</text>
+                  <text x="216" y="1876">coap://as.example.com/revoke/trl?diff=3</text>
+                  <text x="108" y="1940">2.05</text>
+                  <text x="160" y="1940">Content</text>
+                  <text x="168" y="1956">Content-Format:</text>
+                  <text x="332" y="1956">application/ace-trl+cbor</text>
+                  <text x="140" y="1972">Payload:</text>
+                  <text x="184" y="1972">{</text>
+                  <text x="168" y="1988">e'diff_set'</text>
                   <text x="224" y="1988">:</text>
-                  <text x="244" y="1988">3,</text>
-                  <text x="184" y="2004">e'more'</text>
-                  <text x="224" y="2004">:</text>
-                  <text x="256" y="2004">false</text>
-                  <text x="112" y="2020">}</text>
-                  <text x="40" y="2052">GET</text>
-                  <text x="236" y="2068">coap://as.example.com/revoke/trl?diff=3&amp;cursor=3</text>
-                  <text x="108" y="2132">2.05</text>
-                  <text x="160" y="2132">CONTENT</text>
-                  <text x="168" y="2148">Content-Format:</text>
-                  <text x="340" y="2148">"application/ace-trl+cbor"</text>
-                  <text x="140" y="2164">Payload:</text>
-                  <text x="184" y="2164">{</text>
-                  <text x="168" y="2180">e'diff_set'</text>
-                  <text x="224" y="2180">:</text>
-                  <text x="248" y="2180">[],</text>
-                  <text x="176" y="2196">e'cursor'</text>
-                  <text x="224" y="2196">:</text>
-                  <text x="244" y="2196">3,</text>
-                  <text x="184" y="2212">e'more'</text>
-                  <text x="224" y="2212">:</text>
-                  <text x="256" y="2212">false</text>
-                  <text x="112" y="2228">}</text>
+                  <text x="240" y="1988">[</text>
+                  <text x="248" y="2004">[</text>
+                  <text x="312" y="2004">[bstr.h(t2)],</text>
+                  <text x="380" y="2004">[]</text>
+                  <text x="404" y="2004">],</text>
+                  <text x="248" y="2020">[</text>
+                  <text x="312" y="2020">[bstr.h(t1)],</text>
+                  <text x="380" y="2020">[]</text>
+                  <text x="404" y="2020">],</text>
+                  <text x="248" y="2036">[</text>
+                  <text x="272" y="2036">[],</text>
+                  <text x="340" y="2036">[bstr.h(t2)]</text>
+                  <text x="400" y="2036">]</text>
+                  <text x="244" y="2052">],</text>
+                  <text x="176" y="2068">e'cursor'</text>
+                  <text x="224" y="2068">:</text>
+                  <text x="244" y="2068">3,</text>
+                  <text x="184" y="2084">e'more'</text>
+                  <text x="224" y="2084">:</text>
+                  <text x="256" y="2084">false</text>
+                  <text x="112" y="2100">}</text>
+                  <text x="40" y="2132">GET</text>
+                  <text x="252" y="2132">coap://as.example.com/revoke/trl?diff=3&amp;cursor=3</text>
+                  <text x="108" y="2196">2.05</text>
+                  <text x="160" y="2196">Content</text>
+                  <text x="168" y="2212">Content-Format:</text>
+                  <text x="332" y="2212">application/ace-trl+cbor</text>
+                  <text x="140" y="2228">Payload:</text>
+                  <text x="184" y="2228">{</text>
+                  <text x="168" y="2244">e'diff_set'</text>
+                  <text x="224" y="2244">:</text>
+                  <text x="248" y="2244">[],</text>
+                  <text x="176" y="2260">e'cursor'</text>
+                  <text x="224" y="2260">:</text>
+                  <text x="244" y="2260">3,</text>
+                  <text x="184" y="2276">e'more'</text>
+                  <text x="224" y="2276">:</text>
+                  <text x="256" y="2276">false</text>
+                  <text x="112" y="2292">}</text>
                 </g>
               </svg><a href="#appendix-C.4-6.1.1" class="pilcrow">¶</a>
 </div>
@@ -3581,45 +3608,45 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <figure id="figure-12">
           <div id="appendix-C.5-8.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.5-8.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="3616" width="528" viewBox="0 0 528 3616" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,3600" fill="none" stroke="black"></path>
-                <path d="M 520,48 L 520,3600" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="3792" width="528" viewBox="0 0 528 3792" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,3776" fill="none" stroke="black"></path>
+                <path d="M 520,48 L 520,3776" fill="none" stroke="black"></path>
                 <path d="M 8,80 L 512,80" fill="none" stroke="black"></path>
                 <path d="M 16,112 L 520,112" fill="none" stroke="black"></path>
                 <path d="M 8,304 L 512,304" fill="none" stroke="black"></path>
                 <path d="M 16,336 L 520,336" fill="none" stroke="black"></path>
-                <path d="M 16,736 L 520,736" fill="none" stroke="black"></path>
-                <path d="M 16,944 L 520,944" fill="none" stroke="black"></path>
-                <path d="M 16,1152 L 520,1152" fill="none" stroke="black"></path>
-                <path d="M 48,1360 L 520,1360" fill="none" stroke="black"></path>
-                <path d="M 48,1568 L 520,1568" fill="none" stroke="black"></path>
-                <path d="M 48,1776 L 520,1776" fill="none" stroke="black"></path>
-                <path d="M 48,1984 L 520,1984" fill="none" stroke="black"></path>
-                <path d="M 48,2192 L 520,2192" fill="none" stroke="black"></path>
-                <path d="M 48,2400 L 520,2400" fill="none" stroke="black"></path>
-                <path d="M 48,2608 L 520,2608" fill="none" stroke="black"></path>
-                <path d="M 48,2816 L 520,2816" fill="none" stroke="black"></path>
-                <path d="M 8,3072 L 512,3072" fill="none" stroke="black"></path>
-                <path d="M 16,3104 L 520,3104" fill="none" stroke="black"></path>
-                <path d="M 8,3376 L 512,3376" fill="none" stroke="black"></path>
-                <path d="M 16,3408 L 520,3408" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="520,3376 508,3370.4 508,3381.6" fill="black" transform="rotate(0,512,3376)"></polygon>
-                <polygon class="arrowhead" points="520,3072 508,3066.4 508,3077.6" fill="black" transform="rotate(0,512,3072)"></polygon>
+                <path d="M 16,752 L 520,752" fill="none" stroke="black"></path>
+                <path d="M 16,976 L 520,976" fill="none" stroke="black"></path>
+                <path d="M 16,1200 L 520,1200" fill="none" stroke="black"></path>
+                <path d="M 48,1424 L 520,1424" fill="none" stroke="black"></path>
+                <path d="M 48,1648 L 520,1648" fill="none" stroke="black"></path>
+                <path d="M 48,1872 L 520,1872" fill="none" stroke="black"></path>
+                <path d="M 48,2096 L 520,2096" fill="none" stroke="black"></path>
+                <path d="M 48,2320 L 520,2320" fill="none" stroke="black"></path>
+                <path d="M 48,2544 L 520,2544" fill="none" stroke="black"></path>
+                <path d="M 48,2768 L 520,2768" fill="none" stroke="black"></path>
+                <path d="M 48,2992 L 520,2992" fill="none" stroke="black"></path>
+                <path d="M 8,3264 L 512,3264" fill="none" stroke="black"></path>
+                <path d="M 16,3296 L 520,3296" fill="none" stroke="black"></path>
+                <path d="M 8,3552 L 512,3552" fill="none" stroke="black"></path>
+                <path d="M 16,3584 L 520,3584" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="520,3552 508,3546.4 508,3557.6" fill="black" transform="rotate(0,512,3552)"></polygon>
+                <polygon class="arrowhead" points="520,3264 508,3258.4 508,3269.6" fill="black" transform="rotate(0,512,3264)"></polygon>
                 <polygon class="arrowhead" points="520,304 508,298.4 508,309.6" fill="black" transform="rotate(0,512,304)"></polygon>
                 <polygon class="arrowhead" points="520,80 508,74.4 508,85.6" fill="black" transform="rotate(0,512,80)"></polygon>
-                <polygon class="arrowhead" points="56,2816 44,2810.4 44,2821.6" fill="black" transform="rotate(180,48,2816)"></polygon>
-                <polygon class="arrowhead" points="56,2608 44,2602.4 44,2613.6" fill="black" transform="rotate(180,48,2608)"></polygon>
-                <polygon class="arrowhead" points="56,2400 44,2394.4 44,2405.6" fill="black" transform="rotate(180,48,2400)"></polygon>
-                <polygon class="arrowhead" points="56,2192 44,2186.4 44,2197.6" fill="black" transform="rotate(180,48,2192)"></polygon>
-                <polygon class="arrowhead" points="56,1984 44,1978.4 44,1989.6" fill="black" transform="rotate(180,48,1984)"></polygon>
-                <polygon class="arrowhead" points="56,1776 44,1770.4 44,1781.6" fill="black" transform="rotate(180,48,1776)"></polygon>
-                <polygon class="arrowhead" points="56,1568 44,1562.4 44,1573.6" fill="black" transform="rotate(180,48,1568)"></polygon>
-                <polygon class="arrowhead" points="56,1360 44,1354.4 44,1365.6" fill="black" transform="rotate(180,48,1360)"></polygon>
-                <polygon class="arrowhead" points="24,3408 12,3402.4 12,3413.6" fill="black" transform="rotate(180,16,3408)"></polygon>
-                <polygon class="arrowhead" points="24,3104 12,3098.4 12,3109.6" fill="black" transform="rotate(180,16,3104)"></polygon>
-                <polygon class="arrowhead" points="24,1152 12,1146.4 12,1157.6" fill="black" transform="rotate(180,16,1152)"></polygon>
-                <polygon class="arrowhead" points="24,944 12,938.4 12,949.6" fill="black" transform="rotate(180,16,944)"></polygon>
-                <polygon class="arrowhead" points="24,736 12,730.4 12,741.6" fill="black" transform="rotate(180,16,736)"></polygon>
+                <polygon class="arrowhead" points="56,2992 44,2986.4 44,2997.6" fill="black" transform="rotate(180,48,2992)"></polygon>
+                <polygon class="arrowhead" points="56,2768 44,2762.4 44,2773.6" fill="black" transform="rotate(180,48,2768)"></polygon>
+                <polygon class="arrowhead" points="56,2544 44,2538.4 44,2549.6" fill="black" transform="rotate(180,48,2544)"></polygon>
+                <polygon class="arrowhead" points="56,2320 44,2314.4 44,2325.6" fill="black" transform="rotate(180,48,2320)"></polygon>
+                <polygon class="arrowhead" points="56,2096 44,2090.4 44,2101.6" fill="black" transform="rotate(180,48,2096)"></polygon>
+                <polygon class="arrowhead" points="56,1872 44,1866.4 44,1877.6" fill="black" transform="rotate(180,48,1872)"></polygon>
+                <polygon class="arrowhead" points="56,1648 44,1642.4 44,1653.6" fill="black" transform="rotate(180,48,1648)"></polygon>
+                <polygon class="arrowhead" points="56,1424 44,1418.4 44,1429.6" fill="black" transform="rotate(180,48,1424)"></polygon>
+                <polygon class="arrowhead" points="24,3584 12,3578.4 12,3589.6" fill="black" transform="rotate(180,16,3584)"></polygon>
+                <polygon class="arrowhead" points="24,3296 12,3290.4 12,3301.6" fill="black" transform="rotate(180,16,3296)"></polygon>
+                <polygon class="arrowhead" points="24,1200 12,1194.4 12,1205.6" fill="black" transform="rotate(180,16,1200)"></polygon>
+                <polygon class="arrowhead" points="24,976 12,970.4 12,981.6" fill="black" transform="rotate(180,16,976)"></polygon>
+                <polygon class="arrowhead" points="24,752 12,746.4 12,757.6" fill="black" transform="rotate(180,16,752)"></polygon>
                 <polygon class="arrowhead" points="24,336 12,330.4 12,341.6" fill="black" transform="rotate(180,16,336)"></polygon>
                 <polygon class="arrowhead" points="24,112 12,106.4 12,117.6" fill="black" transform="rotate(180,16,112)"></polygon>
                 <g class="text">
@@ -3628,10 +3655,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
                   <text x="236" y="132">2.01</text>
-                  <text x="288" y="132">CREATED</text>
+                  <text x="288" y="132">Created</text>
                   <text x="268" y="148">Payload:</text>
                   <text x="312" y="148">{</text>
-                  <text x="304" y="164">...</text>
+                  <text x="296" y="164">/</text>
+                  <text x="320" y="164">...</text>
+                  <text x="344" y="164">/</text>
                   <text x="332" y="180">"trl_path"</text>
                   <text x="384" y="180">:</text>
                   <text x="448" y="180">"revoke/trl",</text>
@@ -3645,395 +3674,395 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
                   <text x="400" y="228">5</text>
                   <text x="240" y="244">}</text>
                   <text x="40" y="276">GET</text>
-                  <text x="92" y="276">Observe:</text>
-                  <text x="136" y="276">0</text>
-                  <text x="176" y="292">coap://as.example.com/revoke/trl/</text>
+                  <text x="192" y="276">coap://as.example.com/revoke/trl/</text>
+                  <text x="76" y="292">Observe:</text>
+                  <text x="120" y="292">0</text>
                   <text x="164" y="356">2.05</text>
-                  <text x="216" y="356">CONTENT</text>
-                  <text x="284" y="356">Observe:</text>
-                  <text x="332" y="356">42</text>
-                  <text x="224" y="372">Content-Format:</text>
-                  <text x="396" y="372">"application/ace-trl+cbor"</text>
-                  <text x="196" y="388">Payload:</text>
-                  <text x="240" y="388">{</text>
-                  <text x="224" y="404">e'full_set'</text>
-                  <text x="280" y="404">:</text>
-                  <text x="304" y="404">[],</text>
-                  <text x="232" y="420">e'cursor'</text>
+                  <text x="216" y="356">Content</text>
+                  <text x="196" y="372">Observe:</text>
+                  <text x="244" y="372">42</text>
+                  <text x="224" y="388">Content-Format:</text>
+                  <text x="388" y="388">application/ace-trl+cbor</text>
+                  <text x="196" y="404">Payload:</text>
+                  <text x="240" y="404">{</text>
+                  <text x="224" y="420">e'full_set'</text>
                   <text x="280" y="420">:</text>
-                  <text x="308" y="420">null</text>
-                  <text x="168" y="436">}</text>
-                  <text x="264" y="452">.</text>
+                  <text x="304" y="420">[],</text>
+                  <text x="232" y="436">e'cursor'</text>
+                  <text x="280" y="436">:</text>
+                  <text x="308" y="436">null</text>
+                  <text x="168" y="452">}</text>
                   <text x="264" y="468">.</text>
                   <text x="264" y="484">.</text>
-                  <text x="160" y="516">(Access</text>
-                  <text x="220" y="516">tokens</text>
-                  <text x="264" y="516">t1,</text>
-                  <text x="296" y="516">t2,</text>
-                  <text x="324" y="516">t3</text>
-                  <text x="364" y="516">issued</text>
-                  <text x="152" y="532">and</text>
-                  <text x="220" y="532">successfully</text>
-                  <text x="312" y="532">submitted</text>
-                  <text x="364" y="532">to</text>
-                  <text x="392" y="532">RS)</text>
-                  <text x="264" y="548">.</text>
+                  <text x="264" y="500">.</text>
+                  <text x="160" y="532">(Access</text>
+                  <text x="220" y="532">tokens</text>
+                  <text x="264" y="532">t1,</text>
+                  <text x="296" y="532">t2,</text>
+                  <text x="324" y="532">t3</text>
+                  <text x="364" y="532">issued</text>
+                  <text x="152" y="548">and</text>
+                  <text x="220" y="548">successfully</text>
+                  <text x="312" y="548">submitted</text>
+                  <text x="364" y="548">to</text>
+                  <text x="392" y="548">RS)</text>
                   <text x="264" y="564">.</text>
                   <text x="264" y="580">.</text>
-                  <text x="160" y="612">(Access</text>
-                  <text x="220" y="612">tokens</text>
-                  <text x="264" y="612">t4,</text>
-                  <text x="296" y="612">t5,</text>
-                  <text x="324" y="612">t6</text>
-                  <text x="364" y="612">issued</text>
-                  <text x="144" y="628">and</text>
-                  <text x="212" y="628">successfully</text>
-                  <text x="304" y="628">submitted</text>
-                  <text x="356" y="628">to</text>
-                  <text x="384" y="628">RS)</text>
-                  <text x="264" y="644">.</text>
+                  <text x="264" y="596">.</text>
+                  <text x="160" y="628">(Access</text>
+                  <text x="220" y="628">tokens</text>
+                  <text x="264" y="628">t4,</text>
+                  <text x="296" y="628">t5,</text>
+                  <text x="324" y="628">t6</text>
+                  <text x="364" y="628">issued</text>
+                  <text x="144" y="644">and</text>
+                  <text x="212" y="644">successfully</text>
+                  <text x="304" y="644">submitted</text>
+                  <text x="356" y="644">to</text>
+                  <text x="384" y="644">RS)</text>
                   <text x="264" y="660">.</text>
                   <text x="264" y="676">.</text>
-                  <text x="184" y="708">(Access</text>
-                  <text x="240" y="708">token</text>
-                  <text x="276" y="708">t1</text>
-                  <text x="300" y="708">is</text>
-                  <text x="348" y="708">revoked)</text>
-                  <text x="164" y="756">2.05</text>
-                  <text x="216" y="756">CONTENT</text>
-                  <text x="284" y="756">Observe:</text>
-                  <text x="332" y="756">53</text>
-                  <text x="224" y="772">Content-Format:</text>
-                  <text x="396" y="772">"application/ace-trl+cbor"</text>
-                  <text x="196" y="788">Payload:</text>
-                  <text x="240" y="788">{</text>
-                  <text x="224" y="804">e'full_set'</text>
-                  <text x="280" y="804">:</text>
-                  <text x="344" y="804">[bstr.h(t1)],</text>
-                  <text x="232" y="820">e'cursor'</text>
-                  <text x="280" y="820">:</text>
-                  <text x="296" y="820">0</text>
-                  <text x="168" y="836">}</text>
-                  <text x="264" y="852">.</text>
-                  <text x="264" y="868">.</text>
+                  <text x="264" y="692">.</text>
+                  <text x="184" y="724">(Access</text>
+                  <text x="240" y="724">token</text>
+                  <text x="276" y="724">t1</text>
+                  <text x="300" y="724">is</text>
+                  <text x="348" y="724">revoked)</text>
+                  <text x="164" y="772">2.05</text>
+                  <text x="216" y="772">Content</text>
+                  <text x="196" y="788">Observe:</text>
+                  <text x="244" y="788">53</text>
+                  <text x="224" y="804">Content-Format:</text>
+                  <text x="388" y="804">application/ace-trl+cbor</text>
+                  <text x="196" y="820">Payload:</text>
+                  <text x="240" y="820">{</text>
+                  <text x="224" y="836">e'full_set'</text>
+                  <text x="280" y="836">:</text>
+                  <text x="344" y="836">[bstr.h(t1)],</text>
+                  <text x="232" y="852">e'cursor'</text>
+                  <text x="280" y="852">:</text>
+                  <text x="296" y="852">0</text>
+                  <text x="168" y="868">}</text>
                   <text x="264" y="884">.</text>
-                  <text x="184" y="916">(Access</text>
-                  <text x="240" y="916">token</text>
-                  <text x="276" y="916">t2</text>
-                  <text x="300" y="916">is</text>
-                  <text x="348" y="916">revoked)</text>
-                  <text x="164" y="964">2.05</text>
-                  <text x="216" y="964">CONTENT</text>
-                  <text x="284" y="964">Observe:</text>
-                  <text x="332" y="964">64</text>
-                  <text x="224" y="980">Content-Format:</text>
-                  <text x="396" y="980">"application/ace-trl+cbor"</text>
-                  <text x="196" y="996">Payload:</text>
-                  <text x="240" y="996">{</text>
-                  <text x="224" y="1012">e'full_set'</text>
-                  <text x="280" y="1012">:</text>
-                  <text x="340" y="1012">[bstr.h(t1),</text>
-                  <text x="444" y="1012">bstr.h(t2)],</text>
-                  <text x="232" y="1028">e'cursor'</text>
-                  <text x="280" y="1028">:</text>
-                  <text x="296" y="1028">1</text>
-                  <text x="168" y="1044">}</text>
-                  <text x="264" y="1060">.</text>
-                  <text x="264" y="1076">.</text>
-                  <text x="264" y="1092">.</text>
-                  <text x="192" y="1124">(Access</text>
-                  <text x="248" y="1124">token</text>
-                  <text x="284" y="1124">t1</text>
-                  <text x="332" y="1124">expires)</text>
-                  <text x="164" y="1172">2.05</text>
-                  <text x="216" y="1172">CONTENT</text>
-                  <text x="284" y="1172">Observe:</text>
-                  <text x="332" y="1172">75</text>
-                  <text x="224" y="1188">Content-Format:</text>
-                  <text x="396" y="1188">"application/ace-trl+cbor"</text>
-                  <text x="196" y="1204">Payload:</text>
-                  <text x="240" y="1204">{</text>
-                  <text x="224" y="1220">e'full_set'</text>
-                  <text x="280" y="1220">:</text>
-                  <text x="344" y="1220">[bstr.h(t2)],</text>
-                  <text x="216" y="1236">e'cursor'</text>
-                  <text x="280" y="1236">:</text>
-                  <text x="296" y="1236">2</text>
-                  <text x="168" y="1252">}</text>
-                  <text x="264" y="1268">.</text>
-                  <text x="264" y="1284">.</text>
-                  <text x="264" y="1300">.</text>
-                  <text x="192" y="1332">(Access</text>
-                  <text x="248" y="1332">token</text>
-                  <text x="284" y="1332">t2</text>
-                  <text x="332" y="1332">expires)</text>
-                  <text x="32" y="1364">X</text>
-                  <text x="164" y="1380">2.05</text>
-                  <text x="216" y="1380">CONTENT</text>
-                  <text x="284" y="1380">Observe:</text>
-                  <text x="332" y="1380">86</text>
-                  <text x="224" y="1396">Content-Format:</text>
-                  <text x="396" y="1396">"application/ace-trl+cbor"</text>
-                  <text x="196" y="1412">Payload:</text>
-                  <text x="240" y="1412">{</text>
-                  <text x="224" y="1428">e'full_set'</text>
-                  <text x="280" y="1428">:</text>
-                  <text x="304" y="1428">[],</text>
-                  <text x="232" y="1444">e'cursor'</text>
-                  <text x="280" y="1444">:</text>
-                  <text x="296" y="1444">3</text>
-                  <text x="168" y="1460">}</text>
-                  <text x="264" y="1476">.</text>
-                  <text x="264" y="1492">.</text>
-                  <text x="264" y="1508">.</text>
-                  <text x="184" y="1540">(Access</text>
-                  <text x="240" y="1540">token</text>
-                  <text x="276" y="1540">t3</text>
-                  <text x="300" y="1540">is</text>
-                  <text x="348" y="1540">revoked)</text>
-                  <text x="32" y="1572">X</text>
-                  <text x="164" y="1588">2.05</text>
-                  <text x="216" y="1588">CONTENT</text>
-                  <text x="284" y="1588">Observe:</text>
-                  <text x="332" y="1588">88</text>
-                  <text x="224" y="1604">Content-Format:</text>
-                  <text x="396" y="1604">"application/ace-trl+cbor"</text>
-                  <text x="196" y="1620">Payload:</text>
-                  <text x="240" y="1620">{</text>
-                  <text x="224" y="1636">e'full_set'</text>
-                  <text x="280" y="1636">:</text>
-                  <text x="344" y="1636">[bstr.h(t3)],</text>
-                  <text x="232" y="1652">e'cursor'</text>
-                  <text x="280" y="1652">:</text>
-                  <text x="296" y="1652">4</text>
-                  <text x="168" y="1668">}</text>
-                  <text x="264" y="1684">.</text>
-                  <text x="264" y="1700">.</text>
-                  <text x="264" y="1716">.</text>
-                  <text x="184" y="1748">(Access</text>
-                  <text x="240" y="1748">token</text>
-                  <text x="276" y="1748">t4</text>
-                  <text x="300" y="1748">is</text>
-                  <text x="348" y="1748">revoked)</text>
-                  <text x="32" y="1780">X</text>
-                  <text x="164" y="1796">2.05</text>
-                  <text x="216" y="1796">CONTENT</text>
-                  <text x="284" y="1796">Observe:</text>
-                  <text x="332" y="1796">89</text>
-                  <text x="224" y="1812">Content-Format:</text>
-                  <text x="396" y="1812">"application/ace-trl+cbor"</text>
-                  <text x="196" y="1828">Payload:</text>
-                  <text x="240" y="1828">{</text>
-                  <text x="224" y="1844">e'full_set'</text>
-                  <text x="280" y="1844">:</text>
-                  <text x="340" y="1844">[bstr.h(t3),</text>
-                  <text x="444" y="1844">bstr.h(t4)],</text>
-                  <text x="232" y="1860">e'cursor'</text>
-                  <text x="280" y="1860">:</text>
-                  <text x="296" y="1860">5</text>
-                  <text x="168" y="1876">}</text>
-                  <text x="264" y="1892">.</text>
-                  <text x="264" y="1908">.</text>
-                  <text x="264" y="1924">.</text>
-                  <text x="200" y="1956">(Access</text>
-                  <text x="256" y="1956">token</text>
-                  <text x="292" y="1956">t3</text>
-                  <text x="340" y="1956">expires)</text>
-                  <text x="32" y="1988">X</text>
-                  <text x="164" y="2004">2.05</text>
-                  <text x="216" y="2004">CONTENT</text>
-                  <text x="284" y="2004">Observe:</text>
-                  <text x="332" y="2004">90</text>
-                  <text x="224" y="2020">Content-Format:</text>
-                  <text x="396" y="2020">"application/ace-trl+cbor"</text>
-                  <text x="196" y="2036">Payload:</text>
-                  <text x="240" y="2036">{</text>
-                  <text x="224" y="2052">e'full_set'</text>
-                  <text x="280" y="2052">:</text>
-                  <text x="344" y="2052">[bstr.h(t4)],</text>
-                  <text x="232" y="2068">e'cursor'</text>
-                  <text x="280" y="2068">:</text>
-                  <text x="296" y="2068">6</text>
-                  <text x="168" y="2084">}</text>
-                  <text x="264" y="2100">.</text>
-                  <text x="264" y="2116">.</text>
-                  <text x="264" y="2132">.</text>
-                  <text x="200" y="2164">(Access</text>
-                  <text x="256" y="2164">token</text>
-                  <text x="292" y="2164">t4</text>
-                  <text x="340" y="2164">expires)</text>
-                  <text x="32" y="2196">X</text>
-                  <text x="164" y="2212">2.05</text>
-                  <text x="216" y="2212">CONTENT</text>
-                  <text x="284" y="2212">Observe:</text>
-                  <text x="332" y="2212">91</text>
-                  <text x="224" y="2228">Content-Format:</text>
-                  <text x="396" y="2228">"application/ace-trl+cbor"</text>
-                  <text x="196" y="2244">Payload:</text>
-                  <text x="240" y="2244">{</text>
-                  <text x="224" y="2260">e'full_set'</text>
-                  <text x="280" y="2260">:</text>
-                  <text x="304" y="2260">[],</text>
-                  <text x="232" y="2276">e'cursor'</text>
-                  <text x="280" y="2276">:</text>
-                  <text x="296" y="2276">7</text>
-                  <text x="168" y="2292">}</text>
-                  <text x="264" y="2308">.</text>
-                  <text x="264" y="2324">.</text>
-                  <text x="264" y="2340">.</text>
-                  <text x="152" y="2372">(Access</text>
-                  <text x="212" y="2372">tokens</text>
-                  <text x="252" y="2372">t5</text>
-                  <text x="280" y="2372">and</text>
-                  <text x="308" y="2372">t6</text>
-                  <text x="336" y="2372">are</text>
-                  <text x="388" y="2372">revoked)</text>
-                  <text x="32" y="2404">X</text>
-                  <text x="164" y="2420">2.05</text>
-                  <text x="216" y="2420">CONTENT</text>
-                  <text x="284" y="2420">Observe:</text>
-                  <text x="332" y="2420">92</text>
-                  <text x="224" y="2436">Content-Format:</text>
-                  <text x="396" y="2436">"application/ace-trl+cbor"</text>
-                  <text x="196" y="2452">Payload:</text>
-                  <text x="240" y="2452">{</text>
-                  <text x="224" y="2468">e'full_set'</text>
-                  <text x="280" y="2468">:</text>
-                  <text x="340" y="2468">[bstr.h(t5),</text>
-                  <text x="444" y="2468">bstr.h(t6)],</text>
-                  <text x="216" y="2484">e'cursor'</text>
-                  <text x="264" y="2484">:</text>
-                  <text x="280" y="2484">8</text>
-                  <text x="168" y="2500">}</text>
-                  <text x="264" y="2516">.</text>
-                  <text x="264" y="2532">.</text>
-                  <text x="264" y="2548">.</text>
-                  <text x="200" y="2580">(Access</text>
-                  <text x="256" y="2580">token</text>
-                  <text x="292" y="2580">t5</text>
-                  <text x="340" y="2580">expires)</text>
-                  <text x="32" y="2612">X</text>
-                  <text x="164" y="2628">2.05</text>
-                  <text x="216" y="2628">CONTENT</text>
-                  <text x="284" y="2628">Observe:</text>
-                  <text x="332" y="2628">93</text>
-                  <text x="224" y="2644">Content-Format:</text>
-                  <text x="396" y="2644">"application/ace-trl+cbor"</text>
-                  <text x="196" y="2660">Payload:</text>
-                  <text x="240" y="2660">{</text>
-                  <text x="224" y="2676">e'full_set'</text>
-                  <text x="280" y="2676">:</text>
-                  <text x="344" y="2676">[bstr.h(t6)],</text>
-                  <text x="216" y="2692">e'cursor'</text>
-                  <text x="264" y="2692">:</text>
-                  <text x="280" y="2692">9</text>
-                  <text x="168" y="2708">}</text>
-                  <text x="264" y="2724">.</text>
-                  <text x="264" y="2740">.</text>
-                  <text x="264" y="2756">.</text>
-                  <text x="200" y="2788">(Access</text>
-                  <text x="256" y="2788">token</text>
-                  <text x="292" y="2788">t6</text>
-                  <text x="340" y="2788">expires)</text>
-                  <text x="32" y="2820">X</text>
-                  <text x="164" y="2836">2.05</text>
-                  <text x="216" y="2836">CONTENT</text>
-                  <text x="284" y="2836">Observe:</text>
-                  <text x="332" y="2836">94</text>
-                  <text x="224" y="2852">Content-Format:</text>
-                  <text x="396" y="2852">"application/ace-trl+cbor"</text>
-                  <text x="196" y="2868">Payload:</text>
-                  <text x="240" y="2868">{</text>
-                  <text x="224" y="2884">e'full_set'</text>
-                  <text x="280" y="2884">:</text>
-                  <text x="304" y="2884">[],</text>
-                  <text x="232" y="2900">e'cursor'</text>
-                  <text x="280" y="2900">:</text>
-                  <text x="300" y="2900">10</text>
-                  <text x="168" y="2916">}</text>
+                  <text x="264" y="900">.</text>
+                  <text x="264" y="916">.</text>
+                  <text x="184" y="948">(Access</text>
+                  <text x="240" y="948">token</text>
+                  <text x="276" y="948">t2</text>
+                  <text x="300" y="948">is</text>
+                  <text x="348" y="948">revoked)</text>
+                  <text x="164" y="996">2.05</text>
+                  <text x="216" y="996">Content</text>
+                  <text x="196" y="1012">Observe:</text>
+                  <text x="244" y="1012">64</text>
+                  <text x="224" y="1028">Content-Format:</text>
+                  <text x="388" y="1028">application/ace-trl+cbor</text>
+                  <text x="196" y="1044">Payload:</text>
+                  <text x="240" y="1044">{</text>
+                  <text x="224" y="1060">e'full_set'</text>
+                  <text x="280" y="1060">:</text>
+                  <text x="340" y="1060">[bstr.h(t1),</text>
+                  <text x="444" y="1060">bstr.h(t2)],</text>
+                  <text x="232" y="1076">e'cursor'</text>
+                  <text x="280" y="1076">:</text>
+                  <text x="296" y="1076">1</text>
+                  <text x="168" y="1092">}</text>
+                  <text x="264" y="1108">.</text>
+                  <text x="264" y="1124">.</text>
+                  <text x="264" y="1140">.</text>
+                  <text x="192" y="1172">(Access</text>
+                  <text x="248" y="1172">token</text>
+                  <text x="284" y="1172">t1</text>
+                  <text x="332" y="1172">expires)</text>
+                  <text x="164" y="1220">2.05</text>
+                  <text x="216" y="1220">Content</text>
+                  <text x="196" y="1236">Observe:</text>
+                  <text x="244" y="1236">75</text>
+                  <text x="224" y="1252">Content-Format:</text>
+                  <text x="388" y="1252">application/ace-trl+cbor</text>
+                  <text x="196" y="1268">Payload:</text>
+                  <text x="240" y="1268">{</text>
+                  <text x="224" y="1284">e'full_set'</text>
+                  <text x="280" y="1284">:</text>
+                  <text x="344" y="1284">[bstr.h(t2)],</text>
+                  <text x="216" y="1300">e'cursor'</text>
+                  <text x="280" y="1300">:</text>
+                  <text x="296" y="1300">2</text>
+                  <text x="168" y="1316">}</text>
+                  <text x="264" y="1332">.</text>
+                  <text x="264" y="1348">.</text>
+                  <text x="264" y="1364">.</text>
+                  <text x="192" y="1396">(Access</text>
+                  <text x="248" y="1396">token</text>
+                  <text x="284" y="1396">t2</text>
+                  <text x="332" y="1396">expires)</text>
+                  <text x="32" y="1428">X</text>
+                  <text x="164" y="1444">2.05</text>
+                  <text x="216" y="1444">Content</text>
+                  <text x="196" y="1460">Observe:</text>
+                  <text x="244" y="1460">86</text>
+                  <text x="224" y="1476">Content-Format:</text>
+                  <text x="388" y="1476">application/ace-trl+cbor</text>
+                  <text x="196" y="1492">Payload:</text>
+                  <text x="240" y="1492">{</text>
+                  <text x="224" y="1508">e'full_set'</text>
+                  <text x="280" y="1508">:</text>
+                  <text x="304" y="1508">[],</text>
+                  <text x="232" y="1524">e'cursor'</text>
+                  <text x="280" y="1524">:</text>
+                  <text x="296" y="1524">3</text>
+                  <text x="168" y="1540">}</text>
+                  <text x="264" y="1556">.</text>
+                  <text x="264" y="1572">.</text>
+                  <text x="264" y="1588">.</text>
+                  <text x="184" y="1620">(Access</text>
+                  <text x="240" y="1620">token</text>
+                  <text x="276" y="1620">t3</text>
+                  <text x="300" y="1620">is</text>
+                  <text x="348" y="1620">revoked)</text>
+                  <text x="32" y="1652">X</text>
+                  <text x="164" y="1668">2.05</text>
+                  <text x="216" y="1668">Content</text>
+                  <text x="196" y="1684">Observe:</text>
+                  <text x="244" y="1684">88</text>
+                  <text x="224" y="1700">Content-Format:</text>
+                  <text x="388" y="1700">application/ace-trl+cbor</text>
+                  <text x="196" y="1716">Payload:</text>
+                  <text x="240" y="1716">{</text>
+                  <text x="224" y="1732">e'full_set'</text>
+                  <text x="280" y="1732">:</text>
+                  <text x="344" y="1732">[bstr.h(t3)],</text>
+                  <text x="232" y="1748">e'cursor'</text>
+                  <text x="280" y="1748">:</text>
+                  <text x="296" y="1748">4</text>
+                  <text x="168" y="1764">}</text>
+                  <text x="264" y="1780">.</text>
+                  <text x="264" y="1796">.</text>
+                  <text x="264" y="1812">.</text>
+                  <text x="184" y="1844">(Access</text>
+                  <text x="240" y="1844">token</text>
+                  <text x="276" y="1844">t4</text>
+                  <text x="300" y="1844">is</text>
+                  <text x="348" y="1844">revoked)</text>
+                  <text x="32" y="1876">X</text>
+                  <text x="164" y="1892">2.05</text>
+                  <text x="216" y="1892">Content</text>
+                  <text x="196" y="1908">Observe:</text>
+                  <text x="244" y="1908">89</text>
+                  <text x="224" y="1924">Content-Format:</text>
+                  <text x="388" y="1924">application/ace-trl+cbor</text>
+                  <text x="196" y="1940">Payload:</text>
+                  <text x="240" y="1940">{</text>
+                  <text x="224" y="1956">e'full_set'</text>
+                  <text x="280" y="1956">:</text>
+                  <text x="340" y="1956">[bstr.h(t3),</text>
+                  <text x="444" y="1956">bstr.h(t4)],</text>
+                  <text x="232" y="1972">e'cursor'</text>
+                  <text x="280" y="1972">:</text>
+                  <text x="296" y="1972">5</text>
+                  <text x="168" y="1988">}</text>
+                  <text x="264" y="2004">.</text>
+                  <text x="264" y="2020">.</text>
+                  <text x="264" y="2036">.</text>
+                  <text x="200" y="2068">(Access</text>
+                  <text x="256" y="2068">token</text>
+                  <text x="292" y="2068">t3</text>
+                  <text x="340" y="2068">expires)</text>
+                  <text x="32" y="2100">X</text>
+                  <text x="164" y="2116">2.05</text>
+                  <text x="216" y="2116">Content</text>
+                  <text x="196" y="2132">Observe:</text>
+                  <text x="244" y="2132">90</text>
+                  <text x="224" y="2148">Content-Format:</text>
+                  <text x="388" y="2148">application/ace-trl+cbor</text>
+                  <text x="196" y="2164">Payload:</text>
+                  <text x="240" y="2164">{</text>
+                  <text x="224" y="2180">e'full_set'</text>
+                  <text x="280" y="2180">:</text>
+                  <text x="344" y="2180">[bstr.h(t4)],</text>
+                  <text x="232" y="2196">e'cursor'</text>
+                  <text x="280" y="2196">:</text>
+                  <text x="296" y="2196">6</text>
+                  <text x="168" y="2212">}</text>
+                  <text x="264" y="2228">.</text>
+                  <text x="264" y="2244">.</text>
+                  <text x="264" y="2260">.</text>
+                  <text x="200" y="2292">(Access</text>
+                  <text x="256" y="2292">token</text>
+                  <text x="292" y="2292">t4</text>
+                  <text x="340" y="2292">expires)</text>
+                  <text x="32" y="2324">X</text>
+                  <text x="164" y="2340">2.05</text>
+                  <text x="216" y="2340">Content</text>
+                  <text x="196" y="2356">Observe:</text>
+                  <text x="244" y="2356">91</text>
+                  <text x="224" y="2372">Content-Format:</text>
+                  <text x="388" y="2372">application/ace-trl+cbor</text>
+                  <text x="196" y="2388">Payload:</text>
+                  <text x="240" y="2388">{</text>
+                  <text x="224" y="2404">e'full_set'</text>
+                  <text x="280" y="2404">:</text>
+                  <text x="304" y="2404">[],</text>
+                  <text x="232" y="2420">e'cursor'</text>
+                  <text x="280" y="2420">:</text>
+                  <text x="296" y="2420">7</text>
+                  <text x="168" y="2436">}</text>
+                  <text x="264" y="2452">.</text>
+                  <text x="264" y="2468">.</text>
+                  <text x="264" y="2484">.</text>
+                  <text x="152" y="2516">(Access</text>
+                  <text x="212" y="2516">tokens</text>
+                  <text x="252" y="2516">t5</text>
+                  <text x="280" y="2516">and</text>
+                  <text x="308" y="2516">t6</text>
+                  <text x="336" y="2516">are</text>
+                  <text x="388" y="2516">revoked)</text>
+                  <text x="32" y="2548">X</text>
+                  <text x="164" y="2564">2.05</text>
+                  <text x="216" y="2564">Content</text>
+                  <text x="196" y="2580">Observe:</text>
+                  <text x="244" y="2580">92</text>
+                  <text x="224" y="2596">Content-Format:</text>
+                  <text x="388" y="2596">application/ace-trl+cbor</text>
+                  <text x="196" y="2612">Payload:</text>
+                  <text x="240" y="2612">{</text>
+                  <text x="224" y="2628">e'full_set'</text>
+                  <text x="280" y="2628">:</text>
+                  <text x="340" y="2628">[bstr.h(t5),</text>
+                  <text x="444" y="2628">bstr.h(t6)],</text>
+                  <text x="232" y="2644">e'cursor'</text>
+                  <text x="280" y="2644">:</text>
+                  <text x="296" y="2644">8</text>
+                  <text x="168" y="2660">}</text>
+                  <text x="264" y="2676">.</text>
+                  <text x="264" y="2692">.</text>
+                  <text x="264" y="2708">.</text>
+                  <text x="200" y="2740">(Access</text>
+                  <text x="256" y="2740">token</text>
+                  <text x="292" y="2740">t5</text>
+                  <text x="340" y="2740">expires)</text>
+                  <text x="32" y="2772">X</text>
+                  <text x="164" y="2788">2.05</text>
+                  <text x="216" y="2788">Content</text>
+                  <text x="196" y="2804">Observe:</text>
+                  <text x="244" y="2804">93</text>
+                  <text x="224" y="2820">Content-Format:</text>
+                  <text x="388" y="2820">application/ace-trl+cbor</text>
+                  <text x="196" y="2836">Payload:</text>
+                  <text x="240" y="2836">{</text>
+                  <text x="224" y="2852">e'full_set'</text>
+                  <text x="280" y="2852">:</text>
+                  <text x="344" y="2852">[bstr.h(t6)],</text>
+                  <text x="232" y="2868">e'cursor'</text>
+                  <text x="280" y="2868">:</text>
+                  <text x="296" y="2868">9</text>
+                  <text x="168" y="2884">}</text>
+                  <text x="264" y="2900">.</text>
+                  <text x="264" y="2916">.</text>
                   <text x="264" y="2932">.</text>
-                  <text x="264" y="2948">.</text>
-                  <text x="264" y="2964">.</text>
-                  <text x="168" y="2996">(Enough</text>
-                  <text x="220" y="2996">time</text>
-                  <text x="256" y="2996">has</text>
-                  <text x="300" y="2996">passed</text>
-                  <text x="352" y="2996">since</text>
-                  <text x="160" y="3012">the</text>
-                  <text x="204" y="3012">latest</text>
-                  <text x="268" y="3012">received</text>
-                  <text x="360" y="3012">notification)</text>
-                  <text x="40" y="3044">GET</text>
-                  <text x="236" y="3060">coap://as.example.com/revoke/trl?diff=8&amp;cursor=2</text>
-                  <text x="164" y="3124">2.05</text>
-                  <text x="216" y="3124">CONTENT</text>
-                  <text x="224" y="3140">Content-Format:</text>
-                  <text x="396" y="3140">"application/ace-trl+cbor"</text>
-                  <text x="196" y="3156">Payload:</text>
-                  <text x="240" y="3156">{</text>
-                  <text x="224" y="3172">e'diff_set'</text>
-                  <text x="280" y="3172">:</text>
-                  <text x="296" y="3172">[</text>
-                  <text x="304" y="3188">[</text>
-                  <text x="368" y="3188">[bstr.h(t4)],</text>
-                  <text x="436" y="3188">[]</text>
-                  <text x="460" y="3188">],</text>
-                  <text x="304" y="3204">[</text>
-                  <text x="368" y="3204">[bstr.h(t3)],</text>
-                  <text x="436" y="3204">[]</text>
-                  <text x="460" y="3204">],</text>
-                  <text x="304" y="3220">[</text>
-                  <text x="328" y="3220">[],</text>
-                  <text x="396" y="3220">[bstr.h(t4)]</text>
-                  <text x="460" y="3220">],</text>
-                  <text x="304" y="3236">[</text>
-                  <text x="328" y="3236">[],</text>
-                  <text x="396" y="3236">[bstr.h(t3)]</text>
-                  <text x="460" y="3236">],</text>
-                  <text x="304" y="3252">[</text>
-                  <text x="368" y="3252">[bstr.h(t2)],</text>
-                  <text x="436" y="3252">[]</text>
-                  <text x="456" y="3252">]</text>
-                  <text x="292" y="3268">],</text>
-                  <text x="232" y="3284">e'cursor'</text>
-                  <text x="280" y="3284">:</text>
-                  <text x="300" y="3284">7,</text>
-                  <text x="240" y="3300">e'more'</text>
-                  <text x="280" y="3300">:</text>
-                  <text x="308" y="3300">true</text>
-                  <text x="168" y="3316">}</text>
-                  <text x="40" y="3348">GET</text>
-                  <text x="236" y="3364">coap://as.example.com/revoke/trl?diff=8&amp;cursor=7</text>
-                  <text x="92" y="3428">2.05</text>
-                  <text x="144" y="3428">CONTENT</text>
-                  <text x="152" y="3444">Content-Format:</text>
-                  <text x="324" y="3444">"application/ace-trl+cbor"</text>
-                  <text x="124" y="3460">Payload:</text>
-                  <text x="168" y="3460">{</text>
-                  <text x="152" y="3476">e'diff_set'</text>
-                  <text x="208" y="3476">:</text>
-                  <text x="224" y="3476">[</text>
-                  <text x="232" y="3492">[</text>
-                  <text x="296" y="3492">[bstr.h(t6)],</text>
-                  <text x="364" y="3492">[]</text>
-                  <text x="388" y="3492">],</text>
-                  <text x="232" y="3508">[</text>
-                  <text x="296" y="3508">[bstr.h(t5)],</text>
-                  <text x="364" y="3508">[]</text>
-                  <text x="388" y="3508">],</text>
-                  <text x="232" y="3524">[</text>
-                  <text x="256" y="3524">[],</text>
-                  <text x="324" y="3524">[bstr.h(t5),</text>
-                  <text x="424" y="3524">bstr.h(t6)]</text>
-                  <text x="480" y="3524">]</text>
-                  <text x="220" y="3540">],</text>
-                  <text x="160" y="3556">e'cursor'</text>
-                  <text x="208" y="3556">:</text>
-                  <text x="232" y="3556">10,</text>
-                  <text x="168" y="3572">e'more'</text>
-                  <text x="208" y="3572">:</text>
-                  <text x="240" y="3572">false</text>
-                  <text x="96" y="3588">}</text>
+                  <text x="200" y="2964">(Access</text>
+                  <text x="256" y="2964">token</text>
+                  <text x="292" y="2964">t6</text>
+                  <text x="340" y="2964">expires)</text>
+                  <text x="32" y="2996">X</text>
+                  <text x="164" y="3012">2.05</text>
+                  <text x="216" y="3012">Content</text>
+                  <text x="196" y="3028">Observe:</text>
+                  <text x="244" y="3028">94</text>
+                  <text x="224" y="3044">Content-Format:</text>
+                  <text x="388" y="3044">application/ace-trl+cbor</text>
+                  <text x="196" y="3060">Payload:</text>
+                  <text x="240" y="3060">{</text>
+                  <text x="224" y="3076">e'full_set'</text>
+                  <text x="280" y="3076">:</text>
+                  <text x="304" y="3076">[],</text>
+                  <text x="232" y="3092">e'cursor'</text>
+                  <text x="280" y="3092">:</text>
+                  <text x="300" y="3092">10</text>
+                  <text x="168" y="3108">}</text>
+                  <text x="264" y="3124">.</text>
+                  <text x="264" y="3140">.</text>
+                  <text x="264" y="3156">.</text>
+                  <text x="168" y="3188">(Enough</text>
+                  <text x="220" y="3188">time</text>
+                  <text x="256" y="3188">has</text>
+                  <text x="300" y="3188">passed</text>
+                  <text x="352" y="3188">since</text>
+                  <text x="160" y="3204">the</text>
+                  <text x="204" y="3204">latest</text>
+                  <text x="268" y="3204">received</text>
+                  <text x="360" y="3204">notification)</text>
+                  <text x="40" y="3252">GET</text>
+                  <text x="252" y="3252">coap://as.example.com/revoke/trl?diff=8&amp;cursor=2</text>
+                  <text x="164" y="3316">2.05</text>
+                  <text x="216" y="3316">Content</text>
+                  <text x="224" y="3332">Content-Format:</text>
+                  <text x="388" y="3332">application/ace-trl+cbor</text>
+                  <text x="196" y="3348">Payload:</text>
+                  <text x="240" y="3348">{</text>
+                  <text x="224" y="3364">e'diff_set'</text>
+                  <text x="280" y="3364">:</text>
+                  <text x="296" y="3364">[</text>
+                  <text x="304" y="3380">[</text>
+                  <text x="368" y="3380">[bstr.h(t4)],</text>
+                  <text x="436" y="3380">[]</text>
+                  <text x="460" y="3380">],</text>
+                  <text x="304" y="3396">[</text>
+                  <text x="368" y="3396">[bstr.h(t3)],</text>
+                  <text x="436" y="3396">[]</text>
+                  <text x="460" y="3396">],</text>
+                  <text x="304" y="3412">[</text>
+                  <text x="328" y="3412">[],</text>
+                  <text x="396" y="3412">[bstr.h(t4)]</text>
+                  <text x="460" y="3412">],</text>
+                  <text x="304" y="3428">[</text>
+                  <text x="328" y="3428">[],</text>
+                  <text x="396" y="3428">[bstr.h(t3)]</text>
+                  <text x="460" y="3428">],</text>
+                  <text x="304" y="3444">[</text>
+                  <text x="368" y="3444">[bstr.h(t2)],</text>
+                  <text x="436" y="3444">[]</text>
+                  <text x="456" y="3444">]</text>
+                  <text x="300" y="3460">],</text>
+                  <text x="232" y="3476">e'cursor'</text>
+                  <text x="280" y="3476">:</text>
+                  <text x="300" y="3476">7,</text>
+                  <text x="240" y="3492">e'more'</text>
+                  <text x="280" y="3492">:</text>
+                  <text x="308" y="3492">true</text>
+                  <text x="168" y="3508">}</text>
+                  <text x="40" y="3540">GET</text>
+                  <text x="252" y="3540">coap://as.example.com/revoke/trl?diff=8&amp;cursor=7</text>
+                  <text x="92" y="3604">2.05</text>
+                  <text x="144" y="3604">Content</text>
+                  <text x="152" y="3620">Content-Format:</text>
+                  <text x="316" y="3620">application/ace-trl+cbor</text>
+                  <text x="124" y="3636">Payload:</text>
+                  <text x="168" y="3636">{</text>
+                  <text x="152" y="3652">e'diff_set'</text>
+                  <text x="208" y="3652">:</text>
+                  <text x="224" y="3652">[</text>
+                  <text x="232" y="3668">[</text>
+                  <text x="296" y="3668">[bstr.h(t6)],</text>
+                  <text x="364" y="3668">[]</text>
+                  <text x="388" y="3668">],</text>
+                  <text x="232" y="3684">[</text>
+                  <text x="296" y="3684">[bstr.h(t5)],</text>
+                  <text x="364" y="3684">[]</text>
+                  <text x="388" y="3684">],</text>
+                  <text x="232" y="3700">[</text>
+                  <text x="256" y="3700">[],</text>
+                  <text x="324" y="3700">[bstr.h(t5),</text>
+                  <text x="424" y="3700">bstr.h(t6)]</text>
+                  <text x="480" y="3700">]</text>
+                  <text x="228" y="3716">],</text>
+                  <text x="160" y="3732">e'cursor'</text>
+                  <text x="208" y="3732">:</text>
+                  <text x="232" y="3732">10,</text>
+                  <text x="168" y="3748">e'more'</text>
+                  <text x="208" y="3748">:</text>
+                  <text x="240" y="3748">false</text>
+                  <text x="96" y="3764">}</text>
                 </g>
               </svg><a href="#appendix-C.5-8.1.1" class="pilcrow">¶</a>
 </div>
