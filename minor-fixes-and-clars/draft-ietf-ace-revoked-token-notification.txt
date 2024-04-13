@@ -201,16 +201,16 @@ Table of Contents
    Readers are expected to be familiar with the terms and concepts
    described in the ACE framework for Authentication and Authorization
    [RFC9200], as well as with terms and concepts related to CBOR Web
-   Tokens (CWTs) [RFC8392], and JSON Web Tokens (JWTs) [RFC7519].
+   Tokens (CWTs) [RFC8392] and JSON Web Tokens (JWTs) [RFC7519].
 
    The terminology for entities in the considered architecture is
    defined in OAuth 2.0 [RFC6749].  In particular, this includes Client,
    Resource Server (RS), and Authorization Server (AS).
 
    Readers are also expected to be familiar with the terms and concepts
-   related to CBOR [RFC8949], JSON [RFC8259], the CoAP protocol
-   [RFC7252], CoAP Observe [RFC7641], and the use of hash functions to
-   name objects as defined in [RFC6920].
+   related to CDDL [RFC8610], CBOR [RFC8949], JSON [RFC8259], the CoAP
+   protocol [RFC7252], CoAP Observe [RFC7641], and the use of hash
+   functions to name objects as defined in [RFC6920].
 
    Note that, unless otherwise indicated, the term "endpoint" is used
    here following its OAuth definition, aimed at denoting resources such
@@ -335,7 +335,8 @@ Table of Contents
    Figure 1 shows a high-level overview of the service provided by this
    protocol.  For the sake of simplicity, the example shown in the
    figure considers the simultaneous revocation of the three access
-   tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
+   tokens t1, t2, and t3, with token hash th1, th2, and th3,
+   respectively.
 
    Consistently, the AS adds the three token hashes to the TRL at once,
    and sends Observe notifications to one administrator and four
@@ -372,7 +373,7 @@ Table of Contents
 
    1.  The AS considers the content of the 'access_token' parameter in
        the AS-to-Client response (see Section 5.8.2 of [RFC9200]), where
-       the Access Token was included and provided to the requesting
+       the access token was included and provided to the requesting
        Client.
 
    2.  The AS defines HASH_INPUT as follows.
@@ -380,7 +381,7 @@ Table of Contents
        *  If the content of the 'access_token' parameter from step 1 is
           a CBOR byte string, then HASH_INPUT takes the binary
           serialization of that CBOR byte string.  This is the case
-          where CBOR was used to transport the Access Token (as a CWT or
+          where CBOR was used to transport the access token (as a CWT or
           JWT).
 
           With reference to the example in Figure 2, and assuming the
@@ -392,7 +393,7 @@ Table of Contents
        *  If the content of the 'access_token' parameter from step 1 is
           a text string, then HASH_INPUT takes the binary serialization
           of that text string.  This is the case where JSON was used to
-          transport the Access Token (as a CWT or JWT).
+          transport the access token (as a CWT or JWT).
 
           With reference to the example in Figure 3, HASH_INPUT is the
           binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the
@@ -428,7 +429,7 @@ Table of Contents
       / (remainder of the response omitted for brevity) /
    }
 
-           Figure 2: Example of AS-to-Client response using CBOR
+         Figure 2: Example of AS-to-Client CoAP response using CBOR
 
    HTTP/1.1 200 OK
    Content-Type: application/json
@@ -439,11 +440,10 @@ Table of Contents
       "access_token" : "2YotnFZFEjr1zCsicMWpAA",
       "token_type"   : "pop",
       "expires_in"   : 86400,
-      "ace_profile"  : "coap_dtls",
-      / (remainder of the response omitted for brevity) /
+      "ace_profile"  : "1"
    }
 
-           Figure 3: Example of AS-to-Client response using JSON
+         Figure 3: Example of AS-to-Client HTTP response using JSON
 
 4.  Token Revocation List (TRL)
 
@@ -487,8 +487,8 @@ Table of Contents
    Following a request to the TRL endpoint, the messages defined in this
    document that the AS sends as response use Content-Format
    "application/ace-trl+cbor".  Their payload is formatted as a CBOR
-   map, and the CBOR values for the parameters included therein are
-   defined in Section 11.
+   map, and the CBOR values used to abbreviate the parameters included
+   therein are defined in Section 11.
 
    The AS MUST implement measures to prevent access to the TRL endpoint
    by entities other than registered devices and authorized
@@ -1079,7 +1079,7 @@ Table of Contents
          a follow-up diff query request including the 'cursor' query
          parameter, with the same value of the 'cursor' parameter
          specified in this diff query response.  As defined in
-         Section 8.2.3, this would result in the AS transferring the
+         Section 8.2.3, this results in the AS transferring the
          following subset of series items as diff entries, thus resuming
          from where interrupted in the previous transfer.
 
@@ -1190,7 +1190,7 @@ Table of Contents
             If 'more' has value true, the requester can send a follow-up
             diff query request including the 'cursor' query parameter,
             with the same value of the 'cursor' parameter specified in
-            this diff query response.  This would result in the AS
+            this diff query response.  This results in the AS
             transferring the following subset of series items as diff
             entries, thus resuming from where interrupted in the
             previous transfer.
@@ -1297,7 +1297,7 @@ Table of Contents
          AS.
 
    The RS MUST NOT delete the stored token hashes whose corresponding
-   access tokens do not fulfill the two conditions above, unless it
+   access tokens do not fulfill both the two conditions above, unless it
    becomes necessary due to memory limitations.  In such a case, the RS
    MUST delete the earliest stored token hashes first.
 
@@ -1890,9 +1890,8 @@ Appendix C.  Interaction Examples
    Furthermore, 'h(x)' refers to the hash function used to compute the
    token hashes, as defined in Section 3 of this specification and
    according to [RFC6920].  Assuming the usage of CWTs transported in
-   CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the byte-string
-   representations of the token hashes for the access tokens t1 and t2,
-   respectively.
+   CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with
+   value the token hashes of the access tokens t1 and t2, respectively.
 
 C.1.  Full Query with Observe
 
@@ -2700,7 +2699,7 @@ Appendix D.  CDDL Model
 
 Appendix E.  Document Updates
 
-   RFC EDITOR: Please remove this section.
+   This section is to be removed before publishing as an RFC.
 
 E.1.  Version -05 to -06
 
