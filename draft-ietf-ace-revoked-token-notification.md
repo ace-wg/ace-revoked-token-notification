@@ -112,13 +112,13 @@ The benefits of this method are that it complements token introspection, and it 
 
 ## Terminology ## {#terminology}
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
-Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}}, and JSON Web Tokens (JWTs) {{RFC7519}}.
+Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}} and JSON Web Tokens (JWTs) {{RFC7519}}.
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
+Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
 Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
@@ -170,7 +170,7 @@ At a high level, the steps of this protocol are as follows.
 
 * An administrator can access and subscribe to the TRL like a registered device, while getting the full updated content of the TRL.
 
-{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
+{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2, and t3, with token hash th1, th2, and th3, respectively.
 
 Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.
 
@@ -204,15 +204,15 @@ Consistently, the AS adds the three token hashes to the TRL at once, and sends O
 The token hash of an access token is computed as follows.
 
 
-1. The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the Access Token was included and provided to the requesting Client.
+1. The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the access token was included and provided to the requesting Client.
 
 2. The AS defines HASH_INPUT as follows.
 
-   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the access token (as a CWT or JWT).
 
       With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access_token' parameter.
 
-   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the access token (as a CWT or JWT).
 
       With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.
 
@@ -238,7 +238,7 @@ Payload:
    / (remainder of the response omitted for brevity) /
 }
 ~~~~~~~~~~~
-{: #fig-as-response-cbor title="Example of AS-to-Client response using CBOR" artwork-align="left"}
+{: #fig-as-response-cbor title="Example of AS-to-Client CoAP response using CBOR" artwork-align="left"}
 
 ~~~~~~~~~~~
 HTTP/1.1 200 OK
@@ -250,11 +250,10 @@ Payload:
    "access_token" : "2YotnFZFEjr1zCsicMWpAA",
    "token_type"   : "pop",
    "expires_in"   : 86400,
-   "ace_profile"  : "coap_dtls",
-   / (remainder of the response omitted for brevity) /
+   "ace_profile"  : "1"
 }
 ~~~~~~~~~~~
-{: #fig-as-response-json title="Example of AS-to-Client response using JSON" artwork-align="left"}
+{: #fig-as-response-json title="Example of AS-to-Client HTTP response using JSON" artwork-align="left"}
 
 # Token Revocation List (TRL) # {#sec-trl-resource}
 
@@ -278,7 +277,7 @@ The AS MAY perform a single update to the TRL such that one or more token hashes
 
 Consistent with {{Section 6.5 of RFC9200}}, all communications between a requester towards the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the requester MUST be bound to the corresponding requests.
 
-Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
+Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values used to abbreviate the parameters included therein are defined in {{trl-registry-parameters}}.
 
 The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
 
@@ -578,7 +577,7 @@ If the update collection associated with the requester is not empty and the diff
 
    * The 'more' parameter MUST be present and MUST specify the CBOR simple value `false` (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR simple value `true` (0xf5) otherwise.
 
-      If the 'more' parameter has value `true`, the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this would result in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
+      If the 'more' parameter has value `true`, the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this results in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
 ### Cursor Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-cursor}
 
@@ -622,7 +621,7 @@ If the update collection associated with the requester is not empty and the diff
 
       * The 'more' parameter MUST be present and MUST specify the CBOR simple value `false` (0xf4) if SUB_U <= MAX_DIFF_BATCH, or the CBOR simple value `true` (0xf5) otherwise.
 
-         If 'more' has value `true`, the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. This would result in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
+         If 'more' has value `true`, the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. This results in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
 # Registration at the Authorization Server # {#sec-registration}
 
@@ -668,7 +667,7 @@ An RS stores a token hash th1 corresponding to an access token t1 until both the
 
    - The result of token introspection performed on t1 (see {{Section 5.9 of RFC9200}}), if supported by both the RS and the AS.
 
-The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
+The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill both the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
 
 Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
 
@@ -904,7 +903,7 @@ The payload of the registration response is a CBOR map, which includes the follo
 
 * possible further parameters related to the registration process.
 
-Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the byte-string representations of the token hashes for the access tokens t1 and t2, respectively.
+Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value the token hashes of the access tokens t1 and t2, respectively.
 
 ## Full Query with Observe # {#sec-RS-example-1}
 
@@ -1661,8 +1660,7 @@ more = 3
 
 
 # Document Updates # {#sec-document-updates}
-
-RFC EDITOR: Please remove this section.
+{:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
 
