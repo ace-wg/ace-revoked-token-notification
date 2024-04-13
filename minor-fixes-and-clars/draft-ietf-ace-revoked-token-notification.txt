@@ -1315,26 +1315,26 @@ Table of Contents
    The table below summarizes them, and specifies the CBOR value to use
    as abbreviation instead of the full descriptive name.
 
-        +-------------------+------------+------------------------+
-        | Name              | CBOR Value | CBOR Type              |
-        +-------------------+------------+------------------------+
-        | full_set          |  0         | array                  |
-        +-------------------+------------+------------------------+
-        | diff_set          |  1         | array                  |
-        +-------------------+------------+------------------------+
-        | cursor            |  2         | unsigned integer /     |
-        |                   |            | simple value `null`    |
-        +-------------------+------------+------------------------+
-        | more              |  3         | simple value `false` / |
-        |                   |            | simple value `true`    |
-        +-------------------+------------+------------------------+
-        | error             |  4         | integer                |
-        +-------------------+------------+------------------------+
-        | error_description |  5         | text string            |
-        +-------------------+------------+------------------------+
+         +===================+============+======================+
+         | Name              | CBOR Value | CBOR Type            |
+         +===================+============+======================+
+         | full_set          | 0          | array                |
+         +-------------------+------------+----------------------+
+         | diff_set          | 1          | array                |
+         +-------------------+------------+----------------------+
+         | cursor            | 2          | unsigned integer /   |
+         |                   |            | simple value null    |
+         +-------------------+------------+----------------------+
+         | more              | 3          | simple value false / |
+         |                   |            | simple value true    |
+         +-------------------+------------+----------------------+
+         | error             | 4          | integer              |
+         +-------------------+------------+----------------------+
+         | error_description | 5          | text string          |
+         +-------------------+------------+----------------------+
 
-       Figure 8: CBOR abbreviations for the ACE Token Revocation List
-                                 parameters
+               Table 1: CBOR abbreviations for the ACE Token
+                         Revocation List parameters
 
 12.  ACE Token Revocation List Error Identifiers
 
@@ -1343,17 +1343,18 @@ Table of Contents
    from the TRL endpoint.  This applies to error responses whose payload
    is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
 
-                   +-------+---------------------------+
+                   +=======+===========================+
                    | Value | Description               |
+                   +=======+===========================+
+                   | 0     | Invalid parameter value   |
                    +-------+---------------------------+
-                   |   0   | Invalid parameter value   |
+                   | 1     | Invalid set of parameters |
                    +-------+---------------------------+
-                   |   1   | Invalid set of parameters |
-                   +-------+---------------------------+
-                   |   2   | Out of bound cursor value |
+                   | 2     | Out of bound cursor value |
                    +-------+---------------------------+
 
-           Figure 9: ACE Token Revocation List Error Identifiers
+                       Table 2: ACE Token Revocation
+                           List Error Identifiers
 
 13.  Security Considerations
 
@@ -1765,9 +1766,9 @@ Appendix A.  On using the Series Transfer Pattern
 
 Appendix B.  Parameters of the TRL Endpoint
 
-   Figure 10 provides an aggregated overview of the parameters used by
-   the TRL endpoint, when the AS supports diff queries (see Section 5)
-   and the "Cursor" extension (see Section 5.1.1).
+   Table 3 provides an aggregated overview of the parameters used by the
+   TRL endpoint, when the AS supports diff queries (see Section 5) and
+   the "Cursor" extension (see Section 5.1.1).
 
    Except for MAX_N defined in Section 5.1, all the other parameters are
    defined in Section 5.1.1 and are used only if the AS supports the
@@ -1790,39 +1791,41 @@ Appendix B.  Parameters of the TRL Endpoint
       where LB and UB denote the inclusive lower bound and upper bound,
       respectively, and "^" is the exponentiation operator.
 
- +----------------+----------+--------------------+--------------------+
- | Name           | Single   | Description        | Value              |
- |                | instance |                    |                    |
- +----------------+----------+--------------------+--------------------+
- | MAX_N          | Y        | Max number of TRL  | LB = 1             |
- |                |          | updates stored per |                    |
- |                |          | requester          | If supporting      |
- |                |          |                    | "Cursor", then     |
- |                |          |                    | UB = (MAX_INDEX+1) |
- +----------------+----------+--------------------+--------------------+
- | MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
- |                |          | entries included   |                    |
- |                |          | in a diff query    | UB = MAX_N         |
- |                |          | response when      |                    |
- |                |          | using "Cursor"     |                    |
- +----------------+----------+--------------------+--------------------+
- | MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
- |                |          | instance of the    |                    |
- |                |          | 'index' parameter  | UB = ((2^64)-1)    |
- +----------------+----------+--------------------+--------------------+
- | index          | N        | Value associated   | LB = 0             |
- |                |          | with a series item |                    |
- |                |          | of an updated      | UB = MAX_INDEX     |
- |                |          | collection         |                    |
- +----------------+----------+--------------------+--------------------+
- | last_index     | N        | The 'index' value  | LB = 0             |
- |                |          | of the most        |                    |
- |                |          | recently added     | UB = MAX_INDEX     |
- |                |          | series item in an  |                    |
- |                |          | update collection  |                    |
- +----------------+----------+--------------------+--------------------+
+    +================+==========+===================+================+
+    | Name           | Single   | Description       | Value          |
+    |                | instance |                   |                |
+    +================+==========+===================+================+
+    | MAX_N          | Y        | Max number of     | LB=1           |
+    |                |          | TRL updates       |                |
+    |                |          | stored per        | If supporting  |
+    |                |          | requester         | "Cursor", then |
+    |                |          |                   | UB=MAX_INDEX+1 |
+    +----------------+----------+-------------------+----------------+
+    | MAX_DIFF_BATCH | N        | Max number of     | LB=1           |
+    |                |          | diff entries      |                |
+    |                |          | included in a     | UB=MAX_N       |
+    |                |          | diff query        |                |
+    |                |          | response when     |                |
+    |                |          | using "Cursor"    |                |
+    +----------------+----------+-------------------+----------------+
+    | MAX_INDEX      | Y        | Max value of each | LB=MAX_N-1     |
+    |                |          | instance of the   |                |
+    |                |          | 'index' parameter | UB=(2^64)-1    |
+    +----------------+----------+-------------------+----------------+
+    | index          | N        | Value associated  | LB=0           |
+    |                |          | with a series     |                |
+    |                |          | item              | UB=MAX_INDEX   |
+    |                |          | of an update      |                |
+    |                |          | collection        |                |
+    +----------------+----------+-------------------+----------------+
+    | last_index     | N        | The 'index' value | LB=0           |
+    |                |          | of the most       |                |
+    |                |          | recently added    | UB=MAX_INDEX   |
+    |                |          | series item in an |                |
+    |                |          | update collection |                |
+    +----------------+----------+-------------------+----------------+
 
-               Figure 10: Parameters of the TRL Endpoint
+                 Table 3: Parameters of the TRL Endpoint
 
 Appendix C.  Interaction Examples
 
@@ -1860,7 +1863,7 @@ Appendix C.  Interaction Examples
 
 C.1.  Full Query with Observe
 
-   Figure 11 shows an interaction example considering a CoAP observation
+   Figure 8 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
 
    In this example, the AS does not support the "Cursor" extension.
@@ -1949,11 +1952,11 @@ C.1.  Full Query with Observe
           |        }                                           |
           |                                                    |
 
-             Figure 11: Interaction for Full Query with Observe
+             Figure 8: Interaction for Full Query with Observe
 
 C.2.  Diff Query with Observe
 
-   Figure 12 shows an interaction example considering a CoAP observation
+   Figure 9 shows an interaction example considering a CoAP observation
    and a diff query of the TRL.
 
    The RS indicates N = 3 as value of the 'diff' query parameter, i.e.,
@@ -2057,11 +2060,11 @@ C.2.  Diff Query with Observe
           |        }                                           |
           |                                                    |
 
-             Figure 12: Interaction for Diff Query with Observe
+             Figure 9: Interaction for Diff Query with Observe
 
 C.3.  Full Query with Observe plus Diff Query
 
-   Figure 13 shows an interaction example considering a CoAP observation
+   Figure 10 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
 
    The example also considers one of the notifications from the AS to
@@ -2182,7 +2185,7 @@ C.3.  Full Query with Observe plus Diff Query
           |        }                                           |
           |                                                    |
 
-     Figure 13: Interaction for Full Query with Observe plus Diff Query
+     Figure 10: Interaction for Full Query with Observe plus Diff Query
 
 C.4.  Diff Query with Observe and "Cursor"
 
@@ -2193,7 +2196,7 @@ C.4.  Diff Query with Observe and "Cursor"
    that can be included in a response to a diff query request from this
    RS.
 
-   Figure 14 shows an interaction example considering a CoAP observation
+   Figure 11 shows an interaction example considering a CoAP observation
    and a diff query of the TRL.
 
    The RS specifies the query parameter 'diff' with value 3, i.e., the
@@ -2349,7 +2352,7 @@ C.4.  Diff Query with Observe and "Cursor"
         |            }                                           |
         |                                                        |
 
-      Figure 14: Interaction for Diff Query with Observe and "Cursor"
+      Figure 11: Interaction for Diff Query with Observe and "Cursor"
 
 C.5.  Full Query with Observe plus Diff Query with "Cursor"
 
@@ -2360,7 +2363,7 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
    that can be included in a response to a diff query request from this
    RS.
 
-   Figure 15 shows an interaction example considering a CoAP observation
+   Figure 12 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
 
    The example also considers some of the notifications from the AS to
@@ -2618,7 +2621,7 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |          }                                                    |
      |                                                               |
 
-        Figure 15: Interaction for Full Query with Observe plus Diff
+        Figure 12: Interaction for Full Query with Observe plus Diff
                             Query with "Cursor"
 
 Appendix D.  Document Updates

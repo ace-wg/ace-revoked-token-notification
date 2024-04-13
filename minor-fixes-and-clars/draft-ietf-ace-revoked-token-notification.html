@@ -2187,32 +2187,54 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
       </h2>
 <p id="section-11-1">This specification defines a number of parameters that can be transported in the response from the TRL endpoint, when the response payload is a CBOR map. Note that such a response MUST use the Content-Format "application/ace-trl+cbor" defined in <a href="#iana-content-type" class="auto internal xref">Section 14.2</a> of this specification.<a href="#section-11-1" class="pilcrow">¶</a></p>
 <p id="section-11-2">The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.<a href="#section-11-2" class="pilcrow">¶</a></p>
-<span id="name-cbor-abbreviations-for-the-"></span><div id="fig-cbor-trl-params">
-<figure id="figure-8">
-        <div class="alignCenter art-text artwork" id="section-11-3.1">
-<pre>
-+-------------------+------------+------------------------+
-| Name              | CBOR Value | CBOR Type              |
-+-------------------+------------+------------------------+
-| full_set          |  0         | array                  |
-+-------------------+------------+------------------------+
-| diff_set          |  1         | array                  |
-+-------------------+------------+------------------------+
-| cursor            |  2         | unsigned integer /     |
-|                   |            | simple value `null`    |
-+-------------------+------------+------------------------+
-| more              |  3         | simple value `false` / |
-|                   |            | simple value `true`    |
-+-------------------+------------+------------------------+
-| error             |  4         | integer                |
-+-------------------+------------+------------------------+
-| error_description |  5         | text string            |
-+-------------------+------------+------------------------+
-</pre>
-</div>
-<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<span id="name-cbor-abbreviations-for-the-"></span><div id="_table-cbor-trl-params">
+<table class="center" id="table-1">
+        <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
 <a href="#name-cbor-abbreviations-for-the-" class="selfRef">CBOR abbreviations for the ACE Token Revocation List parameters</a>
-        </figcaption></figure>
+        </caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Name</th>
+            <th class="text-left" rowspan="1" colspan="1">CBOR Value</th>
+            <th class="text-left" rowspan="1" colspan="1">CBOR Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">full_set</td>
+            <td class="text-left" rowspan="1" colspan="1">0</td>
+            <td class="text-left" rowspan="1" colspan="1">array</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">diff_set</td>
+            <td class="text-left" rowspan="1" colspan="1">1</td>
+            <td class="text-left" rowspan="1" colspan="1">array</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">cursor</td>
+            <td class="text-left" rowspan="1" colspan="1">2</td>
+            <td class="text-left" rowspan="1" colspan="1">unsigned integer / <br> simple value <code>null</code>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">more</td>
+            <td class="text-left" rowspan="1" colspan="1">3</td>
+            <td class="text-left" rowspan="1" colspan="1">simple value <code>false</code> / <br> simple value <code>true</code>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">error</td>
+            <td class="text-left" rowspan="1" colspan="1">4</td>
+            <td class="text-left" rowspan="1" colspan="1">integer</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">error_description</td>
+            <td class="text-left" rowspan="1" colspan="1">5</td>
+            <td class="text-left" rowspan="1" colspan="1">text string</td>
+          </tr>
+        </tbody>
+      </table>
 </div>
 </section>
 </div>
@@ -2222,24 +2244,33 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <a href="#section-12" class="section-number selfRef">12. </a><a href="#name-ace-token-revocation-list-e" class="section-name selfRef">ACE Token Revocation List Error Identifiers</a>
       </h2>
 <p id="section-12-1">This specification defines a number of values that the AS can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".<a href="#section-12-1" class="pilcrow">¶</a></p>
-<span id="name-ace-token-revocation-list-er"></span><div id="fig-ACE-TRL-Error">
-<figure id="figure-9">
-        <div class="alignCenter art-text artwork" id="section-12-2.1">
-<pre>
-+-------+---------------------------+
-| Value | Description               |
-+-------+---------------------------+
-|   0   | Invalid parameter value   |
-+-------+---------------------------+
-|   1   | Invalid set of parameters |
-+-------+---------------------------+
-|   2   | Out of bound cursor value |
-+-------+---------------------------+
-</pre>
-</div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<span id="name-ace-token-revocation-list-er"></span><div id="_table-ACE-TRL-Error">
+<table class="center" id="table-2">
+        <caption>
+<a href="#table-2" class="selfRef">Table 2</a>:
 <a href="#name-ace-token-revocation-list-er" class="selfRef">ACE Token Revocation List Error Identifiers</a>
-        </figcaption></figure>
+        </caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Value</th>
+            <th class="text-left" rowspan="1" colspan="1">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">0</td>
+            <td class="text-left" rowspan="1" colspan="1">Invalid parameter value</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">1</td>
+            <td class="text-left" rowspan="1" colspan="1">Invalid set of parameters</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">2</td>
+            <td class="text-left" rowspan="1" colspan="1">Out of bound cursor value</td>
+          </tr>
+        </tbody>
+      </table>
 </div>
 </section>
 </div>
@@ -2524,7 +2555,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
       <h2 id="name-parameters-of-the-trl-endpo">
 <a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-parameters-of-the-trl-endpo" class="section-name selfRef">Parameters of the TRL Endpoint</a>
       </h2>
-<p id="appendix-B-1"><a href="#fig-TRL-endpoint-parameters" class="auto internal xref">Figure 10</a> provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see <a href="#sec-trl-endpoint" class="auto internal xref">Section 5</a>) and the "Cursor" extension (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>).<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1"><a href="#_table-TRL-endpoint-parameters" class="auto internal xref">Table 3</a> provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see <a href="#sec-trl-endpoint" class="auto internal xref">Section 5</a>) and the "Cursor" extension (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>).<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">Except for MAX_N defined in <a href="#sec-trl-endpoint-supporting-diff-queries" class="auto internal xref">Section 5.1</a>, all the other parameters are defined in <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a> and are used only if the AS supports the "Cursor" extension.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 <p id="appendix-B-3">For each parameter, the columns of the table specify the following information. Both a registered device and an administrator are referred to as "requester".<a href="#appendix-B-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2541,46 +2572,53 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
           <p id="appendix-B-4.4.1">Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.<a href="#appendix-B-4.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<span id="name-parameters-of-the-trl-endpoi"></span><div id="fig-TRL-endpoint-parameters">
-<figure id="figure-10">
-        <div class="alignCenter art-text artwork" id="appendix-B-5.1">
-<pre>
-+----------------+----------+--------------------+--------------------+
-| Name           | Single   | Description        | Value              |
-|                | instance |                    |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_N          | Y        | Max number of TRL  | LB = 1             |
-|                |          | updates stored per |                    |
-|                |          | requester          | If supporting      |
-|                |          |                    | "Cursor", then     |
-|                |          |                    | UB = (MAX_INDEX+1) |
-+----------------+----------+--------------------+--------------------+
-| MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
-|                |          | entries included   |                    |
-|                |          | in a diff query    | UB = MAX_N         |
-|                |          | response when      |                    |
-|                |          | using "Cursor"     |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
-|                |          | instance of the    |                    |
-|                |          | 'index' parameter  | UB = ((2^64)-1)    |
-+----------------+----------+--------------------+--------------------+
-| index          | N        | Value associated   | LB = 0             |
-|                |          | with a series item |                    |
-|                |          | of an updated      | UB = MAX_INDEX     |
-|                |          | collection         |                    |
-+----------------+----------+--------------------+--------------------+
-| last_index     | N        | The 'index' value  | LB = 0             |
-|                |          | of the most        |                    |
-|                |          | recently added     | UB = MAX_INDEX     |
-|                |          | series item in an  |                    |
-|                |          | update collection  |                    |
-+----------------+----------+--------------------+--------------------+
-</pre>
-</div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<span id="name-parameters-of-the-trl-endpoi"></span><div id="_table-TRL-endpoint-parameters">
+<table class="center" id="table-3">
+        <caption>
+<a href="#table-3" class="selfRef">Table 3</a>:
 <a href="#name-parameters-of-the-trl-endpoi" class="selfRef">Parameters of the TRL Endpoint</a>
-        </figcaption></figure>
+        </caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Name</th>
+            <th class="text-left" rowspan="1" colspan="1">Single  instance</th>
+            <th class="text-left" rowspan="1" colspan="1">Description</th>
+            <th class="text-left" rowspan="1" colspan="1">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_N</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Max number of <br> TRL updates stored per <br> requester</td>
+            <td class="text-left" rowspan="1" colspan="1">LB=1 <br><br> If supporting <br> "Cursor", then <br> UB=MAX_INDEX+1</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_DIFF_BATCH</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Max number of diff entries <br> included in a <br> diff query <br> response when <br> using "Cursor"</td>
+            <td class="text-left" rowspan="1" colspan="1">LB=1 <br><br> UB=MAX_N</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_INDEX</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Max value of each <br> instance of the <br> 'index' parameter</td>
+            <td class="text-left" rowspan="1" colspan="1">LB=MAX_N-1 <br><br> UB=(2^64)-1</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">index</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Value associated <br> with a series item <br> of an update <br> collection</td>
+            <td class="text-left" rowspan="1" colspan="1">LB=0 <br><br> UB=MAX_INDEX</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">last_index</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">The 'index' value <br> of the most <br> recently added <br> series item in an <br> update collection</td>
+            <td class="text-left" rowspan="1" colspan="1">LB=0 <br><br> UB=MAX_INDEX</td>
+          </tr>
+        </tbody>
+      </table>
 </div>
 </section>
 </div>
@@ -2613,10 +2651,10 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
         <h3 id="name-full-query-with-observe">
 <a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-full-query-with-observe" class="section-name selfRef">Full Query with Observe</a>
         </h3>
-<p id="appendix-C.1-1"><a href="#fig-RS-AS" class="auto internal xref">Figure 11</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1-1"><a href="#fig-RS-AS" class="auto internal xref">Figure 8</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.1-1" class="pilcrow">¶</a></p>
 <p id="appendix-C.1-2">In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.<a href="#appendix-C.1-2" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-full-query-"></span><div id="fig-RS-AS">
-<figure id="figure-11">
+<figure id="figure-8">
           <div id="appendix-C.1-3.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.1-3.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1328" width="440" viewBox="0 0 440 1328" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2771,7 +2809,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
               </svg><a href="#appendix-C.1-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
 <a href="#name-interaction-for-full-query-" class="selfRef">Interaction for Full Query with Observe</a>
           </figcaption></figure>
 </div>
@@ -2782,11 +2820,11 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
         <h3 id="name-diff-query-with-observe">
 <a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-diff-query-with-observe" class="section-name selfRef">Diff Query with Observe</a>
         </h3>
-<p id="appendix-C.2-1"><a href="#fig-RS-AS-2" class="auto internal xref">Figure 12</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#appendix-C.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.2-1"><a href="#fig-RS-AS-2" class="auto internal xref">Figure 9</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#appendix-C.2-1" class="pilcrow">¶</a></p>
 <p id="appendix-C.2-2">The RS indicates N = 3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.<a href="#appendix-C.2-2" class="pilcrow">¶</a></p>
 <p id="appendix-C.2-3">In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.<a href="#appendix-C.2-3" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-diff-query-"></span><div id="fig-RS-AS-2">
-<figure id="figure-12">
+<figure id="figure-9">
           <div id="appendix-C.2-4.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.2-4.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1504" width="440" viewBox="0 0 440 1504" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2980,7 +3018,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
               </svg><a href="#appendix-C.2-4.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
 <a href="#name-interaction-for-diff-query-" class="selfRef">Interaction for Diff Query with Observe</a>
           </figcaption></figure>
 </div>
@@ -2991,12 +3029,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
         <h3 id="name-full-query-with-observe-plu">
 <a href="#appendix-C.3" class="section-number selfRef">C.3. </a><a href="#name-full-query-with-observe-plu" class="section-name selfRef">Full Query with Observe plus Diff Query</a>
         </h3>
-<p id="appendix-C.3-1"><a href="#fig-RS-AS-3" class="auto internal xref">Figure 13</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.3-1"><a href="#fig-RS-AS-3" class="auto internal xref">Figure 10</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.3-1" class="pilcrow">¶</a></p>
 <p id="appendix-C.3-2">The example also considers one of the notifications from the AS to get lost in transmission, and thus not reaching the RS.<a href="#appendix-C.3-2" class="pilcrow">¶</a></p>
 <p id="appendix-C.3-3">When this happens, and after a waiting time defined by the application has elapsed, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. The RS indicates N = 8 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.<a href="#appendix-C.3-3" class="pilcrow">¶</a></p>
 <p id="appendix-C.3-4">In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.<a href="#appendix-C.3-4" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-full-query-w"></span><div id="fig-RS-AS-3">
-<figure id="figure-13">
+<figure id="figure-10">
           <div id="appendix-C.3-5.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.3-5.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1648" width="440" viewBox="0 0 440 1648" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -3197,7 +3235,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
               </svg><a href="#appendix-C.3-5.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
 <a href="#name-interaction-for-full-query-w" class="selfRef">Interaction for Full Query with Observe plus Diff Query</a>
           </figcaption></figure>
 </div>
@@ -3209,12 +3247,12 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <a href="#appendix-C.4" class="section-number selfRef">C.4. </a><a href="#name-diff-query-with-observe-and" class="section-name selfRef">Diff Query with Observe and "Cursor"</a>
         </h3>
 <p id="appendix-C.4-1">In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query request from this RS.<a href="#appendix-C.4-1" class="pilcrow">¶</a></p>
-<p id="appendix-C.4-2"><a href="#fig-RS-AS-4" class="auto internal xref">Figure 14</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#appendix-C.4-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.4-2"><a href="#fig-RS-AS-4" class="auto internal xref">Figure 11</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#appendix-C.4-2" class="pilcrow">¶</a></p>
 <p id="appendix-C.4-3">The RS specifies the query parameter 'diff' with value 3, i.e., the maximum number of diff entries to be specified in a response from the AS.<a href="#appendix-C.4-3" class="pilcrow">¶</a></p>
 <p id="appendix-C.4-4">After the RS has not received a notification from the AS for a waiting time defined by the application, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL.<a href="#appendix-C.4-4" class="pilcrow">¶</a></p>
 <p id="appendix-C.4-5">This is followed up by a further diff query request that specifies the query parameter 'cursor'. Note that the payload of the corresponding response differs from the payload of the response to the previous diff query request.<a href="#appendix-C.4-5" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-diff-query-w"></span><div id="fig-RS-AS-4">
-<figure id="figure-14">
+<figure id="figure-11">
           <div id="appendix-C.4-6.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.4-6.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2256" width="472" viewBox="0 0 472 2256" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -3509,7 +3547,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
               </svg><a href="#appendix-C.4-6.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-14" class="selfRef">Figure 14</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-interaction-for-diff-query-w" class="selfRef">Interaction for Diff Query with Observe and "Cursor"</a>
           </figcaption></figure>
 </div>
@@ -3521,7 +3559,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-full-query-with-observe-plus" class="section-name selfRef">Full Query with Observe plus Diff Query with "Cursor"</a>
         </h3>
 <p id="appendix-C.5-1">In this example, the AS supports the "Cursor" extension. Hence, the CBOR map conveyed as payload of the registration response additionally includes a "max_diff_batch" parameter. This specifies the value of MAX_DIFF_BATCH, i.e., the maximum number of diff entries that can be included in a response to a diff query request from this RS.<a href="#appendix-C.5-1" class="pilcrow">¶</a></p>
-<p id="appendix-C.5-2"><a href="#fig-RS-AS-5" class="auto internal xref">Figure 15</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.5-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.5-2"><a href="#fig-RS-AS-5" class="auto internal xref">Figure 12</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.5-2" class="pilcrow">¶</a></p>
 <p id="appendix-C.5-3">The example also considers some of the notifications from the AS to get lost in transmission, and thus not reaching the RS.<a href="#appendix-C.5-3" class="pilcrow">¶</a></p>
 <p id="appendix-C.5-4">When this happens, and after a waiting time defined by the application has elapsed, the RS sends a GET request with no Observe Option to the AS, to perform a diff query of the TRL. In particular, the RS specifies:<a href="#appendix-C.5-4" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -3535,7 +3573,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
 <p id="appendix-C.5-6">The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items from the update collection corresponding to the RS. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to <code>true</code>. Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.<a href="#appendix-C.5-6" class="pilcrow">¶</a></p>
 <p id="appendix-C.5-7">After that, the RS follows up with a further diff query request specifying the query parameter 'cursor' with value 7, in order to retrieve the next and last batch of series items from the update collection.<a href="#appendix-C.5-7" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-full-query-wi"></span><div id="fig-RS-AS-5">
-<figure id="figure-15">
+<figure id="figure-12">
           <div id="appendix-C.5-8.1">
             <div class="alignCenter art-svg artwork" id="appendix-C.5-8.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="3616" width="528" viewBox="0 0 528 3616" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -3995,7 +4033,7 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
               </svg><a href="#appendix-C.5-8.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-15" class="selfRef">Figure 15</a>:
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
 <a href="#name-interaction-for-full-query-wi" class="selfRef">Interaction for Full Query with Observe plus Diff Query with "Cursor"</a>
           </figcaption></figure>
 </div>
