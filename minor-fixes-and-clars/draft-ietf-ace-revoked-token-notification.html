@@ -2611,32 +2611,32 @@ If 'more' has value <code>true</code>, the requester can send a follow-up diff q
           <tr>
             <td class="text-left" rowspan="1" colspan="1">MAX_N</td>
             <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">Max number of <br> TRL updates stored per <br> requester</td>
-            <td class="text-left" rowspan="1" colspan="1">LB=1 <br><br> If supporting <br> "Cursor", then <br> UB=MAX_INDEX+1</td>
+            <td class="text-left" rowspan="1" colspan="1">Max number of TRL updates stored per requester</td>
+            <td class="text-left" rowspan="1" colspan="1">LB = 1 <br><br> If supporting <br> "Cursor", then <br> UB = MAX_INDEX+1</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">MAX_DIFF_BATCH</td>
             <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Max number of diff entries <br> included in a <br> diff query <br> response when <br> using "Cursor"</td>
-            <td class="text-left" rowspan="1" colspan="1">LB=1 <br><br> UB=MAX_N</td>
+            <td class="text-left" rowspan="1" colspan="1">Max number of diff entries included in a diff query response when using "Cursor"</td>
+            <td class="text-left" rowspan="1" colspan="1">LB = 1 <br><br> UB = MAX_N</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">MAX_INDEX</td>
             <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">Max value of each <br> instance of the <br> 'index' parameter</td>
-            <td class="text-left" rowspan="1" colspan="1">LB=MAX_N-1 <br><br> UB=(2^64)-1</td>
+            <td class="text-left" rowspan="1" colspan="1">Max value of each instance of the 'index' parameter</td>
+            <td class="text-left" rowspan="1" colspan="1">LB = MAX_N-1 <br><br> UB = (2^64)-1</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">index</td>
             <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Value associated <br> with a series item <br> of an update <br> collection</td>
-            <td class="text-left" rowspan="1" colspan="1">LB=0 <br><br> UB=MAX_INDEX</td>
+            <td class="text-left" rowspan="1" colspan="1">Value associated with a series item of an update collection</td>
+            <td class="text-left" rowspan="1" colspan="1">LB = 0 <br><br> UB = MAX_INDEX</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">last_index</td>
             <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">The 'index' value <br> of the most <br> recently added <br> series item in an <br> update collection</td>
-            <td class="text-left" rowspan="1" colspan="1">LB=0 <br><br> UB=MAX_INDEX</td>
+            <td class="text-left" rowspan="1" colspan="1">The 'index' value of the most recently added series item in an update collection</td>
+            <td class="text-left" rowspan="1" colspan="1">LB = 0 <br><br> UB = MAX_INDEX</td>
           </tr>
         </tbody>
       </table>

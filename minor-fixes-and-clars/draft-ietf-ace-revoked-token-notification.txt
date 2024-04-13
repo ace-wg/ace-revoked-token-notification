@@ -1824,41 +1824,40 @@ Appendix B.  Parameters of the TRL Endpoint
       where LB and UB denote the inclusive lower bound and upper bound,
       respectively, and "^" is the exponentiation operator.
 
-    +================+==========+===================+================+
-    | Name           | Single   | Description       | Value          |
-    |                | instance |                   |                |
-    +================+==========+===================+================+
-    | MAX_N          | Y        | Max number of     | LB=1           |
-    |                |          | TRL updates       |                |
-    |                |          | stored per        | If supporting  |
-    |                |          | requester         | "Cursor", then |
-    |                |          |                   | UB=MAX_INDEX+1 |
-    +----------------+----------+-------------------+----------------+
-    | MAX_DIFF_BATCH | N        | Max number of     | LB=1           |
-    |                |          | diff entries      |                |
-    |                |          | included in a     | UB=MAX_N       |
-    |                |          | diff query        |                |
-    |                |          | response when     |                |
-    |                |          | using "Cursor"    |                |
-    +----------------+----------+-------------------+----------------+
-    | MAX_INDEX      | Y        | Max value of each | LB=MAX_N-1     |
-    |                |          | instance of the   |                |
-    |                |          | 'index' parameter | UB=(2^64)-1    |
-    +----------------+----------+-------------------+----------------+
-    | index          | N        | Value associated  | LB=0           |
-    |                |          | with a series     |                |
-    |                |          | item              | UB=MAX_INDEX   |
-    |                |          | of an update      |                |
-    |                |          | collection        |                |
-    +----------------+----------+-------------------+----------------+
-    | last_index     | N        | The 'index' value | LB=0           |
-    |                |          | of the most       |                |
-    |                |          | recently added    | UB=MAX_INDEX   |
-    |                |          | series item in an |                |
-    |                |          | update collection |                |
-    +----------------+----------+-------------------+----------------+
+   +================+==========+====================+==================+
+   | Name           | Single   | Description        | Value            |
+   |                | instance |                    |                  |
+   +================+==========+====================+==================+
+   | MAX_N          | Y        | Max number of TRL  | LB = 1           |
+   |                |          | updates stored     |                  |
+   |                |          | per requester      | If supporting    |
+   |                |          |                    | "Cursor", then   |
+   |                |          |                    | UB = MAX_INDEX+1 |
+   +----------------+----------+--------------------+------------------+
+   | MAX_DIFF_BATCH | N        | Max number of      | LB = 1           |
+   |                |          | diff entries       |                  |
+   |                |          | included in a      | UB = MAX_N       |
+   |                |          | diff query         |                  |
+   |                |          | response when      |                  |
+   |                |          | using "Cursor"     |                  |
+   +----------------+----------+--------------------+------------------+
+   | MAX_INDEX      | Y        | Max value of each  | LB = MAX_N-1     |
+   |                |          | instance of the    |                  |
+   |                |          | 'index' parameter  | UB = (2^64)-1    |
+   +----------------+----------+--------------------+------------------+
+   | index          | N        | Value associated   | LB = 0           |
+   |                |          | with a series      |                  |
+   |                |          | item of an update  | UB = MAX_INDEX   |
+   |                |          | collection         |                  |
+   +----------------+----------+--------------------+------------------+
+   | last_index     | N        | The 'index' value  | LB = 0           |
+   |                |          | of the most        |                  |
+   |                |          | recently added     | UB = MAX_INDEX   |
+   |                |          | series item in an  |                  |
+   |                |          | update collection  |                  |
+   +----------------+----------+--------------------+------------------+
 
-                 Table 3: Parameters of the TRL Endpoint
+                  Table 3: Parameters of the TRL Endpoint
 
 Appendix C.  Interaction Examples
 
