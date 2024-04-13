@@ -170,7 +170,7 @@ At a high level, the steps of this protocol are as follows.
 
 Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
                     +----------------------+
                     | Authorization Server |
                     +-----------o----------+
@@ -188,7 +188,7 @@ Consistently, the AS adds the three token hashes to the TRL at once, and sends O
                      :    :   t1   :           :     t3     :    :
                      :    :........:           :............:    :
                      :                   t2                      :
-                     :...........................................:
+                     .............................................
 
 ~~~~~~~~~~~
 {: #fig-protocol-overview title="Protocol Overview" artwork-align="center"}
@@ -938,7 +938,7 @@ Furthermore, 'h(x)' refers to the hash function used to compute the token hashes
 
 In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                  AS
 |                                                    |
 |  Registration: POST                                |
@@ -1031,7 +1031,7 @@ The RS indicates N = 3 as value of the 'diff' query parameter, i.e., as the maxi
 
 In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                  AS
 |                                                    |
 |  Registration: POST                                |
@@ -1137,7 +1137,7 @@ When this happens, and after a waiting time defined by the application has elaps
 
 In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                  AS
 |                                                    |
 |  Registration: POST                                |
@@ -1210,7 +1210,7 @@ RS                                                  AS
 |                                                    |
 |             (Access token t2 expires)              |
 |                                                    |
-|  X<------------------------------------------------+
+|  X <-----------------------------------------------+
 |      2.05 CONTENT Observe: 86                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
@@ -1254,7 +1254,7 @@ After the RS has not received a notification from the AS for a waiting time defi
 
 This is followed up by a further diff query request that specifies the query parameter 'cursor'. Note that the payload of the corresponding response differs from the payload of the response to the previous diff query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                      AS
 |                                                        |
 |  Registration: POST                                    |
@@ -1415,7 +1415,7 @@ The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items 
 
 After that, the RS follows up with a further diff query request specifying the query parameter 'cursor' with value 7, in order to retrieve the next and last batch of series items from the update collection.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                             AS
 |                                                               |
 |  Registration: POST                                           |
@@ -1499,7 +1499,7 @@ RS                                                             AS
 |                                                               |
 |                   (Access token t2 expires)                   |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 86                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1512,7 +1512,7 @@ RS                                                             AS
 |                                                               |
 |                  (Access token t3 is revoked)                 |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 88                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1525,7 +1525,7 @@ RS                                                             AS
 |                                                               |
 |                  (Access token t4 is revoked)                 |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 89                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1538,7 +1538,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t3 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 90                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1551,7 +1551,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t4 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 91                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1564,7 +1564,7 @@ RS                                                             AS
 |                                                               |
 |              (Access tokens t5 and t6 are revoked)            |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 92                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1577,7 +1577,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t5 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 93                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1590,7 +1590,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t6 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  X <----------------------------------------------------------+
 |                 2.05 CONTENT Observe: 94                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
