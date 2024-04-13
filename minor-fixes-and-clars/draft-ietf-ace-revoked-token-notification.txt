@@ -121,13 +121,14 @@ Table of Contents
      C.3.  Full Query with Observe plus Diff Query
      C.4.  Diff Query with Observe and "Cursor"
      C.5.  Full Query with Observe plus Diff Query with "Cursor"
-   Appendix D.  Document Updates
-     D.1.  Version -05 to -06
-     D.2.  Version -04 to -05
-     D.3.  Version -03 to -04
-     D.4.  Version -02 to -03
-     D.5.  Version -01 to -02
-     D.6.  Version -00 to -01
+   Appendix D.  CDDL Model
+   Appendix E.  Document Updates
+     E.1.  Version -05 to -06
+     E.2.  Version -04 to -05
+     E.3.  Version -03 to -04
+     E.4.  Version -02 to -03
+     E.5.  Version -01 to -02
+     E.6.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -256,7 +257,21 @@ Table of Contents
          the AS has issued the access token to be consumed by that RS.
 
    Examples throughout this document are expressed in CBOR diagnostic
-   notation without the tag and value abbreviations.
+   notation as defined in Section 8 of [RFC8949] and Appendix G of
+   [RFC8610] ("diagnostic notation").  Diagnostic notation comments are
+   often used to provide a textual representation of the numeric
+   parameter names and values.
+
+   In the CBOR diagnostic notation used in this document, constructs of
+   the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
+   in the CDDL model shown in Figure 13 of Appendix D.  For example,
+   {e'full_set': [], e'cursor': 3} stands for {0: [], 2: 3}.
+
+   Note to RFC Editor: Please delete the paragraph immediately preceding
+   this note.  Also, in the CBOR diagnostic notation used in this
+   document, please replace the constructs of the form e'SOME_NAME' with
+   the value assigned to SOME_NAME in the CDDL model shown in Figure 13
+   of Appendix D.  Finally, please delete this note.
 
 2.  Protocol Overview
 
@@ -796,7 +811,7 @@ Table of Contents
    Content-Format: application/ace-trl+cbor
    Payload:
    {
-      "full_set" : [
+      e'full_set' : [
         h'01fa51cc ... ', h'01748190 ... '
       ]
    }
@@ -908,7 +923,7 @@ Table of Contents
    Content-Format: application/ace-trl+cbor
    Payload:
    {
-      "diff_set" : [
+      e'diff_set' : [
         [
           [ h'01fa51cc ... ', h'01748190 ... '],
           [ h'01cdf1ca ... ', h'01be41a6 ... ']
@@ -1892,7 +1907,7 @@ C.1.  Full Query with Observe
           |      2.05 CONTENT Observe: 42                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : []                           |
+          |          e'full_set' : []                          |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -1911,7 +1926,7 @@ C.1.  Full Query with Observe
           |      2.05 CONTENT Observe: 53                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : [bstr.h(t1)]                 |
+          |          e'full_set' : [bstr.h(t1)]                |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -1923,7 +1938,7 @@ C.1.  Full Query with Observe
           |      2.05 CONTENT Observe: 64                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+          |          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
           |        }                                           |
           |                                                    |
           |                         .                          |
@@ -1936,7 +1951,7 @@ C.1.  Full Query with Observe
           |      2.05 CONTENT Observe: 75                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : [bstr.h(t2)]                 |
+          |          e'full_set' : [bstr.h(t2)]                |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -1948,7 +1963,7 @@ C.1.  Full Query with Observe
           |      2.05 CONTENT Observe: 86                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : []                           |
+          |          e'full_set' : []                          |
           |        }                                           |
           |                                                    |
 
@@ -1989,7 +2004,7 @@ C.2.  Diff Query with Observe
           |      2.05 CONTENT Observe: 42                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "diff_set" : []                           |
+          |          e'diff_set' : []                          |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -2007,7 +2022,7 @@ C.2.  Diff Query with Observe
           |      2.05 CONTENT Observe: 53                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "diff_set" : [                            |
+          |          e'diff_set' : [                           |
           |                         [ [], [bstr.h(t1)] ]       |
           |                       ]                            |
           |        }                                           |
@@ -2021,7 +2036,7 @@ C.2.  Diff Query with Observe
           |      2.05 CONTENT Observe: 64                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "diff_set" : [                            |
+          |          e'diff_set' : [                           |
           |                         [ [], [bstr.h(t2)] ],      |
           |                         [ [], [bstr.h(t1)] ]       |
           |                       ]                            |
@@ -2036,7 +2051,7 @@ C.2.  Diff Query with Observe
           |      2.05 CONTENT Observe: 75                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "diff_set" : [                            |
+          |          e'diff_set' : [                           |
           |                         [ [bstr.h(t1)], [] ],      |
           |                         [ [], [bstr.h(t2)] ],      |
           |                         [ [], [bstr.h(t1)] ]       |
@@ -2052,7 +2067,7 @@ C.2.  Diff Query with Observe
           |      2.05 CONTENT Observe: 86                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "diff_set" : [                            |
+          |          e'diff_set' : [                           |
           |                         [ [bstr.h(t2)], [] ],      |
           |                         [ [bstr.h(t1)], [] ],      |
           |                         [ [], [bstr.h(t2)] ]       |
@@ -2105,7 +2120,7 @@ C.3.  Full Query with Observe plus Diff Query
           |      2.05 CONTENT Observe: 42                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : []                           |
+          |          e'full_set' : []                          |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -2123,7 +2138,7 @@ C.3.  Full Query with Observe plus Diff Query
           |      2.05 CONTENT Observe: 53                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : [bstr.h(t1)]                 |
+          |          e'full_set' : [bstr.h(t1)]                |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -2135,7 +2150,7 @@ C.3.  Full Query with Observe plus Diff Query
           |      2.05 CONTENT Observe: 64                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+          |          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -2147,7 +2162,7 @@ C.3.  Full Query with Observe plus Diff Query
           |      2.05 CONTENT Observe: 75                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : [bstr.h(t2)]                 |
+          |          e'full_set' : [bstr.h(t2)]                |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -2159,7 +2174,7 @@ C.3.  Full Query with Observe plus Diff Query
           |      2.05 CONTENT Observe: 86                      |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "full_set" : []                           |
+          |          e'full_set' : []                          |
           |        }                                           |
           |                         .                          |
           |                         .                          |
@@ -2176,7 +2191,7 @@ C.3.  Full Query with Observe plus Diff Query
           |      2.05 CONTENT                                  |
           |        Content-Format: "application/ace-trl+cbor"  |
           |        Payload: {                                  |
-          |          "diff_set" : [                            |
+          |          e'diff_set' : [                           |
           |                         [ [bstr.h(t2)], [] ],      |
           |                         [ [bstr.h(t1)], [] ],      |
           |                         [ [], [bstr.h(t2)] ],      |
@@ -2235,9 +2250,9 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT Observe: 42                      |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [],                          |
-        |                "cursor" : null,                        |
-        |                  "more" : false                        |
+        |              e'diff_set' : [],                         |
+        |                e'cursor' : null,                       |
+        |                  e'more' : false                       |
         |            }                                           |
         |                           .                            |
         |                           .                            |
@@ -2255,11 +2270,11 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT Observe: 53                      |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [                            |
+        |              e'diff_set' : [                           |
         |                             [ [], [bstr.h(t1)] ]       |
         |                           ],                           |
-        |                "cursor" : 0,                           |
-        |                  "more" : false                        |
+        |                e'cursor' : 0,                          |
+        |                  e'more' : false                       |
         |            }                                           |
         |                           .                            |
         |                           .                            |
@@ -2271,12 +2286,12 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT Observe: 64                      |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [                            |
+        |              e'diff_set' : [                           |
         |                             [ [], [bstr.h(t2)] ],      |
         |                             [ [], [bstr.h(t1)] ]       |
         |                           ],                           |
-        |                "cursor" : 1,                           |
-        |                  "more" : false                        |
+        |                e'cursor' : 1,                          |
+        |                  e'more' : false                       |
         |            }                                           |
         |                           .                            |
         |                           .                            |
@@ -2288,13 +2303,13 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT Observe: 75                      |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [                            |
+        |              e'diff_set' : [                           |
         |                             [ [bstr.h(t1)], [] ],      |
         |                             [ [], [bstr.h(t2)] ],      |
         |                             [ [], [bstr.h(t1)] ]       |
         |                           ],                           |
-        |                "cursor" : 2,                           |
-        |                  "more" : false                        |
+        |                e'cursor' : 2,                          |
+        |                  e'more' : false                       |
         |            }                                           |
         |                           .                            |
         |                           .                            |
@@ -2306,13 +2321,13 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT Observe: 86                      |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [                            |
+        |              e'diff_set' : [                           |
         |                             [ [bstr.h(t2)], [] ],      |
         |                             [ [bstr.h(t1)], [] ],      |
         |                             [ [], [bstr.h(t2)] ]       |
         |                           ],                           |
-        |                "cursor" : 3,                           |
-        |                  "more" : false                        |
+        |                e'cursor' : 3,                          |
+        |                  e'more' : false                       |
         |            }                                           |
         |                           .                            |
         |                           .                            |
@@ -2329,13 +2344,13 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT                                  |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [                            |
+        |              e'diff_set' : [                           |
         |                             [ [bstr.h(t2)], [] ],      |
         |                             [ [bstr.h(t1)], [] ],      |
         |                             [ [], [bstr.h(t2)] ]       |
         |                           ],                           |
-        |                "cursor" : 3,                           |
-        |                  "more" : false                        |
+        |                e'cursor' : 3,                          |
+        |                  e'more' : false                       |
         |            }                                           |
         |                                                        |
         |  GET                                                   |
@@ -2346,9 +2361,9 @@ C.4.  Diff Query with Observe and "Cursor"
         |          2.05 CONTENT                                  |
         |            Content-Format: "application/ace-trl+cbor"  |
         |            Payload: {                                  |
-        |              "diff_set" : [],                          |
-        |                "cursor" : 3,                           |
-        |                  "more" : false                        |
+        |              e'diff_set' : [],                         |
+        |                e'cursor' : 3,                          |
+        |                  e'more' : false                       |
         |            }                                           |
         |                                                        |
 
@@ -2419,8 +2434,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 42                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [],                          |
-     |                       "cursor" : null                         |
+     |                     e'full_set' : [],                         |
+     |                       e'cursor' : null                        |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2444,8 +2459,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 53                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t1)],                |
-     |                       "cursor" : 0                            |
+     |                     e'full_set' : [bstr.h(t1)],               |
+     |                       e'cursor' : 0                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2457,8 +2472,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 64                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t1), bstr.h(t2)],    |
-     |                       "cursor" : 1                            |
+     |                     e'full_set' : [bstr.h(t1), bstr.h(t2)],   |
+     |                       e'cursor' : 1                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2470,8 +2485,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 75                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t2)],                |
-     |                     "cursor"   : 2                            |
+     |                     e'full_set' : [bstr.h(t2)],               |
+     |                     e'cursor'   : 2                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2483,8 +2498,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 86                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [],                          |
-     |                       "cursor" : 3                            |
+     |                     e'full_set' : [],                         |
+     |                       e'cursor' : 3                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2496,8 +2511,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 88                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t3)],                |
-     |                       "cursor" : 4                            |
+     |                     e'full_set' : [bstr.h(t3)],               |
+     |                       e'cursor' : 4                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2509,8 +2524,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 89                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t3), bstr.h(t4)],    |
-     |                       "cursor" : 5                            |
+     |                     e'full_set' : [bstr.h(t3), bstr.h(t4)],   |
+     |                       e'cursor' : 5                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2522,8 +2537,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 90                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t4)],                |
-     |                       "cursor" : 6                            |
+     |                     e'full_set' : [bstr.h(t4)],               |
+     |                       e'cursor' : 6                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2535,8 +2550,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 91                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [],                          |
-     |                       "cursor" : 7                            |
+     |                     e'full_set' : [],                         |
+     |                       e'cursor' : 7                           |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2548,8 +2563,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 92                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t5), bstr.h(t6)],    |
-     |                     "cursor" : 8                              |
+     |                     e'full_set' : [bstr.h(t5), bstr.h(t6)],   |
+     |                     e'cursor' : 8                             |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2561,8 +2576,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 93                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [bstr.h(t6)],                |
-     |                     "cursor" : 9                              |
+     |                     e'full_set' : [bstr.h(t6)],               |
+     |                     e'cursor' : 9                             |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2574,8 +2589,8 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT Observe: 94                      |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "full_set" : [],                          |
-     |                       "cursor" : 10                           |
+     |                     e'full_set' : [],                         |
+     |                       e'cursor' : 10                          |
      |                   }                                           |
      |                               .                               |
      |                               .                               |
@@ -2592,15 +2607,15 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |                 2.05 CONTENT                                  |
      |                   Content-Format: "application/ace-trl+cbor"  |
      |                   Payload: {                                  |
-     |                     "diff_set" : [                            |
+     |                     e'diff_set' : [                           |
      |                                    [ [bstr.h(t4)], [] ],      |
      |                                    [ [bstr.h(t3)], [] ],      |
      |                                    [ [], [bstr.h(t4)] ],      |
      |                                    [ [], [bstr.h(t3)] ],      |
      |                                    [ [bstr.h(t2)], [] ]       |
      |                                  ],                           |
-     |                       "cursor" : 7,                           |
-     |                         "more" : true                         |
+     |                       e'cursor' : 7,                          |
+     |                         e'more' : true                        |
      |                   }                                           |
      |                                                               |
      |  GET                                                          |
@@ -2611,29 +2626,40 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |        2.05 CONTENT                                           |
      |          Content-Format: "application/ace-trl+cbor"           |
      |          Payload: {                                           |
-     |            "diff_set" : [                                     |
+     |            e'diff_set' : [                                    |
      |                           [ [bstr.h(t6)], [] ],               |
      |                           [ [bstr.h(t5)], [] ],               |
      |                           [ [], [bstr.h(t5), bstr.h(t6)] ]    |
      |                         ],                                    |
-     |              "cursor" : 10,                                   |
-     |                "more" : false                                 |
+     |              e'cursor' : 10,                                  |
+     |                e'more' : false                                |
      |          }                                                    |
      |                                                               |
 
         Figure 12: Interaction for Full Query with Observe plus Diff
                             Query with "Cursor"
 
-Appendix D.  Document Updates
+Appendix D.  CDDL Model
+
+   This section is to be removed before publishing as an RFC.
+
+   full_set = 0
+   diff_set = 1
+   cursor = 2
+   more = 3
+
+                           Figure 13: CDDL model
+
+Appendix E.  Document Updates
 
    RFC EDITOR: Please remove this section.
 
-D.1.  Version -05 to -06
+E.1.  Version -05 to -06
 
    *  Clarified instructions for Expert Review in the IANA
       considerations.
 
-D.2.  Version -04 to -05
+E.2.  Version -04 to -05
 
    *  Explicit focus on CoAP in the abstract and introduction.
 
@@ -2655,7 +2681,7 @@ D.2.  Version -04 to -05
 
    *  Updated author list.
 
-D.3.  Version -03 to -04
+E.3.  Version -03 to -04
 
    *  Improved presentation of pre- and post-registration operations.
 
@@ -2683,7 +2709,7 @@ D.3.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-D.4.  Version -02 to -03
+E.4.  Version -02 to -03
 
    *  Definition of MAX_INDEX for the "Cursor" extension.
 
@@ -2697,7 +2723,7 @@ D.4.  Version -02 to -03
 
    *  Editorial improvements.
 
-D.5.  Version -01 to -02
+E.5.  Version -01 to -02
 
    *  Earlier mentioning of error cases.
 
@@ -2713,7 +2739,7 @@ D.5.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-D.6.  Version -00 to -01
+E.6.  Version -00 to -01
 
    *  Added actions to perform upon receiving responses from the TRL
       endpoint.
