@@ -717,7 +717,7 @@ Table of Contents
          payload of the 4.00 (Bad Request) response MUST have value 0
          ("Invalid parameter value").  The CBOR map MUST also include
          the 'cursor' parameter, which MUST specify either: the CBOR
-         simple value "null" (0xf6), if the update collection associated
+         simple value null (0xf6), if the update collection associated
          with the requester is empty; or the corresponding current value
          of 'last_index' otherwise.
 
@@ -953,9 +953,9 @@ Table of Contents
 
    In particular, the 'cursor' parameter included in the CBOR map
    carried in the response payload specifies either the CBOR simple
-   value "null" (0xf6) or a CBOR unsigned integer.
+   value null (0xf6) or a CBOR unsigned integer.
 
-   The 'cursor' parameter MUST specify the CBOR simple value "null" in
+   The 'cursor' parameter MUST specify the CBOR simple value null in
    case there are currently no TRL updates pertinent to the requester,
    i.e., the update collection for that requester is empty.  This is the
    case from when the requester registers at the AS until a first update
@@ -985,10 +985,10 @@ Table of Contents
       CBOR array.
 
    *  The 'cursor' parameter MUST be included and specifies the CBOR
-      simple value "null" (0xf6).
+      simple value null (0xf6).
 
    *  The 'more' parameter MUST be included and specifies the CBOR
-      simple value "false" (0xf4).
+      simple value false (0xf4).
 
    Note that the above applies when the update collection associated
    with the requester has no elements, regardless of whether the
@@ -1039,12 +1039,12 @@ Table of Contents
          MAX_DIFF_BATCH.
 
       -  The 'more' parameter MUST be present and MUST specify the CBOR
-         simple value "false" (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR
-         simple value "true" (0xf5) otherwise.
+         simple value false (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR
+         simple value true (0xf5) otherwise.
 
-         If the 'more' parameter has value "true", the requester can
-         send a follow-up diff query request including the 'cursor'
-         query parameter, with the same value of the 'cursor' parameter
+         If the 'more' parameter has value true, the requester can send
+         a follow-up diff query request including the 'cursor' query
+         parameter, with the same value of the 'cursor' parameter
          specified in this diff query response.  As defined in
          Section 8.2.3, this would result in the AS transferring the
          following subset of series items as diff entries, thus resuming
@@ -1072,13 +1072,13 @@ Table of Contents
          empty CBOR array.
 
       -  The 'cursor' parameter MUST be included and specifies the CBOR
-         simple value "null" (0xf6).
+         simple value null (0xf6).
 
       -  The 'more' parameter MUST be included and specifies the CBOR
-         simple value "true" (0xf5).
+         simple value true (0xf5).
 
-      With the combination ('cursor', 'more') = ("null", "true"), the AS
-      is signaling that the update collection is in fact not empty, but
+      With the combination ('cursor', 'more') = (null, true), the AS is
+      signaling that the update collection is in fact not empty, but
       that one or more series items have been lost due to their removal.
       These include the item with 'index' value (P + 1) % (MAX_INDEX +
       1), that the requester wished to obtain as the first one following
@@ -1151,15 +1151,15 @@ Table of Contents
             SUB_U <= MAX_DIFF_BATCH.
 
          o  The 'more' parameter MUST be present and MUST specify the
-            CBOR simple value "false" (0xf4) if SUB_U <= MAX_DIFF_BATCH,
-            or the CBOR simple value "true" (0xf5) otherwise.
+            CBOR simple value false (0xf4) if SUB_U <= MAX_DIFF_BATCH,
+            or the CBOR simple value true (0xf5) otherwise.
 
-            If 'more' has value "true", the requester can send a follow-
-            up diff query request including the 'cursor' query
-            parameter, with the same value of the 'cursor' parameter
-            specified in this diff query response.  This would result in
-            the AS transferring the following subset of series items as
-            diff entries, thus resuming from where interrupted in the
+            If 'more' has value true, the requester can send a follow-up
+            diff query request including the 'cursor' query parameter,
+            with the same value of the 'cursor' parameter specified in
+            this diff query response.  This would result in the AS
+            transferring the following subset of series items as diff
+            entries, thus resuming from where interrupted in the
             previous transfer.
 
 9.  Registration at the Authorization Server
@@ -1323,10 +1323,10 @@ Table of Contents
         | diff_set          |  1         | array                  |
         +-------------------+------------+------------------------+
         | cursor            |  2         | unsigned integer /     |
-        |                   |            | simple value "null"    |
+        |                   |            | simple value `null`    |
         +-------------------+------------+------------------------+
-        | more              |  3         | simple value "false" / |
-        |                   |            | simple value "true"    |
+        | more              |  3         | simple value `false` / |
+        |                   |            | simple value `true`    |
         +-------------------+------------+------------------------+
         | error             |  4         | integer                |
         +-------------------+------------+------------------------+
@@ -2384,7 +2384,7 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
    series items from the update collection corresponding to the RS.  The
    AS indicates that further series items are actually available in the
    update collection, by setting the 'more' parameter of the response to
-   "true".  Also, the 'cursor' parameter of the response is set to 7,
+   true.  Also, the 'cursor' parameter of the response is set to 7,
    i.e., to the 'index' value of the most recent series item included in
    the response.
 
