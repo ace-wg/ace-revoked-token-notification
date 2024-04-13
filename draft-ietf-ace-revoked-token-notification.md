@@ -877,12 +877,12 @@ For each parameter, the columns of the table specify the following information. 
 
 * Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.
 
-| Name           | Single <br> instance | Description                                                                                          | Value                                                               |
-| MAX_N          | Y                    | Max number of <br> TRL updates stored per <br> requester                                             | LB=1 <br><br> If supporting <br> "Cursor", then <br> UB=MAX_INDEX+1 |
-| MAX_DIFF_BATCH | N                    | Max number of diff entries <br> included in a <br> diff query <br> response when <br> using "Cursor" | LB=1 <br><br> UB=MAX_N                                              |
-| MAX_INDEX      | Y                    | Max value of each <br> instance of the <br> 'index' parameter                                        | LB=MAX_N-1 <br><br> UB=(2^64)-1                                     |
-| index          | N                    | Value associated <br> with a series item <br> of an update <br> collection                           | LB=0 <br><br> UB=MAX_INDEX                                          |
-| last_index     | N                    | The 'index' value <br> of the most <br> recently added <br> series item in an <br> update collection | LB=0 <br><br> UB=MAX_INDEX                                          |
+| Name           | Single <br> instance | Description                                                                      | Value                                                                   |
+| MAX_N          | Y                    | Max number of TRL updates stored per requester                                   | LB = 1 <br><br> If supporting <br> "Cursor", then <br> UB = MAX_INDEX+1 |
+| MAX_DIFF_BATCH | N                    | Max number of diff entries included in a diff query response when using "Cursor" | LB = 1 <br><br> UB = MAX_N                                              |
+| MAX_INDEX      | Y                    | Max value of each instance of the 'index' parameter                              | LB = MAX_N-1 <br><br> UB = (2^64)-1                                     |
+| index          | N                    | Value associated with a series item of an update collection                      | LB = 0 <br><br> UB = MAX_INDEX                                          |
+| last_index     | N                    | The 'index' value of the most recently added series item in an update collection | LB = 0 <br><br> UB = MAX_INDEX                                          |
 {: #table-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" align="center"}
 
 # Interaction Examples # {#sec-RS-examples}
