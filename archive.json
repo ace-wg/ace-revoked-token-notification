@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-11T01:05:00.421384+00:00",
+  "timestamp": "2024-04-14T01:24:53.519491+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -207,6 +207,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOG4P0p85skqRQ",
+      "title": "Clarifications and minor fixes",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/5",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-04-13T17:56:25Z",
+      "updatedAt": "2024-04-13T17:56:50Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "minor-fixes-and-clars",
+      "headRefOid": "377382d5a9a233bbb70deb5842622a93e33d342d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
