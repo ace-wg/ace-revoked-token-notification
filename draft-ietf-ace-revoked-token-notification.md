@@ -275,7 +275,7 @@ The AS MAY perform a single update to the TRL such that one or more token hashes
 
 Consistent with {{Section 6.5 of RFC9200}}, all communications between a requester towards the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the requester MUST be bound to the corresponding requests.
 
-Following a request to the TRL endpoint, the response messages sent by the AS use Content-Format "application/ace-trl+cbor", unless otherwise specified. Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
+Following a request to the TRL endpoint, the corresponding, success response messages sent by the AS use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
 
 The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
 
