@@ -171,7 +171,7 @@ Table of Contents
    another, and can subscribe to the TRL on the AS by using resource
    observation for CoAP [RFC7641].  Other underlying protocols than CoAP
    are not prohibited from being supported in the future, if they are
-   defined to use in the ACE framework for Authentication and
+   defined to be used in the ACE framework for Authentication and
    Authorization.
 
    Unlike in the case of token introspection (see Section 5.9 of
