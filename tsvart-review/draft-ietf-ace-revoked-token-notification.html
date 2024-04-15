@@ -1577,9 +1577,9 @@ Payload:
 The AS MUST support this type of query. The processing of a full query and the related response format are defined in <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>.<a href="#section-5-5.1.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-5.2">
-          <p id="section-5-5.2.1">Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the subset of the TRL pertaining to the requester.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
+          <p id="section-5-5.2.1">Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates to the TRL, with such an update performed in the subset of the TRL pertaining to the requester.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
 <p id="section-5-5.2.2">
-The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.<a href="#section-5-5.2.2" class="pilcrow">¶</a></p>
+The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL when performing that update to the TRL.<a href="#section-5-5.2.2" class="pilcrow">¶</a></p>
 <p id="section-5-5.2.3">
 The AS MAY support this type of query. In such a case, the AS maintains the history of updates to the TRL as defined in <a href="#sec-trl-endpoint-supporting-diff-queries" class="auto internal xref">Section 5.1</a>. The processing of a diff query and the related response format are defined in <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>.<a href="#section-5-5.2.3" class="pilcrow">¶</a></p>
 </li>
