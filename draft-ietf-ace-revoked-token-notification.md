@@ -284,9 +284,9 @@ The TRL endpoint supports only the GET method, and allows two types of queries o
 
    The AS MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
 
-* Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the subset of the TRL pertaining to the requester.
+* Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates to the TRL, with such an update performed in the subset of the TRL pertaining to the requester.
 
-   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
+   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL when performing that update to the TRL.
 
    The AS MAY support this type of query. In such a case, the AS maintains the history of updates to the TRL as defined in {{sec-trl-endpoint-supporting-diff-queries}}. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
 
