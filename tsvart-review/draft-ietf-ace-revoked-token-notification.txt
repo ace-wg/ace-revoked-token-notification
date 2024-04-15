@@ -469,11 +469,10 @@ Table of Contents
    well as integrity and replay protected.  Furthermore, responses from
    the AS to the requester MUST be bound to the corresponding requests.
 
-   Following a request to the TRL endpoint, the messages defined in this
-   document that the AS sends as response use Content-Format
-   "application/ace-trl+cbor".  Their payload is formatted as a CBOR
-   map, and the CBOR values for the parameters included therein are
-   defined in Section 11.
+   Following a request to the TRL endpoint, the corresponding response
+   messages sent by the AS use Content-Format "application/ace-
+   trl+cbor".  Their payload is formatted as a CBOR map, and the CBOR
+   values for the parameters included therein are defined in Section 11.
 
    The AS MUST implement measures to prevent access to the TRL endpoint
    by entities other than registered devices and authorized
