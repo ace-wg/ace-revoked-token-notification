@@ -311,9 +311,9 @@ Table of Contents
       Depending on the specific subscription established through the
       Observation Request, the notification provides the current updated
       list of revoked access tokens in the subset of the TRL pertaining
-      to that device (see Section 6), or rather the most recent TRL
-      updates occurred over that list of pertaining revoked access
-      tokens (see Section 7).
+      to that device (see Section 6), or the most recent TRL updates
+      occurred over that list of pertaining revoked access tokens (see
+      Section 7).
 
       Further Observe notifications may be sent, consistently with
       ongoing additional observations of the TRL endpoint.

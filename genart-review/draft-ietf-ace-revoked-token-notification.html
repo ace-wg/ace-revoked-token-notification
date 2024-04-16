@@ -1412,7 +1412,7 @@ In particular, the registered device can rely on Observation for CoAP <span>[<a 
 <p id="section-2-3.3.2">
 In either case, after updating the TRL, the AS sends Observe notifications as per <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>. That is, an Observe notification is sent to each registered device subscribed to the TRL and to which the access token pertains.<a href="#section-2-3.3.2" class="pilcrow">¶</a></p>
 <p id="section-2-3.3.3">
-Depending on the specific subscription established through the Observation Request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>).<a href="#section-2-3.3.3" class="pilcrow">¶</a></p>
+Depending on the specific subscription established through the Observation Request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>), or the most recent TRL updates occurred over that list of pertaining revoked access tokens (see <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>).<a href="#section-2-3.3.3" class="pilcrow">¶</a></p>
 <p id="section-2-3.3.4">
 Further Observe notifications may be sent, consistently with ongoing additional observations of the TRL endpoint.<a href="#section-2-3.3.4" class="pilcrow">¶</a></p>
 </li>
