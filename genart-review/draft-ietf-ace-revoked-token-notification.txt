@@ -114,7 +114,7 @@ Table of Contents
      15.1.  Normative References
      15.2.  Informative References
    Appendix A.  On using the Series Transfer Pattern
-   Appendix B.  Parameters of the TRL Endpoint
+   Appendix B.  Local Supportive Parameters of the TRL Endpoint
    Appendix C.  Interaction Examples
      C.1.  Full Query with Observe
      C.2.  Diff Query with Observe
@@ -522,9 +522,9 @@ Table of Contents
    requests and diff query requests, as well as the related response
    format, are further extended as defined in Section 8.
 
-   Appendix B provides an aggregated overview of the parameters used by
-   the TRL endpoint, when the AS supports diff queries and the "Cursor"
-   extension.
+   Appendix B provides an aggregated overview of the local supportive
+   parameters that the AS internally uses at its TRL endpoint, when
+   supporting diff queries and the "Cursor" extension.
 
 5.1.  Supporting Diff Queries
 
@@ -1768,11 +1768,12 @@ Appendix A.  On using the Series Transfer Pattern
    "Cursor" pattern of the Series Transfer Pattern (see Section 3.3 of
    [I-D.bormann-t2trg-stp]).
 
-Appendix B.  Parameters of the TRL Endpoint
+Appendix B.  Local Supportive Parameters of the TRL Endpoint
 
-   Figure 10 provides an aggregated overview of the parameters used by
-   the TRL endpoint, when the AS supports diff queries (see Section 5)
-   and the "Cursor" extension (see Section 5.1.1).
+   Figure 10 provides an aggregated overview of the local supportive
+   parameters that the AS internally uses at its TRL endpoint, when
+   supporting diff queries (see Section 5) and the "Cursor" extension
+   (see Section 5.1.1).
 
    Except for MAX_N defined in Section 5.1, all the other parameters are
    defined in Section 5.1.1 and are used only if the AS supports the

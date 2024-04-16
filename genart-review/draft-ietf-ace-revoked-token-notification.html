@@ -1274,7 +1274,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.16.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-on-using-the-series-transfe" class="internal xref">On using the Series Transfer Pattern</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-parameters-of-the-trl-endpo" class="internal xref">Parameters of the TRL Endpoint</a></p>
+            <p id="section-toc.1-1.17.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-local-supportive-parameters" class="internal xref">Local Supportive Parameters of the TRL Endpoint</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
             <p id="section-toc.1-1.18.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-interaction-examples" class="internal xref">Interaction Examples</a></p>
@@ -1586,7 +1586,7 @@ The AS MAY support this type of query. In such a case, the AS maintains the hist
       </ul>
 <p id="section-5-6">If it supports diff queries, the AS MAY additionally support its "Cursor" extension, which has two benefits. First, the AS can avoid excessively long messages when several diff entries have to be transferred, by delivering several diff query responses, each containing one adjacent subset at a time. Second, a requester can retrieve diff entries associated with TRL updates that, even if not the most recent ones, occurred after a TRL update indicated as reference point.<a href="#section-5-6" class="pilcrow">¶</a></p>
 <p id="section-5-7">If it supports the "Cursor" extension, the AS stores additional information when maintaining the history of updates to the TRL, as defined in <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>. Also, the processing of full query requests and diff query requests, as well as the related response format, are further extended as defined in <a href="#sec-using-cursor" class="auto internal xref">Section 8</a>.<a href="#section-5-7" class="pilcrow">¶</a></p>
-<p id="section-5-8"><a href="#sec-trl-parameteters" class="auto internal xref">Appendix B</a> provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries and the "Cursor" extension.<a href="#section-5-8" class="pilcrow">¶</a></p>
+<p id="section-5-8"><a href="#sec-trl-parameteters" class="auto internal xref">Appendix B</a> provides an aggregated overview of the local supportive parameters that the AS internally uses at its TRL endpoint, when supporting diff queries and the "Cursor" extension.<a href="#section-5-8" class="pilcrow">¶</a></p>
 <div id="sec-trl-endpoint-supporting-diff-queries">
 <section id="section-5.1">
         <h3 id="name-supporting-diff-queries">
@@ -2455,10 +2455,10 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 </div>
 <div id="sec-trl-parameteters">
 <section id="appendix-B">
-      <h2 id="name-parameters-of-the-trl-endpo">
-<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-parameters-of-the-trl-endpo" class="section-name selfRef">Parameters of the TRL Endpoint</a>
+      <h2 id="name-local-supportive-parameters">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-local-supportive-parameters" class="section-name selfRef">Local Supportive Parameters of the TRL Endpoint</a>
       </h2>
-<p id="appendix-B-1"><a href="#fig-TRL-endpoint-parameters" class="auto internal xref">Figure 10</a> provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see <a href="#sec-trl-endpoint" class="auto internal xref">Section 5</a>) and the "Cursor" extension (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>).<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1"><a href="#fig-TRL-endpoint-parameters" class="auto internal xref">Figure 10</a> provides an aggregated overview of the local supportive parameters that the AS internally uses at its TRL endpoint, when supporting diff queries (see <a href="#sec-trl-endpoint" class="auto internal xref">Section 5</a>) and the "Cursor" extension (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>).<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">Except for MAX_N defined in <a href="#sec-trl-endpoint-supporting-diff-queries" class="auto internal xref">Section 5.1</a>, all the other parameters are defined in <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a> and are used only if the AS supports the "Cursor" extension.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 <p id="appendix-B-3">For each parameter, the columns of the table specify the following information. Both a registered device and an administrator are referred to as "requester".<a href="#appendix-B-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2475,7 +2475,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
           <p id="appendix-B-4.4.1">Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.<a href="#appendix-B-4.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<span id="name-parameters-of-the-trl-endpoi"></span><div id="fig-TRL-endpoint-parameters">
+<span id="name-parameters-of-the-trl-endpo"></span><div id="fig-TRL-endpoint-parameters">
 <figure id="figure-10">
         <div class="alignCenter art-text artwork" id="appendix-B-5.1">
 <pre>
@@ -2513,7 +2513,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 </pre>
 </div>
 <figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
-<a href="#name-parameters-of-the-trl-endpoi" class="selfRef">Parameters of the TRL Endpoint</a>
+<a href="#name-parameters-of-the-trl-endpo" class="selfRef">Parameters of the TRL Endpoint</a>
         </figcaption></figure>
 </div>
 </section>
