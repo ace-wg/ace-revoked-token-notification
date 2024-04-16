@@ -1191,7 +1191,7 @@ RS                                                  AS
 |                                                    |
 |             (Access token t2 expires)              |
 |                                                    |
-|  X<------------------------------------------------+
+|  Lost X <------------------------------------------+
 |      2.05 CONTENT Observe: 86                      |
 |        Content-Format: "application/ace-trl+cbor"  |
 |        Payload: {                                  |
@@ -1467,7 +1467,7 @@ RS                                                             AS
 |                                                               |
 |                   (Access token t2 expires)                   |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 86                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1479,7 +1479,7 @@ RS                                                             AS
 |                                                               |
 |                  (Access token t3 is revoked)                 |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 88                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1491,7 +1491,7 @@ RS                                                             AS
 |                                                               |
 |                  (Access token t4 is revoked)                 |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 89                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1503,7 +1503,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t3 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 90                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1515,7 +1515,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t4 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 91                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1527,7 +1527,7 @@ RS                                                             AS
 |                                                               |
 |              (Access tokens t5 and t6 are revoked)            |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 92                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1539,7 +1539,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t5 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 93                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
@@ -1551,7 +1551,7 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t6 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
+|  Lost X <-----------------------------------------------------+
 |                 2.05 CONTENT Observe: 94                      |
 |                   Content-Format: "application/ace-trl+cbor"  |
 |                   Payload: {                                  |
