@@ -407,7 +407,7 @@ In order to produce a (notification) response to a GET request asking for a full
 
       The CBOR array MUST be treated as a set, i.e., the order of its elements has no meaning.
 
-   * The 'cursor' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}). Its value is specified according to what is defined in {{sec-using-cursor-full-query-response}}, and provides the requester with information for performing a follow-up diff query using the "Cursor" extension (see {{sec-using-cursor-diff-query-response}}).
+   * The 'cursor' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}). Its value is set as specified in {{sec-using-cursor-full-query-response}}, and provides the requester with information for performing a follow-up diff query using the "Cursor" extension (see {{sec-using-cursor-diff-query-response}}).
 
       If the AS does not support both diff queries and the "Cursor" extension, this parameter MUST NOT be included. In case the requester does not support both diff queries and the "Cursor" extension, it MUST silently ignore the 'cursor' parameter if present.
 
@@ -461,7 +461,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
       Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the subset of the TRL pertaining to the requester. The second 'diff_entry' element relates to the second from last most recent update to that subset, and so on.
 
-   * The 'cursor' parameter and the 'more' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are specified according to what is defined in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query of the TRL (see {{sec-using-cursor-diff-query-response}}).
+   * The 'cursor' parameter and the 'more' parameter MUST be included if the AS supports both diff queries and the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}). Their values are set as specified in {{sec-using-cursor-diff-query-response}}, and provide the requester with information for performing a follow-up query of the TRL (see {{sec-using-cursor-diff-query-response}}).
 
       In case the AS supports diff queries but not the "Cursor" extension, these parameters MUST NOT be included. In case the requester supports diff queries but not the "Cursor" extension, it MUST silently ignore the 'cursor' parameter and the 'more' parameter if present.
 
