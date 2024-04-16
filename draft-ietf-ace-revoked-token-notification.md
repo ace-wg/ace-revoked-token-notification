@@ -345,7 +345,7 @@ When maintaining the history of updates to the TRL, the following applies separa
 
 * The unsigned integer 'last_index' is also defined, with minimum value 0 and maximum value MAX\_INDEX.
 
-   If the update collection is empty (i.e., no series items have been added yet), the value of 'last_index' is not defined. If the update collection is not empty, 'last_index' has the value of 'index' currently associated with the latest added series item in the update collection.
+   If the update collection is empty (i.e., no series items have been added yet), the value of 'last_index' is not defined. If the update collection is not empty, 'last_index' has the value of 'index' currently associated with the last series item in the update collection.
 
    That is, after having added V series items to the update collection, the last and most recently added series item has 'index' with value 'last_index' = (V - 1) % (MAX_INDEX + 1).
 
