@@ -645,7 +645,7 @@ Table of Contents
    For each update collection, the AS also defines a constant, positive
    integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum
    number of diff entries to be included in a single diff query
-   response.  The specific value depends on the specific registered
+   response.  The specific value MAY depend on the specific registered
    device or administrator associated with the update collection in
    question.  If supporting the "Cursor" extension, the AS SHOULD
    provide registered devices and administrators with the value of

@@ -1666,7 +1666,7 @@ As long as a wrap-around of the 'index' value has not occurred, the value of 'la
 </li>
           </ul>
 <p id="section-5.1.1-5">When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in <a href="#sec-using-cursor-diff-query-response" class="auto internal xref">Section 8.2</a>.<a href="#section-5.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.1.1-6">For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH &lt;= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-5.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-6">For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH &lt;= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value MAY depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-5.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
