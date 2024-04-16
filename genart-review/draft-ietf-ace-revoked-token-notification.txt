@@ -791,7 +791,7 @@ Table of Contents
 
                Figure 4: CDDL definition of 'full_set_value'
 
-   Figure 5 shows an example of response from the AS, following a full
+   Figure 5 shows an example response from the AS, following a full
    query request to the TRL endpoint.  In this example, the AS does not
    support diff queries nor the "Cursor" extension, hence the 'cursor'
    parameter is not included in the payload of the response.  Also, full
@@ -902,7 +902,7 @@ Table of Contents
 
                Figure 6: CDDL definition of 'diff_set_value'
 
-   Figure 7 shows an example of response from the AS, following a diff
+   Figure 7 shows an example response from the AS, following a diff
    query request to the TRL endpoint, where U = 3 diff entries are
    specified.  In this example, the AS does not support the "Cursor"
    extension, hence the 'cursor' parameter and the 'more' parameter are
