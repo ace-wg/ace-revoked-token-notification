@@ -706,7 +706,7 @@ This specification defines a number of values that the AS can include as error i
 
 # Security Considerations # {#sec-security-considerations}
 
-Security considerations are inherited from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
+The protocol defined in this document inherits the security considerations from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
 
 ## Content Retrieval from the TRL
 
