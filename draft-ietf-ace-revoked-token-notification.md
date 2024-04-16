@@ -110,6 +110,8 @@ Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a re
 
 The benefits of this method are that it complements token introspection, and it does not require any additional endpoints on the registered devices. The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
 
+The process by which access tokens are declared revoked is out of the scope of this document. It is also out of scope the method by which the AS determines or is notified of revoked access tokens, according to which the AS consequently updates the TRL as specified in this document.
+
 ## Terminology ## {#terminology}
 
 {::boilerplate bcp14}
