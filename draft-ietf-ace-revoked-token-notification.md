@@ -504,7 +504,7 @@ Payload:
 
 # Response Messages when Using the "Cursor" Extension ## {#sec-using-cursor}
 
-If it supports both diff queries and the "Cursor" extension, the AS composes a response to a full query request or diff query request as defined in {{sec-using-cursor-full-query-response}} and {{sec-using-cursor-diff-query-response}}, respectively.
+If the AS supports both diff queries and the "Cursor" extension, it composes a response to a full query request or diff query request as defined in {{sec-using-cursor-full-query-response}} and {{sec-using-cursor-diff-query-response}}, respectively.
 
 The exact format of the response depends on the request being a full query or diff query request, on the presence of the 'diff' and 'cursor' query parameters and their values in the diff query request, and on the current status of the update collection associated with the requester.
 
