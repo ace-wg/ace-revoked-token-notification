@@ -1374,7 +1374,7 @@ Table of Contents
 
    The AS MUST ensure that each registered device can access and
    retrieve only its pertaining subset of the TRL.  To this end, the AS
-   can perform the required filtering based on the authenticated
+   can always perform the required filtering based on the authenticated
    identity of the registered device, i.e., a (non-public) identifier
    that the AS can securely relate to the registered device and the
    secure association that they use to communicate.
