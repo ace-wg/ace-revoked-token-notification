@@ -730,7 +730,7 @@ In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP O
 
 If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client may receive an unprotected 4.01 (Unauthorized) response from the RS.
 
-This can be due to different reasons. For example, the access token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the access token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
+This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
 
 In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.
 
