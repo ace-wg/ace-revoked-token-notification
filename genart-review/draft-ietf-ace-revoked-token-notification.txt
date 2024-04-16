@@ -938,7 +938,7 @@ Table of Contents
 
 8.  Response Messages when Using the "Cursor" Extension
 
-   If it supports both diff queries and the "Cursor" extension, the AS
+   If the AS supports both diff queries and the "Cursor" extension, it
    composes a response to a full query request or diff query request as
    defined in Section 8.1 and Section 8.2, respectively.
 
