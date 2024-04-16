@@ -327,8 +327,7 @@ Table of Contents
    protocol.  For the sake of simplicity, the example shown in the
    figure considers the simultaneous revocation of the three access
    tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
-
-   Consistently, the AS adds the three token hashes to the TRL at once,
+   Consequently, the AS adds the three token hashes to the TRL at once,
    and sends Observe notifications to one administrator and four
    registered devices.  Each dotted line associated with a pair of
    registered devices indicates the access token that they both own.

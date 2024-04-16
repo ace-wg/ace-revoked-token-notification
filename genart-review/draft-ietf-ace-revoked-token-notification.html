@@ -1420,11 +1420,10 @@ Further Observe notifications may be sent, consistently with ongoing additional 
           <p id="section-2-3.4.1">An administrator can access and subscribe to the TRL like a registered device, while getting the content of the whole TRL (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>) or the most recent updates occurred to the whole TRL (see <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>).<a href="#section-2-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-4"><a href="#fig-protocol-overview" class="auto internal xref">Figure 1</a> shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-4"><a href="#fig-protocol-overview" class="auto internal xref">Figure 1</a> shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively. Consequently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <span id="name-protocol-overview-2"></span><div id="fig-protocol-overview">
 <figure id="figure-1">
-        <div class="alignCenter art-text artwork" id="section-2-6.1">
+        <div class="alignCenter art-text artwork" id="section-2-5.1">
 <pre>
                     +----------------------+
                     | Authorization Server |
@@ -1451,7 +1450,7 @@ Further Observe notifications may be sent, consistently with ongoing additional 
 <a href="#name-protocol-overview-2" class="selfRef">Protocol Overview</a>
         </figcaption></figure>
 </div>
-<p id="section-2-7"><a href="#sec-RS-examples" class="auto internal xref">Appendix C</a> provides examples of the protocol flow and message exchange between the AS and a registered device.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-6"><a href="#sec-RS-examples" class="auto internal xref">Appendix C</a> provides examples of the protocol flow and message exchange between the AS and a registered device.<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-token-name">
