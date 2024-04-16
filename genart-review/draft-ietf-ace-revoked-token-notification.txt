@@ -1228,7 +1228,8 @@ Table of Contents
    the TRL endpoint at any time, analogously to what is defined above.
    When doing so, the requester towards the TRL endpoint can perform a
    full query (see Section 6) or a diff query (see Section 7) of the
-   TRL.
+   TRL.  In the latter case, the requester can additionally rely on the
+   "Cursor" extension (see Section 5.2 and Section 8.2).
 
 10.1.  Handling of Access Tokens and Token Hashes
 
