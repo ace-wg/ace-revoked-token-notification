@@ -168,9 +168,7 @@ At a high level, the steps of this protocol are as follows.
 
 * An administrator can access and subscribe to the TRL like a registered device, while getting the content of the whole TRL (see {{ssec-trl-full-query}}) or the most recent updates occurred to the whole TRL (see {{ssec-trl-diff-query}}).
 
-{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
-
-Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.
+{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively. Consequently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.
 
 ~~~~~~~~~~~
                     +----------------------+
