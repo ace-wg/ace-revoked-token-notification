@@ -2198,7 +2198,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-size-of-the-trl" class="section-name selfRef">Size of the TRL</a>
         </h3>
 <p id="section-13.2-1">If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>).<a href="#section-13.2-1" class="pilcrow">¶</a></p>
-<p id="section-13.2-2">This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing access tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.<a href="#section-13.2-2" class="pilcrow">¶</a></p>
+<p id="section-13.2-2">This could be exploited by attackers to negatively affect the behavior of a registered device. Therefore, in order to help reduce the size of the TRL, the AS SHOULD refrain from issuing access tokens with an excessively long expiration time.<a href="#section-13.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="communication-patterns">

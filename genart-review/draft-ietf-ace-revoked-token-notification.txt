@@ -1395,9 +1395,9 @@ Table of Contents
    Section 6).
 
    This could be exploited by attackers to negatively affect the
-   behavior of a registered device.  Issuing access tokens with not too
-   long expiration time could help reduce the size of the TRL, but an AS
-   SHOULD take measures to limit this size.
+   behavior of a registered device.  Therefore, in order to help reduce
+   the size of the TRL, the AS SHOULD refrain from issuing access tokens
+   with an excessively long expiration time.
 
 13.3.  Communication Patterns
 
