@@ -632,7 +632,7 @@ When receiving a response from the TRL endpoint, a registered device MUST expung
 
 An RS MUST NOT accept and store an access token, if the corresponding token hash is among the currently stored ones.
 
-An RS stores a token hash th1 corresponding to an access token t1 until both the following conditions hold.
+An RS MUST store the token hash th1 corresponding to an access token t1 until both the following conditions hold.
 
 * The RS has received and seen t1, irrespective of having accepted and stored it.
 
