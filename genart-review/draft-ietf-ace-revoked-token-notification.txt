@@ -319,8 +319,9 @@ Table of Contents
       ongoing additional observations of the TRL endpoint.
 
    *  An administrator can access and subscribe to the TRL like a
-      registered device, while getting the full updated content of the
-      TRL.
+      registered device, while getting the content of the whole TRL (see
+      Section 6) or the most recent updates occurred to the whole TRL
+      (see Section 7).
 
    Figure 1 shows a high-level overview of the service provided by this
    protocol.  For the sake of simplicity, the example shown in the
