@@ -1625,7 +1625,7 @@ This occurs when the number of TRL updates pertaining to the requester and curre
 <a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-supporting-the-cursor-exten" class="section-name selfRef">Supporting the "Cursor" Extension</a>
           </h4>
 <p id="section-5.1.1-1">If it supports the "Cursor" extension for diff queries, the AS performs also the following actions.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.1-2">The AS defines the constant, unsigned integer MAX_INDEX &lt;= ((2^64) - 1), where "^" is the exponentiation operator. The value of MAX_INDEX is REQUIRED to be at least (MAX_N - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX_INDEX is practically expected to be order of magnitudes greater than MAX_N.<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-2">The AS defines the constant, unsigned integer MAX_INDEX &lt;= ((2^64) - 1), where "^" is the exponentiation operator. The value of MAX_INDEX is REQUIRED to be at least (MAX_N - 1), and is RECOMMENDED to be at least ((2^32) - 1). MAX_INDEX SHOULD be orders of magnitude greater than MAX_N.<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-3">When maintaining the history of updates to the TRL, the following applies separately for each update collection.<a href="#section-5.1.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.1.1-4.1">
