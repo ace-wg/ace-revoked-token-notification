@@ -162,7 +162,7 @@ At a high level, the steps of this protocol are as follows.
 
    In either case, after updating the TRL, the AS sends Observe notifications as per {{RFC7641}}. That is, an Observe notification is sent to each registered device subscribed to the TRL and to which the access token pertains.
 
-   Depending on the specific subscription established through the Observation Request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
+   Depending on the specific subscription established through the Observation Request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
 
    Further Observe notifications may be sent, consistently with ongoing additional observations of the TRL endpoint.
 
