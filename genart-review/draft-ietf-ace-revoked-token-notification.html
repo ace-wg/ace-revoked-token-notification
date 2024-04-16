@@ -1467,12 +1467,12 @@ Further Observe notifications may be sent, consistently with ongoing additional 
           <p id="section-3-2.2.1">The AS defines HASH_INPUT as follows.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-2.2.2.1">
-              <p id="section-3-2.2.2.1.1">If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).<a href="#section-3-2.2.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3-2.2.2.1.1">If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).<a href="#section-3-2.2.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3-2.2.2.1.2">
-With reference to the example in <a href="#fig-as-response-cbor" class="auto internal xref">Figure 2</a>, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT takes the bytes {0x58 0x77 0xd0 0x83 0x44 0xa1 ...}, i.e., the raw content of the 'access_token' parameter.<a href="#section-3-2.2.2.1.2" class="pilcrow">¶</a></p>
+With reference to the example in <a href="#fig-as-response-cbor" class="auto internal xref">Figure 2</a>, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT is the bytes {0x58 0x77 0xd0 0x83 0x44 0xa1 ...}, i.e., the raw content of the 'access_token' parameter.<a href="#section-3-2.2.2.1.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3-2.2.2.2">
-              <p id="section-3-2.2.2.2.1">If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).<a href="#section-3-2.2.2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3-2.2.2.2.1">If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).<a href="#section-3-2.2.2.2.1" class="pilcrow">¶</a></p>
 <p id="section-3-2.2.2.2.2">
 With reference to the example in <a href="#fig-as-response-json" class="auto internal xref">Figure 3</a>, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.<a href="#section-3-2.2.2.2.2" class="pilcrow">¶</a></p>
 </li>
