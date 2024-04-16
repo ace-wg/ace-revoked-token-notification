@@ -539,10 +539,10 @@ Table of Contents
 
    For each requester, the AS maintains an update collection of maximum
    MAX_N series items, where MAX_N is a pre-defined, constant positive
-   integer.  The AS MUST keep track of the MAX_N most recent updates to
-   the subset of the TRL that pertains to each requester.  The AS SHOULD
-   provide requesters with the value of MAX_N, upon their registration
-   (see Section 9).
+   integer.  For each requester, the AS MUST keep track of the MAX_N
+   most recent updates to the subset of the TRL that pertains to the
+   requester.  The AS SHOULD provide requesters with the value of MAX_N,
+   upon their registration (see Section 9).
 
    The series items in the update collection MUST be strictly ordered in
    a chronological fashion.  That is, at any point in time, the current
