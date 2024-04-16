@@ -1391,7 +1391,7 @@ Table of Contents
    This could be exploited by attackers to negatively affect the
    behavior of a registered device.  Therefore, in order to help reduce
    the size of the TRL, the AS SHOULD refrain from issuing access tokens
-   with an excessive expiration time.
+   with an excessively long expiration time.
 
 13.3.  Communication Patterns
 
