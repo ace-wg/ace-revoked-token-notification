@@ -457,7 +457,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
 4. The AS prepares a 2.05 (Content) response for the requester. The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST be formatted as follows.
 
-   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of U elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared above as diff entry. Note that U might have value 0, in which case 'diff_set_value' is the empty CBOR array.
+   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of U elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared above as a diff entry. Note that U might have value 0, in which case 'diff_set_value' is the empty CBOR array.
 
       Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be sorted to reflect the corresponding updates to the TRL in reverse chronological order. That is, the first 'diff_entry' element of 'diff_set_value' relates to the most recent update to the subset of the TRL pertaining to the requester. The second 'diff_entry' element relates to the second from last most recent update to that subset, and so on.
 
@@ -548,7 +548,7 @@ If the update collection associated with the requester is not empty and the diff
 
 * At step 4, the CBOR map to carry in the payload of the 2.05 (Content) response MUST be formatted as follows.
 
-   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of L elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared as diff entry.
+   * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of L elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared as a diff entry.
 
    * The 'cursor' parameter MUST be present and specifies a CBOR unsigned integer. This MUST take the 'index' value of the series item of the update collection included as first diff entry in the 'diff_set_value' CBOR array, which is specified by the 'diff_set' parameter. That is, the 'cursor' parameter takes the 'index' value of the series item in the update collection corresponding to the most recent update pertaining to the requester and returned in this diff query response.
 
@@ -588,7 +588,7 @@ If the update collection associated with the requester is not empty and the diff
 
    * At step 4, the CBOR map to carry in the payload of the 2.05 (Content) response MUST be formatted as follows.
 
-      * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of L elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared as diff entry. Note that L might have value 0, in which case 'diff_set_value' is the empty CBOR array.
+      * The 'diff_set' parameter MUST be present and specifies a CBOR array 'diff_set_value' of L elements. Each element of 'diff_set_value' specifies one of the CBOR arrays 'diff_entry' prepared as a diff entry. Note that L might have value 0, in which case 'diff_set_value' is the empty CBOR array.
 
       * The 'cursor' parameter MUST be present and MUST specify a CBOR unsigned integer. In particular:
 
