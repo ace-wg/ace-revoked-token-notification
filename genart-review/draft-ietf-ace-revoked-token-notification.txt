@@ -1194,13 +1194,12 @@ Table of Contents
 
 10.  Notification of Revoked Access Tokens
 
-   Once completed the registration procedure at the AS, the
-   administrator or registered device can send a GET request to the TRL
-   endpoint at the AS.  The request can express the wish for a full
-   query (see Section 6) or a diff query (see Section 7) of the TRL.
-   Also, the request can include the CoAP Observe Option set to 0
-   (register), in order to start an observation of the TRL endpoint as
-   per Section 3.1 of [RFC7641].
+   Once registered at the AS, the administrator or registered device can
+   send a GET request to the TRL endpoint at the AS.  The request can
+   express the wish for a full query (see Section 6) or a diff query
+   (see Section 7) of the TRL.  Also, the request can include the CoAP
+   Observe Option set to 0 (register), in order to start an observation
+   of the TRL endpoint as per Section 3.1 of [RFC7641].
 
    In case the request is successfully processed, the AS replies with a
    response specifying the CoAP response code 2.05 (Content).  In
