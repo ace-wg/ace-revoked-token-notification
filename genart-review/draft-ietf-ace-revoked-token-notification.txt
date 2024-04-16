@@ -578,7 +578,7 @@ Table of Contents
        requester and currently stored at the AS is equal to MAX_N.
 
    6.  The AS adds the series item to the update collection associated
-       with the requester, as the most recent one.
+       with the requester, as the last (most recent) one.
 
 5.1.1.  Supporting the "Cursor" Extension
 
