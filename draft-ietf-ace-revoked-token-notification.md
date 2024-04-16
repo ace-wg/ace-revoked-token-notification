@@ -204,11 +204,11 @@ The token hash of an access token is computed as follows.
 
 2. The AS defines HASH_INPUT as follows.
 
-   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).
 
-      With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access_token' parameter.
+      With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT is the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access_token' parameter.
 
-   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).
 
       With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.
 
