@@ -294,7 +294,7 @@ If it supports diff queries, the AS MAY additionally support its "Cursor" extens
 
 If it supports the "Cursor" extension, the AS stores additional information when maintaining the history of updates to the TRL, as defined in {{sec-trl-endpoint-supporting-cursor}}. Also, the processing of full query requests and diff query requests, as well as the related response format, are further extended as defined in {{sec-using-cursor}}.
 
-{{sec-trl-parameteters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries and the "Cursor" extension.
+{{sec-trl-parameteters}} provides an aggregated overview of the local supportive parameters that the AS internally uses at its TRL endpoint, when supporting diff queries and the "Cursor" extension.
 
 ## Supporting Diff Queries # {#sec-trl-endpoint-supporting-diff-queries}
 
@@ -861,9 +861,9 @@ Since the update collection associated with each requester includes up to MAX_N 
 Furthermore, performing a diff query of the TRL together with the "Cursor" extension as specified in {{sec-using-cursor}} in fact relies on the "Cursor" pattern of the Series Transfer Pattern (see {{Section 3.3 of I-D.bormann-t2trg-stp}}).
 
 
-# Parameters of the TRL Endpoint # {#sec-trl-parameteters}
+# Local Supportive Parameters of the TRL Endpoint # {#sec-trl-parameteters}
 
-{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
+{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the local supportive parameters that the AS internally uses at its TRL endpoint, when supporting diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
 
 Except for MAX_N defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the AS supports the "Cursor" extension.
 
