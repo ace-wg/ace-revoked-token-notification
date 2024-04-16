@@ -538,7 +538,7 @@ Note that the above applies when the update collection associated with the reque
 
 ### Cursor Not Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-no-cursor}
 
-If the update collection associated with the requester is not empty and the diff query request does not include the 'cursor' query parameter, the AS performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
+If the update collection associated with the requester is not empty and the diff query request does not include the 'cursor' query parameter, the AS performs the actions defined in {{ssec-trl-diff-query}}, with the following differences.
 
 * At step 3, the AS considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(U, MAX_DIFF_BATCH) diff entries.
 
@@ -578,7 +578,7 @@ If the update collection associated with the requester is not empty and the diff
 
 * Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.
 
-   In this case, the AS performs the same actions defined in {{ssec-trl-diff-query}}, with the following differences.
+   In this case, the AS performs the actions defined in {{ssec-trl-diff-query}}, with the following differences.
 
    * At step 3, the AS considers the value MAX_DIFF_BATCH (see {{sec-trl-endpoint-supporting-cursor}}), and prepares L = min(SUB_U, MAX_DIFF_BATCH) diff entries, where SUB_U = min(NUM, SUB_SIZE), and SUB_SIZE is the number of series items in the update collection starting from and including the series item added immediately after X. If L is equal to 0 (e.g., because SUB_U is equal to 0), then no diff entries are prepared.
 
