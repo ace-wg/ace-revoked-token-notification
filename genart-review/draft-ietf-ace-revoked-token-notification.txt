@@ -867,8 +867,8 @@ Table of Contents
        *  The 'diff_set' parameter MUST be present and specifies a CBOR
           array 'diff_set_value' of U elements.  Each element of
           'diff_set_value' specifies one of the CBOR arrays 'diff_entry'
-          prepared above as diff entry.  Note that U might have value 0,
-          in which case 'diff_set_value' is the empty CBOR array.
+          prepared above as a diff entry.  Note that U might have value
+          0, in which case 'diff_set_value' is the empty CBOR array.
 
           Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be
           sorted to reflect the corresponding updates to the TRL in
@@ -1028,7 +1028,7 @@ Table of Contents
       -  The 'diff_set' parameter MUST be present and specifies a CBOR
          array 'diff_set_value' of L elements.  Each element of
          'diff_set_value' specifies one of the CBOR arrays 'diff_entry'
-         prepared as diff entry.
+         prepared as a diff entry.
 
       -  The 'cursor' parameter MUST be present and specifies a CBOR
          unsigned integer.  This MUST take the 'index' value of the
@@ -1129,9 +1129,9 @@ Table of Contents
          o  The 'diff_set' parameter MUST be present and specifies a
             CBOR array 'diff_set_value' of L elements.  Each element of
             'diff_set_value' specifies one of the CBOR arrays
-            'diff_entry' prepared as diff entry.  Note that L might have
-            value 0, in which case 'diff_set_value' is the empty CBOR
-            array.
+            'diff_entry' prepared as a diff entry.  Note that L might
+            have value 0, in which case 'diff_set_value' is the empty
+            CBOR array.
 
          o  The 'cursor' parameter MUST be present and MUST specify a
             CBOR unsigned integer.  In particular:
