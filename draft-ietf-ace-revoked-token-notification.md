@@ -712,7 +712,7 @@ The protocol defined in this document inherits the security considerations from 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can always perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-Disclosing any information about revoked access tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
+Disclosing any information about revoked access tokens to entities to which they do not pertain may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
 
 ## Size of the TRL
 
