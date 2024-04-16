@@ -1176,10 +1176,9 @@ Table of Contents
    *  The url-path to the TRL endpoint at the AS.
 
    *  The hash function used to compute token hashes.  This is specified
-      as an integer or a text string, taking value from the "ID" or
-      "Hash Name String" column of the "Named Information Hash
-      Algorithm" Registry [Named.Information.Hash.Algorithm],
-      respectively.
+      by identifying an entry in the "Named Information Hash Algorithm"
+      Registry [Named.Information.Hash.Algorithm].  The specific means
+      for this is outside the scope of this document.
 
    *  Optionally, a positive integer MAX_N, if the AS supports diff
       queries of the TRL (see Section 5.1 and Section 7).
