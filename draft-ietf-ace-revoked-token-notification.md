@@ -922,7 +922,7 @@ Registration is assumed to be done by the RS sending a POST request with an unsp
 
 * a 'trl_path' parameter, specifying the path of the TRL endpoint;
 
-* a 'trl_hash' parameter, specifying the hash function used to compute token hashes as defined in {{sec-token-name}};
+* a 'trl_hash' parameter, specifying the "Hash Name String" of the hash function used to compute token hashes as defined in {{sec-token-name}};
 
 * a 'max_n' parameter, specifying the value of MAX_N, i.e., the maximum number of TRL updates pertaining to each registered device that the AS retains for that device (see {{ssec-trl-diff-query}});
 
