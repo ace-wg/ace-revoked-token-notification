@@ -1939,7 +1939,7 @@ Payload:
           <h4 id="name-cursor-not-specified-in-the">
 <a href="#section-8.2.2" class="section-number selfRef">8.2.2. </a><a href="#name-cursor-not-specified-in-the" class="section-name selfRef">Cursor Not Specified in the Diff Query Request</a>
           </h4>
-<p id="section-8.2.2-1">If the update collection associated with the requester is not empty and the diff query request does not include the 'cursor' query parameter, the AS performs the same actions defined in <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>, with the following differences.<a href="#section-8.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2.2-1">If the update collection associated with the requester is not empty and the diff query request does not include the 'cursor' query parameter, the AS performs the actions defined in <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>, with the following differences.<a href="#section-8.2.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.2.2-2.1">
               <p id="section-8.2.2-2.1.1">At step 3, the AS considers the value MAX_DIFF_BATCH (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>), and prepares L = min(U, MAX_DIFF_BATCH) diff entries.<a href="#section-8.2.2-2.1.1" class="pilcrow">¶</a></p>
@@ -1999,7 +1999,7 @@ When receiving this diff query response, the requester should send a new full qu
             <li class="normal" id="section-8.2.3-2.2">
               <p id="section-8.2.3-2.2.1">Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.<a href="#section-8.2.3-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-8.2.3-2.2.2">
-In this case, the AS performs the same actions defined in <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>, with the following differences.<a href="#section-8.2.3-2.2.2" class="pilcrow">¶</a></p>
+In this case, the AS performs the actions defined in <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>, with the following differences.<a href="#section-8.2.3-2.2.2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.2.3-2.2.3.1">
                   <p id="section-8.2.3-2.2.3.1.1">At step 3, the AS considers the value MAX_DIFF_BATCH (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a>), and prepares L = min(SUB_U, MAX_DIFF_BATCH) diff entries, where SUB_U = min(NUM, SUB_SIZE), and SUB_SIZE is the number of series items in the update collection starting from and including the series item added immediately after X. If L is equal to 0 (e.g., because SUB_U is equal to 0), then no diff entries are prepared.<a href="#section-8.2.3-2.2.3.1.1" class="pilcrow">¶</a></p>
