@@ -608,7 +608,7 @@ During the registration process at the AS, an administrator or a registered devi
 
 * The url-path to the TRL endpoint at the AS.
 
-* The hash function used to compute token hashes. This is specified as an integer or a text string, taking value from the "ID" or "Hash Name String" column of the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}, respectively.
+* The hash function used to compute token hashes. This is specified by identifying an entry in the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}. The specific means for this is outside the scope of this document.
 
 * Optionally, a positive integer MAX\_N, if the AS supports diff queries of the TRL (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
 
