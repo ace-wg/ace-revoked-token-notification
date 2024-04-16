@@ -918,9 +918,7 @@ This section provides examples of interactions between an RS as a registered dev
 
 The AS supports both full queries and diff queries of the TRL, as defined in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, respectively.
 
-The details of the registration process are omitted, but it is assumed that the RS sends an unspecified payload to the AS, which replies with a 2.01 (Created) response.
-
-The payload of the registration response is a CBOR map, which includes the following entries:
+Registration is assumed to be done by the RS sending a POST request with an unspecified payload to the AS, which replies with a 2.01 (Created) response. The payload of the registration response is assumed to be a CBOR map, which in turn is assumed to include the following entries:
 
 * a 'trl_path' parameter, specifying the path of the TRL endpoint;
 
