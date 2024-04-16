@@ -771,10 +771,10 @@ Table of Contents
 
        *  The 'cursor' parameter MUST be included if the AS supports
           both diff queries and the related "Cursor" extension (see
-          Section 5.1 and Section 5.1.1).  Its value is specified
-          according to what is defined in Section 8.1, and provides the
-          requester with information for performing a follow-up diff
-          query using the "Cursor" extension (see Section 8.2).
+          Section 5.1 and Section 5.1.1).  Its value is set as specified
+          in Section 8.1, and provides the requester with information
+          for performing a follow-up diff query using the "Cursor"
+          extension (see Section 8.2).
 
           If the AS does not support both diff queries and the "Cursor"
           extension, this parameter MUST NOT be included.  In case the
@@ -880,10 +880,10 @@ Table of Contents
 
        *  The 'cursor' parameter and the 'more' parameter MUST be
           included if the AS supports both diff queries and the related
-          "Cursor" extension (see Section 5.1.1).  Their values are
-          specified according to what is defined in Section 8.2, and
-          provide the requester with information for performing a
-          follow-up query of the TRL (see Section 8.2).
+          "Cursor" extension (see Section 5.1.1).  Their values are set
+          as specified in Section 8.2, and provide the requester with
+          information for performing a follow-up query of the TRL (see
+          Section 8.2).
 
           In case the AS supports diff queries but not the "Cursor"
           extension, these parameters MUST NOT be included.  In case the
