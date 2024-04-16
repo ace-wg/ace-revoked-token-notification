@@ -328,7 +328,7 @@ If it supports the "Cursor" extension for diff queries, the AS performs also the
 
 The AS defines the constant, unsigned integer MAX\_INDEX <= ((2^64) - 1), where "^" is the exponentiation operator. The value of MAX\_INDEX is REQUIRED to be at least (MAX\_N - 1), and is RECOMMENDED to be at least ((2^32) - 1). MAX\_INDEX SHOULD be orders of magnitude greater than MAX\_N.
 
-When maintaining the history of updates to the TRL, the following applies separately for each update collection.
+When maintaining the history of updates to the TRL, the following applies separately for each requester's update collection.
 
 * Each series item X in the update collection is also associated with an unsigned integer 'index', whose minimum value is 0 and whose maximum value is MAX\_INDEX. The first series item ever added to the update collection MUST have 'index' with value 0.
 
