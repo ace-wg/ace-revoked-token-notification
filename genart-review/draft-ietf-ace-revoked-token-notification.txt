@@ -628,8 +628,8 @@ Table of Contents
       If the update collection is empty (i.e., no series items have been
       added yet), the value of 'last_index' is not defined.  If the
       update collection is not empty, 'last_index' has the value of
-      'index' currently associated with the latest added series item in
-      the update collection.
+      'index' currently associated with the last series item in the
+      update collection.
 
       That is, after having added V series items to the update
       collection, the last and most recently added series item has
