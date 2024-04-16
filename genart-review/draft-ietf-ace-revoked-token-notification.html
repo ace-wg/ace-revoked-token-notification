@@ -1662,7 +1662,7 @@ If the update collection is empty (i.e., no series items have been added yet), t
 <p id="section-5.1.1-4.2.3">
 That is, after having added V series items to the update collection, the last and most recently added series item has 'index' with value 'last_index' = (V - 1) % (MAX_INDEX + 1).<a href="#section-5.1.1-4.2.3" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-4.2.4">
-As long as a wrap-around of the 'index' value has not occurred, the value of 'last_index' is the absolute counter of series items added to that update collection until and including V, minus 1.<a href="#section-5.1.1-4.2.4" class="pilcrow">¶</a></p>
+As long as a wrap-around of the 'index' value has not occurred, the value of 'last_index' is the absolute counter of series items added to that update collection, minus 1.<a href="#section-5.1.1-4.2.4" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-5.1.1-5">When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in <a href="#sec-using-cursor-diff-query-response" class="auto internal xref">Section 8.2</a>.<a href="#section-5.1.1-5" class="pilcrow">¶</a></p>

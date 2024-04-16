@@ -637,7 +637,7 @@ Table of Contents
 
       As long as a wrap-around of the 'index' value has not occurred,
       the value of 'last_index' is the absolute counter of series items
-      added to that update collection until and including V, minus 1.
+      added to that update collection, minus 1.
 
    When processing a diff query using the "Cursor" extension, the values
    of 'index' are used as cursor information, as defined in Section 8.2.
