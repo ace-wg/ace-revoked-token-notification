@@ -961,16 +961,13 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : []                           |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |          (Access tokens t1 and t2 issued           |
 |          and successfully submitted to RS)         |
-|                         .                          |
-|                         .                          |
-|                         .                          |
 |                                                    |
+|                        ...                         |
 |                                                    |
 |             (Access token t1 is revoked)           |
 |                                                    |
@@ -980,9 +977,8 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : [bstr.h(t1)]                 |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |             (Access token t2 is revoked)           |
 |                                                    |
@@ -993,9 +989,7 @@ RS                                                  AS
 |          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
 |        }                                           |
 |                                                    |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                        ...                         |
 |                                                    |
 |             (Access token t1 expires)              |
 |                                                    |
@@ -1005,9 +999,8 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : [bstr.h(t2)]                 |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |             (Access token t2 expires)              |
 |                                                    |
@@ -1054,15 +1047,13 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "diff_set" : []                           |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |          (Access tokens t1 and t2 issued           |
 |          and successfully submitted to RS)         |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |            (Access token t1 is revoked)            |
 |                                                    |
@@ -1074,9 +1065,8 @@ RS                                                  AS
 |                         [ [], [bstr.h(t1)] ]       |
 |                       ]                            |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |            (Access token t2 is revoked)            |
 |                                                    |
@@ -1089,9 +1079,8 @@ RS                                                  AS
 |                         [ [], [bstr.h(t1)] ]       |
 |                       ]                            |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |              (Access token t1 expires)             |
 |                                                    |
@@ -1105,9 +1094,8 @@ RS                                                  AS
 |                         [ [], [bstr.h(t1)] ]       |
 |                       ]                            |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |              (Access token t2 expires)             |
 |                                                    |
@@ -1160,15 +1148,13 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : []                           |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |          (Access tokens t1 and t2 issued           |
 |          and successfully submitted to RS)         |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |            (Access token t1 is revoked)            |
 |                                                    |
@@ -1178,9 +1164,8 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : [bstr.h(t1)]                 |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |            (Access token t2 is revoked)            |
 |                                                    |
@@ -1190,9 +1175,8 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |             (Access token t1 expires)              |
 |                                                    |
@@ -1202,9 +1186,8 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : [bstr.h(t2)]                 |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |             (Access token t2 expires)              |
 |                                                    |
@@ -1214,9 +1197,8 @@ RS                                                  AS
 |        Payload: {                                  |
 |          "full_set" : []                           |
 |        }                                           |
-|                         .                          |
-|                         .                          |
-|                         .                          |
+|                                                    |
+|                        ...                         |
 |                                                    |
 |           (Enough time has passed since            |
 |         the latest received notification)          |
@@ -1280,15 +1262,13 @@ RS                                                      AS
 |                "cursor" : null,                        |
 |                  "more" : false                        |
 |            }                                           |
-|                           .                            |
-|                           .                            |
-|                           .                            |
+|                                                        |
+|                          ...                           |
 |                                                        |
 |            (Access tokens t1 and t2 issued             |
 |            and successfully submitted to RS)           |
-|                           .                            |
-|                           .                            |
-|                           .                            |
+|                                                        |
+|                          ...                           |
 |                                                        |
 |              (Access token t1 is revoked)              |
 |                                                        |
@@ -1302,9 +1282,8 @@ RS                                                      AS
 |                "cursor" : 0,                           |
 |                  "more" : false                        |
 |            }                                           |
-|                           .                            |
-|                           .                            |
-|                           .                            |
+|                                                        |
+|                          ...                           |
 |                                                        |
 |              (Access token t2 is revoked)              |
 |                                                        |
@@ -1319,9 +1298,8 @@ RS                                                      AS
 |                "cursor" : 1,                           |
 |                  "more" : false                        |
 |            }                                           |
-|                           .                            |
-|                           .                            |
-|                           .                            |
+|                                                        |
+|                          ...                           |
 |                                                        |
 |              (Access token t1 expires)                 |
 |                                                        |
@@ -1337,9 +1315,8 @@ RS                                                      AS
 |                "cursor" : 2,                           |
 |                  "more" : false                        |
 |            }                                           |
-|                           .                            |
-|                           .                            |
-|                           .                            |
+|                                                        |
+|                          ...                           |
 |                                                        |
 |              (Access token t2 expires)                 |
 |                                                        |
@@ -1355,9 +1332,8 @@ RS                                                      AS
 |                "cursor" : 3,                           |
 |                  "more" : false                        |
 |            }                                           |
-|                           .                            |
-|                           .                            |
-|                           .                            |
+|                                                        |
+|                          ...                           |
 |                                                        |
 |            (Enough time has passed since               |
 |             the latest received notification)          |
@@ -1440,21 +1416,18 @@ RS                                                             AS
 |                     "full_set" : [],                          |
 |                       "cursor" : null                         |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |               (Access tokens t1, t2, t3 issued                |
 |                and successfully submitted to RS)              |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |               (Access tokens t4, t5, t6 issued                |
 |               and successfully submitted to RS)               |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                  (Access token t1 is revoked)                 |
 |                                                               |
@@ -1465,9 +1438,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t1)],                |
 |                       "cursor" : 0                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                  (Access token t2 is revoked)                 |
 |                                                               |
@@ -1478,9 +1450,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t1), bstr.h(t2)],    |
 |                       "cursor" : 1                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                   (Access token t1 expires)                   |
 |                                                               |
@@ -1491,9 +1462,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t2)],                |
 |                     "cursor"   : 2                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                   (Access token t2 expires)                   |
 |                                                               |
@@ -1504,9 +1474,8 @@ RS                                                             AS
 |                     "full_set" : [],                          |
 |                       "cursor" : 3                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                  (Access token t3 is revoked)                 |
 |                                                               |
@@ -1517,9 +1486,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t3)],                |
 |                       "cursor" : 4                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                  (Access token t4 is revoked)                 |
 |                                                               |
@@ -1530,9 +1498,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t3), bstr.h(t4)],    |
 |                       "cursor" : 5                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                    (Access token t3 expires)                  |
 |                                                               |
@@ -1543,9 +1510,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t4)],                |
 |                       "cursor" : 6                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                    (Access token t4 expires)                  |
 |                                                               |
@@ -1556,9 +1522,8 @@ RS                                                             AS
 |                     "full_set" : [],                          |
 |                       "cursor" : 7                            |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |              (Access tokens t5 and t6 are revoked)            |
 |                                                               |
@@ -1569,9 +1534,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t5), bstr.h(t6)],    |
 |                     "cursor" : 8                              |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                    (Access token t5 expires)                  |
 |                                                               |
@@ -1582,9 +1546,8 @@ RS                                                             AS
 |                     "full_set" : [bstr.h(t6)],                |
 |                     "cursor" : 9                              |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                    (Access token t6 expires)                  |
 |                                                               |
@@ -1595,9 +1558,8 @@ RS                                                             AS
 |                     "full_set" : [],                          |
 |                       "cursor" : 10                           |
 |                   }                                           |
-|                               .                               |
-|                               .                               |
-|                               .                               |
+|                                                               |
+|                              ...                              |
 |                                                               |
 |                (Enough time has passed since                  |
 |                 the latest received notification)             |
