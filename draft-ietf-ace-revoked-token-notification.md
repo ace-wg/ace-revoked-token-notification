@@ -320,7 +320,7 @@ Each time the TRL changes, the AS performs the following operations for each req
 
    This occurs when the number of TRL updates pertaining to the requester and currently stored at the AS is equal to MAX\_N.
 
-6. The AS adds the series item to the update collection associated with the requester, as the most recent one.
+6. The AS adds the series item to the update collection associated with the requester, as the last (most recent) one.
 
 ### Supporting the "Cursor" Extension # {#sec-trl-endpoint-supporting-cursor}
 
