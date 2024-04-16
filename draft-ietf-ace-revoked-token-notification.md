@@ -154,15 +154,15 @@ At a high level, the steps of this protocol are as follows.
 
 * When a device registers at the AS, it also receives the url-path to the TRL endpoint.
 
-   After the registration procedure is finished, the registered device can send an Observation Request to the TRL endpoint as described in {{RFC7641}}, i.e., a GET request including the CoAP Observe Option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL, as interested to receive notifications about its update. Upon receiving the request, the AS adds the registered device to the list of observers of the TRL endpoint.
+  At any time after the registration procedure is finished, the registered device can send a GET request to the TRL endpoint at the AS. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
 
-   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL as discussed above.
+  In particular, the registered device can rely on Observation for CoAP {{RFC7641}}. In such a case, the GET request sent to the TRL endpoint includes the CoAP Observe Option set to 0 (register), i.e., it is an Observation Request. By doing so, the registered device effectively subscribes to the TRL, as interested to receive notifications about its update. Upon receiving the Observation Request, the AS adds the registered device to the list of observers of the TRL endpoint.
 
 * When an access token is revoked, the AS adds the corresponding token hash to the TRL. Also, when a revoked access token eventually expires, the AS removes the corresponding token hash from the TRL.
 
    In either case, after updating the TRL, the AS sends Observe notifications as per {{RFC7641}}. That is, an Observe notification is sent to each registered device subscribed to the TRL and to which the access token pertains.
 
-   Depending on the specific subscription established through the observation request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
+   Depending on the specific subscription established through the Observation Request, the notification provides the current updated list of revoked access tokens in the subset of the TRL pertaining to that device (see {{ssec-trl-full-query}}), or rather the most recent TRL updates occurred over that list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
 
    Further Observe notifications may be sent, consistently with ongoing additional observations of the TRL endpoint.
 
