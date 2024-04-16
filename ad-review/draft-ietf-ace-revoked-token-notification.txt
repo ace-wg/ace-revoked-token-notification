@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 10 October 2024                                     Ericsson AB
+Expires: 18 October 2024                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                            8 April 2024
+                                                           16 April 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 October 2024.
+   This Internet-Draft will expire on 18 October 2024.
 
 Copyright Notice
 
@@ -1391,7 +1391,7 @@ Table of Contents
    This could be exploited by attackers to negatively affect the
    behavior of a registered device.  Therefore, in order to help reduce
    the size of the TRL, the AS SHOULD refrain from issuing access tokens
-   with a too long expiration time.
+   with an excessive expiration time.
 
 13.3.  Communication Patterns
 
