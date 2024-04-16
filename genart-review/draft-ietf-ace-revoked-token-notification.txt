@@ -592,7 +592,7 @@ Table of Contents
    than MAX_N.
 
    When maintaining the history of updates to the TRL, the following
-   applies separately for each update collection.
+   applies separately for each requester's update collection.
 
    *  Each series item X in the update collection is also associated
       with an unsigned integer 'index', whose minimum value is 0 and
