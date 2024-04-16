@@ -618,7 +618,7 @@ Further details about the registration process at the AS are out of scope for th
 
 # Notification of Revoked Access Tokens # {#sec-notification}
 
-Once completed the registration procedure at the AS, the administrator or registered device can send a GET request to the TRL endpoint at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL endpoint as per {{Section 3.1 of RFC7641}}.
+Once registered at the AS, the administrator or registered device can send a GET request to the TRL endpoint at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL endpoint as per {{Section 3.1 of RFC7641}}.
 
 In case the request is successfully processed, the AS replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the AS supports diff queries but not the "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively. Instead, if the AS supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
