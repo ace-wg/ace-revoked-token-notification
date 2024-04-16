@@ -662,26 +662,26 @@ By virtue of what is defined in {{Section 5.10.3 of RFC9200}}, this ensures that
 
 This specification defines a number of parameters that can be transported in the response from the TRL endpoint, when the response payload is a CBOR map. Note that such a response MUST use the Content-Format "application/ace-trl+cbor" defined in {{iana-content-type}} of this specification.
 
-The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
+The table below summarizes the parameters. For each of them, it specifies the value to use as CBOR key, i.e., as abbreviation in the key of the map pair for the parameter, instead of the parameter's name as a text string.
 
 ~~~~~~~~~~~
-+-------------------+------------+------------------------+
-| Name              | CBOR Value | CBOR Type              |
-+-------------------+------------+------------------------+
-| full_set          |  0         | array                  |
-+-------------------+------------+------------------------+
-| diff_set          |  1         | array                  |
-+-------------------+------------+------------------------+
-| cursor            |  2         | unsigned integer /     |
-|                   |            | simple value "null"    |
-+-------------------+------------+------------------------+
-| more              |  3         | simple value "false" / |
-|                   |            | simple value "true"    |
-+-------------------+------------+------------------------+
-| error             |  4         | integer                |
-+-------------------+------------+------------------------+
-| error_description |  5         | text string            |
-+-------------------+------------+------------------------+
++-------------------+----------+------------------------+
+| Name              | CBOR Key | Value Type             |
++-------------------+----------+------------------------+
+| full_set          |  0       | array                  |
++-------------------+----------+------------------------+
+| diff_set          |  1       | array                  |
++-------------------+----------+------------------------+
+| cursor            |  2       | unsigned integer /     |
+|                   |          | simple value "null"    |
++-------------------+----------+------------------------+
+| more              |  3       | simple value "false" / |
+|                   |          | simple value "true"    |
++-------------------+----------+------------------------+
+| error             |  4       | integer                |
++-------------------+----------+------------------------+
+| error_description |  5       | text string            |
++-------------------+----------+------------------------+
 ~~~~~~~~~~~
 {: #fig-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" artwork-align="center"}
 
@@ -808,9 +808,9 @@ The columns of this registry are:
 
 * Name: This field contains a descriptive name that enables easier reference to the item. The name MUST be unique. It is not used in the encoding.
 
-* CBOR Value: This field contains the value used as CBOR abbreviation of the item. These values MUST be unique. The value can be an unsigned integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
+* CBOR Key: This field contains the value used as CBOR map key of the item. These values MUST be unique. The value can be an unsigned integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
 
-* CBOR Type: This field contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
+* Value Type: This field contains the allowable CBOR data types for values of this item, or a pointer to the registry that defines its type, when that depends on another item.
 
 * Reference: This field contains a pointer to the public specification for the item.
 
