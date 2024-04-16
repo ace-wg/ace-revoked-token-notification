@@ -189,6 +189,12 @@ Table of Contents
    lightweight computation of hash values to use as Token identifiers
    (see Section 3).
 
+   The process by which access tokens are declared revoked is out of the
+   scope of this document.  It is also out of scope the method by which
+   the AS determines or is notified of revoked access tokens, according
+   to which the AS consequently updates the TRL as specified in this
+   document.
+
 1.1.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
