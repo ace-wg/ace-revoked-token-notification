@@ -537,6 +537,8 @@ Table of Contents
    histories of TRL updates for each registered device and
    administrator, hereafter referred to as requesters.
 
+   The AS defines the single, constant unsigned integer MAX_N >= 1.
+
    For each requester, the AS maintains an update collection of maximum
    MAX_N series items, where MAX_N is a pre-defined, constant positive
    integer.  For each requester, the AS MUST keep track of the MAX_N
