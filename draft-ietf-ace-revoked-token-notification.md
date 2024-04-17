@@ -302,6 +302,8 @@ If the AS supports diff queries, it is able to transfer a list of diff entries, 
 
 The following defines how the AS builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
+The AS defines the single, constant unsigned integer MAX\_N >= 1.
+
 For each requester, the AS maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. For each requester, the AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to the requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the AS, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
