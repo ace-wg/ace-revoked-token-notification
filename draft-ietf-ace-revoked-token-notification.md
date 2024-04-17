@@ -353,7 +353,7 @@ When maintaining the history of updates to the TRL, the following applies separa
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
-For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value MAY depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
+For each requester's update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value MAY depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
