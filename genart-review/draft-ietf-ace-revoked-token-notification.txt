@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 18 October 2024                                     Ericsson AB
+Expires: 19 October 2024                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           16 April 2024
+                                                           17 April 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 October 2024.
+   This Internet-Draft will expire on 19 October 2024.
 
 Copyright Notice
 
@@ -642,14 +642,14 @@ Table of Contents
    When processing a diff query using the "Cursor" extension, the values
    of 'index' are used as cursor information, as defined in Section 8.2.
 
-   For each update collection, the AS also defines a constant, positive
-   integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum
-   number of diff entries to be included in a single diff query
-   response.  The specific value MAY depend on the specific registered
-   device or administrator associated with the update collection in
-   question.  If supporting the "Cursor" extension, the AS SHOULD
-   provide registered devices and administrators with the value of
-   MAX_DIFF_BATCH, upon their registration (see Section 9).
+   For each requester's update collection, the AS also defines a
+   constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value
+   specifies the maximum number of diff entries to be included in a
+   single diff query response.  The specific value MAY depend on the
+   specific registered device or administrator associated with the
+   update collection in question.  If supporting the "Cursor" extension,
+   the AS SHOULD provide registered devices and administrators with the
+   value of MAX_DIFF_BATCH, upon their registration (see Section 9).
 
 5.2.  Query Parameters
 
