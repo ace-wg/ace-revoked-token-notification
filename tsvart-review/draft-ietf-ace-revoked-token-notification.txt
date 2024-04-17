@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 17 October 2024                                     Ericsson AB
+Expires: 19 October 2024                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           15 April 2024
+                                                           17 April 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 October 2024.
+   This Internet-Draft will expire on 19 October 2024.
 
 Copyright Notice
 
@@ -532,14 +532,12 @@ Table of Contents
    histories of TRL updates for each registered device and
    administrator, hereafter referred to as requesters.
 
-   The AS defines the single, constant unsigned integer MAX_N >= 1.
-
-   For each requester, the AS maintains an update collection of maximum
-   MAX_N series items, where MAX_N is a pre-defined, constant positive
-   integer.  The AS MUST keep track of the MAX_N most recent updates to
-   the subset of the TRL that pertains to each requester.  The AS SHOULD
-   provide requesters with the value of MAX_N, upon their registration
-   (see Section 9).
+   The AS defines the single, constant positive integer MAX_N >= 1.  For
+   each requester, the AS maintains an update collection of maximum
+   MAX_N series items.  The AS MUST keep track of the MAX_N most recent
+   updates to the subset of the TRL that pertains to each requester.
+   The AS SHOULD provide requesters with the value of MAX_N, upon their
+   registration (see Section 9).
 
    The series items in the update collection MUST be strictly ordered in
    a chronological fashion.  That is, at any point in time, the current
