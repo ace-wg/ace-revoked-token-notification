@@ -62,6 +62,7 @@ author:
 
 normative:
   RFC2119:
+  RFC6347:
   RFC6749:
   RFC6838:
   RFC6920:
@@ -74,7 +75,11 @@ normative:
   RFC8392:
   RFC8610:
   RFC8949:
+  RFC9147:
   RFC9200:
+  RFC9202:
+  RFC9203:
+  RFC9431:
   Named.Information.Hash.Algorithm:
     author:
       org: IANA
@@ -199,26 +204,57 @@ At a high level, the steps of this protocol are as follows.
 
 The token hash of an access token is computed as follows.
 
+## Determining the Hash Input # {#sec-token-hash-input}
 
-1. The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the Access Token was included and provided to the requesting Client.
+An access token can have one among different formats. The most expected formats are CWT {{RFC8392}} and JWT {{RFC7519}}, with the former being the default format to use in the ACE framework (see {{Section 3 of RFC9200}}). The AS and the RS are aware of which format of access token is used, but the same does not necessarily hold for the Client.
+
+At the same time, there are two possible encodings that the AS can use for the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the issued access token is included and provided to the requesting Client. The RS may not be aware of which encoding is used for that response.
+
+* The AS-to-Client response is encoded in CBOR, which is required if CoAP is used (see {{Section 5 of RFC9200}}) and is recommended otherwise (see {{Section 3 of RFC9200}}). That is, the AS-to-Client response has media-type "application/ace+cbor".
+
+   This implies that, within the CBOR map specified as message payload, the parameter 'access_token' is a CBOR data item of type CBOR byte string and with value the binary representation BYTES of the access token. In particular:
+
+   * If the access token is a CWT, then BYTES is the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).
+
+   * If the access token is a JWT, then BYTES is the binary representation of the JWT (i.e., of the text string that encodes the JWT).
+
+* The AS-to-Client response is encoded in JSON. That is, the AS-to-Client response has media-type "application/ace+json".
+
+  This implies that, within the JSON object specified as message payload, the parameter 'access_token' has as value a text string TEXT encoding the access token. In particular:
+
+  * If the access token is a JWT, then TEXT is the text string that encodes the JWT.
+
+  * If the access token is a CWT, then TEXT is the base64-encoded text string of the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).
+
+Given an access token in any of the cases above, it has to be ensured that the same HASH_INPUT for generating the corresponding token hash is considered by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).
+
+To this end, both the Client and the AS proceed as follows.
+
+1. The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the Access Token was included and provided to the requesting Client.
 
 2. The AS defines HASH_INPUT as follows.
 
-   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the value of that CBOR byte string. This is the case where the AS-to-Client response is encoded in CBOR, hence CBOR was used to transport the access token (as a CWT or JWT).
 
-      With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT is the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access_token' parameter.
+      With reference to the example in {{fig-as-response-cbor}}, HASH_INPUT is the bytes \{0xd0 0x83 0x44 0xa1 ...\}.
 
-   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary representation of that text string. This is the case where the AS-to-Client response is encoded in JSON, hence JSON was used to transport the access token (as a CWT or JWT).
 
-      With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.
+      With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary representation of "2YotnFZFEjr1zCsicMWpAA".
 
-   In either case, HASH_INPUT results in the binary representation of the raw content of the 'access_token' parameter from the AS-to-Client response.
+Therefore, irrespective of the encoding used for the AS-to-Client response and of the format used for the acces token, HASH_INPUT is always the binary representation of the token-related information conveyed by the 'access_token' parameter in that response.
 
-3. The AS generates a hash value of HASH\_INPUT as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
+Such a token-related information is precisely what the Client is going to provide to the RS, according to the method specified in the used transport profile of ACE (e.g., {{RFC9202}}, {{RFC9203}}, {{RFC9431}}). Note that such a token-related information is not the direct binary representation of the actual access token, in case the latter is a CWT and the AS-to-Client response conveying it was encoded in JSON.
 
-   The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}.
+Consequently, when the access token is uploaded at the RS, the RS is always able to identify the same token-related information as HASH_INPUT. Some concrete examples are compiled below.
 
-   The AS specifies the used hash function to registered devices during their registration procedure (see {{sec-registration}}).
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), with media-type different from "application/ace+cbor" (e.g., like in {{RFC9202}}). In such a case, HASH_INPUT is the request payload of the POST request.
+
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info enpoint, with media-type "application/ace+cbor" (e.g., like in {{RFC9203}}). In such a case, HASH_INPUT is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
+
+* The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. In such a case, HASH_INPUT is the value of the 'psk_identity' field of the ClientKeyExchange message (if using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
+
+* The access token can be uploaded to the RS within the MQTT CONNECT packet, e.g., like it is defined in {{Section 2.2.4.1 of RFC9431}}. In such a case, HASH_INPUT is what is specified in the 'Authentication Data' field of the MQTT CONNECT packet, following the property identifier 22 (0x16) and the token length.
 
 ~~~~~~~~~~~
 2.01 Created
@@ -238,7 +274,7 @@ Payload:
 
 ~~~~~~~~~~~
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/ace+json
 Cache-Control: no-store
 Pragma: no-cache
 Payload:
@@ -251,6 +287,14 @@ Payload:
 }
 ~~~~~~~~~~~
 {: #fig-as-response-json title="Example of AS-to-Client response using JSON" artwork-align="left"}
+
+## Computing the Token Hash # {#sec-token-hash-output}
+
+Once determined HASH\_INPUT as defined in {{sec-token-hash-input}}, a hash value of HASH\_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
+
+The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}.
+
+The AS specifies the used hash function to registered devices during their registration procedure (see {{sec-registration}}).
 
 # Token Revocation List (TRL) # {#sec-trl-resource}
 
