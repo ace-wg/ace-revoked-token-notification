@@ -12,12 +12,12 @@
 <meta content="
        This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked access tokens. As specified in this document, the method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked access tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers. 
     " name="description">
-<meta content="xml2rfc 3.20.1" name="generator">
+<meta content="xml2rfc 3.21.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-ace-revoked-token-notification-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.20.1
-    Python 3.11.8
+  xml2rfc 3.21.0
+    Python 3.11.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
@@ -1032,7 +1032,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca, et al.</td>
-<td class="center">Expires 19 October 2024</td>
+<td class="center">Expires 23 October 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1045,12 +1045,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-ace-revoked-token-notification-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-04-17" class="published">17 April 2024</time>
+<time datetime="2024-04-21" class="published">21 April 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-10-19">19 October 2024</time></dd>
+<dd class="expires"><time datetime="2024-10-23">23 October 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1107,7 +1107,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 October 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 October 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1149,6 +1149,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-token-hash" class="internal xref">Token Hash</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-determining-the-hash-input" class="internal xref">Determining the Hash Input</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-computing-the-token-hash" class="internal xref">Computing the Token Hash</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-token-revocation-list-trl" class="internal xref">Token Revocation List (TRL)</a></p>
@@ -1459,38 +1467,83 @@ Further Observe notifications may be sent, consistently with ongoing additional 
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-token-hash" class="section-name selfRef">Token Hash</a>
       </h2>
 <p id="section-3-1">The token hash of an access token is computed as follows.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-3-2">
-<li id="section-3-2.1">
-          <p id="section-3-2.1.1">The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), where the Access Token was included and provided to the requesting Client.<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="section-3-2.2">
-          <p id="section-3-2.2.1">The AS defines HASH_INPUT as follows.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+<div id="sec-token-hash-input">
+<section id="section-3.1">
+        <h3 id="name-determining-the-hash-input">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-determining-the-hash-input" class="section-name selfRef">Determining the Hash Input</a>
+        </h3>
+<p id="section-3.1-1">An access token can have one among different formats. The most expected formats are CWT <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> and JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, with the former being the default format to use in the ACE framework (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-3" class="relref">Section 3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). The AS and the RS are aware of which format of access token is used, but the same does not necessarily hold for the Client.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">At the same time, there are two possible encodings that the AS can use for the AS-to-Client response (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), where the issued access token is included and provided to the requesting Client. The RS may not be aware of which encoding is used for that response.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3-2.2.2.1">
-              <p id="section-3-2.2.2.1.1">If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).<a href="#section-3-2.2.2.1.1" class="pilcrow">¶</a></p>
-<p id="section-3-2.2.2.1.2">
-With reference to the example in <a href="#fig-as-response-cbor" class="auto internal xref">Figure 2</a>, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT is the bytes {0x58 0x77 0xd0 0x83 0x44 0xa1 ...}, i.e., the raw content of the 'access_token' parameter.<a href="#section-3-2.2.2.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.1-3.1">
+            <p id="section-3.1-3.1.1">The AS-to-Client response is encoded in CBOR, which is required if CoAP is used (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5" class="relref">Section 5</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and is recommended otherwise (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-3" class="relref">Section 3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). That is, the AS-to-Client response has media-type "application/ace+cbor".<a href="#section-3.1-3.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-3.1.2">
+This implies that, within the CBOR map specified as message payload, the parameter 'access_token' is a CBOR data item of type CBOR byte string and with value the binary representation BYTES of the access token. In particular:<a href="#section-3.1-3.1.2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-3.1.3.1">
+                <p id="section-3.1-3.1.3.1.1">If the access token is a CWT, then BYTES is the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).<a href="#section-3.1-3.1.3.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3-2.2.2.2">
-              <p id="section-3-2.2.2.2.1">If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).<a href="#section-3-2.2.2.2.1" class="pilcrow">¶</a></p>
-<p id="section-3-2.2.2.2.2">
-With reference to the example in <a href="#fig-as-response-json" class="auto internal xref">Figure 3</a>, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.<a href="#section-3-2.2.2.2.2" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.1-3.1.3.2">
+                <p id="section-3.1-3.1.3.2.1">If the access token is a JWT, then BYTES is the binary representation of the JWT (i.e., of the text string that encodes the JWT).<a href="#section-3.1-3.1.3.2.1" class="pilcrow">¶</a></p>
 </li>
-          </ul>
-<p id="section-3-2.2.3">
-In either case, HASH_INPUT results in the binary representation of the raw content of the 'access_token' parameter from the AS-to-Client response.<a href="#section-3-2.2.3" class="pilcrow">¶</a></p>
+            </ul>
 </li>
-        <li id="section-3-2.3">
-          <p id="section-3-2.3.1">The AS generates a hash value of HASH_INPUT as per <span><a href="https://rfc-editor.org/rfc/rfc6920#section-6" class="relref">Section 6</a> of [<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
-<p id="section-3-2.3.2">
-The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry <span>[<a href="#Named.Information.Hash.Algorithm" class="cite xref">Named.Information.Hash.Algorithm</a>]</span>.<a href="#section-3-2.3.2" class="pilcrow">¶</a></p>
-<p id="section-3-2.3.3">
-The AS specifies the used hash function to registered devices during their registration procedure (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-3-2.3.3" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.1-3.2">
+            <p id="section-3.1-3.2.1">The AS-to-Client response is encoded in JSON. That is, the AS-to-Client response has media-type "application/ace+json".<a href="#section-3.1-3.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-3.2.2">
+This implies that, within the JSON object specified as message payload, the parameter 'access_token' has as value a text string TEXT encoding the access token. In particular:<a href="#section-3.1-3.2.2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-3.2.3.1">
+                <p id="section-3.1-3.2.3.1.1">If the access token is a JWT, then TEXT is the text string that encodes the JWT.<a href="#section-3.1-3.2.3.1.1" class="pilcrow">¶</a></p>
 </li>
-      </ol>
+              <li class="normal" id="section-3.1-3.2.3.2">
+                <p id="section-3.1-3.2.3.2.1">If the access token is a CWT, then TEXT is the base64-encoded text string of the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).<a href="#section-3.1-3.2.3.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
+<p id="section-3.1-4">Given an access token in any of the cases above, it has to be ensured that the same HASH_INPUT for generating the corresponding token hash is considered by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">To this end, both the Client and the AS proceed as follows.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.1-6">
+<li id="section-3.1-6.1">
+            <p id="section-3.1-6.1.1">The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the Access Token was included and provided to the requesting Client.<a href="#section-3.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.1-6.2">
+            <p id="section-3.1-6.2.1">The AS defines HASH_INPUT as follows.<a href="#section-3.1-6.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-6.2.2.1">
+                <p id="section-3.1-6.2.2.1.1">If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the value of that CBOR byte string. This is the case where the AS-to-Client response is encoded in CBOR, hence CBOR was used to transport the access token (as a CWT or JWT).<a href="#section-3.1-6.2.2.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-6.2.2.1.2">
+With reference to the example in <a href="#fig-as-response-cbor" class="auto internal xref">Figure 2</a>, HASH_INPUT is the bytes {0xd0 0x83 0x44 0xa1 ...}.<a href="#section-3.1-6.2.2.1.2" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-6.2.2.2">
+                <p id="section-3.1-6.2.2.2.1">If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary representation of that text string. This is the case where the AS-to-Client response is encoded in JSON, hence JSON was used to transport the access token (as a CWT or JWT).<a href="#section-3.1-6.2.2.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-6.2.2.2.2">
+With reference to the example in <a href="#fig-as-response-json" class="auto internal xref">Figure 3</a>, HASH_INPUT is the binary representation of "2YotnFZFEjr1zCsicMWpAA".<a href="#section-3.1-6.2.2.2.2" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ol>
+<p id="section-3.1-7">Therefore, irrespective of the encoding used for the AS-to-Client response and of the format used for the acces token, HASH_INPUT is always the binary representation of the token-related information conveyed by the 'access_token' parameter in that response.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-8">Such a token-related information is precisely what the Client is going to provide to the RS, according to the method specified in the used transport profile of ACE (e.g., <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, <span>[<a href="#RFC9431" class="cite xref">RFC9431</a>]</span>). Note that such a token-related information is not the direct binary representation of the actual access token, in case the latter is a CWT and the AS-to-Client response conveying it was encoded in JSON.<a href="#section-3.1-8" class="pilcrow">¶</a></p>
+<p id="section-3.1-9">Consequently, when the access token is uploaded at the RS, the RS is always able to identify the same token-related information as HASH_INPUT. Some concrete examples are compiled below.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-10.1">
+            <p id="section-3.1-10.1.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10.1" class="relref">Section 5.10.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), with media-type different from "application/ace+cbor" (e.g., like in <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>). In such a case, HASH_INPUT is the request payload of the POST request.<a href="#section-3.1-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-10.2">
+            <p id="section-3.1-10.2.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info enpoint, with media-type "application/ace+cbor" (e.g., like in <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>). In such a case, HASH_INPUT is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.<a href="#section-3.1-10.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-10.3">
+            <p id="section-3.1-10.3.1">The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>. In such a case, HASH_INPUT is the value of the 'psk_identity' field of the ClientKeyExchange message (if using DTLS 1.2 <span>[<a href="#RFC6347" class="cite xref">RFC6347</a>]</span>), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>).<a href="#section-3.1-10.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-10.4">
+            <p id="section-3.1-10.4.1">The access token can be uploaded to the RS within the MQTT CONNECT packet, e.g., like it is defined in <span><a href="https://rfc-editor.org/rfc/rfc9431#section-2.2.4.1" class="relref">Section 2.2.4.1</a> of [<a href="#RFC9431" class="cite xref">RFC9431</a>]</span>. In such a case, HASH_INPUT is what is specified in the 'Authentication Data' field of the MQTT CONNECT packet, following the property identifier 22 (0x16) and the token length.<a href="#section-3.1-10.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 <span id="name-example-of-as-to-client-res"></span><div id="fig-as-response-cbor">
 <figure id="figure-2">
-        <div class="alignLeft art-text artwork" id="section-3-3.1">
+          <div class="alignLeft art-text artwork" id="section-3.1-11.1">
 <pre>
 2.01 Created
 Content-Format: application/ace+cbor
@@ -1508,14 +1561,14 @@ Payload:
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
 <a href="#name-example-of-as-to-client-res" class="selfRef">Example of AS-to-Client response using CBOR</a>
-        </figcaption></figure>
+          </figcaption></figure>
 </div>
 <span id="name-example-of-as-to-client-resp"></span><div id="fig-as-response-json">
 <figure id="figure-3">
-        <div class="alignLeft art-text artwork" id="section-3-4.1">
+          <div class="alignLeft art-text artwork" id="section-3.1-12.1">
 <pre>
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/ace+json
 Cache-Control: no-store
 Pragma: no-cache
 Payload:
@@ -1530,7 +1583,19 @@ Payload:
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-example-of-as-to-client-resp" class="selfRef">Example of AS-to-Client response using JSON</a>
-        </figcaption></figure>
+          </figcaption></figure>
+</div>
+</section>
+</div>
+<div id="sec-token-hash-output">
+<section id="section-3.2">
+        <h3 id="name-computing-the-token-hash">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-computing-the-token-hash" class="section-name selfRef">Computing the Token Hash</a>
+        </h3>
+<p id="section-3.2-1">Once determined HASH_INPUT as defined in <a href="#sec-token-hash-input" class="auto internal xref">Section 3.1</a>, a hash value of HASH_INPUT is generated as per <span><a href="https://rfc-editor.org/rfc/rfc6920#section-6" class="relref">Section 6</a> of [<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry <span>[<a href="#Named.Information.Hash.Algorithm" class="cite xref">Named.Information.Hash.Algorithm</a>]</span>.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">The AS specifies the used hash function to registered devices during their registration procedure (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+</section>
 </div>
 </section>
 </div>
@@ -2363,6 +2428,10 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC6347">[RFC6347]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span> and <span class="refAuthor">N. Modadugu</span>, <span class="refTitle">"Datagram Transport Layer Security Version 1.2"</span>, <span class="seriesInfo">RFC 6347</span>, <span class="seriesInfo">DOI 10.17487/RFC6347</span>, <time datetime="2012-01" class="refDate">January 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6347">https://www.rfc-editor.org/rfc/rfc6347</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6749">[RFC6749]</dt>
         <dd>
 <span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework"</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI 10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6749">https://www.rfc-editor.org/rfc/rfc6749</a>&gt;</span>. </dd>
@@ -2411,9 +2480,25 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         <dd>
 <span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8949">https://www.rfc-editor.org/rfc/rfc8949</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9147">[RFC9147]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Tschofenig, H.</span>, and <span class="refAuthor">N. Modadugu</span>, <span class="refTitle">"The Datagram Transport Layer Security (DTLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 9147</span>, <span class="seriesInfo">DOI 10.17487/RFC9147</span>, <time datetime="2022-04" class="refDate">April 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9147">https://www.rfc-editor.org/rfc/rfc9147</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC9200">[RFC9200]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Authentication and Authorization for Constrained Environments Using the OAuth 2.0 Framework (ACE-OAuth)"</span>, <span class="seriesInfo">RFC 9200</span>, <span class="seriesInfo">DOI 10.17487/RFC9200</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9200">https://www.rfc-editor.org/rfc/rfc9200</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9202">[RFC9202]</dt>
+        <dd>
+<span class="refAuthor">Gerdes, S.</span>, <span class="refAuthor">Bergmann, O.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">L. Seitz</span>, <span class="refTitle">"Datagram Transport Layer Security (DTLS) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="seriesInfo">RFC 9202</span>, <span class="seriesInfo">DOI 10.17487/RFC9202</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9202">https://www.rfc-editor.org/rfc/rfc9202</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9203">[RFC9203]</dt>
+        <dd>
+<span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">M. Gunnarsson</span>, <span class="refTitle">"The Object Security for Constrained RESTful Environments (OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="seriesInfo">RFC 9203</span>, <span class="seriesInfo">DOI 10.17487/RFC9203</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9203">https://www.rfc-editor.org/rfc/rfc9203</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9431">[RFC9431]</dt>
+      <dd>
+<span class="refAuthor">Sengul, C.</span> and <span class="refAuthor">A. Kirby</span>, <span class="refTitle">"Message Queuing Telemetry Transport (MQTT) and Transport Layer Security (TLS) Profile of Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="seriesInfo">RFC 9431</span>, <span class="seriesInfo">DOI 10.17487/RFC9431</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9431">https://www.rfc-editor.org/rfc/rfc9431</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
