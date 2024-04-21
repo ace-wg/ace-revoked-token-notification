@@ -413,11 +413,11 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
 
-* 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer.
+* 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer. If the 'cursor' query parameter is included, then the 'diff' query parameter MUST also be included.
 
    If included, the 'cursor' query parameter specifies an unsigned integer value that was provided by the AS in a previous response from the TRL endpoint (see {{sec-using-cursor-full-query-response}}, {{sec-using-cursor-diff-query-response-no-cursor}} and {{sec-using-cursor-diff-query-response-cursor}}).
 
-   If the AS does not support the "Cursor" extension, it ignores the 'cursor' query parameter when present in the GET request. In such a case, the AS proceeds: i) like when processing a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the 'diff' query parameter is present in the GET request; or ii) like when processing a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
+   If the AS does not support the "Cursor" extension, it ignores the 'cursor' query parameter when present in the GET request. In such a case, the AS proceeds as specified elsewhere in this document, i.e.: i) it performs a diff query of the TRL (see {{ssec-trl-diff-query}}), if it supports diff queries and the 'diff' query parameter is present in the GET request; or ii) it performs a full query of the TRL (see {{ssec-trl-full-query}}) otherwise.
 
    If the AS supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the AS MUST return a 4.00 (Bad Request) response in case any of the conditions below holds.
 
