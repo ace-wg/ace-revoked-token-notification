@@ -1243,7 +1243,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.13.2.4.1"><a href="#section-13.4" class="auto internal xref">13.4</a>.  <a href="#name-request-of-new-access-token" class="internal xref">Request of New Access Tokens</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.5">
-                <p id="section-toc.1-1.13.2.5.1"><a href="#section-13.5" class="auto internal xref">13.5</a>.  <a href="#name-dishonest-clients" class="internal xref">Dishonest Clients</a></p>
+                <p id="section-toc.1-1.13.2.5.1"><a href="#section-13.5" class="auto internal xref">13.5</a>.  <a href="#name-vulnerable-time-window-at-t" class="internal xref">Vulnerable Time Window at the RS</a></p>
 </li>
             </ul>
 </li>
@@ -2285,15 +2285,14 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <p id="section-13.4-3">In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.<a href="#section-13.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="dishonest-clients">
+<div id="vulnerable-time-window-at-the-rs">
 <section id="section-13.5">
-        <h3 id="name-dishonest-clients">
-<a href="#section-13.5" class="section-number selfRef">13.5. </a><a href="#name-dishonest-clients" class="section-name selfRef">Dishonest Clients</a>
+        <h3 id="name-vulnerable-time-window-at-t">
+<a href="#section-13.5" class="section-number selfRef">13.5. </a><a href="#name-vulnerable-time-window-at-t" class="section-name selfRef">Vulnerable Time Window at the RS</a>
         </h3>
-<p id="section-13.5-1">A dishonest Client may attempt to exploit its early knowledge about a revoked access token, in order to illegitimately continue accessing a protected resource at the RS beyond the access token revocation.<a href="#section-13.5-1" class="pilcrow">¶</a></p>
-<p id="section-13.5-2">That is, the Client might gain knowledge about the revocation of an access token considerably earlier than the RS, e.g., if the Client relies on CoAP Observe to access the TRL at the AS, while the RS relies only on polling through individual requests.<a href="#section-13.5-2" class="pilcrow">¶</a></p>
-<p id="section-13.5-3">This makes the RS vulnerable during a time interval that starts when the Client gains knowledge of the revoked access token and ends when the RS expunges the access token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the RS, if this still retains the access token without knowing about its revocation yet.<a href="#section-13.5-3" class="pilcrow">¶</a></p>
-<p id="section-13.5-4">In order to mitigate the risk of such an abuse, if an RS relies solely on polling through individual requests to the TRL endpoint, the RS SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.<a href="#section-13.5-4" class="pilcrow">¶</a></p>
+<p id="section-13.5-1">A Client may attempt to access a protected resource at an RS after the access token allowing such an access has been revoked, but before the RS is aware of the revocation.<a href="#section-13.5-1" class="pilcrow">¶</a></p>
+<p id="section-13.5-2">In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.<a href="#section-13.5-2" class="pilcrow">¶</a></p>
+<p id="section-13.5-3">In order to minimize such risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.<a href="#section-13.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
