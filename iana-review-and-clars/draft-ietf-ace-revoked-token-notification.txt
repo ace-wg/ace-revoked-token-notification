@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 10 October 2024                                     Ericsson AB
+Expires: 24 October 2024                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                            8 April 2024
+                                                           22 April 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 October 2024.
+   This Internet-Draft will expire on 24 October 2024.
 
 Copyright Notice
 
@@ -1315,23 +1315,21 @@ Table of Contents
    The table below summarizes them, and specifies the CBOR value to use
    as abbreviation instead of the full descriptive name.
 
-        +-------------------+------------+------------------------+
-        | Name              | CBOR Value | CBOR Type              |
-        +-------------------+------------+------------------------+
-        | full_set          |  0         | array                  |
-        +-------------------+------------+------------------------+
-        | diff_set          |  1         | array                  |
-        +-------------------+------------+------------------------+
-        | cursor            |  2         | unsigned integer /     |
-        |                   |            | simple value "null"    |
-        +-------------------+------------+------------------------+
-        | more              |  3         | simple value "false" / |
-        |                   |            | simple value "true"    |
-        +-------------------+------------+------------------------+
-        | error             |  4         | integer                |
-        +-------------------+------------+------------------------+
-        | error_description |  5         | text string            |
-        +-------------------+------------+------------------------+
+       +-------------------+------------+--------------------------+
+       | Name              | CBOR Value | CBOR Type                |
+       +-------------------+------------+--------------------------+
+       | full_set          |  0         | array                    |
+       +-------------------+------------+--------------------------+
+       | diff_set          |  1         | array                    |
+       +-------------------+------------+--------------------------+
+       | cursor            |  2         | Null or unsigned integer |
+       +-------------------+------------+--------------------------+
+       | more              |  3         | True or False            |
+       +-------------------+------------+--------------------------+
+       | error             |  4         | integer                  |
+       +-------------------+------------+--------------------------+
+       | error_description |  5         | text string              |
+       +-------------------+------------+--------------------------+
 
        Figure 8: CBOR abbreviations for the ACE Token Revocation List
                                  parameters
