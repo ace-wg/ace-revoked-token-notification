@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-21T01:09:33.576891+00:00",
+  "timestamp": "2024-04-23T01:05:37.626780+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -193,13 +193,13 @@
       "labels": [],
       "body": "This PR addresses the review from IANA on version -06, and provides further improvements and clarifications in the \"IANA Considerations\" section.",
       "createdAt": "2024-04-08T17:26:05Z",
-      "updatedAt": "2024-04-09T18:37:33Z",
+      "updatedAt": "2024-04-22T21:07:30Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "iana-review-and-clars",
-      "headRefOid": "2ffe6bdd5d7eabd52a4052b3399762e35721a77a",
+      "headRefOid": "d041ef6eb023502222338f8008d33c4790fbc1f3",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
