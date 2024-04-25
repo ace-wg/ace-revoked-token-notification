@@ -62,6 +62,8 @@ author:
 
 normative:
   RFC2119:
+  RFC3629:
+  RFC4648:
   RFC6347:
   RFC6749:
   RFC6838:
@@ -202,15 +204,23 @@ At a high level, the steps of this protocol are as follows.
 
 # Token Hash # {#sec-token-name}
 
-The token hash of an access token is computed as follows.
+This section specifies how token hashes are computed.
 
-## Determining the Hash Input # {#sec-token-hash-input}
+First, {{sec-token-hash-input-motivation}} provides the motivation for the used construction.
 
-An access token can have one among different formats. The most expected formats are CWT {{RFC8392}} and JWT {{RFC7519}}, with the former being the default format to use in the ACE framework (see {{Section 3 of RFC9200}}). The AS and the RS are aware of which format of access token is used, but the same does not necessarily hold for the Client.
+Building on that, the value used as input to compute a token hash is defined in {{sec-token-hash-input-c-as}} for the Client and the AS, and in {{sec-token-hash-input-rs}} for the RS. Finally, {{sec-token-hash-output}} defines how such an input is used for computing the token hash.
 
-At the same time, there are two possible encodings that the AS can use for the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the issued access token is included and provided to the requesting Client. The RS may not be aware of which encoding is used for that response.
+The process outlined below refers to the base64url encoding specified in {{Section 5 of RFC4648}}, and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
 
-* The AS-to-Client response is encoded in CBOR, which is required if CoAP is used (see {{Section 5 of RFC9200}}) and is recommended otherwise (see {{Section 3 of RFC9200}}). That is, the AS-to-Client response has media-type "application/ace+cbor".
+## Motivation for the Used Construction # {#sec-token-hash-input-motivation}
+
+An access token can have one among different formats. The most expected formats are CWT {{RFC8392}} and JWT {{RFC7519}}, with the former being the default format to use in the ACE framework (see {{Section 3 of RFC9200}}). While access tokens are opaque to Clients, an RS is aware of whether access tokens that are issued for it to consume are either CWTs or JWTs.
+
+### Issuing of the Access Token to the Client
+
+There are two possible encodings that the AS can use for the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the issued access token is included and provided to the requester Client. The RS may not be aware of which encoding is used for that response to that particular requester Client.
+
+* One way relies on CBOR, which is required if CoAP is used (see {{Section 5 of RFC9200}}) and is recommended otherwise (see {{Section 3 of RFC9200}}). That is, the AS-to-Client response has media-type "application/ace+cbor".
 
    This implies that, within the CBOR map specified as message payload, the parameter 'access_token' is a CBOR data item of type CBOR byte string and with value the binary representation BYTES of the access token. In particular:
 
@@ -218,43 +228,63 @@ At the same time, there are two possible encodings that the AS can use for the A
 
    * If the access token is a JWT, then BYTES is the binary representation of the JWT (i.e., of the text string that encodes the JWT).
 
-* The AS-to-Client response is encoded in JSON. That is, the AS-to-Client response has media-type "application/ace+json".
+* An alternative way relies on JSON. That is, the AS-to-Client response has media-type "application/ace+json".
 
   This implies that, within the JSON object specified as message payload, the parameter 'access_token' has as value a text string TEXT encoding the access token. In particular:
 
   * If the access token is a JWT, then TEXT is the text string that encodes the JWT.
 
-  * If the access token is a CWT, then TEXT is the base64-encoded text string of the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).
+  * If the access token is a CWT, then TEXT is the base64url-encoded text string of the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).
 
-Given an access token in any of the cases above, it has to be ensured that the same HASH_INPUT for generating the corresponding token hash is considered by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).
+### Provisioning of Access Tokens to the RS # {#sec-token-hash-input-motivation-rs}
 
-To this end, both the Client and the AS proceed as follows.
+In accordance with the used transport profile of ACE (e.g., {{RFC9202}}, {{RFC9203}}, {{RFC9431}}), the RS receives a piece of token-related information hereafter denoted as TOKEN_INFO.
 
-1. The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the Access Token was included and provided to the requesting Client.
+In particular:
 
-2. The AS defines HASH_INPUT as follows.
+* If the AS-to-Client response was encoded in CBOR, then TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter of that response. This is irrespective of the access token being a CWT or a JWT. That is, TOKEN_INFO is the binary representation of the access token.
 
-   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT is the value of that CBOR byte string. This is the case where the AS-to-Client response is encoded in CBOR, hence CBOR was used to transport the access token (as a CWT or JWT).
+* If the AS-to-Client response was encoded in JSON and the access token is a JWT, then TOKEN_INFO is the binary representation of the text string conveyed by the 'access_token' parameter of that response. That is, TOKEN_INFO is the binary representation of the access token.
 
-      With reference to the example in {{fig-as-response-cbor}}, HASH_INPUT is the bytes \{0xd0 0x83 0x44 0xa1 ...\}.
+* If the AS-to-Client response was encoded in JSON and the access token is a CWT, then TOKEN_INFO is the binary representation of the base64url-encoded text string that encodes the binary representation of the access token. That is, TOKEN_INFO is the binary representation of the base64url-encoded text string conveyed by the 'access_token' parameter.
 
-   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT is the binary representation of that text string. This is the case where the AS-to-Client response is encoded in JSON, hence JSON was used to transport the access token (as a CWT or JWT).
+The following overviews how the above specifically applies to the existing transport profiles of ACE.
 
-      With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary representation of "2YotnFZFEjr1zCsicMWpAA".
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), using a media-type different from "application/ace+cbor" (e.g., like in {{RFC9202}}). In such a case, TOKEN_INFO is the request payload of the POST request.
 
-Therefore, irrespective of the encoding used for the AS-to-Client response and of the format used for the acces token, HASH_INPUT is always the binary representation of the token-related information conveyed by the 'access_token' parameter in that response.
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info enpoint, using the media-type "application/ace+cbor" (e.g., like in {{RFC9203}}). In such a case, TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
 
-Such a token-related information is precisely what the Client is going to provide to the RS, according to the method specified in the used transport profile of ACE (e.g., {{RFC9202}}, {{RFC9203}}, {{RFC9431}}). Note that such a token-related information is not the direct binary representation of the actual access token, in case the latter is a CWT and the AS-to-Client response conveying it was encoded in JSON.
+* The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. In such a case, TOKEN_INFO is the value of the 'psk_identity' field of the ClientKeyExchange message (when using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
 
-Consequently, when the access token is uploaded at the RS, the RS is always able to identify the same token-related information as HASH_INPUT. Some concrete examples are compiled below.
+* The access token can be uploaded to the RS within the MQTT CONNECT packet, e.g., like it is defined in {{Section 2.2.4.1 of RFC9431}}. In such a case, TOKEN_INFO is specified within the 'Authentication Data' field of the MQTT CONNECT packet, following the property identifier 22 (0x16) and the token length.
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), with media-type different from "application/ace+cbor" (e.g., like in {{RFC9202}}). In such a case, HASH_INPUT is the request payload of the POST request.
+### Design Rationale
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info enpoint, with media-type "application/ace+cbor" (e.g., like in {{RFC9203}}). In such a case, HASH_INPUT is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
+Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).
 
-* The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. In such a case, HASH_INPUT is the value of the 'psk_identity' field of the ClientKeyExchange message (if using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
+This is achieved by building HASH_INPUT according to the content of the 'access_token' parameter in the AS-to-Client responses, since that is what all among the AS, the Client, and the RS are able to see.
 
-* The access token can be uploaded to the RS within the MQTT CONNECT packet, e.g., like it is defined in {{Section 2.2.4.1 of RFC9431}}. In such a case, HASH_INPUT is what is specified in the 'Authentication Data' field of the MQTT CONNECT packet, following the property identifier 22 (0x16) and the token length.
+## Hash Input on the Client and the AS # {#sec-token-hash-input-c-as}
+
+The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the access token is included and provided to the requester Client.
+
+The following defines how the Client and the AS determine the HASH_INPUT value to use as input for computing the token hash of the conveyed access token, depending on the AS-to-Client response being encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}) or in JSON (see {{sec-token-hash-input-c-as-json}}).
+
+Once determined HASH_INPUT, the Client and the AS use it to compute the token hash of the conveyed access token as defined in {{sec-token-hash-output}}.
+
+### AS-to-Client Response in CBOR # {#sec-token-hash-input-c-as-cbor}
+
+If the AS-to-Client response is encoded in CBOR, then HASH_INPUT is defined as follows:
+
+* BYTES denotes the value of the CBOR byte string conveyed in the parameter 'access_token'.
+
+  With reference to the example in {{fig-as-response-cbor}}, BYTES is the bytes \{0xd0 0x83 0x43 ... 0x64 0x3b\}.
+
+  Note that BYTES is the binary representation of the access token, irrespective of this being a CWT or a JWT.
+
+* HASH_INPUT_TEXT is the base64url-encoded text string that encodes BYTES.
+
+* HASH_INPUT is the binary representation of HASH_INPUT_TEXT.
 
 ~~~~~~~~~~~
 2.01 Created
@@ -262,8 +292,15 @@ Content-Format: application/ace+cbor
 Max-Age: 85800
 Payload:
 {
-   "access_token" : h'd08344a1 ...
-    (remainder of the access token omitted for brevity) ...',
+   "access_token" : h'd08343a1010aa2044c53796d6d65
+                      74726963313238054d99a0d7846e
+                      762c49ffe8a63e0b5858b918a11f
+                      d81e438b7f973d9e2e119bcb2242
+                      4ba0f38a80f27562f400ee1d0d6c
+                      0fdb559c02421fd384fc2ebe22d7
+                      071378b0ea7428fff157444d45f7
+                      e6afcda1aae5f6495830c5862708
+                      7fc5b4974f319a8707a635dd643b',
    "token_type" : pop,
    "expires_in" : 86400,
    "profile" : coap_dtls,
@@ -271,6 +308,18 @@ Payload:
 }
 ~~~~~~~~~~~
 {: #fig-as-response-cbor title="Example of AS-to-Client response using CBOR" artwork-align="left"}
+
+### AS-to-Client Response in JSON # {#sec-token-hash-input-c-as-json}
+
+If the AS-to-Client response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the 'access_token' parameter.
+
+With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary representation of "2YotnFZFEjr1zCsicMWpAA".
+
+Note that:
+
+* If the access token is a JWT, then HASH_INPUT is the binary representation of the JWT.
+
+* If the access token is a CWT, then HASH_INPUT is the binary representation of the base64url-encoded text string that encodes the binary representation of the CWT.
 
 ~~~~~~~~~~~
 HTTP/1.1 200 OK
@@ -288,9 +337,66 @@ Payload:
 ~~~~~~~~~~~
 {: #fig-as-response-json title="Example of AS-to-Client response using JSON" artwork-align="left"}
 
+
+## HASH\_INPUT on the RS # {#sec-token-hash-input-rs}
+
+The following defines how the RS determines the HASH_INPUT value to use as input for computing the token hash of an access token, depending on the RS using either CWTs (see {{sec-token-hash-input-rs-cwt}}) or JWTs (see {{sec-token-hash-input-rs-jwt}}).
+
+### Access Tokens as CWTs # {#sec-token-hash-input-rs-cwt}
+
+If the RS expects access tokens to be CWTs, then the RS performs the following steps.
+
+1. The RS receives the token-related information TOKEN_INFO, in accordance with what is specified by the used profile of ACE (see {{sec-token-hash-input-motivation-rs}}).
+
+2. The RS assumes that the Client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of the access token.
+
+3. The RS verifies the access token as per {{Section 5.10.1.1 of RFC9200}}. If the verification fails, then the RS does not discard the access token yet, and it instead moves to step 4.
+
+   Otherwise, the RS stores the access token and computes the corresponding token hash, as defined in {{sec-token-hash-output}}. In particular, the RS considers HASH_INPUT_TEXT as the base64url-encoded text string that encodes TOKEN_INFO. Then, HASH_INPUT is the binary representation of HASH_INPUT_TEXT.
+
+   After that, the RS stores the computed token hash as associated with the access token, and then terminates this algorithm.
+
+4. The RS assumes that the Client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of HASH_INPUT_TEXT, which is the base64url-encoded text string that encodes the binary representation of the access token.
+
+5. The RS performs the base64url decoding of HASH_INPUT_TEXT, and considers the result as the binary representation of the access token.
+
+6. The RS verifies the access token as per {{Section 5.10.1.1 of RFC9200}}. If the verification fails, then the RS terminates this algorithm.
+
+   Otherwise, the RS stores the access token and computes the corresponding token hash, as defined in {{sec-token-hash-output}}. In particular, HASH_INPUT is TOKEN_INFO.
+
+   After that, the RS stores the computed token hash as associated with the access token.
+
+### Access Tokens as JWTs # {#sec-token-hash-input-rs-jwt}
+
+If the RS expects access tokens to be JWTs, then the RS performs the following steps.
+
+1. The RS receives the token-related information TOKEN_INFO, in accordance with what is specified by the used profile of ACE (see {{sec-token-hash-input-motivation-rs}}).
+
+2. The RS verifies the access token as per {{Section 5.10.1.1 of RFC9200}}. If the verification fails, then the RS terminates this algorithm. Otherwise, the RS stores the access token.
+
+3. The RS computes a first token hash associated with the access token, as defined in {{sec-token-hash-output}}.
+
+   In particular, the RS assumes that the Client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, HASH_INPUT is TOKEN_INFO.
+
+   After that, the RS stores the computed token hash as associated with the access token.
+
+4. The RS computes a second token hash associated with the access token, as defined in {{sec-token-hash-output}}.
+
+   In particular, the RS assumes that the Client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, HASH_INPUT is the binary representation of HASH_INPUT_TEXT, which in turn is the base64url-encoded text string that encodes TOKEN_INFO.
+
+   After that, the RS stores the computed token hash as associated with the access token.
+
+The RS skips step 3 only if it is certain that all its pertaining access tokens are provided to any Client by means of AS-to-Client responses encoded as CBOR messages. Otherwise, the RS MUST perform step 3.
+
+The RS skips step 4 only if it is certain that all its pertaining access tokens are provided to any Client by means of AS-to-Client responses encoded as JSON messages. Otherwise, the RS MUST perform step 4.
+
+If the RS performs both step 3 and step 4 above, then the RS MUST store, maintain, and rely on both token hashes as associated with the access token, consistent with what is specified in {{sec-handling-token-hashes}}.
+
+{{sec-seccons-two-hashes-jwt}} discusses how computing and storing both token hashes neutralizes an attack against the RS, where a dishonest Client can induce the RS to compute a token hash different from the correct one.
+
 ## Computing the Token Hash # {#sec-token-hash-output}
 
-Once determined HASH\_INPUT as defined in {{sec-token-hash-input}}, a hash value of HASH\_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
+Once determined HASH\_INPUT as defined in {{sec-token-hash-input-c-as}} and {{sec-token-hash-input-rs}}, a hash value of HASH\_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
 
 The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}.
 
@@ -670,9 +776,9 @@ When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifica
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. In the latter case, the requester can additionally rely on the "Cursor" extension (see {{sec-trl-endpoint-query-parameters}} and {{sec-using-cursor-diff-query-response}}).
 
-## Handling of Access Tokens and Token Hashes
+## Handling of Access Tokens and Token Hashes # {#sec-handling-token-hashes}
 
-When receiving a response from the TRL endpoint, a registered device MUST expunge every stored access token associated with a token hash specified in the response. In case the registered device is an RS, it MUST store the token hash.
+When receiving a response from the TRL endpoint, a registered device MUST expunge every stored access token associated with a token hash specified in the response. In case the registered device is an RS, it MUST NOT delete the stored token hash after having expunged the associated access token.
 
 An RS MUST NOT accept and store an access token, if the corresponding token hash is among the currently stored ones.
 
@@ -785,6 +891,20 @@ A Client may attempt to access a protected resource at an RS after the access to
 In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.
 
 In order to minimize such risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
+
+## Two Token Hashes at the RS using JWTs # {#sec-seccons-two-hashes-jwt}
+
+{{sec-token-hash-input-rs-jwt}} defines that an RS using JWTs as access tokens has to compute and store two token hashes associated with the same access token. This is because, when using JWTs, the RS does not know for sure if the AS provided the access token to the Client by means of an AS-to-Client response encoded in CBOR or in JSON.
+
+Taking advantage of that, a dishonest Client can attempt to perform an attack against the RS. That is, the Client can first receive the JWT in an AS-to-Client response encoded in CBOR (JSON). Then, the Client can upload the JWT to the RS in a way that makes the RS believe that the Client instead received the JWT in an AS-to-Client response encoded in JSON (CBOR).
+
+Consequently, the RS considers a HASH_INPUT different from the one considered by the AS and the Client (see {{sec-token-hash-input-c-as}}). Hence, the RS computes a token hash h' different from the token hash h computed by the AS and the Client. It follows that, if the AS revokes the access token and advertises the right token hash h, then the RS will not learn about the access token revocation and thus will not delete the access token.
+
+Fundamentally, this would happen because the HASH_INPUT used to compute the token hash of a JWT depends on whether the AS-to-Client response is encoded in CBOR or in JSON. This makes the RS vulnerable to the attack described above, when JWTs are used as access tokens. Instead, this is not a problem if the access token is a CWT, since the HASH_INPUT used to compute the token hash of a CWT does not depend on whether the AS-to-Client response is encoded in CBOR or in JSON.
+
+While this asymmetry cannot be avoided altogether, the method defined for the AS and the Client in {{sec-token-hash-input-c-as}} deliberately penalizes the case where the RS uses JWTs as access tokens. In such a case, the RS effectively neutralizes the attack described above, by computing and storing two token hashes associated with the same access token (see {{sec-token-hash-input-rs-jwt}}).
+
+Conversely, this design deliberately favors the case where the RS uses CWTs as access tokens, which is a preferable option for resource-constrained RSs as well as the default case in the ACE framework (see {{Section 3 of RFC9200}}). That is, if a RS uses CWTs as access tokens, then the RS is not exposed to the attack described above, and thus it safely computes and stores only one token hash per access token (see {{sec-token-hash-input-rs-cwt}}).
 
 # IANA Considerations # {#iana}
 
