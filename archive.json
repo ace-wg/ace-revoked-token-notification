@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-25T01:07:21.654370+00:00",
+  "timestamp": "2024-04-28T01:10:11.605621+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -340,6 +340,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOG4P0p85twRZv",
+      "title": "GENART review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/8",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from GENART archived at https://mailarchive.ietf.org/arch/msg/ace/ETtaBMaSyoZKMD82kgG49P2cF9U/",
+      "createdAt": "2024-04-25T17:24:09Z",
+      "updatedAt": "2024-04-25T17:24:52Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "genart-review",
+      "headRefOid": "176fbc07d1c6816422438acf58e8a5391f4d12a6",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
