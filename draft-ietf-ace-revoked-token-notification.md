@@ -118,7 +118,7 @@ Readers are expected to be familiar with the terms and concepts described in the
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
+Readers are also expected to be familiar with the terms and concepts related to CBOR {{RFC8949}}, JSON {{RFC8259}}, CoAP {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
 Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
