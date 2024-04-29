@@ -782,9 +782,9 @@ Intended usage: COMMON
 
 Restrictions on usage: None
 
-Author: Marco Tiloca \<marco.tiloca@ri.se>
+Author/Change controller: IETF
 
-Change controller: IESG
+Provisional registration: No
 
 ## CoAP Content-Formats Registry {#iana-content-type}
 
