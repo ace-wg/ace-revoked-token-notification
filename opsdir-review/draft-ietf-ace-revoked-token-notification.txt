@@ -1501,9 +1501,9 @@ Table of Contents
 
    Restrictions on usage: None
 
-   Author: Marco Tiloca <marco.tiloca@ri.se>
+   Author/Change controller: IETF
 
-   Change controller: IESG
+   Provisional registration: No
 
 14.2.  CoAP Content-Formats Registry
 
