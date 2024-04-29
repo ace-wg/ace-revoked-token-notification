@@ -280,18 +280,18 @@ Table of Contents
       device can send an Observation Request to the TRL endpoint as
       described in [RFC7641], i.e., a GET request including the CoAP
       Observe Option set to 0 (register).  By doing so, the registered
-      device effectively subscribes to the TRL, as interested to receive
-      notifications about its update.  Upon receiving the request, the
-      AS adds the registered device to the list of observers of the TRL
-      endpoint.
+      device effectively subscribes to the TRL, as interested in
+      receiving notifications about its update.  Upon receiving the
+      request, the AS adds the registered device to the list of
+      observers of the TRL endpoint.
 
       At any time, the registered device can send a GET request to the
       TRL endpoint.  When doing so, it can request for: the current list
       of pertaining revoked access tokens (see Section 6); or the most
-      recent updates occurred over the list of pertaining revoked access
-      tokens (see Section 7).  In either case, the registered device may
-      also rely on an Observation Request for subscribing to the TRL as
-      discussed above.
+      recent updates that occurred over the list of pertaining revoked
+      access tokens (see Section 7).  In either case, the registered
+      device may also rely on an Observation Request for subscribing to
+      the TRL as discussed above.
 
    *  When an access token is revoked, the AS adds the corresponding
       token hash to the TRL.  Also, when a revoked access token
@@ -486,7 +486,7 @@ Table of Contents
       tokens currently in the TRL and pertaining to the requester.
 
       The AS MUST support this type of query.  The processing of a full
-      query and the related response format are defined in Section 6.
+      query and the related response format are defined are Section 6.
 
    *  Diff query: the AS returns a list of diff entries.  Each diff
       entry is related to one of the most recent updates, in the subset
@@ -668,7 +668,7 @@ Table of Contents
 
       Otherwise, the AS MUST return a 4.00 (Bad Request) response in
       case the 'diff' query parameter of the GET request specifies a
-      value other than 0 or than a positive integer, irrespective of the
+      value other than 0 or a positive integer, irrespective of the
       presence of the 'cursor' parameter and its value (see below).  The
       response MUST have Content-Format "application/ace-trl+cbor".  The
       payload of the response is a CBOR map, which MUST include the
@@ -709,7 +709,7 @@ Table of Contents
          payload of the 4.00 (Bad Request) response MUST have value 1
          ("Invalid set of parameters").
 
-      -  The 'cursor' query parameter has a value other than 0 or than a
+      -  The 'cursor' query parameter has a value other than 0 or a
          positive integer, or it has a value strictly greater than
          MAX_INDEX (see Section 5.1.1).
 
@@ -958,16 +958,16 @@ Table of Contents
    The 'cursor' parameter MUST specify the CBOR simple value "null" in
    case there are currently no TRL updates pertinent to the requester,
    i.e., the update collection for that requester is empty.  This is the
-   case from when the requester registers at the AS until a first update
-   pertaining to that requester occurs to the TRL.
+   case from when the requester registers at the AS until the first
+   update pertaining to that requester occurs to the TRL.
 
    Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned
    integer.  This MUST take the 'index' value of the last series item in
    the update collection associated with the requester (see
    Section 5.1.1), as corresponding to the most recent update pertaining
-   to the requester occurred to the TRL.  Such a value is in fact the
-   current value of 'last_index' for the update collection associated
-   with the requester.
+   to the requester that occurred to the TRL.  Such a value is in fact
+   the current value of 'last_index' for the update collection
+   associated with the requester.
 
 8.2.  Response to Diff Query
 
@@ -1190,13 +1190,12 @@ Table of Contents
 
 10.  Notification of Revoked Access Tokens
 
-   Once completed the registration procedure at the AS, the
-   administrator or registered device can send a GET request to the TRL
-   endpoint at the AS.  The request can express the wish for a full
-   query (see Section 6) or a diff query (see Section 7) of the TRL.
-   Also, the request can include the CoAP Observe Option set to 0
-   (register), in order to start an observation of the TRL endpoint as
-   per Section 3.1 of [RFC7641].
+   Once registered at the AS, the administrator or registered device can
+   send a GET request to the TRL endpoint at the AS.  The request can
+   express the wish for a full query (see Section 6) or a diff query
+   (see Section 7) of the TRL.  Also, the request can include the CoAP
+   Observe Option set to 0 (register), in order to start an observation
+   of the TRL endpoint as per Section 3.1 of [RFC7641].
 
    In case the request is successfully processed, the AS replies with a
    response specifying the CoAP response code 2.05 (Content).  In
@@ -1416,10 +1415,10 @@ Table of Contents
    (Unauthorized) response from the RS.
 
    This can be due to different reasons.  For example, the access token
-   has actually been revoked and the Client is not aware about that yet,
-   while the RS has gained knowledge about that and has expunged the
-   access token.  Also, an on-path, active adversary might have injected
-   a forged 4.01 (Unauthorized) response.
+   has been revoked, and the RS has become aware of it and has expunged
+   the access token, but the Client is not aware of it (yet).  Also, an
+   on-path, active adversary might have injected a forged 4.01
+   (Unauthorized) response.
 
    In either case, if the Client believes that the access token is still
    valid, it SHOULD NOT immediately ask for a new access token to the
