@@ -152,9 +152,9 @@ At a high level, the steps of this protocol are as follows.
 
 * When a device registers at the AS, it also receives the url-path to the TRL endpoint.
 
-   After the registration procedure is finished, the registered device can send an Observation Request to the TRL endpoint as described in {{RFC7641}}, i.e., a GET request including the CoAP Observe Option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL, as interested to receive notifications about its update. Upon receiving the request, the AS adds the registered device to the list of observers of the TRL endpoint.
+   After the registration procedure is finished, the registered device can send an Observation Request to the TRL endpoint as described in {{RFC7641}}, i.e., a GET request including the CoAP Observe Option set to 0 (register). By doing so, the registered device effectively subscribes to the TRL, as interested in receiving notifications about its update. Upon receiving the request, the AS adds the registered device to the list of observers of the TRL endpoint.
 
-   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL as discussed above.
+   At any time, the registered device can send a GET request to the TRL endpoint. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates that occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}). In either case, the registered device may also rely on an Observation Request for subscribing to the TRL as discussed above.
 
 * When an access token is revoked, the AS adds the corresponding token hash to the TRL. Also, when a revoked access token eventually expires, the AS removes the corresponding token hash from the TRL.
 
@@ -282,7 +282,7 @@ The TRL endpoint supports only the GET method, and allows two types of queries o
 
 * Full query: the AS returns the token hashes of the revoked access tokens currently in the TRL and pertaining to the requester.
 
-   The AS MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
+   The AS MUST support this type of query. The processing of a full query and the related response format are defined are {{ssec-trl-full-query}}.
 
 * Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the subset of the TRL pertaining to the requester.
 
@@ -367,7 +367,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS does not support diff queries, it ignores the 'diff' query parameter when present in the GET request, and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
-   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
+   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
 
 * 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer.
 
@@ -383,7 +383,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
       The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 1 ("Invalid set of parameters").
 
-   * The 'cursor' query parameter has a value other than 0 or than a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
+   * The 'cursor' query parameter has a value other than 0 or a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
       The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
@@ -516,9 +516,9 @@ When processing a full query request to the TRL endpoint, the AS composes a resp
 
 In particular, the 'cursor' parameter included in the CBOR map carried in the response payload specifies either the CBOR simple value "null" (0xf6) or a CBOR unsigned integer.
 
-The 'cursor' parameter MUST specify the CBOR simple value "null" in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until a first update pertaining to that requester occurs to the TRL.
+The 'cursor' parameter MUST specify the CBOR simple value "null" in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until the first update pertaining to that requester occurs to the TRL.
 
-Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.
+Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester that occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.
 
 ## Response to Diff Query {#sec-using-cursor-diff-query-response}
 
@@ -618,7 +618,7 @@ Further details about the registration process at the AS are out of scope for th
 
 # Notification of Revoked Access Tokens # {#sec-notification}
 
-Once completed the registration procedure at the AS, the administrator or registered device can send a GET request to the TRL endpoint at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL endpoint as per {{Section 3.1 of RFC7641}}.
+Once registered at the AS, the administrator or registered device can send a GET request to the TRL endpoint at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL endpoint as per {{Section 3.1 of RFC7641}}.
 
 In case the request is successfully processed, the AS replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the AS supports diff queries but not the "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively. Instead, if the AS supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
@@ -730,7 +730,7 @@ In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP O
 
 If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client might anyway receive an unprotected 4.01 (Unauthorized) response from the RS.
 
-This can be due to different reasons. For example, the access token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the access token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
+This can be due to different reasons. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
 
 In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.
 
