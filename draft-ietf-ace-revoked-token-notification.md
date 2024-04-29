@@ -367,7 +367,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS does not support diff queries, it ignores the 'diff' query parameter when present in the GET request, and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
-   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
+   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value that is neither 0 nor a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
 
 * 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer.
 
@@ -383,7 +383,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
       The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 1 ("Invalid set of parameters").
 
-   * The 'cursor' query parameter has a value other than 0 or a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
+   * The 'cursor' query parameter has a value that is neither 0 nor a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
       The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
