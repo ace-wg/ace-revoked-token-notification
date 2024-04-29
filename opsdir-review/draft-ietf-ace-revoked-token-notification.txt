@@ -668,10 +668,10 @@ Table of Contents
 
       Otherwise, the AS MUST return a 4.00 (Bad Request) response in
       case the 'diff' query parameter of the GET request specifies a
-      value other than 0 or a positive integer, irrespective of the
-      presence of the 'cursor' parameter and its value (see below).  The
-      response MUST have Content-Format "application/ace-trl+cbor".  The
-      payload of the response is a CBOR map, which MUST include the
+      value that is neither 0 nor a positive integer, irrespective of
+      the presence of the 'cursor' parameter and its value (see below).
+      The response MUST have Content-Format "application/ace-trl+cbor".
+      The payload of the response is a CBOR map, which MUST include the
       'error' parameter with value 0 ("Invalid parameter value") and MAY
       include the 'error_description' parameter to provide additional
       context.
@@ -709,8 +709,8 @@ Table of Contents
          payload of the 4.00 (Bad Request) response MUST have value 1
          ("Invalid set of parameters").
 
-      -  The 'cursor' query parameter has a value other than 0 or a
-         positive integer, or it has a value strictly greater than
+      -  The 'cursor' query parameter has a value that is neither 0 nor
+         a positive integer, or it has a value strictly greater than
          MAX_INDEX (see Section 5.1.1).
 
          The 'error' parameter within the CBOR map carried in the
