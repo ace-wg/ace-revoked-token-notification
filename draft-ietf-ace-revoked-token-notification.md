@@ -140,7 +140,7 @@ This specification also refers to the following terminology.
 
    - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
-Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
+Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
 
 # Protocol Overview # {#sec-overview}
 
