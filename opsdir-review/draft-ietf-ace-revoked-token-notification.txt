@@ -256,7 +256,9 @@ Table of Contents
          the AS has issued the access token to be consumed by that RS.
 
    Examples throughout this document are expressed in CBOR diagnostic
-   notation without the tag and value abbreviations.
+   notation as defined in Section 8 of [RFC8949] and Appendix G of
+   [RFC8610].  Diagnostic notation comments are often used to provide a
+   textual representation of the numeric parameter names and values.
 
 2.  Protocol Overview
 
