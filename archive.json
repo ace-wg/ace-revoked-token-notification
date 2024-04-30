@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-28T01:10:11.605621+00:00",
+  "timestamp": "2024-04-30T01:05:15.267442+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -233,13 +233,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-04-13T17:56:25Z",
-      "updatedAt": "2024-04-15T13:08:54Z",
+      "updatedAt": "2024-04-29T16:43:08Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "minor-fixes-and-clars",
-      "headRefOid": "377382d5a9a233bbb70deb5842622a93e33d342d",
+      "headRefOid": "1a6f74c6f0fd10101f78f04437d41dfa7c112a79",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
