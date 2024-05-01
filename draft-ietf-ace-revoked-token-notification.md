@@ -72,9 +72,13 @@ normative:
   RFC8126:
   RFC8174:
   RFC8392:
+  RFC8446:
   RFC8610:
+  RFC8613:
   RFC8949:
+  RFC9147:
   RFC9200:
+  RFC9528:
   Named.Information.Hash.Algorithm:
     author:
       org: IANA
@@ -132,7 +136,7 @@ This specification also refers to the following terminology.
 
 * Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens. How the administrator authorization is established and verified is out of the scope of this specification.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens.
 
 * Pertaining access token:
 
@@ -276,7 +280,7 @@ Consistent with {{Section 6.5 of RFC9200}}, all communications between a request
 
 Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
 
-The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
+The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators (see {{sec-registration}}).
 
 The TRL endpoint supports only the GET method, and allows two types of queries of the TRL.
 
@@ -614,6 +618,16 @@ During the registration process at the AS, an administrator or a registered devi
 
 * A positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
+When communicating with one another, the registered devices and the AS have to use a secure communication association and be mutually authenticated (see {{Section 5 of RFC9200}}).
+
+In the same spirit, it MUST be ensured that communications between the AS and an administrator are mutually authenticated, encrypted and integrity protected, as well as protected against message replay.
+
+Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is REQUIRED during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication {{RFC8446}}{{RFC9147}}, or an OSCORE Security Context {{RFC8613}} by running the authenticated key establishment protocol EDHOC {{RFC9528}}.
+
+When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the full TRL.
+
+To this end, the AS may rely on a local access control list or similar, which specifies the authentication credentials of trusted, authorized administrators. In particular, the AS verifies the requester to the TRL endpoint as an authorized administrator, only if the access control list includes the same authentication credential used by the requester when establishing the mutually-authenticated secure communication association with the AS.
+
 Further details about the registration process at the AS are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of RFC9200}}).
 
 # Notification of Revoked Access Tokens # {#sec-notification}
@@ -720,7 +734,7 @@ Security considerations are inherited from the ACE framework for Authentication 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-Disclosing any information about revoked access tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
+Disclosing any information about revoked access tokens to entities other than the intended registered devices may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
 
 ## Size of the TRL
 
