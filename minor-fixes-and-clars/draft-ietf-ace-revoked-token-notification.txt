@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 31 October 2024                                     Ericsson AB
+Expires: 2 November 2024                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           29 April 2024
+                                                              1 May 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 October 2024.
+   This Internet-Draft will expire on 2 November 2024.
 
 Copyright Notice
 
@@ -1430,16 +1430,17 @@ Table of Contents
 
    The communication about revoked access tokens presented in this
    specification is expected to especially rely on CoAP Observe
-   notifications sent from the AS to a registered device.  The
-   suppression of those notifications by an external attacker that has
-   access to the network would prevent registered devices from ever
-   knowing that their pertaining access tokens have been revoked.
+   notifications sent from the AS to a requester (i.e., an administrator
+   or a registered device).  The suppression of those notifications by
+   an external attacker that has access to the network would prevent
+   requesters from ever knowing that their pertaining access tokens have
+   been revoked.
 
-   In order to avoid this, a registered device SHOULD NOT rely solely on
-   the CoAP Observe notifications.  In particular, a registered device
-   SHOULD also regularly poll the AS for the most current information
-   about revoked access tokens, by sending GET requests to the TRL
-   endpoint according to a related application policy.
+   In order to avoid this, a requester SHOULD NOT rely solely on the
+   CoAP Observe notifications.  In particular, a requester SHOULD also
+   regularly poll the AS for the most current information about revoked
+   access tokens, by sending GET requests to the TRL endpoint according
+   to a related application policy.
 
 13.4.  Request of New Access Tokens
 
