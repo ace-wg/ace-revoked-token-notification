@@ -353,7 +353,7 @@ When maintaining the history of updates to the TRL, the following applies separa
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
-For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
+For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS MUST provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
@@ -612,7 +612,7 @@ During the registration process at the AS, an administrator or a registered devi
 
 * A positive integer MAX\_N, if the AS supports diff queries of the TRL (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
 
-* Optionally, a positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
+* A positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
 Further details about the registration process at the AS are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of RFC9200}}).
 
