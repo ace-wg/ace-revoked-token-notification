@@ -644,8 +644,8 @@ Table of Contents
    number of diff entries to be included in a single diff query
    response.  The specific value depends on the specific registered
    device or administrator associated with the update collection in
-   question.  If supporting the "Cursor" extension, the AS SHOULD
-   provide registered devices and administrators with the value of
+   question.  If supporting the "Cursor" extension, the AS MUST provide
+   registered devices and administrators with the value of
    MAX_DIFF_BATCH, upon their registration (see Section 9).
 
 5.2.  Query Parameters
@@ -1181,9 +1181,9 @@ Table of Contents
    *  A positive integer MAX_N, if the AS supports diff queries of the
       TRL (see Section 5.1 and Section 7).
 
-   *  Optionally, a positive integer MAX_DIFF_BATCH, if the AS supports
-      diff queries of the TRL as well as the related "Cursor" extension
-      (see Section 5.1.1 and Section 8).
+   *  A positive integer MAX_DIFF_BATCH, if the AS supports diff queries
+      of the TRL as well as the related "Cursor" extension (see
+      Section 5.1.1 and Section 8).
 
    Further details about the registration process at the AS are out of
    scope for this specification.  Note that the registration process is

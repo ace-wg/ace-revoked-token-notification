@@ -1666,7 +1666,7 @@ As long as a wrap-around of the 'index' value has not occurred, the value of 'la
 </li>
           </ul>
 <p id="section-5.1.1-5">When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in <a href="#sec-using-cursor-diff-query-response" class="auto internal xref">Section 8.2</a>.<a href="#section-5.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.1.1-6">For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH &lt;= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-5.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-6">For each update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH &lt;= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value depends on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS MUST provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-5.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2060,7 +2060,7 @@ If 'more' has value "true", the requester can send a follow-up diff query reques
           <p id="section-9-2.3.1">A positive integer MAX_N, if the AS supports diff queries of the TRL (see <a href="#sec-trl-endpoint-supporting-diff-queries" class="auto internal xref">Section 5.1</a> and <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>).<a href="#section-9-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-9-2.4">
-          <p id="section-9-2.4.1">Optionally, a positive integer MAX_DIFF_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a> and <a href="#sec-using-cursor" class="auto internal xref">Section 8</a>).<a href="#section-9-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-9-2.4.1">A positive integer MAX_DIFF_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.1.1</a> and <a href="#sec-using-cursor" class="auto internal xref">Section 8</a>).<a href="#section-9-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-9-3">Further details about the registration process at the AS are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.5" class="relref">Section 5.5</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-9-3" class="pilcrow">¶</a></p>
