@@ -1806,7 +1806,7 @@ Payload:
           <p id="section-7-3.1.1">The AS defines the positive integer NUM as follows. If the value N specified in the 'diff' query parameter in the GET request is equal to 0 or greater than the pre-defined positive integer MAX_N (see <a href="#sec-trl-endpoint-supporting-diff-queries" class="auto internal xref">Section 5.1</a>), then NUM takes the value of MAX_N. Otherwise, NUM takes N.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-7-3.2">
-          <p id="section-7-3.2.1">The AS determines U = min(NUM, SIZE), where SIZE &lt;= MAX_N is the number of TRL updates pertaining to the requester and currently stored at the AS.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-7-3.2.1">The AS determines U = min(NUM, SIZE), where SIZE &lt;= MAX_N. In particular, SIZE is the number of TRL updates pertaining to the requester and currently stored at the AS.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-7-3.3">
           <p id="section-7-3.3.1">The AS prepares U diff entries. If U is equal to 0 (e.g., because SIZE is equal to 0 at step 2), then no diff entries are prepared.<a href="#section-7-3.3.1" class="pilcrow">¶</a></p>

@@ -821,9 +821,9 @@ Table of Contents
        (see Section 5.1), then NUM takes the value of MAX_N.  Otherwise,
        NUM takes N.
 
-   2.  The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N is the
-       number of TRL updates pertaining to the requester and currently
-       stored at the AS.
+   2.  The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N.  In
+       particular, SIZE is the number of TRL updates pertaining to the
+       requester and currently stored at the AS.
 
    3.  The AS prepares U diff entries.  If U is equal to 0 (e.g.,
        because SIZE is equal to 0 at step 2), then no diff entries are
