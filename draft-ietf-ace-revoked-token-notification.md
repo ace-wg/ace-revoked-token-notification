@@ -574,7 +574,7 @@ If the update collection associated with the requester is not empty and the diff
 
    With the combination ('cursor', 'more') = ("null", "true"), the AS is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
-   When receiving this diff query response, the requester should send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
+   When receiving this diff query response, the requester SHOULD send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
 * Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.
 
@@ -625,6 +625,14 @@ In case the request is successfully processed, the AS replies with a response sp
 When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless of whether the TRL has changed or not.
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL.
+
+As specified in {{sec-trl-endpoint-supporting-diff-queries}}, an AS supporting diff queries maintains an update collection of maximum MAX_N series items for each administrator or registered device, hereafter referred to as requester. In particular, if an update collection includes MAX\_N series items, adding a further series item to that update collection results in deleting the oldest series item from that update collection.
+
+From then on, the requester associated with the update collection will not not able to retrieve the deleted series item, when sending a new diff query request to the TRL endpoint. If that series item reflected the revocation of an access token pertaining to the requester, then the requester will not learn about that when receiving the corresponding diff query response from the AS.
+
+Sending a diff query request specifically as an Observation request, and thus relying on Observe notifications, largely reduces the chances for a requester to miss updates occurred to its associated update collection altogether. In turn, this relies on the requester successfully receiving the Observe notification responses from the TRL (see also {{sec-security-considerations-comm-patterns}}).
+
+In order to limit the amount of time during which the requester is unaware of pertaining access tokens that have been revoked but are not expired yet, a requester SHOULD NOT rely solely on diff query requests. In particular, a requester SHOULD also regularly send a full query request to the TRL endpoint according to a related application policy.
 
 ## Handling of Access Tokens and Token Hashes
 
@@ -720,7 +728,7 @@ If many non-expired access tokens associated with a registered device are revoke
 
 This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing access tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.
 
-## Communication Patterns
+## Communication Patterns # {#sec-security-considerations-comm-patterns}
 
 The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining access tokens have been revoked.
 
