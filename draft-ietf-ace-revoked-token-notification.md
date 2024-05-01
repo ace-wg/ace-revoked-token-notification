@@ -441,7 +441,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
 1. The AS defines the positive integer NUM as follows. If the value N specified in the 'diff' query parameter in the GET request is equal to 0 or greater than the pre-defined positive integer MAX\_N (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of MAX_N. Otherwise, NUM takes N.
 
-2. The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N is the number of TRL updates pertaining to the requester and currently stored at the AS.
+2. The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N. In particular, SIZE is the number of TRL updates pertaining to the requester and currently stored at the AS.
 
 3. The AS prepares U diff entries. If U is equal to 0 (e.g., because SIZE is equal to 0 at step 2), then no diff entries are prepared.
 
