@@ -722,9 +722,9 @@ This could be exploited by attackers to negatively affect the behavior of a regi
 
 ## Communication Patterns
 
-The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining access tokens have been revoked.
+The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a requester (i.e., an administrator or a registered device). The suppression of those notifications by an external attacker that has access to the network would prevent requesters from ever knowing that their pertaining access tokens have been revoked.
 
-In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+In order to avoid this, a requester SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a requester SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint according to a related application policy.
 
 ## Request of New Access Tokens
 
