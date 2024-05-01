@@ -302,7 +302,7 @@ If the AS supports diff queries, it is able to transfer a list of diff entries, 
 
 The following defines how the AS builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
-For each requester, the AS maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. The AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to each requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
+For each requester, the AS maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. The AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to each requester. If the AS supports diff queries, the AS MUST provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the AS, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
@@ -610,7 +610,7 @@ During the registration process at the AS, an administrator or a registered devi
 
 * The hash function used to compute token hashes. This is specified as an integer or a text string, taking value from the "ID" or "Hash Name String" column of the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}, respectively.
 
-* Optionally, a positive integer MAX\_N, if the AS supports diff queries of the TRL (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
+* A positive integer MAX\_N, if the AS supports diff queries of the TRL (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
 
 * Optionally, a positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
