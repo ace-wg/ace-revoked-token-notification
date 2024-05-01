@@ -1086,7 +1086,7 @@ Table of Contents
       1), that the requester wished to obtain as the first one following
       the specified reference point with 'index' value P.
 
-      When receiving this diff query response, the requester should send
+      When receiving this diff query response, the requester SHOULD send
       a new full query request to the AS.  A successful response
       provides the requester with the full, current pertaining subset of
       the TRL, as well as with a valid value of the 'cursor' parameter
@@ -1227,6 +1227,35 @@ Table of Contents
    When doing so, the requester towards the TRL endpoint can perform a
    full query (see Section 6) or a diff query (see Section 7) of the
    TRL.
+
+   As specified in Section 5.1, an AS supporting diff queries maintains
+   an update collection of maximum MAX_N series items for each
+   administrator or registered device, hereafter referred to as
+   requester.  In particular, if an update collection includes MAX_N
+   series items, adding a further series item to that update collection
+   results in deleting the oldest series item from that update
+   collection.
+
+   From then on, the requester associated with the update collection
+   will not not able to retrieve the deleted series item, when sending a
+   new diff query request to the TRL endpoint.  If that series item
+   reflected the revocation of an access token pertaining to the
+   requester, then the requester will not learn about that when
+   receiving the corresponding diff query response from the AS.
+
+   Sending a diff query request specifically as an Observation request,
+   and thus relying on Observe notifications, largely reduces the
+   chances for a requester to miss updates occurred to its associated
+   update collection altogether.  In turn, this relies on the requester
+   successfully receiving the Observe notification responses from the
+   TRL (see also Section 13.3).
+
+   In order to limit the amount of time during which the requester is
+   unaware of pertaining access tokens that have been revoked but are
+   not expired yet, a requester SHOULD NOT rely solely on diff query
+   requests.  In particular, a requester SHOULD also regularly send a
+   full query request to the TRL endpoint according to a related
+   application policy.
 
 10.1.  Handling of Access Tokens and Token Hashes
 
