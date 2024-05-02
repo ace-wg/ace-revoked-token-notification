@@ -210,7 +210,7 @@ First, {{sec-token-hash-input-motivation}} provides the motivation for the used 
 
 Building on that, the value used as input to compute a token hash is defined in {{sec-token-hash-input-c-as}} for the Client and the AS, and in {{sec-token-hash-input-rs}} for the RS. Finally, {{sec-token-hash-output}} defines how such an input is used for computing the token hash.
 
-The process outlined below refers to the base64url encoding specified in {{Section 5 of RFC4648}}, and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
+The process outlined below refers to the base64url (see {{Section 5 of RFC4648}}) encoding and decoding without padding, and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
 
 ## Motivation for the Used Construction # {#sec-token-hash-input-motivation}
 
