@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 27 October 2024                                     Ericsson AB
+Expires: 3 November 2024                                     Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           25 April 2024
+                                                              2 May 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 October 2024.
+   This Internet-Draft will expire on 3 November 2024.
 
 Copyright Notice
 
@@ -379,10 +379,11 @@ Table of Contents
    for the RS.  Finally, Section 3.4 defines how such an input is used
    for computing the token hash.
 
-   The process outlined below refers to the base64url encoding specified
-   in Section 5 of [RFC4648], and denotes as "binary representation" of
-   a text string the corresponding UTF-8 encoding [RFC3629], which is
-   the implied charset used in JSON (see Section 8.1 of [RFC8259]).
+   The process outlined below refers to the base64url (see Section 5 of
+   [RFC4648]) encoding and decoding without padding, and denotes as
+   "binary representation" of a text string the corresponding UTF-8
+   encoding [RFC3629], which is the implied charset used in JSON (see
+   Section 8.1 of [RFC8259]).
 
 3.1.  Motivation for the Used Construction
 
