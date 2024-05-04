@@ -730,19 +730,17 @@ In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP O
 
 If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client might anyway receive an unprotected 4.01 (Unauthorized) response from the RS.
 
-This can be due to different reasons. For example, the access token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the access token. Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
+This can be due to different reasons. For example, the access token has actually been revoked and the Client is not aware about that yet, while the RS has gained knowledge about that and has expunged the access token. As another example, the access token is still valid, but an on-path active adversary might have injected a forged 4.01 (Unauthorized) response, or the RS might have deleted the access token from its local storage due to its dedicated storage space being all consumed.
 
 In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.
 
-## Dishonest Clients
+## Vulnerable Time Window at the RS
 
-A dishonest Client may attempt to exploit its early knowledge about a revoked access token, in order to illegitimately continue accessing a protected resource at the RS beyond the access token revocation.
+A Client may attempt to access a protected resource at an RS after the access token allowing such an access has been revoked, but before the RS is aware of the revocation.
 
-That is, the Client might gain knowledge about the revocation of an access token considerably earlier than the RS, e.g., if the Client relies on CoAP Observe to access the TRL at the AS, while the RS relies only on polling through individual requests.
+In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.
 
-This makes the RS vulnerable during a time interval that starts when the Client gains knowledge of the revoked access token and ends when the RS expunges the access token, e.g., after having gained knowledge of its revocation. During such a time interval, the Client would be able to illegitimately access protected resources at the RS, if this still retains the access token without knowing about its revocation yet.
-
-In order to mitigate the risk of such an abuse, if an RS relies solely on polling through individual requests to the TRL endpoint, the RS SHOULD enforce an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
+In order to minimize such risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
 # IANA Considerations # {#iana}
 
