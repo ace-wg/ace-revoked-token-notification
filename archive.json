@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-02T01:05:06.705656+00:00",
+  "timestamp": "2024-05-05T01:10:20.498320+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -353,13 +353,13 @@
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from GENART archived at https://mailarchive.ietf.org/arch/msg/ace/ETtaBMaSyoZKMD82kgG49P2cF9U/",
       "createdAt": "2024-04-25T17:24:09Z",
-      "updatedAt": "2024-04-25T17:24:52Z",
+      "updatedAt": "2024-05-02T14:49:30Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "genart-review",
-      "headRefOid": "176fbc07d1c6816422438acf58e8a5391f4d12a6",
+      "headRefOid": "372437ff85c3c176b6febc57a74bec641261b3e9",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -406,6 +406,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOG4P0p85ujFB1",
+      "title": "SECDIR review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/10",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from SECDIR archived at https://mailarchive.ietf.org/arch/msg/ace/4kVRbVjCrQ77agBzVu7n_YEjjCc/",
+      "createdAt": "2024-05-04T17:11:38Z",
+      "updatedAt": "2024-05-04T17:15:47Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "secdir-review",
+      "headRefOid": "c80002d8aa03045c56ffe8791189a8e0b2848384",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
