@@ -1,0 +1,437 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-05-05T01:10:20.498320+00:00",
+  "repo": "ace-wg/ace-revoked-token-notification",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOG4P0p840z5D0",
+      "title": "Use the example.com URL in the examples.",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/1",
+      "state": "MERGED",
+      "author": "dnav",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Signed-off-by: David Navarro <david.navarro@ioterop.com>",
+      "createdAt": "2022-03-22T12:58:18Z",
+      "updatedAt": "2022-06-15T10:06:22Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "88080e8a19242f57ba9c3691c84e67842b132e1e",
+      "headRepository": "dnav/ace-revoked-token-notification",
+      "headRefName": "dnav_fix_url_typo",
+      "headRefOid": "a0456763f0db08818a446284eb06c85bfaa370dc",
+      "closedAt": "2022-06-15T10:06:22Z",
+      "mergedAt": "2022-06-15T10:06:22Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "98becb9469e60482b166f684a89de1a00814aa2a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOG4P0p85SADWi",
+      "title": "Clarified instructions for Expert Review in the IANA considerations.",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/2",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-06-02T13:02:04Z",
+      "updatedAt": "2023-06-02T13:57:04Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "467db225db44b2f0f9e2d3aefd11440b16fd46a3",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "iana-expert-instructions",
+      "headRefOid": "3b3137185a313e6c97a6eec313768105411eabb2",
+      "closedAt": "2023-06-02T13:39:28Z",
+      "mergedAt": "2023-06-02T13:39:28Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "46405ab29d4883a5423841c20b5154bf252a3fe9"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p85W3skf",
+          "commit": {
+            "abbreviatedOid": "38dba72"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-06-02T13:25:17Z",
+          "updatedAt": "2023-06-02T13:25:17Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "OLD\r\n> For the \"Expert Review\" range of point assignment, specifications are generally recommended, but they are needed if they are expected to be used outside of closed environments in an interoperable way.\r\n\r\nNEW\r\nFor the \"Expert Review\" range of point assignment, specifications are recommended, and are needed if they are expected to be used outside of closed environments in an interoperable way.",
+              "createdAt": "2023-06-02T13:25:17Z",
+              "updatedAt": "2023-06-02T13:25:17Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOG4P0p85sCTJ2",
+      "title": "AD Review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/3",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the AD Review archived at https://mailarchive.ietf.org/arch/msg/ace/TvnxSbPuaf_2w59RYtAt-Wq3gEc/",
+      "createdAt": "2024-04-08T16:47:55Z",
+      "updatedAt": "2024-04-16T15:50:26Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "ad-review",
+      "headRefOid": "69af576a15fd641c736e14ce2c9c40f228dc583d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p852mzYq",
+          "commit": {
+            "abbreviatedOid": "95e525f"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me",
+          "createdAt": "2024-04-09T18:38:12Z",
+          "updatedAt": "2024-04-09T18:38:12Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOG4P0p853cyuz",
+          "commit": {
+            "abbreviatedOid": "69af576"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good!",
+          "createdAt": "2024-04-16T15:50:26Z",
+          "updatedAt": "2024-04-16T15:50:26Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOG4P0p85sCgTc",
+      "title": "IANA Review and Clarifications",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/4",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from IANA on version -06, and provides further improvements and clarifications in the \"IANA Considerations\" section.",
+      "createdAt": "2024-04-08T17:26:05Z",
+      "updatedAt": "2024-04-22T21:07:30Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "iana-review-and-clars",
+      "headRefOid": "d041ef6eb023502222338f8008d33c4790fbc1f3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p852my5Q",
+          "commit": {
+            "abbreviatedOid": "2ffe6bd"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "I am ok with the changes, not familiar enough with the process described to have any additional comments.",
+          "createdAt": "2024-04-09T18:37:33Z",
+          "updatedAt": "2024-04-09T18:37:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOG4P0p85skqRQ",
+      "title": "Clarifications and minor fixes",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/5",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-04-13T17:56:25Z",
+      "updatedAt": "2024-05-01T15:23:51Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "minor-fixes-and-clars",
+      "headRefOid": "a3f708e4331b3f0c776f94cd319e1461ab3b62db",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p853Rc3V",
+          "commit": {
+            "abbreviatedOid": "377382d"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me",
+          "createdAt": "2024-04-15T13:08:54Z",
+          "updatedAt": "2024-04-15T13:08:54Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOG4P0p85smAKs",
+      "title": "Use of Problem Details (RFC 9290) for error responses",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/6",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-04-14T10:58:42Z",
+      "updatedAt": "2024-04-15T13:12:58Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "problem-details",
+      "headRefOid": "a692c17c27bfd3e1c73291ed07fef25c37c44311",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p853RfRp",
+          "commit": {
+            "abbreviatedOid": "a692c17"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Nice changes, looks good to me",
+          "createdAt": "2024-04-15T13:12:58Z",
+          "updatedAt": "2024-04-15T13:12:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOG4P0p85squjw",
+      "title": "TSVART review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/7",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from TSVART archived at https://mailarchive.ietf.org/arch/msg/ace/1Ufd_Z00F3toQw32BFW_W89fiqE/",
+      "createdAt": "2024-04-15T12:08:53Z",
+      "updatedAt": "2024-04-17T08:21:14Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "tsvart-review",
+      "headRefOid": "fd25b50d42c54e9e7c8160db2f2b92b2e9bbe360",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p853U8Fi",
+          "commit": {
+            "abbreviatedOid": "c202d20"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good",
+          "createdAt": "2024-04-15T19:20:45Z",
+          "updatedAt": "2024-04-15T19:20:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOG4P0p85twRZv",
+      "title": "GENART review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/8",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from GENART archived at https://mailarchive.ietf.org/arch/msg/ace/ETtaBMaSyoZKMD82kgG49P2cF9U/",
+      "createdAt": "2024-04-25T17:24:09Z",
+      "updatedAt": "2024-05-02T14:49:30Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "genart-review",
+      "headRefOid": "372437ff85c3c176b6febc57a74bec641261b3e9",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOG4P0p85uReTt",
+      "title": "OPSDIR review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/9",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from OPSDIR archived at https://mailarchive.ietf.org/arch/msg/ace/ElqlgO6FHPsjoqw7L3gKkbSqVUo/",
+      "createdAt": "2024-05-01T17:49:33Z",
+      "updatedAt": "2024-05-01T20:44:28Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "opsdir-review",
+      "headRefOid": "873ff6a45fe1744765b7749aefe5e810a0c7c28b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p855Qt5Q",
+          "commit": {
+            "abbreviatedOid": "873ff6a"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me, agree with changes",
+          "createdAt": "2024-05-01T20:44:28Z",
+          "updatedAt": "2024-05-01T20:44:28Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOG4P0p85ujFB1",
+      "title": "SECDIR review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/10",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from SECDIR archived at https://mailarchive.ietf.org/arch/msg/ace/4kVRbVjCrQ77agBzVu7n_YEjjCc/",
+      "createdAt": "2024-05-04T17:11:38Z",
+      "updatedAt": "2024-05-04T17:15:47Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "secdir-review",
+      "headRefOid": "c80002d8aa03045c56ffe8791189a8e0b2848384",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
