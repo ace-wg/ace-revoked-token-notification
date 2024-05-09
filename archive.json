@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-07T01:06:42.584758+00:00",
+  "timestamp": "2024-05-09T01:06:34.819158+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -353,7 +353,7 @@
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from GENART archived at https://mailarchive.ietf.org/arch/msg/ace/ETtaBMaSyoZKMD82kgG49P2cF9U/",
       "createdAt": "2024-04-25T17:24:09Z",
-      "updatedAt": "2024-05-02T14:49:30Z",
+      "updatedAt": "2024-05-07T19:36:34Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
@@ -365,7 +365,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p8551Q8U",
+          "commit": {
+            "abbreviatedOid": "372437f"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me!",
+          "createdAt": "2024-05-07T19:36:34Z",
+          "updatedAt": "2024-05-07T19:36:34Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 9,
@@ -419,7 +433,7 @@
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from SECDIR archived at https://mailarchive.ietf.org/arch/msg/ace/4kVRbVjCrQ77agBzVu7n_YEjjCc/",
       "createdAt": "2024-05-04T17:11:38Z",
-      "updatedAt": "2024-05-04T17:15:47Z",
+      "updatedAt": "2024-05-07T19:13:51Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
@@ -431,7 +445,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p8551INV",
+          "commit": {
+            "abbreviatedOid": "c80002d"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Changes look good to me!",
+          "createdAt": "2024-05-07T19:13:51Z",
+          "updatedAt": "2024-05-07T19:13:51Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
