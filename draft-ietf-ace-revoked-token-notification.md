@@ -642,7 +642,7 @@ Following a first exchange with the AS, an administrator or a registered device 
 
 As specified in {{sec-trl-endpoint-supporting-diff-queries}}, an AS supporting diff queries maintains an update collection of maximum MAX_N series items for each administrator or registered device, hereafter referred to as requester. In particular, if an update collection includes MAX\_N series items, adding a further series item to that update collection results in deleting the oldest series item from that update collection.
 
-From then on, the requester associated with the update collection will not not able to retrieve the deleted series item, when sending a new diff query request to the TRL endpoint. If that series item reflected the revocation of an access token pertaining to the requester, then the requester will not learn about that when receiving the corresponding diff query response from the AS.
+From then on, the requester associated with the update collection will not be able to retrieve the deleted series item, when sending a new diff query request to the TRL endpoint. If that series item reflected the revocation of an access token pertaining to the requester, then the requester will not learn about that when receiving the corresponding diff query response from the AS.
 
 Sending a diff query request specifically as an Observation request, and thus relying on Observe notifications, largely reduces the chances for a requester to miss updates occurred to its associated update collection altogether. In turn, this relies on the requester successfully receiving the Observe notification responses from the TRL (see also {{sec-security-considerations-comm-patterns}}).
 
