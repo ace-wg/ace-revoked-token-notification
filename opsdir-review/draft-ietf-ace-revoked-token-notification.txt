@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 2 November 2024                                     Ericsson AB
+Expires: 11 November 2024                                    Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                              1 May 2024
+                                                             10 May 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 November 2024.
+   This Internet-Draft will expire on 11 November 2024.
 
 Copyright Notice
 
@@ -1267,7 +1267,7 @@ Table of Contents
    collection.
 
    From then on, the requester associated with the update collection
-   will not not able to retrieve the deleted series item, when sending a
+   will not be able to retrieve the deleted series item, when sending a
    new diff query request to the TRL endpoint.  If that series item
    reflected the revocation of an access token pertaining to the
    requester, then the requester will not learn about that when
