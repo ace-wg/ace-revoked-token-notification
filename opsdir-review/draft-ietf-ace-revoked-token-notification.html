@@ -23,7 +23,7 @@
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 4.2.0
+    platformdirs 4.2.1
     pycountry 22.3.5
     PyYAML 6.0.1
     requests 2.31.0
@@ -1032,7 +1032,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca, et al.</td>
-<td class="center">Expires 2 November 2024</td>
+<td class="center">Expires 11 November 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1045,12 +1045,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-ace-revoked-token-notification-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-05-01" class="published">1 May 2024</time>
+<time datetime="2024-05-10" class="published">10 May 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-11-02">2 November 2024</time></dd>
+<dd class="expires"><time datetime="2024-11-11">11 November 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1107,7 +1107,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 November 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 November 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2081,7 +2081,7 @@ If 'more' has value "true", the requester can send a follow-up diff query reques
 <p id="section-10-3">When the TRL is updated (see <a href="#ssec-trl-update" class="auto internal xref">Section 4.1</a>), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per <span><a href="https://rfc-editor.org/rfc/rfc7641#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in <span>[<a href="#I-D.ietf-core-conditional-attributes" class="cite xref">I-D.ietf-core-conditional-attributes</a>]</span>, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless of whether the TRL has changed or not.<a href="#section-10-3" class="pilcrow">¶</a></p>
 <p id="section-10-4">Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>) or a diff query (see <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>) of the TRL.<a href="#section-10-4" class="pilcrow">¶</a></p>
 <p id="section-10-5">As specified in <a href="#sec-trl-endpoint-supporting-diff-queries" class="auto internal xref">Section 5.1</a>, an AS supporting diff queries maintains an update collection of maximum MAX_N series items for each administrator or registered device, hereafter referred to as requester. In particular, if an update collection includes MAX_N series items, adding a further series item to that update collection results in deleting the oldest series item from that update collection.<a href="#section-10-5" class="pilcrow">¶</a></p>
-<p id="section-10-6">From then on, the requester associated with the update collection will not not able to retrieve the deleted series item, when sending a new diff query request to the TRL endpoint. If that series item reflected the revocation of an access token pertaining to the requester, then the requester will not learn about that when receiving the corresponding diff query response from the AS.<a href="#section-10-6" class="pilcrow">¶</a></p>
+<p id="section-10-6">From then on, the requester associated with the update collection will not be able to retrieve the deleted series item, when sending a new diff query request to the TRL endpoint. If that series item reflected the revocation of an access token pertaining to the requester, then the requester will not learn about that when receiving the corresponding diff query response from the AS.<a href="#section-10-6" class="pilcrow">¶</a></p>
 <p id="section-10-7">Sending a diff query request specifically as an Observation request, and thus relying on Observe notifications, largely reduces the chances for a requester to miss updates occurred to its associated update collection altogether. In turn, this relies on the requester successfully receiving the Observe notification responses from the TRL (see also <a href="#sec-security-considerations-comm-patterns" class="auto internal xref">Section 13.3</a>).<a href="#section-10-7" class="pilcrow">¶</a></p>
 <p id="section-10-8">In order to limit the amount of time during which the requester is unaware of pertaining access tokens that have been revoked but are not expired yet, a requester SHOULD NOT rely solely on diff query requests. In particular, a requester SHOULD also regularly send a full query request to the TRL endpoint according to a related application policy.<a href="#section-10-8" class="pilcrow">¶</a></p>
 <div id="handling-of-access-tokens-and-token-hashes">
