@@ -742,6 +742,20 @@ In such a case, if the RS is still storing the access token, the Client will be 
 
 In order to minimize such risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
+## Additional Security Measures
+
+By accessing the TRL at the AS, registered devices and administrators are able to learn that their pertaining access tokens have been revoked. However, they cannot learn the reason why that happened, including when that reason is the compromise, misbehavior, or decommissioning of a registered device.
+
+In fact, even the AS might not know that a registered device to which a revoked access token pertains has been specifically compromised, misbehaving, or decommissioned. At the same time, it might not be acceptable to only revoke the access tokens pertaining to such a registered device.
+
+Therefore, in order to preserve the security of the system and application, the entity that authoritatively declares a registered device to be compromised, misbehaving, or decommissioned should also promptly trigger the execution of additional revocation processes as deemed appropriate. These include, for instance:
+
+* The de-registration of the registered device from the AS, so that the AS does not issue further access tokens pertaining to that device.
+
+* If applicable, the revocation of the public authentication credential associated with the registered device (e.g., its public key certificate).
+
+The methods by which these processes are triggered and carried out are out of the scope of this document.
+
 # IANA Considerations # {#iana}
 
 This document has the following actions for IANA.
