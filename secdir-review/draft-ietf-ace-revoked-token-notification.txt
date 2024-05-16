@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 5 November 2024                                     Ericsson AB
+Expires: 17 November 2024                                    Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                              4 May 2024
+                                                             16 May 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 November 2024.
+   This Internet-Draft will expire on 17 November 2024.
 
 Copyright Notice
 
@@ -104,6 +104,7 @@ Table of Contents
      13.3.  Communication Patterns
      13.4.  Request of New Access Tokens
      13.5.  Vulnerable Time Window at the RS
+     13.6.  Additional Security Measures
    14. IANA Considerations
      14.1.  Media Type Registrations
      14.2.  CoAP Content-Formats Registry
@@ -1446,6 +1447,37 @@ Table of Contents
    access tokens, the RS SHOULD implement an adequate trade-off between
    the polling frequency and the maximum length of the vulnerable time
    window.
+
+13.6.  Additional Security Measures
+
+   By accessing the TRL at the AS, registered devices and administrators
+   are able to learn that their pertaining access tokens have been
+   revoked.  However, they cannot learn the reason why that happened,
+   including when that reason is the compromise, misbehavior, or
+   decommissioning of a registered device.
+
+   In fact, even the AS might not know that a registered device to which
+   a revoked access token pertains has been specifically compromised,
+   misbehaving, or decommissioned.  At the same time, it might not be
+   acceptable to only revoke the access tokens pertaining to such a
+   registered device.
+
+   Therefore, in order to preserve the security of the system and
+   application, the entity that authoritatively declares a registered
+   device to be compromised, misbehaving, or decommissioned should also
+   promptly trigger the execution of additional revocation processes as
+   deemed appropriate.  These include, for instance:
+
+   *  The de-registration of the registered device from the AS, so that
+      the AS does not issue further access tokens pertaining to that
+      device.
+
+   *  If applicable, the revocation of the public authentication
+      credential associated with the registered device (e.g., its public
+      key certificate).
+
+   The methods by which these processes are triggered and carried out
+   are out of the scope of this document.
 
 14.  IANA Considerations
 
