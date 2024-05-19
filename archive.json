@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-16T01:07:43.663217+00:00",
+  "timestamp": "2024-05-19T01:12:23.602515+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -433,13 +433,13 @@
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from SECDIR archived at https://mailarchive.ietf.org/arch/msg/ace/4kVRbVjCrQ77agBzVu7n_YEjjCc/",
       "createdAt": "2024-05-04T17:11:38Z",
-      "updatedAt": "2024-05-07T19:13:51Z",
+      "updatedAt": "2024-05-16T18:30:55Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "46405ab29d4883a5423841c20b5154bf252a3fe9",
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "secdir-review",
-      "headRefOid": "c80002d8aa03045c56ffe8791189a8e0b2848384",
+      "headRefOid": "a64db82a2d000cdcc365406abde658062fa87083",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
