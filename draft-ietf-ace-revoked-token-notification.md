@@ -65,6 +65,7 @@ normative:
   RFC6749:
   RFC6838:
   RFC6920:
+  RFC7120:
   RFC7252:
   RFC7641:
   RFC8259:
@@ -685,13 +686,13 @@ This specification defines a number of parameters that can be transported in the
 
 The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
 
-| Name              | CBOR Value | CBOR Type                                       |
-| full_set          |  0         | array                                           |
-| diff_set          |  1         | array                                           |
-| cursor            |  2         | unsigned integer / <br> simple value `null`     |
-| more              |  3         | simple value `false` / <br> simple value `true` |
-| error             |  4         | integer                                         |
-| error_description |  5         | text string                                     |
+| Name              | CBOR Value | CBOR Type                |
+| full_set          |  0         | array                    |
+| diff_set          |  1         | array                    |
+| cursor            |  2         | Null or unsigned integer |
+| more              |  3         | True or False            |
+| error             |  4         | integer                  |
+| error_description |  5         | text string              |
 {: #table-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" align="center"}
 
 # ACE Token Revocation List Error Identifiers {#error-types}
@@ -718,7 +719,7 @@ Disclosing any information about revoked access tokens to entities other than th
 
 If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
 
-This could be exploited by attackers to negatively affect the behavior of a registered device. Issuing access tokens with not too long expiration time could help reduce the size of the TRL, but an AS SHOULD take measures to limit this size.
+This could be exploited by attackers to negatively affect the behavior of a registered device. Therefore, in order to help reduce the size of the TRL, the AS SHOULD refrain from issuing access tokens with an excessively long expiration time.
 
 ## Communication Patterns
 
@@ -776,23 +777,23 @@ Fragment identifier considerations: N/A
 
 Additional information: N/A
 
-Person & email address to contact for further information: \<iesg@ietf.org\>
+Person & email address to contact for further information: ACE WG mailing list (ace@ietf.org) or IETF Applications and Real-Time Area (art@ietf.org)
 
 Intended usage: COMMON
 
 Restrictions on usage: None
 
-Author: Marco Tiloca \<marco.tiloca@ri.se>
+Author/Change controller: IETF
 
-Change controller: IESG
+Provisional registration: No
 
 ## CoAP Content-Formats Registry {#iana-content-type}
 
 IANA is asked to add the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
 
-Media Type: application/ace-trl+cbor
+Content Type: application/ace-trl+cbor
 
-Encoding: -
+Content Coding: -
 
 ID: TBD
 
@@ -802,7 +803,9 @@ Reference: {{&SELF}}
 
 IANA is asked to establish the "ACE Token Revocation List Parameters" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
 
-The registry uses the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+As registration policy, the registry uses either "Standards Action with Expert Review", or "Specification Required" per {{Section 4.6 of RFC8126}}, or "Expert Review" per {{Section 4.5 of RFC8126}}. Expert Review guidelines are provided in {{review}}.
+
+All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per {{Section 4.9 of RFC8126}}, with Expert Review additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of Standards Track code points defined in {{RFC7120}} also applies. When such a procedure is used, review and approval by the designated expert are also required, in order for the WG chairs to determine that the conditions for early allocation are met (see step 2 in {{Section 3.1 of RFC7120}}).
 
 The columns of this registry are:
 
@@ -820,7 +823,9 @@ This registry has been initially populated by the values in {{trl-registry-param
 
 IANA is asked to establish the "ACE Token Revocation List Errors" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
 
-The registry uses the "Expert Review" registration procedure {{RFC8126}}. Expert Review guidelines are provided in {{review}}. It should be noted that, in addition to the Expert Review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+As registration policy, the registry uses either "Standards Action with Expert Review", or "Specification Required" per {{Section 4.6 of RFC8126}}, or "Expert Review" per {{Section 4.5 of RFC8126}}. Expert Review guidelines are provided in {{review}}.
+
+All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per {{Section 4.9 of RFC8126}}, with Expert Review additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of Standards Track code points defined in {{RFC7120}} also applies. When such a procedure is used, review and approval by the designated expert are also required, in order for the WG chairs to determine that the conditions for early allocation are met (see step 2 in {{Section 3.1 of RFC7120}}).
 
 The columns of this registry are:
 
@@ -834,7 +839,7 @@ This registry has been initially populated by the values in {{error-types}}. The
 
 ## Expert Review Instructions {#review}
 
-The IANA registries established in this document are defined as "Expert Review". This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
+The IANA registries established in this document are defined as "Standards Action with Expert Review", "Specification Required", or "Expert Review", depending on the range of values for which an assignment is requested. This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
 
 Expert reviewers should take into consideration the following points:
 
@@ -1763,6 +1768,6 @@ more = 3
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}} and {{{Travis Spencer}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
