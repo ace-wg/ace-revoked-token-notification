@@ -117,6 +117,7 @@ Table of Contents
      13.4.  Request of New Access Tokens
      13.5.  Vulnerable Time Window at the RS
      13.6.  Two Token Hashes at the RS using JWTs
+     13.7.  Additional Security Measures
    14. IANA Considerations
      14.1.  Media Type Registrations
      14.2.  CoAP Content-Formats Registry
@@ -1829,9 +1830,7 @@ Table of Contents
    that the AS can securely relate to the registered device and the
    secure association that they use to communicate.
 
-   Disclosing any information about revoked access tokens to entities to
-   which they do not pertain may result in privacy concerns.  Therefore,
-   the AS MUST ensure that, other than registered devices accessing
+   The AS MUST ensure that, other than registered devices accessing
    their own pertaining subset of the TRL, only authorized and
    authenticated administrators can retrieve the full TRL (see
    Section 9).
@@ -1874,9 +1873,11 @@ Table of Contents
 
    This can be due to a number of causes.  For example, the access token
    has been revoked, and the RS has become aware of it and has expunged
-   the access token, but the Client is not aware of it (yet).  Also, an
-   on-path, active adversary might have injected a forged 4.01
-   (Unauthorized) response.
+   the access token, but the Client is not aware of it (yet).  As
+   another example, the access token is still valid, but an on-path
+   active adversary might have injected a forged 4.01 (Unauthorized)
+   response, or the RS might have deleted the access token from its
+   local storage due to its dedicated storage space being all consumed.
 
    In either case, if the Client believes that the access token is still
    valid, it SHOULD NOT immediately ask for a new access token to the
@@ -1950,6 +1951,37 @@ Table of Contents
    as access tokens, then the RS is not exposed to the attack described
    above, and thus it safely computes and stores only one token hash per
    access token (see Section 3.3.1).
+
+13.7.  Additional Security Measures
+
+   By accessing the TRL at the AS, registered devices and administrators
+   are able to learn that their pertaining access tokens have been
+   revoked.  However, they cannot learn the reason why that happened,
+   including when that reason is the compromise, misbehavior, or
+   decommissioning of a registered device.
+
+   In fact, even the AS might not know that a registered device to which
+   a revoked access token pertains has been specifically compromised,
+   misbehaving, or decommissioned.  At the same time, it might not be
+   acceptable to only revoke the access tokens pertaining to such a
+   registered device.
+
+   Therefore, in order to preserve the security of the system and
+   application, the entity that authoritatively declares a registered
+   device to be compromised, misbehaving, or decommissioned should also
+   promptly trigger the execution of additional revocation processes as
+   deemed appropriate.  These include, for instance:
+
+   *  The de-registration of the registered device from the AS, so that
+      the AS does not issue further access tokens pertaining to that
+      device.
+
+   *  If applicable, the revocation of the public authentication
+      credential associated with the registered device (e.g., its public
+      key certificate).
+
+   The methods by which these processes are triggered and carried out
+   are out of the scope of this document.
 
 14.  IANA Considerations
 
@@ -3333,9 +3365,9 @@ Acknowledgments
 
    The authors sincerely thank Christian Amsüss, Carsten Bormann, Dhruv
    Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro, Joerg Ott,
-   Marco Rasori, Michael Richardson, Jim Schaad, Göran Selander, Travis
-   Spencer, Dale Worley, and Paul Wouters for their comments and
-   feedback.
+   Marco Rasori, Michael Richardson, Kyle Rose, Jim Schaad, Göran
+   Selander, Travis Spencer, Dale Worley, and Paul Wouters for their
+   comments and feedback.
 
    The work on this document has been partly supported by VINNOVA and
    the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home
