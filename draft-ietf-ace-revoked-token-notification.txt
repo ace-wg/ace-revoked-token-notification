@@ -2800,7 +2800,7 @@ C.3.  Full Query with Observe plus Diff Query
           |                         [ [bstr.h(t1)], [] ],      |
           |                         [ [], [bstr.h(t2)] ],      |
           |                         [ [], [bstr.h(t1)] ]       |
-          |                       ]                            |
+          |                        ]                           |
           |        }                                           |
           |                                                    |
 
