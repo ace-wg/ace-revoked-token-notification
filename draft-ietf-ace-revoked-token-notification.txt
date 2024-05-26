@@ -174,7 +174,7 @@ Table of Contents
    another, and can subscribe to the TRL on the AS by using resource
    observation for CoAP [RFC7641].  Other underlying protocols than CoAP
    are not prohibited from being supported in the future, if they are
-   defined to use in the ACE framework for Authentication and
+   defined to be used in the ACE framework for Authentication and
    Authorization.
 
    Unlike in the case of token introspection (see Section 5.9 of
@@ -505,13 +505,14 @@ Table of Contents
       query and the related response format are defined in Section 6.
 
    *  Diff query: the AS returns a list of diff entries.  Each diff
-      entry is related to one of the most recent updates, in the subset
-      of the TRL pertaining to the requester.
+      entry is related to one of the most recent updates to the TRL,
+      with such an update performed in the subset of the TRL pertaining
+      to the requester.
 
       The entry associated with one of such updates contains a list of
       token hashes, such that: i) the corresponding revoked access
       tokens pertain to the requester; and ii) they were added to or
-      removed from the TRL at that update.
+      removed from the TRL when performing that update to the TRL.
 
       The AS MAY support this type of query.  In such a case, the AS
       maintains the history of updates to the TRL as defined in
@@ -625,12 +626,12 @@ Table of Contents
    histories of TRL updates for each registered device and
    administrator, hereafter referred to as requesters.
 
-   For each requester, the AS maintains an update collection of maximum
-   MAX_N series items, where MAX_N is a pre-defined, constant positive
-   integer.  The AS MUST keep track of the MAX_N most recent updates to
-   the subset of the TRL that pertains to each requester.  The AS SHOULD
-   provide requesters with the value of MAX_N, upon their registration
-   (see Section 9).
+   The AS defines the single, constant positive integer MAX_N >= 1.  For
+   each requester, the AS maintains an update collection of maximum
+   MAX_N series items.  The AS MUST keep track of the MAX_N most recent
+   updates to the subset of the TRL that pertains to each requester.
+   The AS SHOULD provide requesters with the value of MAX_N, upon their
+   registration (see Section 9).
 
    The series items in the update collection MUST be strictly ordered in
    a chronological fashion.  That is, at any point in time, the current
@@ -673,11 +674,12 @@ Table of Contents
    If it supports the "Cursor" extension for diff queries, the AS
    performs also the following actions.
 
-   The AS defines the constant, unsigned integer MAX_INDEX <= ((2^64) -
-   1), where "^" is the exponentiation operator.  In particular, the
-   value of MAX_INDEX is REQUIRED to be at least (MAX_N - 1), and is
-   RECOMMENDED to be at least ((2^32) - 1).  Note that MAX_INDEX is
-   practically expected to be order of magnitudes greater than MAX_N.
+   The AS defines the single, constant unsigned integer MAX_INDEX <=
+   ((2^64) - 1), where "^" is the exponentiation operator.  In
+   particular, the value of MAX_INDEX is REQUIRED to be at least (MAX_N
+   - 1), and is RECOMMENDED to be at least ((2^32) - 1).  Note that
+   MAX_INDEX is practically expected to be order of magnitudes greater
+   than MAX_N.
 
    When maintaining the history of updates to the TRL, the following
    applies separately for each update collection.
@@ -1298,13 +1300,12 @@ Table of Contents
 
 10.  Notification of Revoked Access Tokens
 
-   Once completed the registration procedure at the AS, the
-   administrator or registered device can send a GET request to the TRL
-   endpoint at the AS.  The request can express the wish for a full
-   query (see Section 6) or a diff query (see Section 7) of the TRL.
-   Also, the request can include the CoAP Observe Option set to 0
-   (register), in order to start an observation of the TRL endpoint as
-   per Section 3.1 of [RFC7641].
+   Once registered at the AS, the administrator or registered device can
+   send a GET request to the TRL endpoint at the AS.  The request can
+   express the wish for a full query (see Section 6) or a diff query
+   (see Section 7) of the TRL.  Also, the request can include the CoAP
+   Observe Option set to 0 (register), in order to start an observation
+   of the TRL endpoint as per Section 3.1 of [RFC7641].
 
    In case the request is successfully processed, the AS replies with a
    response specifying the CoAP response code 2.05 (Content).  In
@@ -2926,9 +2927,9 @@ Acknowledgments
    document.
 
    The authors sincerely thank Christian Amsüss, Carsten Bormann, Rikard
-   Höglund, Benjamin Kaduk, David Navarro, Marco Rasori, Michael
-   Richardson, Jim Schaad, Göran Selander, Travis Spencer, and Paul
-   Wouters for their comments and feedback.
+   Höglund, Benjamin Kaduk, David Navarro, Joerg Ott, Marco Rasori,
+   Michael Richardson, Jim Schaad, Göran Selander, Travis Spencer, and
+   Paul Wouters for their comments and feedback.
 
    The work on this document has been partly supported by VINNOVA and
    the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home
