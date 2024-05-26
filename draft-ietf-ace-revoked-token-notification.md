@@ -76,6 +76,7 @@ normative:
   RFC8610:
   RFC8949:
   RFC9200:
+  RFC9290:
   Named.Information.Hash.Algorithm:
     author:
       org: IANA
@@ -278,7 +279,7 @@ The AS MAY perform a single update to the TRL such that one or more token hashes
 
 Consistent with {{Section 6.5 of RFC9200}}, all communications between a requester towards the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the requester MUST be bound to the corresponding requests.
 
-Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values used to abbreviate the parameters included therein are defined in {{trl-registry-parameters}}.
+Following a request to the TRL endpoint, the corresponding, success response messages sent by the AS use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values used to abbreviate the parameters included therein are defined in {{trl-registry-parameters}}.
 
 The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
 
@@ -299,6 +300,52 @@ If it supports diff queries, the AS MAY additionally support its "Cursor" extens
 If it supports the "Cursor" extension, the AS stores additional information when maintaining the history of updates to the TRL, as defined in {{sec-trl-endpoint-supporting-cursor}}. Also, the processing of full query requests and diff query requests, as well as the related response format, are further extended as defined in {{sec-using-cursor}}.
 
 {{sec-trl-parameteters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries and the "Cursor" extension.
+
+## Error Responses with Problem Details # {#sec-error-responses}
+
+Some error responses from the TRL endpoint at the AS can convey error-specific information according to the problem-details format defined in {{RFC9290}}. Such error responses MUST have Content-Format set to "application/concise-problem-details+cbor". The payload of these error responses MUST be a CBOR map specifying a Concise Problem Details data item (see {{Section 2 of RFC9290}}). The CBOR map is formatted as follows.
+
+* It MUST include the Custom Problem Detail entry 'ace-trl-error' registered in {{iana-custom-problem-details}} of this document. This entry is formatted as a CBOR map, which includes the following fields.
+
+  - The field 'error-id' MUST be present. The map key used for this field is the CBOR unsigned integer with value 0. The value of this field is a CBOR integer specifying the error occurred at the AS. This value is taken from the 'Value' column of the "ACE Token Revocation List Errors" registry defined in {{iana-token-revocation-list-errors}} of this document.
+
+  - The field 'cursor' MAY be present. The map key used for this field is the CBOR unsigned integer with value 1. The value of this field is a CBOR unsigned integer, or the CBOR simple value `null` (0xf6).
+
+  The CDDL notation {{RFC8610}} of the 'ace-trl-error' entry is given below.
+
+~~~~~~~~~~~ CDDL
+   ace-trl-error = {
+       0: int,        ; error-id
+     ? 1: uint / null ; cursor
+   }
+~~~~~~~~~~~
+
+* It MAY include further Standard Problem Detail entries or Custom Problem Detail entries (see {{RFC9290}}).
+
+  In particular, it can include the Standard Problem Detail entry 'detail' (map key -2), whose value is a CBOR text string that specifies a human-readable, diagnostic description of the error occurred at the AS. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the AS. The 'detail' entry is unlikely relevant in an unattended setup where human intervention is not expected.
+
+An example of error response using the problem-details format is shown in {{fig-example-error-response}}.
+
+~~~~~~~~~~~
+Response:
+
+Header: Bad Request (Code=4.00)
+Content-Format: application/concise-problem-details+cbor
+Payload:
+{
+  / title /          -1: "Invalid parameter value",
+  / detail /         -2: "Invalid value for 'cursor': -53",
+  / ace-trl-error / 123: {
+    / error-id / 0: 0 / "Invalid parameter value" /,
+    / cursor /   1: 42
+  }
+}
+~~~~~~~~~~~
+{: #fig-example-error-response title="Example of Error Response with Problem Details"}
+
+Note to RFC Editor: In the figure above, please replace "123" with the unsigned integer value assigned as 'Key Value' to the Custom Problem Detail entry 'ace-trl-error' (see {{iana-custom-problem-details}}). Then, please delete this paragraph.
+
+The problem-details format in general and the Custom Problem Detail entry 'ace-trl-error' in particular are OPTIONAL to support for registered devices. A registered device supporting the entry 'ace-trl-error' and able to understand the specified error may use that information to determine what actions to take next.
 
 ## Supporting Diff Queries # {#sec-trl-endpoint-supporting-diff-queries}
 
@@ -371,7 +418,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS does not support diff queries, it ignores the 'diff' query parameter when present in the GET request, and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
-   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which MUST include the 'error' parameter with value 0 ("Invalid parameter value") and MAY include the 'error_description' parameter to provide additional context.
+   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/concise-problem-details+cbor" and its payload is formatted as defined in {{sec-error-responses}}. Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 0 ("Invalid parameter value"), and the field 'cursor' MUST NOT be present.
 
 * 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer.
 
@@ -381,19 +428,19 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS supports both diff queries and the "Cursor" extension, and the GET request specifies the 'cursor' query parameter, then the AS MUST return a 4.00 (Bad Request) response in case any of the conditions below holds.
 
-   The 4.00 (Bad Request) response MUST have Content-Format "application/ace-trl+cbor". The payload of the response MUST be a CBOR map, which MUST include the 'error' parameter and MAY include the 'error_description' parameter to provide additional context.
+   The 4.00 (Bad Request) response MUST have Content-Format "application/concise-problem-details+cbor" and its payload is formatted as defined in {{sec-error-responses}}.
 
    * The GET request does not specify the 'diff' query parameter, irrespective of the value of the 'cursor' parameter.
 
-      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 1 ("Invalid set of parameters").
+      Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 1 ("Invalid set of parameters"), and the field 'cursor' MUST NOT be present.
 
    * The 'cursor' query parameter has a value other than 0 or than a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value `null` (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
+      Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 0 ("Invalid parameter value"). The entry 'ace-trl-error' MUST include the field 'cursor', whose value is either: the CBOR simple value `null` (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
    * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the 'cursor' query parameter has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 2 ("Out of bound cursor value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify the current value of 'last_index' for the update collection associated with the requester.
+      Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 2 ("Out of bound cursor value"), and the field 'cursor' MUST NOT be present.
 
 # Full Query of the TRL ## {#ssec-trl-full-query}
 
@@ -691,13 +738,11 @@ The table below summarizes them, and specifies the CBOR value to use as abbrevia
 | diff_set          |  1         | array                    |
 | cursor            |  2         | Null or unsigned integer |
 | more              |  3         | True or False            |
-| error             |  4         | integer                  |
-| error_description |  5         | text string              |
 {: #table-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" align="center"}
 
 # ACE Token Revocation List Error Identifiers {#error-types}
 
-This specification defines a number of values that the AS can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
+This specification defines a number of values that the AS can use as error identifiers. These are used in error responses with Content-Format "application/concise-problem-details+cbor", as values of the 'error-id' field within the Custom Problem Detail entry 'ace-trl-error' (see {{sec-error-responses}}).
 
 | Value | Description               |
 | 0     | Invalid parameter value   |
@@ -798,6 +843,16 @@ Content Coding: -
 ID: TBD
 
 Reference: {{&SELF}}
+
+## Custom Problem Detail Keys Registry {#iana-custom-problem-details}
+
+IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
+
+* Key Value: TBD
+* Name: ace-trl-error
+* Brief Description: Carry {{&SELF}} problem details in a Concise Problem Details data item.
+* Change Controller: IETF
+* Reference: {{sec-error-responses}} of {{&SELF}}
 
 ## ACE Token Revocation List Parameters Registry ## {#iana-token-revocation-list}
 
