@@ -76,14 +76,18 @@ normative:
   RFC8126:
   RFC8174:
   RFC8392:
+  RFC8446:
   RFC8610:
+  RFC8613:
   RFC8949:
   RFC9147:
   RFC9200:
+  RFC9528:
   RFC9202:
   RFC9203:
   RFC9290:
   RFC9431:
+  RFC9528:
   Named.Information.Hash.Algorithm:
     author:
       org: IANA
@@ -117,7 +121,7 @@ This document specifies a method for allowing registered devices to access and p
 
 Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned access token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining access tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
 
-The benefits of this method are that it complements token introspection, and it does not require any additional endpoints on the registered devices. The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
+The benefits of this method are that it complements token introspection, and it does not require the registered devices to support any additional endpoints (see {{terminology}}). The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
 
 The process by which access tokens are declared revoked is out of the scope of this document. It is also out of scope the method by which the AS determines or is notified of revoked access tokens, according to which the AS consequently updates the TRL as specified in this document.
 
@@ -129,9 +133,9 @@ Readers are expected to be familiar with the terms and concepts described in the
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
+Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, CoAP {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
-Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
+Note that the term "endpoint" is used here following its OAuth definition {{RFC6749}}, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
 This specification also refers to the following terminology.
 
@@ -143,7 +147,7 @@ This specification also refers to the following terminology.
 
 * Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens. How the administrator authorization is established and verified is out of the scope of this specification.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens.
 
 * Pertaining access token:
 
@@ -151,7 +155,7 @@ This specification also refers to the following terminology.
 
    - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
-Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
+Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
 
 In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'full_set': \[\], e'cursor': 3} stands for {0: \[\], 2: 3}.
 
@@ -167,9 +171,9 @@ At a high level, the steps of this protocol are as follows.
 
 * When a device registers at the AS, it also receives the url-path to the TRL endpoint.
 
-  At any time after the registration procedure is finished, the registered device can send a GET request to the TRL endpoint at the AS. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
+  At any time after the registration procedure is finished, the registered device can send a GET request to the TRL endpoint at the AS. When doing so, it can request for: the current list of pertaining revoked access tokens (see {{ssec-trl-full-query}}); or the most recent updates that occurred over the list of pertaining revoked access tokens (see {{ssec-trl-diff-query}}).
 
-  In particular, the registered device can rely on Observation for CoAP {{RFC7641}}. In such a case, the GET request sent to the TRL endpoint includes the CoAP Observe Option set to 0 (register), i.e., it is an Observation Request. By doing so, the registered device effectively subscribes to the TRL, as interested to receive notifications about its update. Upon receiving the Observation Request, the AS adds the registered device to the list of observers of the TRL endpoint.
+  In particular, the registered device can rely on Observation for CoAP {{RFC7641}}. In such a case, the GET request sent to the TRL endpoint includes the CoAP Observe Option set to 0 (register), i.e., it is an Observation Request. By doing so, the registered device effectively subscribes to the TRL, as interested in receiving notifications about its update. Upon receiving the Observation Request, the AS adds the registered device to the list of observers of the TRL endpoint.
 
 * When an access token is revoked, the AS adds the corresponding token hash to the TRL. Also, when a revoked access token eventually expires, the AS removes the corresponding token hash from the TRL.
 
@@ -431,13 +435,13 @@ Consistent with {{Section 6.5 of RFC9200}}, all communications between a request
 
 Following a request to the TRL endpoint, the corresponding, success response messages sent by the AS use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values used to abbreviate the parameters included therein are defined in {{trl-registry-parameters}}.
 
-The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
+The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators (see {{sec-registration}}).
 
 The TRL endpoint supports only the GET method, and allows two types of queries of the TRL.
 
 * Full query: the AS returns the token hashes of the revoked access tokens currently in the TRL and pertaining to the requester.
 
-   The AS MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
+   The AS MUST support this type of query. The processing of a full query and the related response format are defined are {{ssec-trl-full-query}}.
 
 * Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates to the TRL, with such an update performed in the subset of the TRL pertaining to the requester.
 
@@ -503,7 +507,7 @@ If the AS supports diff queries, it is able to transfer a list of diff entries, 
 
 The following defines how the AS builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
-The AS defines the single, constant positive integer MAX\_N >= 1. For each requester, the AS maintains an update collection of maximum MAX\_N series items. For each requester, the AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to the requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
+The AS defines the single, constant positive integer MAX\_N >= 1. For each requester, the AS maintains an update collection of maximum MAX\_N series items. For each requester, the AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to the requester. If the AS supports diff queries, the AS MUST provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the AS, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
@@ -554,7 +558,7 @@ When maintaining the history of updates to the TRL, the following applies separa
 
 When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in {{sec-using-cursor-diff-query-response}}.
 
-For each requester's update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value MAY depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS SHOULD provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
+For each requester's update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value MAY depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS MUST provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see {{sec-registration}}).
 
 ## Query Parameters # {#sec-trl-endpoint-query-parameters}
 
@@ -568,7 +572,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    If the AS does not support diff queries, it ignores the 'diff' query parameter when present in the GET request, and proceeds like when processing a full query of the TRL (see {{ssec-trl-full-query}}).
 
-   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value other than 0 or than a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/concise-problem-details+cbor" and its payload is formatted as defined in {{sec-error-responses}}. Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 0 ("Invalid parameter value"), and the field 'cursor' MUST NOT be present.
+   Otherwise, the AS MUST return a 4.00 (Bad Request) response in case the 'diff' query parameter of the GET request specifies a value that is neither 0 nor a positive integer, irrespective of the presence of the 'cursor' parameter and its value (see below). The response MUST have Content-Format "application/concise-problem-details+cbor" and its payload is formatted as defined in {{sec-error-responses}}. Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 0 ("Invalid parameter value"), and the field 'cursor' MUST NOT be present.
 
 * 'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in {{sec-using-cursor-diff-query-response}}. Its value MUST be either 0 or a positive integer. If the 'cursor' query parameter is included, then the 'diff' query parameter MUST also be included.
 
@@ -584,7 +588,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
       Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 1 ("Invalid set of parameters"), and the field 'cursor' MUST NOT be present.
 
-   * The 'cursor' query parameter has a value other than 0 or than a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
+   * The 'cursor' query parameter has a value that is neither 0 nor a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
       Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-id' field MUST be set to 0 ("Invalid parameter value"). The entry 'ace-trl-error' MUST include the field 'cursor', whose value is either: the CBOR simple value `null` (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
@@ -645,7 +649,7 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 
 1. The AS defines the positive integer NUM as follows. If the value N specified in the 'diff' query parameter in the GET request is equal to 0 or greater than the pre-defined positive integer MAX\_N (see {{sec-trl-endpoint-supporting-diff-queries}}), then NUM takes the value of MAX_N. Otherwise, NUM takes N.
 
-2. The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N is the number of TRL updates pertaining to the requester and currently stored at the AS.
+2. The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N. In particular, SIZE is the number of TRL updates pertaining to the requester and currently stored at the AS.
 
 3. The AS prepares U diff entries. If U is equal to 0 (e.g., because SIZE is equal to 0 at step 2), then no diff entries are prepared.
 
@@ -735,9 +739,9 @@ When processing a full query request to the TRL endpoint, the AS composes a resp
 
 In particular, the 'cursor' parameter included in the CBOR map carried in the response payload specifies either the CBOR simple value `null` (0xf6) or a CBOR unsigned integer.
 
-The 'cursor' parameter MUST specify the CBOR simple value `null` in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until a first update pertaining to that requester occurs to the TRL.
+The 'cursor' parameter MUST specify the CBOR simple value `null` in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until the first update pertaining to that requester occurs to the TRL.
 
-Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.
+Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester that occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.
 
 ## Response to Diff Query {#sec-using-cursor-diff-query-response}
 
@@ -793,7 +797,7 @@ If the update collection associated with the requester is not empty and the diff
 
    With the combination ('cursor', 'more') = (`null`, `true`), the AS is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
-   When receiving this diff query response, the requester should send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
+   When receiving this diff query response, the requester SHOULD send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
 * Case B - The series item X with 'index' having value P is found in the update collection associated with the requester; or the series item X is not found and the series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1) is found in the update collection associated with the requester.
 
@@ -829,9 +833,19 @@ During the registration process at the AS, an administrator or a registered devi
 
 * The hash function used to compute token hashes. This is specified by identifying an entry in the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}. The specific means for this is outside the scope of this document.
 
-* Optionally, a positive integer MAX\_N, if the AS supports diff queries of the TRL (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
+* A positive integer MAX\_N, if the AS supports diff queries of the TRL (see {{sec-trl-endpoint-supporting-diff-queries}} and {{ssec-trl-diff-query}}).
 
-* Optionally, a positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
+* A positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
+
+When communicating with one another, the registered devices and the AS have to use a secure communication association and be mutually authenticated (see {{Section 5 of RFC9200}}).
+
+In the same spirit, it MUST be ensured that communications between the AS and an administrator are mutually authenticated, encrypted and integrity protected, as well as protected against message replay.
+
+Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is REQUIRED during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication {{RFC8446}}{{RFC9147}}, or an OSCORE Security Context {{RFC8613}} by running the authenticated key establishment protocol EDHOC {{RFC9528}}.
+
+When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the full TRL.
+
+To this end, the AS may rely on a local access control list or similar, which specifies the authentication credentials of trusted, authorized administrators. In particular, the AS verifies the requester to the TRL endpoint as an authorized administrator, only if the access control list includes the same authentication credential used by the requester when establishing the mutually-authenticated secure communication association with the AS.
 
 Further details about the registration process at the AS are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see {{Section 5.5 of RFC9200}}).
 
@@ -844,6 +858,14 @@ In case the request is successfully processed, the AS replies with a response sp
 When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless of whether the TRL has changed or not.
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. In the latter case, the requester can additionally rely on the "Cursor" extension (see {{sec-trl-endpoint-query-parameters}} and {{sec-using-cursor-diff-query-response}}).
+
+As specified in {{sec-trl-endpoint-supporting-diff-queries}}, an AS supporting diff queries maintains an update collection of maximum MAX_N series items for each administrator or registered device, hereafter referred to as requester. In particular, if an update collection includes MAX\_N series items, adding a further series item to that update collection results in deleting the oldest series item from that update collection.
+
+From then on, the requester associated with the update collection will not be able to retrieve the deleted series item, when sending a new diff query request to the TRL endpoint. If that series item reflected the revocation of an access token pertaining to the requester, then the requester will not learn about that when receiving the corresponding diff query response from the AS.
+
+Sending a diff query request specifically as an Observation request, and thus relying on Observe notifications, largely reduces the chances for a requester to miss updates occurred to its associated update collection altogether. In turn, this relies on the requester successfully receiving the Observe notification responses from the TRL (see also {{sec-security-considerations-comm-patterns}}).
+
+In order to limit the amount of time during which the requester is unaware of pertaining access tokens that have been revoked but are not expired yet, a requester SHOULD NOT rely solely on diff query requests. In particular, a requester SHOULD also regularly send a full query request to the TRL endpoint according to a related application policy.
 
 ## Handling of Access Tokens and Token Hashes # {#sec-handling-token-hashes}
 
@@ -908,7 +930,7 @@ The protocol defined in this document inherits the security considerations from 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can always perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-Disclosing any information about revoked access tokens to entities to which they do not pertain may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL. To this end, the AS may rely on an access control list or similar.
+Disclosing any information about revoked access tokens to entities to which they do not pertain may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
 
 ## Size of the TRL
 
@@ -916,7 +938,7 @@ If many non-expired access tokens associated with a registered device are revoke
 
 This could be exploited by attackers to negatively affect the behavior of a registered device. Therefore, in order to help reduce the size of the TRL, the AS SHOULD refrain from issuing access tokens with an excessively long expiration time.
 
-## Communication Patterns
+## Communication Patterns # {#sec-security-considerations-comm-patterns}
 
 The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a requester (i.e., an administrator or a registered device). The suppression of those notifications by an external attacker that has access to the network would prevent requesters from ever knowing that their pertaining access tokens have been revoked.
 
@@ -1945,6 +1967,6 @@ more = 3
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
