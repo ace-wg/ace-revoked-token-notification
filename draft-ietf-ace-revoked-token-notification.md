@@ -930,7 +930,7 @@ The protocol defined in this document inherits the security considerations from 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can always perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-Disclosing any information about revoked access tokens to entities to which they do not pertain may result in privacy concerns. Therefore, the AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
+The AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
 
 ## Size of the TRL
 
@@ -948,7 +948,7 @@ In order to avoid this, a requester SHOULD NOT rely solely on the CoAP Observe n
 
 If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client may receive an unprotected 4.01 (Unauthorized) response from the RS.
 
-This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.
+This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). As another example, the access token is still valid, but an on-path active adversary might have injected a forged 4.01 (Unauthorized) response, or the RS might have deleted the access token from its local storage due to its dedicated storage space being all consumed.
 
 In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.
 
@@ -973,6 +973,20 @@ Fundamentally, this would happen because the HASH_INPUT used to compute the toke
 While this asymmetry cannot be avoided altogether, the method defined for the AS and the Client in {{sec-token-hash-input-c-as}} deliberately penalizes the case where the RS uses JWTs as access tokens. In such a case, the RS effectively neutralizes the attack described above, by computing and storing two token hashes associated with the same access token (see {{sec-token-hash-input-rs-jwt}}).
 
 Conversely, this design deliberately favors the case where the RS uses CWTs as access tokens, which is a preferable option for resource-constrained RSs as well as the default case in the ACE framework (see {{Section 3 of RFC9200}}). That is, if a RS uses CWTs as access tokens, then the RS is not exposed to the attack described above, and thus it safely computes and stores only one token hash per access token (see {{sec-token-hash-input-rs-cwt}}).
+
+## Additional Security Measures
+
+By accessing the TRL at the AS, registered devices and administrators are able to learn that their pertaining access tokens have been revoked. However, they cannot learn the reason why that happened, including when that reason is the compromise, misbehavior, or decommissioning of a registered device.
+
+In fact, even the AS might not know that a registered device to which a revoked access token pertains has been specifically compromised, misbehaving, or decommissioned. At the same time, it might not be acceptable to only revoke the access tokens pertaining to such a registered device.
+
+Therefore, in order to preserve the security of the system and application, the entity that authoritatively declares a registered device to be compromised, misbehaving, or decommissioned should also promptly trigger the execution of additional revocation processes as deemed appropriate. These include, for instance:
+
+* The de-registration of the registered device from the AS, so that the AS does not issue further access tokens pertaining to that device.
+
+* If applicable, the revocation of the public authentication credential associated with the registered device (e.g., its public key certificate).
+
+The methods by which these processes are triggered and carried out are out of the scope of this document.
 
 # IANA Considerations # {#iana}
 
@@ -1967,6 +1981,6 @@ more = 3
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
