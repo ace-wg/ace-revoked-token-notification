@@ -113,13 +113,13 @@ The benefits of this method are that it complements token introspection, and it 
 
 ## Terminology ## {#terminology}
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
-Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}}, and JSON Web Tokens (JWTs) {{RFC7519}}.
+Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}} and JSON Web Tokens (JWTs) {{RFC7519}}.
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
+Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, the CoAP protocol {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
 Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
@@ -141,7 +141,11 @@ This specification also refers to the following terminology.
 
    - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
-Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
+Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
+
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'full_set': \[\], e'cursor': 3} stands for {0: \[\], 2: 3}.
+
+Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
 # Protocol Overview # {#sec-overview}
 
@@ -167,11 +171,11 @@ At a high level, the steps of this protocol are as follows.
 
 * An administrator can access and subscribe to the TRL like a registered device, while getting the full updated content of the TRL.
 
-{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
+{{fig-protocol-overview}} shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2, and t3, with token hash th1, th2, and th3, respectively.
 
 Consistently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
                     +----------------------+
                     | Authorization Server |
                     +-----------o----------+
@@ -189,7 +193,7 @@ Consistently, the AS adds the three token hashes to the TRL at once, and sends O
                      :    :   t1   :           :     t3     :    :
                      :    :........:           :............:    :
                      :                   t2                      :
-                     :...........................................:
+                     .............................................
 
 ~~~~~~~~~~~
 {: #fig-protocol-overview title="Protocol Overview" artwork-align="center"}
@@ -201,15 +205,15 @@ Consistently, the AS adds the three token hashes to the TRL at once, and sends O
 The token hash of an access token is computed as follows.
 
 
-1. The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the Access Token was included and provided to the requesting Client.
+1. The AS considers the content of the 'access_token' parameter in the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the access token was included and provided to the requesting Client.
 
 2. The AS defines HASH_INPUT as follows.
 
-   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a CBOR byte string, then HASH_INPUT takes the binary serialization of that CBOR byte string. This is the case where CBOR was used to transport the access token (as a CWT or JWT).
 
       With reference to the example in {{fig-as-response-cbor}}, and assuming the string's length in bytes to be 119 (i.e., 0x77 in hexadecimal), then HASH_INPUT takes the bytes \{0x58 0x77 0xd0 0x83 0x44 0xa1 ...\}, i.e., the raw content of the 'access_token' parameter.
 
-   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the Access Token (as a CWT or JWT).
+   * If the content of the 'access_token' parameter from step 1 is a text string, then HASH_INPUT takes the binary serialization of that text string. This is the case where JSON was used to transport the access token (as a CWT or JWT).
 
       With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary serialization of "2YotnFZFEjr1zCsicMWpAA", i.e., of the raw content of the 'access_token' parameter.
 
@@ -227,15 +231,15 @@ Content-Format: application/ace+cbor
 Max-Age: 85800
 Payload:
 {
-   "access_token" : h'd08344a1 ...
-    (remainder of the access token omitted for brevity) ...',
-   "token_type" : pop,
-   "expires_in" : 86400,
-   "profile" : coap_dtls,
-   (remainder of the response omitted for brevity)
+   / access_token / 1 : h'd08344a1/...
+    (remainder of the access token omitted for brevity)/',
+   / token_type /  34 : 2 / PoP /,
+   / expires_in /   2 : 86400,
+   / ace_profile / 38 : 1 / coap_dtls /,
+   / (remainder of the response omitted for brevity) /
 }
 ~~~~~~~~~~~
-{: #fig-as-response-cbor title="Example of AS-to-Client response using CBOR" artwork-align="left"}
+{: #fig-as-response-cbor title="Example of AS-to-Client CoAP response using CBOR" artwork-align="left"}
 
 ~~~~~~~~~~~
 HTTP/1.1 200 OK
@@ -245,13 +249,12 @@ Pragma: no-cache
 Payload:
 {
    "access_token" : "2YotnFZFEjr1zCsicMWpAA",
-   "token_type" : "pop",
-   "expires_in" : 86400,
-   "profile" : "coap_dtls",
-   (remainder of the response omitted for brevity)
+   "token_type"   : "pop",
+   "expires_in"   : 86400,
+   "ace_profile"  : "1"
 }
 ~~~~~~~~~~~
-{: #fig-as-response-json title="Example of AS-to-Client response using JSON" artwork-align="left"}
+{: #fig-as-response-json title="Example of AS-to-Client HTTP response using JSON" artwork-align="left"}
 
 # Token Revocation List (TRL) # {#sec-trl-resource}
 
@@ -275,7 +278,7 @@ The AS MAY perform a single update to the TRL such that one or more token hashes
 
 Consistent with {{Section 6.5 of RFC9200}}, all communications between a requester towards the TRL endpoint and the AS MUST be encrypted, as well as integrity and replay protected. Furthermore, responses from the AS to the requester MUST be bound to the corresponding requests.
 
-Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values for the parameters included therein are defined in {{trl-registry-parameters}}.
+Following a request to the TRL endpoint, the messages defined in this document that the AS sends as response use Content-Format "application/ace-trl+cbor". Their payload is formatted as a CBOR map, and the CBOR values used to abbreviate the parameters included therein are defined in {{trl-registry-parameters}}.
 
 The AS MUST implement measures to prevent access to the TRL endpoint by entities other than registered devices and authorized administrators.
 
@@ -386,7 +389,7 @@ A GET request to the TRL endpoint can include the following query parameters. Th
 
    * The 'cursor' query parameter has a value other than 0 or than a positive integer, or it has a value strictly greater than MAX_INDEX (see {{sec-trl-endpoint-supporting-cursor}}).
 
-      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value "null" (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
+      The 'error' parameter within the CBOR map carried in the payload of the 4.00 (Bad Request) response MUST have value 0 ("Invalid parameter value"). The CBOR map MUST also include the 'cursor' parameter, which MUST specify either: the CBOR simple value `null` (0xf6), if the update collection associated with the requester is empty; or the corresponding current value of 'last_index' otherwise.
 
    * All of the following hold: the update collection associated with the requester is not empty; no wrap-around of its 'index' value has occurred; and the 'cursor' query parameter has a value strictly greater than the current 'last_index' on the update collection (see {{sec-trl-endpoint-supporting-cursor}}).
 
@@ -427,8 +430,11 @@ full_set_value = [* token_hash]
 Content-Format: application/ace-trl+cbor
 Payload:
 {
-   "full_set" : [
-     h'01fa51cc ... ', h'01748190 ... '
+   e'full_set' : [
+     h'01fa51cc/...
+       (remainder of the token hash omitted for brevity)/',
+     h'01748190/...
+       (remainder of the token hash omitted for brevity)/'
    ]
 }
 ~~~~~~~~~~~
@@ -483,18 +489,33 @@ Note that, if the AS supports both diff queries and the related "Cursor" extensi
 Content-Format: application/ace-trl+cbor
 Payload:
 {
-   "diff_set" : [
+   e'diff_set' : [
      [
-       [ h'01fa51cc ... ', h'01748190 ... '],
-       [ h'01cdf1ca ... ', h'01be41a6 ... ']
+       [ h'01fa51cc/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01748190/...
+           (remainder of the token hash omitted for brevity)/'],
+       [ h'01cdf1ca/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01be41a6/...
+           (remainder of the token hash omitted for brevity)/'
+       ]
      ],
      [
-       [ h'0144dd12 ... ', h'01231fff ... '],
+       [ h'0144dd12/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01231fff/...
+           (remainder of the token hash omitted for brevity)/'
+       ],
        []
      ],
      [
        [],
-       [ h'01ca986f ... ', h'01fe1a2b ... ']
+       [ h'01ca986f/...
+           (remainder of the token hash omitted for brevity)/',
+         h'01fe1a2b/...
+           (remainder of the token hash omitted for brevity)/'
+       ]
      ]
    ]
 }
@@ -515,9 +536,9 @@ Error handling and the possible resulting error responses are as defined in {{se
 
 When processing a full query request to the TRL endpoint, the AS composes a response as defined in {{ssec-trl-full-query}}.
 
-In particular, the 'cursor' parameter included in the CBOR map carried in the response payload specifies either the CBOR simple value "null" (0xf6) or a CBOR unsigned integer.
+In particular, the 'cursor' parameter included in the CBOR map carried in the response payload specifies either the CBOR simple value `null` (0xf6) or a CBOR unsigned integer.
 
-The 'cursor' parameter MUST specify the CBOR simple value "null" in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until a first update pertaining to that requester occurs to the TRL.
+The 'cursor' parameter MUST specify the CBOR simple value `null` in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until a first update pertaining to that requester occurs to the TRL.
 
 Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned integer. This MUST take the 'index' value of the last series item in the update collection associated with the requester (see {{sec-trl-endpoint-supporting-cursor}}), as corresponding to the most recent update pertaining to the requester occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.
 
@@ -531,9 +552,9 @@ If the update collection associated with the requester has no elements, the AS r
 
 * The 'diff_set' parameter MUST be included and specifies the empty CBOR array.
 
-* The 'cursor' parameter MUST be included and specifies the CBOR simple value "null" (0xf6).
+* The 'cursor' parameter MUST be included and specifies the CBOR simple value `null` (0xf6).
 
-* The 'more' parameter MUST be included and specifies the CBOR simple value "false" (0xf4).
+* The 'more' parameter MUST be included and specifies the CBOR simple value `false` (0xf4).
 
 Note that the above applies when the update collection associated with the requester has no elements, regardless of whether the 'cursor' query parameter is included or not in the diff query request, and irrespective of the specified unsigned integer value if present.
 
@@ -555,9 +576,9 @@ If the update collection associated with the requester is not empty and the diff
 
       Note that the 'cursor' parameter takes the same 'index' value of the last series item in the update collection when U <= MAX_DIFF_BATCH.
 
-   * The 'more' parameter MUST be present and MUST specify the CBOR simple value "false" (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR simple value "true" (0xf5) otherwise.
+   * The 'more' parameter MUST be present and MUST specify the CBOR simple value `false` (0xf4) if U <= MAX_DIFF_BATCH, or the CBOR simple value `true` (0xf5) otherwise.
 
-      If the 'more' parameter has value "true", the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this would result in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
+      If the 'more' parameter has value `true`, the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. As defined in {{sec-using-cursor-diff-query-response-cursor}}, this results in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
 ### Cursor Specified in the Diff Query Request {#sec-using-cursor-diff-query-response-cursor}
 
@@ -569,11 +590,11 @@ If the update collection associated with the requester is not empty and the diff
 
     * The 'diff_set' parameter MUST be included and specifies the empty CBOR array.
 
-    * The 'cursor' parameter MUST be included and specifies the CBOR simple value "null" (0xf6).
+    * The 'cursor' parameter MUST be included and specifies the CBOR simple value `null` (0xf6).
 
-    * The 'more' parameter MUST be included and specifies the CBOR simple value "true" (0xf5).
+    * The 'more' parameter MUST be included and specifies the CBOR simple value `true` (0xf5).
 
-   With the combination ('cursor', 'more') = ("null", "true"), the AS is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
+   With the combination ('cursor', 'more') = (`null`, `true`), the AS is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.
 
    When receiving this diff query response, the requester should send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see {{sec-using-cursor-full-query-response}}) to be possibly used as query parameter in a following diff query request.
 
@@ -599,9 +620,9 @@ If the update collection associated with the requester is not empty and the diff
 
          Note that the 'cursor' parameter takes the same 'index' value of the last series item in the update collection when SUB_U <= MAX_DIFF_BATCH.
 
-      * The 'more' parameter MUST be present and MUST specify the CBOR simple value "false" (0xf4) if SUB_U <= MAX_DIFF_BATCH, or the CBOR simple value "true" (0xf5) otherwise.
+      * The 'more' parameter MUST be present and MUST specify the CBOR simple value `false` (0xf4) if SUB_U <= MAX_DIFF_BATCH, or the CBOR simple value `true` (0xf5) otherwise.
 
-         If 'more' has value "true", the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. This would result in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
+         If 'more' has value `true`, the requester can send a follow-up diff query request including the 'cursor' query parameter, with the same value of the 'cursor' parameter specified in this diff query response. This results in the AS transferring the following subset of series items as diff entries, thus resuming from where interrupted in the previous transfer.
 
 # Registration at the Authorization Server # {#sec-registration}
 
@@ -647,7 +668,7 @@ An RS stores a token hash th1 corresponding to an access token t1 until both the
 
    - The result of token introspection performed on t1 (see {{Section 5.9 of RFC9200}}), if supported by both the RS and the AS.
 
-The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
+The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill both the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
 
 Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
 
@@ -665,43 +686,24 @@ This specification defines a number of parameters that can be transported in the
 
 The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
 
-~~~~~~~~~~~
-+-------------------+------------+--------------------------+
 | Name              | CBOR Value | CBOR Type                |
-+-------------------+------------+--------------------------+
 | full_set          |  0         | array                    |
-+-------------------+------------+--------------------------+
 | diff_set          |  1         | array                    |
-+-------------------+------------+--------------------------+
 | cursor            |  2         | Null or unsigned integer |
-+-------------------+------------+--------------------------+
 | more              |  3         | True or False            |
-+-------------------+------------+--------------------------+
 | error             |  4         | integer                  |
-+-------------------+------------+--------------------------+
 | error_description |  5         | text string              |
-+-------------------+------------+--------------------------+
-~~~~~~~~~~~
-{: #fig-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" artwork-align="center"}
-
+{: #table-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" align="center"}
 
 # ACE Token Revocation List Error Identifiers {#error-types}
 
 This specification defines a number of values that the AS can include as error identifiers, in the 'error' parameter of an error response from the TRL endpoint. This applies to error responses whose payload is a CBOR map and whose Content-Format is "application/ace-trl+cbor".
 
-~~~~~~~~~~~
-+-------+---------------------------+
 | Value | Description               |
-+-------+---------------------------+
-|   0   | Invalid parameter value   |
-+-------+---------------------------+
-|   1   | Invalid set of parameters |
-+-------+---------------------------+
-|   2   | Out of bound cursor value |
-+-------+---------------------------+
-~~~~~~~~~~~
-{: #fig-ACE-TRL-Error Identifiers title="ACE Token Revocation List Error Identifiers" artwork-align="center"}
-
+| 0     | Invalid parameter value   |
+| 1     | Invalid set of parameters |
+| 2     | Out of bound cursor value |
+{: #table-ACE-TRL-Error Identifiers title="ACE Token Revocation List Error Identifiers" align="center"}
 
 # Security Considerations # {#sec-security-considerations}
 
@@ -721,9 +723,9 @@ This could be exploited by attackers to negatively affect the behavior of a regi
 
 ## Communication Patterns
 
-The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a registered device. The suppression of those notifications by an external attacker that has access to the network would prevent registered devices from ever knowing that their pertaining access tokens have been revoked.
+The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a requester (i.e., an administrator or a registered device). The suppression of those notifications by an external attacker that has access to the network would prevent requesters from ever knowing that their pertaining access tokens have been revoked.
 
-In order to avoid this, a registered device SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a registered device SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+In order to avoid this, a requester SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a requester SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint according to a related application policy.
 
 ## Request of New Access Tokens
 
@@ -866,7 +868,7 @@ Furthermore, performing a diff query of the TRL together with the "Cursor" exten
 
 # Parameters of the TRL Endpoint # {#sec-trl-parameteters}
 
-{{fig-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
+{{table-TRL-endpoint-parameters}} provides an aggregated overview of the parameters used by the TRL endpoint, when the AS supports diff queries (see {{sec-trl-endpoint}}) and the "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}}).
 
 Except for MAX_N defined in {{sec-trl-endpoint-supporting-diff-queries}}, all the other parameters are defined in {{sec-trl-endpoint-supporting-cursor}} and are used only if the AS supports the "Cursor" extension.
 
@@ -880,40 +882,13 @@ For each parameter, the columns of the table specify the following information. 
 
 * Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.
 
-~~~~~~~~~~~
-+----------------+----------+--------------------+--------------------+
-| Name           | Single   | Description        | Value              |
-|                | instance |                    |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_N          | Y        | Max number of TRL  | LB = 1             |
-|                |          | updates stored per |                    |
-|                |          | requester          | If supporting      |
-|                |          |                    | "Cursor", then     |
-|                |          |                    | UB = (MAX_INDEX+1) |
-+----------------+----------+--------------------+--------------------+
-| MAX_DIFF_BATCH | N        | Max number of diff | LB = 1             |
-|                |          | entries included   |                    |
-|                |          | in a diff query    | UB = MAX_N         |
-|                |          | response when      |                    |
-|                |          | using "Cursor"     |                    |
-+----------------+----------+--------------------+--------------------+
-| MAX_INDEX      | Y        | Max value of each  | LB = (MAX_N-1)     |
-|                |          | instance of the    |                    |
-|                |          | 'index' parameter  | UB = ((2^64)-1)    |
-+----------------+----------+--------------------+--------------------+
-| index          | N        | Value associated   | LB = 0             |
-|                |          | with a series item |                    |
-|                |          | of an updated      | UB = MAX_INDEX     |
-|                |          | collection         |                    |
-+----------------+----------+--------------------+--------------------+
-| last_index     | N        | The 'index' value  | LB = 0             |
-|                |          | of the most        |                    |
-|                |          | recently added     | UB = MAX_INDEX     |
-|                |          | series item in an  |                    |
-|                |          | update collection  |                    |
-+----------------+----------+--------------------+--------------------+
-~~~~~~~~~~~
-{: #fig-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" artwork-align="center"}
+| Name           | Single <br> instance | Description                                                                      | Value                                                                   |
+| MAX_N          | Y                    | Max number of TRL updates stored per requester                                   | LB = 1 <br><br> If supporting <br> "Cursor", then <br> UB = MAX_INDEX+1 |
+| MAX_DIFF_BATCH | N                    | Max number of diff entries included in a diff query response when using "Cursor" | LB = 1 <br><br> UB = MAX_N                                              |
+| MAX_INDEX      | Y                    | Max value of each instance of the 'index' parameter                              | LB = MAX_N-1 <br><br> UB = (2^64)-1                                     |
+| index          | N                    | Value associated with a series item of an update collection                      | LB = 0 <br><br> UB = MAX_INDEX                                          |
+| last_index     | N                    | The 'index' value of the most recently added series item in an update collection | LB = 0 <br><br> UB = MAX_INDEX                                          |
+{: #table-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" align="center"}
 
 # Interaction Examples # {#sec-RS-examples}
 
@@ -933,7 +908,7 @@ The payload of the registration response is a CBOR map, which includes the follo
 
 * possible further parameters related to the registration process.
 
-Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the byte-string representations of the token hashes for the access tokens t1 and t2, respectively.
+Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value the token hashes of the access tokens t1 and t2, respectively.
 
 ## Full Query with Observe # {#sec-RS-example-1}
 
@@ -941,30 +916,31 @@ Furthermore, 'h(x)' refers to the hash function used to compute the token hashes
 
 In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                  AS
 |                                                    |
 |  Registration: POST                                |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|                    2.01 CREATED                    |
+|                    2.01 Created                    |
 |                      Payload: {                    |
-|                        ...                         |
+|                        / ... /                     |
 |                        "trl_path" : "revoke/trl",  |
 |                        "trl_hash" : "sha-256",     |
 |                           "max_n" : 10             |
 |                      }                             |
 |                                                    |
-|  GET Observe: 0                                    |
-|    coap://as.example.com/revoke/trl/               |
+|  GET coap://as.example.com/revoke/trl/             |
+|    Observe: 0                                      |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 42                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 42                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -980,10 +956,11 @@ RS                                                  AS
 |             (Access token t1 is revoked)           |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 53                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 53                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1)]                 |
+|          e'full_set' : [bstr.h(t1)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -992,10 +969,11 @@ RS                                                  AS
 |             (Access token t2 is revoked)           |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 64                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 64                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+|          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
 |        }                                           |
 |                                                    |
 |                         .                          |
@@ -1005,10 +983,11 @@ RS                                                  AS
 |             (Access token t1 expires)              |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 75                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 75                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t2)]                 |
+|          e'full_set' : [bstr.h(t2)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1017,10 +996,11 @@ RS                                                  AS
 |             (Access token t2 expires)              |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 86                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 86                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
@@ -1034,30 +1014,31 @@ The RS indicates N = 3 as value of the 'diff' query parameter, i.e., as the maxi
 
 In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                  AS
 |                                                    |
 |  Registration: POST                                |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|                   2.01 CREATED                     |
+|                   2.01 Created                     |
 |                     Payload: {                     |
-|                       ...                          |
+|                       / ... /                      |
 |                       "trl_path" : "revoke/trl",   |
 |                       "trl_hash" : "sha-256",      |
 |                          "max_n" : 10              |
 |                     }                              |
 |                                                    |
-|  GET Observe: 0                                    |
-|    coap://as.example.com/revoke/trl?diff=3         |
+|  GET coap://as.example.com/revoke/trl?diff=3       |
+|    Observe: 0                                      |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 42                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 42                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "diff_set" : []                           |
+|          e'diff_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1072,12 +1053,13 @@ RS                                                  AS
 |            (Access token t1 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 53                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 53                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [], [bstr.h(t1)] ]       |
-|                       ]                            |
+|                        ]                           |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1086,13 +1068,14 @@ RS                                                  AS
 |            (Access token t2 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 64                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 64                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [], [bstr.h(t2)] ],      |
 |                         [ [], [bstr.h(t1)] ]       |
-|                       ]                            |
+|                        ]                           |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1101,14 +1084,15 @@ RS                                                  AS
 |              (Access token t1 expires)             |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 75                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 75                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [bstr.h(t1)], [] ],      |
 |                         [ [], [bstr.h(t2)] ],      |
 |                         [ [], [bstr.h(t1)] ]       |
-|                       ]                            |
+|                        ]                           |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1117,14 +1101,15 @@ RS                                                  AS
 |              (Access token t2 expires)             |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 86                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 86                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [bstr.h(t2)], [] ],      |
 |                         [ [bstr.h(t1)], [] ],      |
 |                         [ [], [bstr.h(t2)] ]       |
-|                       ]                            |
+|                        ]                           |
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
@@ -1140,30 +1125,31 @@ When this happens, and after a waiting time defined by the application has elaps
 
 In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request. Also, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                  AS
 |                                                    |
 |  Registration: POST                                |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|                   2.01 CREATED                     |
+|                   2.01 Created                     |
 |                     Payload: {                     |
-|                       ...                          |
+|                       / ... /                      |
 |                       "trl_path" : "revoke/trl",   |
 |                       "trl_hash" : "sha-256",      |
 |                          "max_n" : 10              |
 |                     }                              |
 |                                                    |
-|  GET Observe: 0                                    |
-|    coap://as.example.com/revoke/trl/               |
+|  GET coap://as.example.com/revoke/trl/             |
+|    Observe: 0                                      |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 42                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 42                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1178,10 +1164,11 @@ RS                                                  AS
 |            (Access token t1 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 53                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 53                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1)]                 |
+|          e'full_set' : [bstr.h(t1)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1190,10 +1177,11 @@ RS                                                  AS
 |            (Access token t2 is revoked)            |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 64                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+         Observe: 64                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t1), bstr.h(t2)]     |
+|          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1202,10 +1190,11 @@ RS                                                  AS
 |             (Access token t1 expires)              |
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT Observe: 75                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Observe: 75                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : [bstr.h(t2)]                 |
+|          e'full_set' : [bstr.h(t2)]                |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1213,11 +1202,12 @@ RS                                                  AS
 |                                                    |
 |             (Access token t2 expires)              |
 |                                                    |
-|  X<------------------------------------------------+
-|      2.05 CONTENT Observe: 86                      |
-|        Content-Format: "application/ace-trl+cbor"  |
+|  X <-----------------------------------------------+
+|      2.05 Content                                  |
+|        Observe: 86                                 |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "full_set" : []                           |
+|          e'full_set' : []                          |
 |        }                                           |
 |                         .                          |
 |                         .                          |
@@ -1226,15 +1216,15 @@ RS                                                  AS
 |           (Enough time has passed since            |
 |         the latest received notification)          |
 |                                                    |
-|  GET                                               |
-|    coap://as.example.com/revoke/trl?diff=8         |
+|                                                    |
+|  GET coap://as.example.com/revoke/trl?diff=8       |
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|      2.05 CONTENT                                  |
-|        Content-Format: "application/ace-trl+cbor"  |
+|      2.05 Content                                  |
+|        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
-|          "diff_set" : [                            |
+|          e'diff_set' : [                           |
 |                         [ [bstr.h(t2)], [] ],      |
 |                         [ [bstr.h(t1)], [] ],      |
 |                         [ [], [bstr.h(t2)] ],      |
@@ -1257,33 +1247,34 @@ After the RS has not received a notification from the AS for a waiting time defi
 
 This is followed up by a further diff query request that specifies the query parameter 'cursor'. Note that the payload of the corresponding response differs from the payload of the response to the previous diff query request.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                      AS
 |                                                        |
 |  Registration: POST                                    |
 +------------------------------------------------------->|
 |                                                        |
 |<-------------------------------------------------------+
-|                   2.01 CREATED                         |
+|                   2.01 Created                         |
 |                     Payload: {                         |
-|                            ...                         |
+|                            / ... /                     |
 |                            "trl_path" : "revoke/trl",  |
 |                            "trl_hash" : "sha-256",     |
 |                               "max_n" : 10,            |
 |                       "max_diff_batch": 5              |
 |                     }                                  |
 |                                                        |
-|  GET Observe: 0                                        |
-|    coap://as.example.com/revoke/trl?diff=3             |
+|  GET coap://as.example.com/revoke/trl?diff=3           |
+|    Observe: 0                                          |
 +------------------------------------------------------->|
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT Observe: 42                      |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Observe: 42                                 |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [],                          |
-|                "cursor" : null,                        |
-|                  "more" : false                        |
+|              e'diff_set' : [],                         |
+|                e'cursor' : null,                       |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1298,14 +1289,15 @@ RS                                                      AS
 |              (Access token t1 is revoked)              |
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT Observe: 53                      |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Observe: 53                                 |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [], [bstr.h(t1)] ]       |
-|                           ],                           |
-|                "cursor" : 0,                           |
-|                  "more" : false                        |
+|                            ],                          |
+|                e'cursor' : 0,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1314,15 +1306,16 @@ RS                                                      AS
 |              (Access token t2 is revoked)              |
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT Observe: 64                      |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Observe: 64                                 |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [], [bstr.h(t2)] ],      |
 |                             [ [], [bstr.h(t1)] ]       |
-|                           ],                           |
-|                "cursor" : 1,                           |
-|                  "more" : false                        |
+|                            ],                          |
+|                e'cursor' : 1,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1331,16 +1324,17 @@ RS                                                      AS
 |              (Access token t1 expires)                 |
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT Observe: 75                      |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Observe: 75                                 |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [bstr.h(t1)], [] ],      |
 |                             [ [], [bstr.h(t2)] ],      |
 |                             [ [], [bstr.h(t1)] ]       |
-|                           ],                           |
-|                "cursor" : 2,                           |
-|                  "more" : false                        |
+|                            ],                          |
+|                e'cursor' : 2,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1349,16 +1343,17 @@ RS                                                      AS
 |              (Access token t2 expires)                 |
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT Observe: 86                      |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Observe: 86                                 |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [bstr.h(t2)], [] ],      |
 |                             [ [bstr.h(t1)], [] ],      |
 |                             [ [], [bstr.h(t2)] ]       |
-|                           ],                           |
-|                "cursor" : 3,                           |
-|                  "more" : false                        |
+|                            ],                          |
+|                e'cursor' : 3,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                           .                            |
 |                           .                            |
@@ -1367,34 +1362,33 @@ RS                                                      AS
 |            (Enough time has passed since               |
 |             the latest received notification)          |
 |                                                        |
-|  GET                                                   |
-|    coap://as.example.com/revoke/trl?diff=3             |
+|                                                        |
+|  GET coap://as.example.com/revoke/trl?diff=3           |
 +------------------------------------------------------->|
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT                                  |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [                            |
+|              e'diff_set' : [                           |
 |                             [ [bstr.h(t2)], [] ],      |
 |                             [ [bstr.h(t1)], [] ],      |
 |                             [ [], [bstr.h(t2)] ]       |
-|                           ],                           |
-|                "cursor" : 3,                           |
-|                  "more" : false                        |
+|                            ],                          |
+|                e'cursor' : 3,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                                                        |
-|  GET                                                   |
-|    coap://as.example.com/revoke/trl?diff=3&cursor=3    |
+|  GET coap://as.example.com/revoke/trl?diff=3&cursor=3  |
 +------------------------------------------------------->|
 |                                                        |
 |<-------------------------------------------------------+
-|          2.05 CONTENT                                  |
-|            Content-Format: "application/ace-trl+cbor"  |
+|          2.05 Content                                  |
+|            Content-Format: application/ace-trl+cbor    |
 |            Payload: {                                  |
-|              "diff_set" : [],                          |
-|                "cursor" : 3,                           |
-|                  "more" : false                        |
+|              e'diff_set' : [],                         |
+|                e'cursor' : 3,                          |
+|                  e'more' : false                       |
 |            }                                           |
 |                                                        |
 ~~~~~~~~~~~
@@ -1414,36 +1408,37 @@ When this happens, and after a waiting time defined by the application has elaps
 
 * The query parameter 'cursor' with value 2, thus requesting from the update collection the series items following the one with 'index' value equal to 2 (i.e., following the last series item that the RS successfully received in an earlier notification response).
 
-The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items from the update collection corresponding to the RS. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to "true". Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.
+The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items from the update collection corresponding to the RS. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to `true`. Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.
 
 After that, the RS follows up with a further diff query request specifying the query parameter 'cursor' with value 7, in order to retrieve the next and last batch of series items from the update collection.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 RS                                                             AS
 |                                                               |
 |  Registration: POST                                           |
 +-------------------------------------------------------------->|
 |                                                               |
 |<--------------------------------------------------------------+
-|                          2.01 CREATED                         |
+|                          2.01 Created                         |
 |                            Payload: {                         |
-|                                   ...                         |
+|                                   / ... /                     |
 |                                   "trl_path" : "revoke/trl",  |
 |                                   "trl_hash" : "sha-256",     |
 |                                      "max_n" : 10,            |
 |                              "max_diff_batch": 5              |
 |                            }                                  |
 |                                                               |
-|  GET Observe: 0                                               |
-|    coap://as.example.com/revoke/trl/                          |
+|  GET coap://as.example.com/revoke/trl/                        |
+|    Observe: 0                                                 |
 +-------------------------------------------------------------->|
 |                                                               |
 |<--------------------------------------------------------------+
-|                 2.05 CONTENT Observe: 42                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|                 2.05 Content                                  |
+|                   Observe: 42                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : null                         |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : null                        |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1464,11 +1459,12 @@ RS                                                             AS
 |                  (Access token t1 is revoked)                 |
 |                                                               |
 |<--------------------------------------------------------------+
-|                 2.05 CONTENT Observe: 53                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|                 2.05 Content                                  |
+|                   Observe: 53                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t1)],                |
-|                       "cursor" : 0                            |
+|                     e'full_set' : [bstr.h(t1)],               |
+|                       e'cursor' : 0                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1477,11 +1473,12 @@ RS                                                             AS
 |                  (Access token t2 is revoked)                 |
 |                                                               |
 |<--------------------------------------------------------------+
-|                 2.05 CONTENT Observe: 64                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|                 2.05 Content                                  |
+|                   Observe: 64                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t1), bstr.h(t2)],    |
-|                       "cursor" : 1                            |
+|                     e'full_set' : [bstr.h(t1), bstr.h(t2)],   |
+|                       e'cursor' : 1                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1490,11 +1487,12 @@ RS                                                             AS
 |                   (Access token t1 expires)                   |
 |                                                               |
 |<--------------------------------------------------------------+
-|                 2.05 CONTENT Observe: 75                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|                 2.05 Content                                  |
+|                   Observe: 75                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t2)],                |
-|                     "cursor"   : 2                            |
+|                     e'full_set' : [bstr.h(t2)],               |
+|                     e'cursor'   : 2                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1502,12 +1500,13 @@ RS                                                             AS
 |                                                               |
 |                   (Access token t2 expires)                   |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 86                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 86                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : 3                            |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : 3                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1515,12 +1514,13 @@ RS                                                             AS
 |                                                               |
 |                  (Access token t3 is revoked)                 |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 88                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 88                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t3)],                |
-|                       "cursor" : 4                            |
+|                     e'full_set' : [bstr.h(t3)],               |
+|                       e'cursor' : 4                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1528,12 +1528,13 @@ RS                                                             AS
 |                                                               |
 |                  (Access token t4 is revoked)                 |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 89                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 89                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t3), bstr.h(t4)],    |
-|                       "cursor" : 5                            |
+|                     e'full_set' : [bstr.h(t3), bstr.h(t4)],   |
+|                       e'cursor' : 5                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1541,12 +1542,13 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t3 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 90                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 90                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t4)],                |
-|                       "cursor" : 6                            |
+|                     e'full_set' : [bstr.h(t4)],               |
+|                       e'cursor' : 6                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1554,12 +1556,13 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t4 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 91                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 91                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : 7                            |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : 7                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1567,12 +1570,13 @@ RS                                                             AS
 |                                                               |
 |              (Access tokens t5 and t6 are revoked)            |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 92                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 92                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t5), bstr.h(t6)],    |
-|                     "cursor" : 8                              |
+|                     e'full_set' : [bstr.h(t5), bstr.h(t6)],   |
+|                       e'cursor' : 8                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1580,12 +1584,13 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t5 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 93                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 93                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [bstr.h(t6)],                |
-|                     "cursor" : 9                              |
+|                     e'full_set' : [bstr.h(t6)],               |
+|                       e'cursor' : 9                           |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1593,12 +1598,13 @@ RS                                                             AS
 |                                                               |
 |                    (Access token t6 expires)                  |
 |                                                               |
-|  X<-----------------------------------------------------------+
-|                 2.05 CONTENT Observe: 94                      |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|  X <----------------------------------------------------------+
+|                 2.05 Content                                  |
+|                   Observe: 94                                 |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "full_set" : [],                          |
-|                       "cursor" : 10                           |
+|                     e'full_set' : [],                         |
+|                       e'cursor' : 10                          |
 |                   }                                           |
 |                               .                               |
 |                               .                               |
@@ -1607,49 +1613,59 @@ RS                                                             AS
 |                (Enough time has passed since                  |
 |                 the latest received notification)             |
 |                                                               |
-|  GET                                                          |
-|    coap://as.example.com/revoke/trl?diff=8&cursor=2           |
+|                                                               |
+|  GET coap://as.example.com/revoke/trl?diff=8&cursor=2         |
 +-------------------------------------------------------------->|
 |                                                               |
 |<--------------------------------------------------------------+
-|                 2.05 CONTENT                                  |
-|                   Content-Format: "application/ace-trl+cbor"  |
+|                 2.05 Content                                  |
+|                   Content-Format: application/ace-trl+cbor    |
 |                   Payload: {                                  |
-|                     "diff_set" : [                            |
+|                     e'diff_set' : [                           |
 |                                    [ [bstr.h(t4)], [] ],      |
 |                                    [ [bstr.h(t3)], [] ],      |
 |                                    [ [], [bstr.h(t4)] ],      |
 |                                    [ [], [bstr.h(t3)] ],      |
 |                                    [ [bstr.h(t2)], [] ]       |
-|                                  ],                           |
-|                       "cursor" : 7,                           |
-|                         "more" : true                         |
+|                                   ],                          |
+|                       e'cursor' : 7,                          |
+|                         e'more' : true                        |
 |                   }                                           |
 |                                                               |
-|  GET                                                          |
-|    coap://as.example.com/revoke/trl?diff=8&cursor=7           |
+|  GET coap://as.example.com/revoke/trl?diff=8&cursor=7         |
 +-------------------------------------------------------------->|
 |                                                               |
 |<--------------------------------------------------------------+
-|        2.05 CONTENT                                           |
-|          Content-Format: "application/ace-trl+cbor"           |
+|        2.05 Content                                           |
+|          Content-Format: application/ace-trl+cbor             |
 |          Payload: {                                           |
-|            "diff_set" : [                                     |
+|            e'diff_set' : [                                    |
 |                           [ [bstr.h(t6)], [] ],               |
 |                           [ [bstr.h(t5)], [] ],               |
 |                           [ [], [bstr.h(t5), bstr.h(t6)] ]    |
-|                         ],                                    |
-|              "cursor" : 10,                                   |
-|                "more" : false                                 |
+|                          ],                                   |
+|              e'cursor' : 10,                                  |
+|                e'more' : false                                |
 |          }                                                    |
 |                                                               |
 ~~~~~~~~~~~
 {: #fig-RS-AS-5 title="Interaction for Full Query with Observe plus Diff Query with \"Cursor\"" artwork-align="center"}
 
 
-# Document Updates # {#sec-document-updates}
+# CDDL Model # {#sec-cddl-model}
+{:removeinrfc}
 
-RFC EDITOR: Please remove this section.
+~~~~~~~~~~~~~~~~~~~~ CDDL
+full_set = 0
+diff_set = 1
+cursor = 2
+more = 3
+~~~~~~~~~~~~~~~~~~~~
+{: #fig-cddl-model title="CDDL model" artwork-align="left"}
+
+
+# Document Updates # {#sec-document-updates}
+{:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
 
