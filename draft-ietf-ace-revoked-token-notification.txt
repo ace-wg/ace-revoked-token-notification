@@ -138,12 +138,13 @@ Table of Contents
      C.5.  Full Query with Observe plus Diff Query with "Cursor"
    Appendix D.  CDDL Model
    Appendix E.  Document Updates
-     E.1.  Version -05 to -06
-     E.2.  Version -04 to -05
-     E.3.  Version -03 to -04
-     E.4.  Version -02 to -03
-     E.5.  Version -01 to -02
-     E.6.  Version -00 to -01
+     E.1.  Version -06 to -07
+     E.2.  Version -05 to -06
+     E.3.  Version -04 to -05
+     E.4.  Version -03 to -04
+     E.5.  Version -02 to -03
+     E.6.  Version -01 to -02
+     E.7.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -3257,12 +3258,61 @@ Appendix E.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-E.1.  Version -05 to -06
+E.1.  Version -06 to -07
+
+   *  RFC 9290 is used instead of the custom format for error responses.
+
+   *  Avoided quotation marks when using CBOR simple values.
+
+   *  CBOR diagnostic notation uses placeholders from a CDDL model.
+
+   *  Early mentioning that there is a single MAX_N value.
+
+   *  Added more details on the authorization of administrators.
+
+   *  Added recommendations for avoiding lost TRL updates from going
+      unnoticed.
+
+   *  If diff queries are supported, the AS MUST provide MAX_N at
+      registration.
+
+   *  If the "Cursor" extension is supported, the AS MUST provide
+      MAX_DIFF_BATCH at registration.
+
+   *  Clarified that how the token revocation specifically happens is
+      out of scope.
+
+   *  Clearer, upfront distinction between using CoAP Observe or not.
+
+   *  Revised and extended method for computing the token hashes.
+
+   *  Clearer presentation of invalid requests to the TRL endpoint.
+
+   *  Clearer expected relation between MAX_INDEX and MAX_N values.
+
+   *  Clarified meaning of registered parameters.
+
+   *  Generalized security considerations on vulnerable time window at
+      the RS.
+
+   *  Added security considerations on additional security measures.
+
+   *  Fixes and improvements in the IANA considerations.
+
+   *  Used AASVG in diagrams.
+
+   *  Used actual tables instead of figures.
+
+   *  Fixed notation in the examples.
+
+   *  Clarifications and editorial improvements.
+
+E.2.  Version -05 to -06
 
    *  Clarified instructions for Expert Review in the IANA
       considerations.
 
-E.2.  Version -04 to -05
+E.3.  Version -04 to -05
 
    *  Explicit focus on CoAP in the abstract and introduction.
 
@@ -3284,7 +3334,7 @@ E.2.  Version -04 to -05
 
    *  Updated author list.
 
-E.3.  Version -03 to -04
+E.4.  Version -03 to -04
 
    *  Improved presentation of pre- and post-registration operations.
 
@@ -3312,7 +3362,7 @@ E.3.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-E.4.  Version -02 to -03
+E.5.  Version -02 to -03
 
    *  Definition of MAX_INDEX for the "Cursor" extension.
 
@@ -3326,7 +3376,7 @@ E.4.  Version -02 to -03
 
    *  Editorial improvements.
 
-E.5.  Version -01 to -02
+E.6.  Version -01 to -02
 
    *  Earlier mentioning of error cases.
 
@@ -3342,7 +3392,7 @@ E.5.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-E.6.  Version -00 to -01
+E.7.  Version -00 to -01
 
    *  Added actions to perform upon receiving responses from the TRL
       endpoint.
