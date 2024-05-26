@@ -733,7 +733,6 @@ This specification defines a number of parameters that can be transported in the
 
 The table below summarizes them, and specifies the CBOR value to use as abbreviation instead of the full descriptive name.
 
-=======
 | Name              | CBOR Value | CBOR Type                |
 | full_set          |  0         | array                    |
 | diff_set          |  1         | array                    |
