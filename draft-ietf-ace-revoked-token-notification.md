@@ -106,7 +106,7 @@ Even though access tokens have expiration times, there are circumstances by whic
 
 As discussed in {{Section 6.1 of RFC9200}}, only client-initiated revocation is currently specified {{RFC7009}} for OAuth 2.0 {{RFC6749}}, based on the assumption that access tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need access tokens with relatively long lifetimes.
 
-This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) on the AS, in order to obtain updated information about pertaining access tokens that were revoked prior to their expiration. As specified in this document, the registered devices use the Constrained Application Protocol (CoAP) {{RFC7252}} to communicate with the AS and with one another, and can subscribe to the TRL on the AS by using resource observation for CoAP {{RFC7641}}. Other underlying protocols than CoAP are not prohibited from being supported in the future, if they are defined to use in the ACE framework for Authentication and Authorization.
+This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) on the AS, in order to obtain updated information about pertaining access tokens that were revoked prior to their expiration. As specified in this document, the registered devices use the Constrained Application Protocol (CoAP) {{RFC7252}} to communicate with the AS and with one another, and can subscribe to the TRL on the AS by using resource observation for CoAP {{RFC7641}}. Other underlying protocols than CoAP are not prohibited from being supported in the future, if they are defined to be used in the ACE framework for Authentication and Authorization.
 
 Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned access token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining access tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
 
@@ -289,9 +289,9 @@ The TRL endpoint supports only the GET method, and allows two types of queries o
 
    The AS MUST support this type of query. The processing of a full query and the related response format are defined in {{ssec-trl-full-query}}.
 
-* Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates, in the subset of the TRL pertaining to the requester.
+* Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates to the TRL, with such an update performed in the subset of the TRL pertaining to the requester.
 
-   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL at that update.
+   The entry associated with one of such updates contains a list of token hashes, such that: i) the corresponding revoked access tokens pertain to the requester; and ii) they were added to or removed from the TRL when performing that update to the TRL.
 
    The AS MAY support this type of query. In such a case, the AS maintains the history of updates to the TRL as defined in {{sec-trl-endpoint-supporting-diff-queries}}. The processing of a diff query and the related response format are defined in {{ssec-trl-diff-query}}.
 
@@ -353,7 +353,7 @@ If the AS supports diff queries, it is able to transfer a list of diff entries, 
 
 The following defines how the AS builds and maintains consistent histories of TRL updates for each registered device and administrator, hereafter referred to as requesters.
 
-For each requester, the AS maintains an update collection of maximum MAX\_N series items, where MAX\_N is a pre-defined, constant positive integer. The AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to each requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
+The AS defines the single, constant positive integer MAX\_N >= 1. For each requester, the AS maintains an update collection of maximum MAX\_N series items. The AS MUST keep track of the MAX\_N most recent updates to the subset of the TRL that pertains to each requester. The AS SHOULD provide requesters with the value of MAX\_N, upon their registration (see {{sec-registration}}).
 
 The series items in the update collection MUST be strictly ordered in a chronological fashion. That is, at any point in time, the current first series item is the one least recently added to the update collection and still retained by the AS, while the current last series item is the one most recently added to the update collection. The particular method used to achieve this is implementation-specific.
 
@@ -377,7 +377,7 @@ Each time the TRL changes, the AS performs the following operations for each req
 
 If it supports the "Cursor" extension for diff queries, the AS performs also the following actions.
 
-The AS defines the constant, unsigned integer MAX\_INDEX <= ((2^64) - 1), where "^" is the exponentiation operator. In particular, the value of MAX\_INDEX is REQUIRED to be at least (MAX\_N - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than MAX\_N.
+The AS defines the single, constant unsigned integer MAX\_INDEX <= ((2^64) - 1), where "^" is the exponentiation operator. In particular, the value of MAX\_INDEX is REQUIRED to be at least (MAX\_N - 1), and is RECOMMENDED to be at least ((2^32) - 1). Note that MAX\_INDEX is practically expected to be order of magnitudes greater than MAX\_N.
 
 When maintaining the history of updates to the TRL, the following applies separately for each update collection.
 
@@ -687,7 +687,7 @@ Further details about the registration process at the AS are out of scope for th
 
 # Notification of Revoked Access Tokens # {#sec-notification}
 
-Once completed the registration procedure at the AS, the administrator or registered device can send a GET request to the TRL endpoint at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL endpoint as per {{Section 3.1 of RFC7641}}.
+Once registered at the AS, the administrator or registered device can send a GET request to the TRL endpoint at the AS. The request can express the wish for a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. Also, the request can include the CoAP Observe Option set to 0 (register), in order to start an observation of the TRL endpoint as per {{Section 3.1 of RFC7641}}.
 
 In case the request is successfully processed, the AS replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the AS supports diff queries but not the "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively. Instead, if the AS supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
@@ -1823,6 +1823,6 @@ more = 3
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).
