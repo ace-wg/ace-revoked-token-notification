@@ -197,12 +197,12 @@ Table of Contents
    efficiently identified by corresponding hash values.
 
    The benefits of this method are that it complements token
-   introspection, and it does not require any additional endpoints on
-   the registered devices.  The only additional requirements for
-   registered devices are a request/response interaction with the AS to
-   access and possibly subscribe to the TRL (see Section 2), and the
-   lightweight computation of hash values to use as Token identifiers
-   (see Section 3).
+   introspection, and it does not require the registered devices to
+   support any additional endpoints (see Section 1.1).  The only
+   additional requirements for registered devices are a request/response
+   interaction with the AS to access and possibly subscribe to the TRL
+   (see Section 2), and the lightweight computation of hash values to
+   use as Token identifiers (see Section 3).
 
    The process by which access tokens are declared revoked is out of the
    scope of this document.  It is also out of scope the method by which
@@ -228,15 +228,15 @@ Table of Contents
    Resource Server (RS), and Authorization Server (AS).
 
    Readers are also expected to be familiar with the terms and concepts
-   related to CDDL [RFC8610], CBOR [RFC8949], JSON [RFC8259], the CoAP
-   protocol [RFC7252], CoAP Observe [RFC7641], and the use of hash
-   functions to name objects as defined in [RFC6920].
+   related to CDDL [RFC8610], CBOR [RFC8949], JSON [RFC8259], CoAP
+   [RFC7252], CoAP Observe [RFC7641], and the use of hash functions to
+   name objects as defined in [RFC6920].
 
-   Note that, unless otherwise indicated, the term "endpoint" is used
-   here following its OAuth definition, aimed at denoting resources such
-   as /token and /introspect at the AS, and /authz-info at the RS.  This
-   document does not use the CoAP definition of "endpoint", which is "An
-   entity participating in the CoAP protocol."
+   Note that the term "endpoint" is used here following its OAuth
+   definition [RFC6749], aimed at denoting resources such as /token and
+   /introspect at the AS, and /authz-info at the RS.  This document does
+   not use the CoAP definition of "endpoint", which is "An entity
+   participating in the CoAP protocol."
 
    This specification also refers to the following terminology.
 
@@ -262,8 +262,7 @@ Table of Contents
       the AS, and acting as a requester towards the TRL endpoint.  An
       administrator is not necessarily a registered device as defined
       above, i.e., a Client requesting access tokens or an RS consuming
-      access tokens.  How the administrator authorization is established
-      and verified is out of the scope of this specification.
+      access tokens.
 
    *  Pertaining access token:
 
@@ -314,17 +313,17 @@ Table of Contents
       registered device can send a GET request to the TRL endpoint at
       the AS.  When doing so, it can request for: the current list of
       pertaining revoked access tokens (see Section 6); or the most
-      recent updates occurred over the list of pertaining revoked access
-      tokens (see Section 7).
+      recent updates that occurred over the list of pertaining revoked
+      access tokens (see Section 7).
 
       In particular, the registered device can rely on Observation for
       CoAP [RFC7641].  In such a case, the GET request sent to the TRL
       endpoint includes the CoAP Observe Option set to 0 (register),
       i.e., it is an Observation Request.  By doing so, the registered
-      device effectively subscribes to the TRL, as interested to receive
-      notifications about its update.  Upon receiving the Observation
-      Request, the AS adds the registered device to the list of
-      observers of the TRL endpoint.
+      device effectively subscribes to the TRL, as interested in
+      receiving notifications about its update.  Upon receiving the
+      Observation Request, the AS adds the registered device to the list
+      of observers of the TRL endpoint.
 
    *  When an access token is revoked, the AS adds the corresponding
       token hash to the TRL.  Also, when a revoked access token
@@ -779,7 +778,7 @@ Table of Contents
 
    The AS MUST implement measures to prevent access to the TRL endpoint
    by entities other than registered devices and authorized
-   administrators.
+   administrators (see Section 9).
 
    The TRL endpoint supports only the GET method, and allows two types
    of queries of the TRL.
@@ -788,7 +787,7 @@ Table of Contents
       tokens currently in the TRL and pertaining to the requester.
 
       The AS MUST support this type of query.  The processing of a full
-      query and the related response format are defined in Section 6.
+      query and the related response format are defined are Section 6.
 
    *  Diff query: the AS returns a list of diff entries.  Each diff
       entry is related to one of the most recent updates to the TRL,
@@ -916,8 +915,9 @@ Table of Contents
    each requester, the AS maintains an update collection of maximum
    MAX_N series items.  For each requester, the AS MUST keep track of
    the MAX_N most recent updates to the subset of the TRL that pertains
-   to the requester.  The AS SHOULD provide requesters with the value of
-   MAX_N, upon their registration (see Section 9).
+   to the requester.  If the AS supports diff queries, the AS MUST
+   provide requesters with the value of MAX_N, upon their registration
+   (see Section 9).
 
    The series items in the update collection MUST be strictly ordered in
    a chronological fashion.  That is, at any point in time, the current
@@ -1023,7 +1023,7 @@ Table of Contents
    single diff query response.  The specific value MAY depend on the
    specific registered device or administrator associated with the
    update collection in question.  If supporting the "Cursor" extension,
-   the AS SHOULD provide registered devices and administrators with the
+   the AS MUST provide registered devices and administrators with the
    value of MAX_DIFF_BATCH, upon their registration (see Section 9).
 
 5.3.  Query Parameters
@@ -1048,10 +1048,10 @@ Table of Contents
 
       Otherwise, the AS MUST return a 4.00 (Bad Request) response in
       case the 'diff' query parameter of the GET request specifies a
-      value other than 0 or than a positive integer, irrespective of the
-      presence of the 'cursor' parameter and its value (see below).  The
-      response MUST have Content-Format "application/concise-problem-
-      details+cbor" and its payload is formatted as defined in
+      value that is neither 0 nor a positive integer, irrespective of
+      the presence of the 'cursor' parameter and its value (see below).
+      The response MUST have Content-Format "application/concise-
+      problem-details+cbor" and its payload is formatted as defined in
       Section 5.1.  Within the Custom Problem Detail entry 'ace-trl-
       error', the value of the 'error-id' field MUST be set to 0
       ("Invalid parameter value"), and the field 'cursor' MUST NOT be
@@ -1092,8 +1092,8 @@ Table of Contents
          value of the 'error-id' field MUST be set to 1 ("Invalid set of
          parameters"), and the field 'cursor' MUST NOT be present.
 
-      -  The 'cursor' query parameter has a value other than 0 or than a
-         positive integer, or it has a value strictly greater than
+      -  The 'cursor' query parameter has a value that is neither 0 nor
+         a positive integer, or it has a value strictly greater than
          MAX_INDEX (see Section 5.2.1).
 
          Within the Custom Problem Detail entry 'ace-trl-error', the
@@ -1202,9 +1202,9 @@ Table of Contents
        (see Section 5.2), then NUM takes the value of MAX_N.  Otherwise,
        NUM takes N.
 
-   2.  The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N is the
-       number of TRL updates pertaining to the requester and currently
-       stored at the AS.
+   2.  The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N.  In
+       particular, SIZE is the number of TRL updates pertaining to the
+       requester and currently stored at the AS.
 
    3.  The AS prepares U diff entries.  If U is equal to 0 (e.g.,
        because SIZE is equal to 0 at step 2), then no diff entries are
@@ -1356,16 +1356,16 @@ Table of Contents
    The 'cursor' parameter MUST specify the CBOR simple value null in
    case there are currently no TRL updates pertinent to the requester,
    i.e., the update collection for that requester is empty.  This is the
-   case from when the requester registers at the AS until a first update
-   pertaining to that requester occurs to the TRL.
+   case from when the requester registers at the AS until the first
+   update pertaining to that requester occurs to the TRL.
 
    Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned
    integer.  This MUST take the 'index' value of the last series item in
    the update collection associated with the requester (see
    Section 5.2.1), as corresponding to the most recent update pertaining
-   to the requester occurred to the TRL.  Such a value is in fact the
-   current value of 'last_index' for the update collection associated
-   with the requester.
+   to the requester that occurred to the TRL.  Such a value is in fact
+   the current value of 'last_index' for the update collection
+   associated with the requester.
 
 8.2.  Response to Diff Query
 
@@ -1482,7 +1482,7 @@ Table of Contents
       1), that the requester wished to obtain as the first one following
       the specified reference point with 'index' value P.
 
-      When receiving this diff query response, the requester should send
+      When receiving this diff query response, the requester SHOULD send
       a new full query request to the AS.  A successful response
       provides the requester with the full, current pertaining subset of
       the TRL, as well as with a valid value of the 'cursor' parameter
@@ -1573,12 +1573,43 @@ Table of Contents
       Registry [Named.Information.Hash.Algorithm].  The specific means
       for this is outside the scope of this document.
 
-   *  Optionally, a positive integer MAX_N, if the AS supports diff
-      queries of the TRL (see Section 5.2 and Section 7).
+   *  A positive integer MAX_N, if the AS supports diff queries of the
+      TRL (see Section 5.2 and Section 7).
 
-   *  Optionally, a positive integer MAX_DIFF_BATCH, if the AS supports
-      diff queries of the TRL as well as the related "Cursor" extension
-      (see Section 5.2.1 and Section 8).
+   *  A positive integer MAX_DIFF_BATCH, if the AS supports diff queries
+      of the TRL as well as the related "Cursor" extension (see
+      Section 5.2.1 and Section 8).
+
+   When communicating with one another, the registered devices and the
+   AS have to use a secure communication association and be mutually
+   authenticated (see Section 5 of [RFC9200]).
+
+   In the same spirit, it MUST be ensured that communications between
+   the AS and an administrator are mutually authenticated, encrypted and
+   integrity protected, as well as protected against message replay.
+
+   Before starting its registration process at the AS, an administrator
+   has to establish such a secure communication association with the AS,
+   if they do not share one already.  In particular, mutual
+   authentication is REQUIRED during the establishment of the secure
+   association.  To this end, the administrator and the AS can rely,
+   e.g., on establishing a TLS or DTLS secure session with mutual
+   authentication [RFC8446][RFC9147], or an OSCORE Security Context
+   [RFC8613] by running the authenticated key establishment protocol
+   EDHOC [RFC9528].
+
+   When receiving authenticated requests from the administrator for
+   accessing the TRL endpoint, the AS can always check whether the
+   requester is authorized to take such a role, i.e., to access the full
+   TRL.
+
+   To this end, the AS may rely on a local access control list or
+   similar, which specifies the authentication credentials of trusted,
+   authorized administrators.  In particular, the AS verifies the
+   requester to the TRL endpoint as an authorized administrator, only if
+   the access control list includes the same authentication credential
+   used by the requester when establishing the mutually-authenticated
+   secure communication association with the AS.
 
    Further details about the registration process at the AS are out of
    scope for this specification.  Note that the registration process is
@@ -1623,6 +1654,35 @@ Table of Contents
    full query (see Section 6) or a diff query (see Section 7) of the
    TRL.  In the latter case, the requester can additionally rely on the
    "Cursor" extension (see Section 5.3 and Section 8.2).
+
+   As specified in Section 5.2, an AS supporting diff queries maintains
+   an update collection of maximum MAX_N series items for each
+   administrator or registered device, hereafter referred to as
+   requester.  In particular, if an update collection includes MAX_N
+   series items, adding a further series item to that update collection
+   results in deleting the oldest series item from that update
+   collection.
+
+   From then on, the requester associated with the update collection
+   will not be able to retrieve the deleted series item, when sending a
+   new diff query request to the TRL endpoint.  If that series item
+   reflected the revocation of an access token pertaining to the
+   requester, then the requester will not learn about that when
+   receiving the corresponding diff query response from the AS.
+
+   Sending a diff query request specifically as an Observation request,
+   and thus relying on Observe notifications, largely reduces the
+   chances for a requester to miss updates occurred to its associated
+   update collection altogether.  In turn, this relies on the requester
+   successfully receiving the Observe notification responses from the
+   TRL (see also Section 13.3).
+
+   In order to limit the amount of time during which the requester is
+   unaware of pertaining access tokens that have been revoked but are
+   not expired yet, a requester SHOULD NOT rely solely on diff query
+   requests.  In particular, a requester SHOULD also regularly send a
+   full query request to the TRL endpoint according to a related
+   application policy.
 
 10.1.  Handling of Access Tokens and Token Hashes
 
@@ -1773,8 +1833,8 @@ Table of Contents
    which they do not pertain may result in privacy concerns.  Therefore,
    the AS MUST ensure that, other than registered devices accessing
    their own pertaining subset of the TRL, only authorized and
-   authenticated administrators can retrieve the full TRL.  To this end,
-   the AS may rely on an access control list or similar.
+   authenticated administrators can retrieve the full TRL (see
+   Section 9).
 
 13.2.  Size of the TRL
 
@@ -2180,11 +2240,20 @@ Table of Contents
               "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
               May 2018, <https://www.rfc-editor.org/rfc/rfc8392>.
 
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/rfc/rfc8446>.
+
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
               Express Concise Binary Object Representation (CBOR) and
               JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
               June 2019, <https://www.rfc-editor.org/rfc/rfc8610>.
+
+   [RFC8613]  Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
+              "Object Security for Constrained RESTful Environments
+              (OSCORE)", RFC 8613, DOI 10.17487/RFC8613, July 2019,
+              <https://www.rfc-editor.org/rfc/rfc8613>.
 
    [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
@@ -2227,6 +2296,11 @@ Table of Contents
               Constrained Environments (ACE) Framework", RFC 9431,
               DOI 10.17487/RFC9431, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9431>.
+
+   [RFC9528]  Selander, G., Preuß Mattsson, J., and F. Palombini,
+              "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
+              DOI 10.17487/RFC9528, March 2024,
+              <https://www.rfc-editor.org/rfc/rfc9528>.
 
 15.2.  Informative References
 
@@ -3257,10 +3331,11 @@ Acknowledgments
    Ludwig Seitz contributed as a co-author of initial versions of this
    document.
 
-   The authors sincerely thank Christian Amsüss, Carsten Bormann, Rikard
-   Höglund, Benjamin Kaduk, David Navarro, Joerg Ott, Marco Rasori,
-   Michael Richardson, Jim Schaad, Göran Selander, Travis Spencer, Dale
-   Worley, and Paul Wouters for their comments and feedback.
+   The authors sincerely thank Christian Amsüss, Carsten Bormann, Dhruv
+   Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro, Joerg Ott,
+   Marco Rasori, Michael Richardson, Jim Schaad, Göran Selander, Travis
+   Spencer, Dale Worley, and Paul Wouters for their comments and
+   feedback.
 
    The work on this document has been partly supported by VINNOVA and
    the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home
