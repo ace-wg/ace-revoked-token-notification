@@ -487,17 +487,15 @@ Header: Bad Request (Code=4.00)
 Content-Format: application/concise-problem-details+cbor
 Payload:
 {
-  / title /          -1: "Invalid parameter value",
-  / detail /         -2: "Invalid value for 'cursor': -53",
-  / ace-trl-error / 123: {
+  / title /     -1: "Invalid parameter value",
+  / detail /    -2: "Invalid value for 'cursor': -53",
+  / ace-trl-error / e'ace-trl-error': {
     / error-id / 0: 0 / "Invalid parameter value" /,
     / cursor /   1: 42
   }
 }
 ~~~~~~~~~~~
 {: #fig-example-error-response title="Example of Error Response with Problem Details"}
-
-Note to RFC Editor: In the figure above, please replace "123" with the unsigned integer value assigned as 'Key Value' to the Custom Problem Detail entry 'ace-trl-error' (see {{iana-custom-problem-details}}). Then, please delete this paragraph.
 
 The problem-details format in general and the Custom Problem Detail entry 'ace-trl-error' in particular are OPTIONAL to support for registered devices. A registered device supporting the entry 'ace-trl-error' and able to understand the specified error may use that information to determine what actions to take next.
 
@@ -1873,6 +1871,8 @@ full_set = 0
 diff_set = 1
 cursor = 2
 more = 3
+
+ace-trl-error = 1
 ~~~~~~~~~~~~~~~~~~~~
 {: #fig-cddl-model title="CDDL model" artwork-align="left"}
 
