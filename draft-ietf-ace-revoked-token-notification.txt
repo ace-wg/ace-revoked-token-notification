@@ -881,20 +881,15 @@ Table of Contents
    Content-Format: application/concise-problem-details+cbor
    Payload:
    {
-     / title /          -1: "Invalid parameter value",
-     / detail /         -2: "Invalid value for 'cursor': -53",
-     / ace-trl-error / 123: {
+     / title /     -1: "Invalid parameter value",
+     / detail /    -2: "Invalid value for 'cursor': -53",
+     / ace-trl-error / e'ace-trl-error': {
        / error-id / 0: 0 / "Invalid parameter value" /,
        / cursor /   1: 42
      }
    }
 
           Figure 4: Example of Error Response with Problem Details
-
-   Note to RFC Editor: In the figure above, please replace "123" with
-   the unsigned integer value assigned as 'Key Value' to the Custom
-   Problem Detail entry 'ace-trl-error' (see Section 14.3).  Then,
-   please delete this paragraph.
 
    The problem-details format in general and the Custom Problem Detail
    entry 'ace-trl-error' in particular are OPTIONAL to support for
@@ -3251,6 +3246,8 @@ Appendix D.  CDDL Model
    diff_set = 1
    cursor = 2
    more = 3
+
+   ace-trl-error = 1
 
                            Figure 14: CDDL model
 
