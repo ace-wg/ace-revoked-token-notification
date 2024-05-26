@@ -1880,6 +1880,50 @@ more = 3
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
 
+## Version -06 to -07 ## {#sec-06-07}
+
+* RFC 9290 is used instead of the custom format for error responses.
+
+* Avoided quotation marks when using CBOR simple values.
+
+* CBOR diagnostic notation uses placeholders from a CDDL model.
+
+* Early mentioning that there is a single MAX_N value.
+
+* Added more details on the authorization of administrators.
+
+* Added recommendations for avoiding lost TRL updates from going unnoticed.
+
+* If diff queries are supported, the AS MUST provide MAX_N at registration.
+
+* If the "Cursor" extension is supported, the AS MUST provide MAX_DIFF_BATCH at registration.
+
+* Clarified that how the token revocation specifically happens is out of scope.
+
+* Clearer, upfront distinction between using CoAP Observe or not.
+
+* Revised and extended method for computing the token hashes.
+
+* Clearer presentation of invalid requests to the TRL endpoint.
+
+* Clearer expected relation between MAX_INDEX and MAX_N values.
+
+* Clarified meaning of registered parameters.
+
+* Generalized security considerations on vulnerable time window at the RS.
+
+* Added security considerations on additional security measures.
+
+* Fixes and improvements in the IANA considerations.
+
+* Used AASVG in diagrams.
+
+* Used actual tables instead of figures.
+
+* Fixed notation in the examples.
+
+* Clarifications and editorial improvements.
+
 ## Version -05 to -06 ## {#sec-05-06}
 
 * Clarified instructions for Expert Review in the IANA considerations.
