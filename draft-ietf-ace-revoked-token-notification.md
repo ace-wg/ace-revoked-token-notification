@@ -1414,7 +1414,7 @@ RS                                                  AS
 |                                                    |
 |<---------------------------------------------------+
 |      2.05 Content                                  |
-         Observe: 64                                 |
+|        Observe: 64                                 |
 |        Content-Format: application/ace-trl+cbor    |
 |        Payload: {                                  |
 |          e'full_set' : [bstr.h(t1), bstr.h(t2)]    |
