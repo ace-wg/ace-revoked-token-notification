@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 4 December 2023                                     Ericsson AB
+Expires: 27 November 2024                                    Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                             2 June 2023
+                                                             26 May 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,11 +57,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 December 2023.
+   This Internet-Draft will expire on 27 November 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1389,9 +1389,9 @@ Table of Contents
    Section 6).
 
    This could be exploited by attackers to negatively affect the
-   behavior of a registered device.  Issuing access tokens with not too
-   long expiration time could help reduce the size of the TRL, but an AS
-   SHOULD take measures to limit this size.
+   behavior of a registered device.  Therefore, in order to help reduce
+   the size of the TRL, the AS SHOULD refrain from issuing access tokens
+   with an excessively long expiration time.
 
 13.3.  Communication Patterns
 
@@ -2733,8 +2733,8 @@ Acknowledgments
 
    The authors sincerely thank Christian Amsüss, Carsten Bormann, Rikard
    Höglund, Benjamin Kaduk, David Navarro, Marco Rasori, Michael
-   Richardson, Jim Schaad, Göran Selander and Travis Spencer for their
-   comments and feedback.
+   Richardson, Jim Schaad, Göran Selander, Travis Spencer, and Paul
+   Wouters for their comments and feedback.
 
    The work on this document has been partly supported by VINNOVA and
    the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home
