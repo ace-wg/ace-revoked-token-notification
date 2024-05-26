@@ -1422,7 +1422,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
             <p id="section-1.1-7.2.1">Token Revocation List (TRL): a collection of token hashes such that the corresponding access tokens have been revoked but are not expired yet.<a href="#section-1.1-7.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-7.3">
-            <p id="section-1.1-7.3.1">TRL endpoint: an endpoint on the AS with a TRL as its representation. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.<a href="#section-1.1-7.3.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-7.3.1">TRL endpoint: an endpoint at the AS with a TRL as its representation. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.<a href="#section-1.1-7.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-7.4">
             <p id="section-1.1-7.4.1">Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.<a href="#section-1.1-7.4.1" class="pilcrow">¶</a></p>
@@ -1480,12 +1480,12 @@ Further Observe notifications may be sent, consistently with ongoing additional 
           <p id="section-2-3.4.1">An administrator can access and subscribe to the TRL like a registered device, while getting the content of the whole TRL (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>) or the most recent updates occurred to the whole TRL (see <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>).<a href="#section-2-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-4"><a href="#fig-protocol-overview" class="auto internal xref">Figure 1</a> shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively. Consequently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-4"><a href="#fig-protocol-overview" class="auto internal xref">Figure 1</a> shows a high-level overview of the service provided by this protocol. For the sake of simplicity, the example shown in the figure considers the simultaneous revocation of the three access tokens t1, t2, and t3, whose corresponding token hashes are th1, th2, and th3, respectively. Consequently, the AS adds the three token hashes to the TRL at once, and sends Observe notifications to one administrator and four registered devices. Each dotted line associated with a pair of registered devices indicates the access token that they both own.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <span id="name-protocol-overview-2"></span><div id="fig-protocol-overview">
 <figure id="figure-1">
         <div id="section-2-5.1">
           <div class="alignCenter art-svg artwork" id="section-2-5.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="560" viewBox="0 0 560 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="320" width="560" viewBox="0 0 560 320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,176 L 8,224" fill="none" stroke="black"></path>
               <path d="M 16,112 L 16,168" fill="none" stroke="black"></path>
               <path d="M 136,176 L 136,224" fill="none" stroke="black"></path>
@@ -1526,9 +1526,9 @@ Further Observe notifications may be sent, consistently with ongoing additional 
               <g class="text">
                 <text x="232" y="52">Authorization</text>
                 <text x="316" y="52">Server</text>
-                <text x="204" y="84">revoke/trl</text>
-                <text x="300" y="84">TRL:</text>
-                <text x="376" y="84">(th1,th2,th3)</text>
+                <text x="192" y="84">/revoke/trl</text>
+                <text x="308" y="84">TRL:</text>
+                <text x="384" y="84">(th1,th2,th3)</text>
                 <text x="72" y="148">th1,th2,th3</text>
                 <text x="200" y="148">th1,th2</text>
                 <text x="288" y="148">th1</text>
@@ -1575,7 +1575,7 @@ Further Observe notifications may be sent, consistently with ongoing additional 
 <a href="#name-protocol-overview-2" class="selfRef">Protocol Overview</a>
         </figcaption></figure>
 </div>
-<p id="section-2-6"><a href="#sec-RS-examples" class="auto internal xref">Appendix C</a> provides examples of the protocol flow and message exchange between the AS and a registered device.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-6"><a href="#sec-RS-examples" class="auto internal xref">Appendix C</a> provides examples of the protocol flow and message exchanges between the AS and a registered device.<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-token-name">
@@ -1586,7 +1586,7 @@ Further Observe notifications may be sent, consistently with ongoing additional 
 <p id="section-3-1">This section specifies how token hashes are computed.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">First, <a href="#sec-token-hash-input-motivation" class="auto internal xref">Section 3.1</a> provides the motivation for the used construction.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">Building on that, the value used as input to compute a token hash is defined in <a href="#sec-token-hash-input-c-as" class="auto internal xref">Section 3.2</a> for the Client and the AS, and in <a href="#sec-token-hash-input-rs" class="auto internal xref">Section 3.3</a> for the RS. Finally, <a href="#sec-token-hash-output" class="auto internal xref">Section 3.4</a> defines how such an input is used for computing the token hash.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">The process outlined below refers to the base64url (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>) encoding and decoding without padding, and denotes as "binary representation" of a text string the corresponding UTF-8 encoding <span>[<a href="#RFC3629" class="cite xref">RFC3629</a>]</span>, which is the implied charset used in JSON (see <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>).<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-4">The process outlined below refers to the base64url encoding and decoding without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>), and denotes as "binary representation" of a text string the corresponding UTF-8 encoding <span>[<a href="#RFC3629" class="cite xref">RFC3629</a>]</span>, which is the implied charset used in JSON (see <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>).<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="sec-token-hash-input-motivation">
 <section id="section-3.1">
         <h3 id="name-motivation-for-the-used-con">
@@ -1650,7 +1650,7 @@ This implies that, within the JSON object specified as message payload, the para
 <p id="section-3.1.2-4">The following overviews how the above specifically applies to the existing transport profiles of ACE.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-5.1">
-              <p id="section-3.1.2-5.1.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10.1" class="relref">Section 5.10.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), using a media-type different from "application/ace+cbor" (e.g., like in <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>). In such a case, TOKEN_INFO is the request payload of the POST request.<a href="#section-3.1.2-5.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-5.1.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10.1" class="relref">Section 5.10.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), using a media-type different from "application/ace+cbor" (e.g., like in <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>). In such a case, TOKEN_INFO is the payload of the POST request.<a href="#section-3.1.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-5.2">
               <p id="section-3.1.2-5.2.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info enpoint, using the media-type "application/ace+cbor" (e.g., like in <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>). In such a case, TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.<a href="#section-3.1.2-5.2.1" class="pilcrow">¶</a></p>
@@ -1708,7 +1708,7 @@ Note that BYTES is the binary representation of the access token, irrespective o
 <figure id="figure-2">
             <div class="alignLeft art-text artwork" id="section-3.2.1-3.1">
 <pre>
-2.01 Created
+Header: Created (Code=2.01)
 Content-Format: application/ace+cbor
 Max-Age: 85800
 Payload:
@@ -1873,7 +1873,7 @@ After that, the RS stores the computed token hash as associated with the access 
       </h2>
 <p id="section-4-1">Upon startup, the AS creates a single Token Revocation List (TRL), encoded as a CBOR array.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">Each element of the array is a CBOR byte string, with value the token hash of an access token. The CBOR array <span class="bcp14">MUST</span> be treated as a set, i.e., the order of its elements has no meaning.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">The TRL is initialized as empty, i.e., its initial content <span class="bcp14">MUST</span> be the empty CBOR array. The TRL is accessible through the TRL endpoint on the AS.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-3">The TRL is initialized as empty, i.e., its initial content <span class="bcp14">MUST</span> be the empty CBOR array. The TRL is accessible through the TRL endpoint at the AS.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <div id="ssec-trl-update">
 <section id="section-4.1">
         <h3 id="name-update-of-the-trl">
@@ -1906,7 +1906,7 @@ After that, the RS stores the computed token hash as associated with the access 
 <li class="normal" id="section-5-5.1">
           <p id="section-5-5.1.1">Full query: the AS returns the token hashes of the revoked access tokens currently in the TRL and pertaining to the requester.<a href="#section-5-5.1.1" class="pilcrow">¶</a></p>
 <p id="section-5-5.1.2">
-The AS <span class="bcp14">MUST</span> support this type of query. The processing of a full query and the related response format are defined are <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>.<a href="#section-5-5.1.2" class="pilcrow">¶</a></p>
+The AS <span class="bcp14">MUST</span> support this type of query. The processing of a full query and the related response format are defined in <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>.<a href="#section-5-5.1.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-5.2">
           <p id="section-5-5.2.1">Diff query: the AS returns a list of diff entries. Each diff entry is related to one of the most recent updates to the TRL, with such an update performed in the subset of the TRL pertaining to the requester.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
@@ -1933,7 +1933,7 @@ The AS <span class="bcp14">MAY</span> support this type of query. In such a case
                 <p id="section-5.1-2.1.2.1.1">The field 'error-id' <span class="bcp14">MUST</span> be present. The map key used for this field is the CBOR unsigned integer with value 0. The value of this field is a CBOR integer specifying the error occurred at the AS. This value is taken from the 'Value' column of the "ACE Token Revocation List Errors" registry defined in <a href="#iana-token-revocation-list-errors" class="auto internal xref">Section 14.5</a> of this document.<a href="#section-5.1-2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-5.1-2.1.2.2">
-                <p id="section-5.1-2.1.2.2.1">The field 'cursor' <span class="bcp14">MAY</span> be present. The map key used for this field is the CBOR unsigned integer with value 1. The value of this field is a CBOR unsigned integer, or the CBOR simple value <code>null</code> (0xf6).<a href="#section-5.1-2.1.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.1.2.2.1">The field 'cursor' <span class="bcp14">MAY</span> be present. The map key used for this field is the CBOR unsigned integer with value 1. The value of this field is a CBOR unsigned integer or the CBOR simple value <code>null</code> (0xf6).<a href="#section-5.1-2.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 <p id="section-5.1-2.1.3">
@@ -1960,8 +1960,6 @@ In particular, it can include the Standard Problem Detail entry 'detail' (map ke
 <figure id="figure-4">
           <div class="alignLeft art-text artwork" id="section-5.1-6.1">
 <pre>
-Response:
-
 Header: Bad Request (Code=4.00)
 Content-Format: application/concise-problem-details+cbor
 Payload:
@@ -2034,16 +2032,16 @@ For example, assuming MAX_N = 3, the values of 'index' in the update collection 
                   <p id="section-5.2.1-4.1.4.1.1">...<a href="#section-5.2.1-4.1.4.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-5.2.1-4.1.4.2">
-                  <p id="section-5.2.1-4.1.4.2.1">( i_A = MAX_INDEX - 2, i_B = MAX_INDEX - 1, i_C = MAX_INDEX )<a href="#section-5.2.1-4.1.4.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-5.2.1-4.1.4.2.1">(i_A = MAX_INDEX - 2, i_B = MAX_INDEX - 1, i_C = MAX_INDEX)<a href="#section-5.2.1-4.1.4.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-5.2.1-4.1.4.3">
-                  <p id="section-5.2.1-4.1.4.3.1">( i_B = MAX_INDEX - 1, i_C = MAX_INDEX, i_D = 0 )<a href="#section-5.2.1-4.1.4.3.1" class="pilcrow">¶</a></p>
+                  <p id="section-5.2.1-4.1.4.3.1">(i_B = MAX_INDEX - 1, i_C = MAX_INDEX, i_D = 0)<a href="#section-5.2.1-4.1.4.3.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-5.2.1-4.1.4.4">
-                  <p id="section-5.2.1-4.1.4.4.1">( i_C = MAX_INDEX, i_D = 0, i_E = 1 )<a href="#section-5.2.1-4.1.4.4.1" class="pilcrow">¶</a></p>
+                  <p id="section-5.2.1-4.1.4.4.1">(i_C = MAX_INDEX, i_D = 0, i_E = 1)<a href="#section-5.2.1-4.1.4.4.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-5.2.1-4.1.4.5">
-                  <p id="section-5.2.1-4.1.4.5.1">( i_D = 0, i_E = 1, i_F = 2 )<a href="#section-5.2.1-4.1.4.5.1" class="pilcrow">¶</a></p>
+                  <p id="section-5.2.1-4.1.4.5.1">(i_D = 0, i_E = 1, i_F = 2)<a href="#section-5.2.1-4.1.4.5.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-5.2.1-4.1.4.6">
                   <p id="section-5.2.1-4.1.4.6.1">...<a href="#section-5.2.1-4.1.4.6.1" class="pilcrow">¶</a></p>
@@ -2061,7 +2059,7 @@ As long as a wrap-around of the 'index' value has not occurred, the value of 'la
 </li>
           </ul>
 <p id="section-5.2.1-5">When processing a diff query using the "Cursor" extension, the values of 'index' are used as cursor information, as defined in <a href="#sec-using-cursor-diff-query-response" class="auto internal xref">Section 8.2</a>.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.2.1-6">For each requester's update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH &lt;= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value <span class="bcp14">MAY</span> depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS <span class="bcp14">MUST</span> provide registered devices and administrators with the value of MAX_DIFF_BATCH, upon their registration (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-5.2.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.2.1-6">For each requester's update collection, the AS also defines a constant, positive integer MAX_DIFF_BATCH &lt;= MAX_N, whose value specifies the maximum number of diff entries to be included in a single diff query response. The specific value <span class="bcp14">MAY</span> depend on the specific registered device or administrator associated with the update collection in question. If supporting the "Cursor" extension, the AS <span class="bcp14">MUST</span> provide registered devices and administrators with the corresponding value of MAX_DIFF_BATCH, upon their registration (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-5.2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2091,7 +2089,7 @@ Otherwise, the AS <span class="bcp14">MUST</span> return a 4.00 (Bad Request) re
           <li class="normal" id="section-5.3-2.2">
             <p id="section-5.3-2.2.1">'cursor': if included, it indicates to perform a diff query of the TRL together with the "Cursor" extension, as defined in <a href="#sec-using-cursor-diff-query-response" class="auto internal xref">Section 8.2</a>. Its value <span class="bcp14">MUST</span> be either 0 or a positive integer. If the 'cursor' query parameter is included, then the 'diff' query parameter <span class="bcp14">MUST</span> also be included.<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2.2.2">
-If included, the 'cursor' query parameter specifies an unsigned integer value that was provided by the AS in a previous response from the TRL endpoint (see <a href="#sec-using-cursor-full-query-response" class="auto internal xref">Section 8.1</a>, <a href="#sec-using-cursor-diff-query-response-no-cursor" class="auto internal xref">Section 8.2.2</a> and <a href="#sec-using-cursor-diff-query-response-cursor" class="auto internal xref">Section 8.2.3</a>).<a href="#section-5.3-2.2.2" class="pilcrow">¶</a></p>
+If included, the 'cursor' query parameter specifies an unsigned integer value that was provided by the AS in a previous response from the TRL endpoint (see <a href="#sec-using-cursor-full-query-response" class="auto internal xref">Section 8.1</a>, <a href="#sec-using-cursor-diff-query-response-no-cursor" class="auto internal xref">Section 8.2.2</a>, and <a href="#sec-using-cursor-diff-query-response-cursor" class="auto internal xref">Section 8.2.3</a>).<a href="#section-5.3-2.2.2" class="pilcrow">¶</a></p>
 <p id="section-5.3-2.2.3">
 If the AS does not support the "Cursor" extension, it ignores the 'cursor' query parameter when present in the GET request. In such a case, the AS proceeds as specified elsewhere in this document, i.e.: i) it performs a diff query of the TRL (see <a href="#ssec-trl-diff-query" class="auto internal xref">Section 7</a>), if it supports diff queries and the 'diff' query parameter is present in the GET request; or ii) it performs a full query of the TRL (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>) otherwise.<a href="#section-5.3-2.2.3" class="pilcrow">¶</a></p>
 <p id="section-5.3-2.2.4">
@@ -2132,7 +2130,7 @@ Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-
           <p id="section-6-2.1.1">From the TRL, the AS builds a set HASHES such that:<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-2.1.2.1">
-              <p id="section-6-2.1.2.1.1">If the requester is a registered device, HASHES specifies the token hashes currently in the TRL and associated with the access tokens pertaining to that registered device. The AS can use the authenticated identity of the registered device to perform the necessary filtering on the TRL content.<a href="#section-6-2.1.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-6-2.1.2.1.1">If the requester is a registered device, HASHES specifies the token hashes currently in the TRL and associated with the access tokens pertaining to that registered device. The AS can always use the authenticated identity of the registered device to perform the necessary filtering on the TRL content.<a href="#section-6-2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-6-2.1.2.2">
               <p id="section-6-2.1.2.2.1">If the requester is an administrator, HASHES specifies all the token hashes currently in the TRL.<a href="#section-6-2.1.2.2.1" class="pilcrow">¶</a></p>
@@ -2143,7 +2141,7 @@ Within the Custom Problem Detail entry 'ace-trl-error', the value of the 'error-
           <p id="section-6-2.2.1">The AS sends a 2.05 (Content) response to the requester. The response <span class="bcp14">MUST</span> have Content-Format "application/ace-trl+cbor". The payload of the response is a CBOR map, which <span class="bcp14">MUST</span> be formatted as follows.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-2.2.2.1">
-              <p id="section-6-2.2.2.1.1">The 'full_set' parameter <span class="bcp14">MUST</span> be included and specifies a CBOR array 'full_set_value'. Each element of 'full_set_value' specifies one of the token hashes from the set HASHES, encoded as a CBOR byte string. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-6-2.2.2.1.1">The 'full_set' parameter <span class="bcp14">MUST</span> be included and specifies a CBOR array 'full_set_value'. Each element of 'full_set_value' is a CBOR byte string, with value one of the token hashes from the set HASHES. If the set HASHES is empty, the 'full_set' parameter specifies the empty CBOR array.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
 <p id="section-6-2.2.2.1.2">
 The CBOR array <span class="bcp14">MUST</span> be treated as a set, i.e., the order of its elements has no meaning.<a href="#section-6-2.2.2.1.2" class="pilcrow">¶</a></p>
 </li>
@@ -2173,7 +2171,7 @@ full_set_value = [* token_hash]
 <figure id="figure-6">
         <div class="alignLeft art-text artwork" id="section-6-6.1">
 <pre>
-2.05 Content
+Header: Content (Code=2.05)
 Content-Format: application/ace-trl+cbor
 Payload:
 {
@@ -2259,7 +2257,7 @@ In case the AS supports diff queries but not the "Cursor" extension, these param
 <figure id="figure-8">
         <div class="alignLeft art-text artwork" id="section-7-7.1">
 <pre>
-2.05 Content
+Header: Content (Code=2.05)
 Content-Format: application/ace-trl+cbor
 Payload:
 {
@@ -2317,7 +2315,7 @@ Payload:
         </h3>
 <p id="section-8.1-1">When processing a full query request to the TRL endpoint, the AS composes a response as defined in <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1-2">In particular, the 'cursor' parameter included in the CBOR map carried in the response payload specifies either the CBOR simple value <code>null</code> (0xf6) or a CBOR unsigned integer.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">The 'cursor' parameter <span class="bcp14">MUST</span> specify the CBOR simple value <code>null</code> in case there are currently no TRL updates pertinent to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until the first update pertaining to that requester occurs to the TRL.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">The 'cursor' parameter <span class="bcp14">MUST</span> specify the CBOR simple value <code>null</code> in case there are currently no TRL updates pertaining to the requester, i.e., the update collection for that requester is empty. This is the case from when the requester registers at the AS until the first update pertaining to that requester occurs to the TRL.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <p id="section-8.1-4">Otherwise, the 'cursor' parameter <span class="bcp14">MUST</span> specify a CBOR unsigned integer. This <span class="bcp14">MUST</span> take the 'index' value of the last series item in the update collection associated with the requester (see <a href="#sec-trl-endpoint-supporting-cursor" class="auto internal xref">Section 5.2.1</a>), as corresponding to the most recent update pertaining to the requester that occurred to the TRL. Such a value is in fact the current value of 'last_index' for the update collection associated with the requester.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2404,7 +2402,7 @@ In this case, the AS returns a 2.05 (Content) response. The response <span class
 </li>
               </ul>
 <p id="section-8.2.3-2.1.4">
-With the combination ('cursor', 'more') = (<code>null</code>, <code>true</code>), the AS is signaling that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.<a href="#section-8.2.3-2.1.4" class="pilcrow">¶</a></p>
+With the combination ('cursor', 'more') = (<code>null</code>, <code>true</code>), the AS is indicating that the update collection is in fact not empty, but that one or more series items have been lost due to their removal. These include the item with 'index' value (P + 1) % (MAX_INDEX + 1), that the requester wished to obtain as the first one following the specified reference point with 'index' value P.<a href="#section-8.2.3-2.1.4" class="pilcrow">¶</a></p>
 <p id="section-8.2.3-2.1.5">
 When receiving this diff query response, the requester <span class="bcp14">SHOULD</span> send a new full query request to the AS. A successful response provides the requester with the full, current pertaining subset of the TRL, as well as with a valid value of the 'cursor' parameter (see <a href="#sec-using-cursor-full-query-response" class="auto internal xref">Section 8.1</a>) to be possibly used as query parameter in a following diff query request.<a href="#section-8.2.3-2.1.5" class="pilcrow">¶</a></p>
 </li>
@@ -2681,7 +2679,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <p id="section-13.6-3">Consequently, the RS considers a HASH_INPUT different from the one considered by the AS and the Client (see <a href="#sec-token-hash-input-c-as" class="auto internal xref">Section 3.2</a>). Hence, the RS computes a token hash h' different from the token hash h computed by the AS and the Client. It follows that, if the AS revokes the access token and advertises the right token hash h, then the RS will not learn about the access token revocation and thus will not delete the access token.<a href="#section-13.6-3" class="pilcrow">¶</a></p>
 <p id="section-13.6-4">Fundamentally, this would happen because the HASH_INPUT used to compute the token hash of a JWT depends on whether the AS-to-Client response is encoded in CBOR or in JSON. This makes the RS vulnerable to the attack described above, when JWTs are used as access tokens. Instead, this is not a problem if the access token is a CWT, since the HASH_INPUT used to compute the token hash of a CWT does not depend on whether the AS-to-Client response is encoded in CBOR or in JSON.<a href="#section-13.6-4" class="pilcrow">¶</a></p>
 <p id="section-13.6-5">While this asymmetry cannot be avoided altogether, the method defined for the AS and the Client in <a href="#sec-token-hash-input-c-as" class="auto internal xref">Section 3.2</a> deliberately penalizes the case where the RS uses JWTs as access tokens. In such a case, the RS effectively neutralizes the attack described above, by computing and storing two token hashes associated with the same access token (see <a href="#sec-token-hash-input-rs-jwt" class="auto internal xref">Section 3.3.2</a>).<a href="#section-13.6-5" class="pilcrow">¶</a></p>
-<p id="section-13.6-6">Conversely, this design deliberately favors the case where the RS uses CWTs as access tokens, which is a preferable option for resource-constrained RSs as well as the default case in the ACE framework (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-3" class="relref">Section 3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). That is, if a RS uses CWTs as access tokens, then the RS is not exposed to the attack described above, and thus it safely computes and stores only one token hash per access token (see <a href="#sec-token-hash-input-rs-cwt" class="auto internal xref">Section 3.3.1</a>).<a href="#section-13.6-6" class="pilcrow">¶</a></p>
+<p id="section-13.6-6">Conversely, this design deliberately favors the case where the RS uses CWTs as access tokens, which is a preferable option for resource-constrained RSs as well as the default case in the ACE framework (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-3" class="relref">Section 3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). That is, if an RS uses CWTs as access tokens, then the RS is not exposed to the attack described above, and thus it safely computes and stores only one token hash per access token (see <a href="#sec-token-hash-input-rs-cwt" class="auto internal xref">Section 3.3.1</a>).<a href="#section-13.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="additional-security-measures">
@@ -2726,7 +2724,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <p id="section-14.1-7">Security considerations: See <a href="#sec-security-considerations" class="auto internal xref">Section 13</a> of this document.<a href="#section-14.1-7" class="pilcrow">¶</a></p>
 <p id="section-14.1-8">Interoperability considerations: N/A<a href="#section-14.1-8" class="pilcrow">¶</a></p>
 <p id="section-14.1-9">Published specification: [RFC-XXXX]<a href="#section-14.1-9" class="pilcrow">¶</a></p>
-<p id="section-14.1-10">Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the notification of revoked access tokens, according to a Token Revocation List maintained by the Authorization Server as specified in [RFC-XXXX].<a href="#section-14.1-10" class="pilcrow">¶</a></p>
+<p id="section-14.1-10">Applications that use this media type: The type is used by Authorization Servers, Clients, and Resource Servers that support the notification of revoked access tokens, according to a Token Revocation List maintained by the Authorization Server as specified in [RFC-XXXX].<a href="#section-14.1-10" class="pilcrow">¶</a></p>
 <p id="section-14.1-11">Fragment identifier considerations: N/A<a href="#section-14.1-11" class="pilcrow">¶</a></p>
 <p id="section-14.1-12">Additional information: N/A<a href="#section-14.1-12" class="pilcrow">¶</a></p>
 <p id="section-14.1-13">Person &amp; email address to contact for further information: ACE WG mailing list (ace@ietf.org) or IETF Applications and Real-Time Area (art@ietf.org)<a href="#section-14.1-13" class="pilcrow">¶</a></p>
@@ -2741,7 +2739,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         <h3 id="name-coap-content-formats-regist">
 <a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-coap-content-formats-regist" class="section-name selfRef">CoAP Content-Formats Registry</a>
         </h3>
-<p id="section-14.2-1">IANA is asked to add the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.<a href="#section-14.2-1" class="pilcrow">¶</a></p>
+<p id="section-14.2-1">IANA is asked to add the following entry to the "CoAP Content-Formats" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-14.2-1" class="pilcrow">¶</a></p>
 <p id="section-14.2-2">Content Type: application/ace-trl+cbor<a href="#section-14.2-2" class="pilcrow">¶</a></p>
 <p id="section-14.2-3">Content Coding: -<a href="#section-14.2-3" class="pilcrow">¶</a></p>
 <p id="section-14.2-4">ID: TBD<a href="#section-14.2-4" class="pilcrow">¶</a></p>
@@ -2784,10 +2782,10 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <p id="section-14.4-4">The columns of this registry are:<a href="#section-14.4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-14.4-5.1">
-            <p id="section-14.4-5.1.1">Name: This field contains a descriptive name that enables easier reference to the item. The name <span class="bcp14">MUST</span> be unique. It is not used in the encoding.<a href="#section-14.4-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-14.4-5.1.1">Name: This field contains a descriptive name that enables easier reference to the item. The name <span class="bcp14">MUST</span> be unique and it is not used in the encoding.<a href="#section-14.4-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-14.4-5.2">
-            <p id="section-14.4-5.2.1">CBOR Key: This field contains the value used as CBOR map key of the item. These values <span class="bcp14">MUST</span> be unique. The value is an unsigned integer or a negative integer. Different ranges of values use different registration policies <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".<a href="#section-14.4-5.2.1" class="pilcrow">¶</a></p>
+            <p id="section-14.4-5.2.1">CBOR Key: This field contains the value used as CBOR map key of the item. The value <span class="bcp14">MUST</span> be unique. The value is an unsigned integer or a negative integer. Different ranges of values use different registration policies <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".<a href="#section-14.4-5.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-14.4-5.3">
             <p id="section-14.4-5.3.1">Value Type: This field contains the allowable CBOR data types for values of this item, or a pointer to the registry that defines its type, when that depends on another item.<a href="#section-14.4-5.3.1" class="pilcrow">¶</a></p>
@@ -2810,7 +2808,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <p id="section-14.5-4">The columns of this registry are:<a href="#section-14.5-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-14.5-5.1">
-            <p id="section-14.5-5.1.1">Value: The field contains the value to be used to identify the error. These values <span class="bcp14">MUST</span> be unique. The value is an unsigned integer or a negative integer. Different ranges of values use different registration policies <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".<a href="#section-14.5-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-14.5-5.1.1">Value: The field contains the value to be used to identify the error. The value <span class="bcp14">MUST</span> be unique. The value is an unsigned integer or a negative integer. Different ranges of values use different registration policies <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".<a href="#section-14.5-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-14.5-5.2">
             <p id="section-14.5-5.2.1">Description: This field contains a brief description of the error.<a href="#section-14.5-5.2.1" class="pilcrow">¶</a></p>
@@ -3101,7 +3099,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-full-query-with-observe" class="section-name selfRef">Full Query with Observe</a>
         </h3>
 <p id="appendix-C.1-1"><a href="#fig-RS-AS" class="auto internal xref">Figure 9</a> shows an interaction example considering a CoAP observation and a full query of the TRL.<a href="#appendix-C.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-C.1-2">In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter is not included in the payload of the responses to a full query request.<a href="#appendix-C.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.1-2">In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter is not included in the payload of the responses to a full query request.<a href="#appendix-C.1-2" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-full-query-"></span><div id="fig-RS-AS">
 <figure id="figure-9">
           <div id="appendix-C.1-3.1">
@@ -3263,7 +3261,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         </h3>
 <p id="appendix-C.2-1"><a href="#fig-RS-AS-2" class="auto internal xref">Figure 10</a> shows an interaction example considering a CoAP observation and a diff query of the TRL.<a href="#appendix-C.2-1" class="pilcrow">¶</a></p>
 <p id="appendix-C.2-2">The RS indicates N = 3 as value of the 'diff' query parameter, i.e., as the maximum number of diff entries to be specified in a response from the AS.<a href="#appendix-C.2-2" class="pilcrow">¶</a></p>
-<p id="appendix-C.2-3">In this example, the AS does not support the "Cursor" extension. Hence the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.<a href="#appendix-C.2-3" class="pilcrow">¶</a></p>
+<p id="appendix-C.2-3">In this example, the AS does not support the "Cursor" extension. Hence, the 'cursor' parameter and the 'more' parameter are not included in the payload of the responses to a diff query request.<a href="#appendix-C.2-3" class="pilcrow">¶</a></p>
 <span id="name-interaction-for-diff-query-"></span><div id="fig-RS-AS-2">
 <figure id="figure-10">
           <div id="appendix-C.2-4.1">

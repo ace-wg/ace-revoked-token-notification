@@ -251,7 +251,7 @@ Table of Contents
       that the corresponding access tokens have been revoked but are not
       expired yet.
 
-   *  TRL endpoint: an endpoint on the AS with a TRL as its
+   *  TRL endpoint: an endpoint at the AS with a TRL as its
       representation.  The default name of the TRL endpoint in a url-
       path is '/revoke/trl'.  Implementations are not required to use
       this name, and can define their own instead.
@@ -355,16 +355,17 @@ Table of Contents
    Figure 1 shows a high-level overview of the service provided by this
    protocol.  For the sake of simplicity, the example shown in the
    figure considers the simultaneous revocation of the three access
-   tokens t1, t2 and t3, with token hash th1, th2 and th3, respectively.
-   Consequently, the AS adds the three token hashes to the TRL at once,
-   and sends Observe notifications to one administrator and four
-   registered devices.  Each dotted line associated with a pair of
-   registered devices indicates the access token that they both own.
+   tokens t1, t2, and t3, whose corresponding token hashes are th1, th2,
+   and th3, respectively.  Consequently, the AS adds the three token
+   hashes to the TRL at once, and sends Observe notifications to one
+   administrator and four registered devices.  Each dotted line
+   associated with a pair of registered devices indicates the access
+   token that they both own.
 
                        +----------------------+
                        | Authorization Server |
                        +-----------o----------+
-                       revoke/trl  |  TRL: (th1,th2,th3)
+                     /revoke/trl   |   TRL: (th1,th2,th3)
                                    |
     +-----------------+------------+------------+------------+
     |                 |            |            |            |
@@ -383,7 +384,7 @@ Table of Contents
                         Figure 1: Protocol Overview
 
    Appendix C provides examples of the protocol flow and message
-   exchange between the AS and a registered device.
+   exchanges between the AS and a registered device.
 
 3.  Token Hash
 
@@ -396,8 +397,8 @@ Table of Contents
    for the RS.  Finally, Section 3.4 defines how such an input is used
    for computing the token hash.
 
-   The process outlined below refers to the base64url (see Section 5 of
-   [RFC4648]) encoding and decoding without padding, and denotes as
+   The process outlined below refers to the base64url encoding and
+   decoding without padding (see Section 5 of [RFC4648]), and denotes as
    "binary representation" of a text string the corresponding UTF-8
    encoding [RFC3629], which is the implied charset used in JSON (see
    Section 8.1 of [RFC8259]).
@@ -485,7 +486,7 @@ Table of Contents
       request to the /authz-info endpoint (see Section 5.10.1 of
       [RFC9200]), using a media-type different from "application/
       ace+cbor" (e.g., like in [RFC9202]).  In such a case, TOKEN_INFO
-      is the request payload of the POST request.
+      is the payload of the POST request.
 
    *  The access token can be uploaded to the RS by means of a POST
       request to the /authz-info enpoint, using the media-type
@@ -555,7 +556,7 @@ Table of Contents
 
    *  HASH_INPUT is the binary representation of HASH_INPUT_TEXT.
 
-   2.01 Created
+   Header: Created (Code=2.01)
    Content-Format: application/ace+cbor
    Max-Age: 85800
    Payload:
@@ -744,7 +745,7 @@ Table of Contents
 
    The TRL is initialized as empty, i.e., its initial content MUST be
    the empty CBOR array.  The TRL is accessible through the TRL endpoint
-   on the AS.
+   at the AS.
 
 4.1.  Update of the TRL
 
@@ -789,7 +790,7 @@ Table of Contents
       tokens currently in the TRL and pertaining to the requester.
 
       The AS MUST support this type of query.  The processing of a full
-      query and the related response format are defined are Section 6.
+      query and the related response format are defined in Section 6.
 
    *  Diff query: the AS returns a list of diff entries.  Each diff
       entry is related to one of the most recent updates to the TRL,
@@ -848,7 +849,7 @@ Table of Contents
 
       -  The field 'cursor' MAY be present.  The map key used for this
          field is the CBOR unsigned integer with value 1.  The value of
-         this field is a CBOR unsigned integer, or the CBOR simple value
+         this field is a CBOR unsigned integer or the CBOR simple value
          null (0xf6).
 
       The CDDL notation [RFC8610] of the 'ace-trl-error' entry is given
@@ -874,8 +875,6 @@ Table of Contents
 
    An example of error response using the problem-details format is
    shown in Figure 4.
-
-   Response:
 
    Header: Bad Request (Code=4.00)
    Content-Format: application/concise-problem-details+cbor
@@ -984,13 +983,13 @@ Table of Contents
 
       -  ...
 
-      -  ( i_A = MAX_INDEX - 2, i_B = MAX_INDEX - 1, i_C = MAX_INDEX )
+      -  (i_A = MAX_INDEX - 2, i_B = MAX_INDEX - 1, i_C = MAX_INDEX)
 
-      -  ( i_B = MAX_INDEX - 1, i_C = MAX_INDEX, i_D = 0 )
+      -  (i_B = MAX_INDEX - 1, i_C = MAX_INDEX, i_D = 0)
 
-      -  ( i_C = MAX_INDEX, i_D = 0, i_E = 1 )
+      -  (i_C = MAX_INDEX, i_D = 0, i_E = 1)
 
-      -  ( i_D = 0, i_E = 1, i_F = 2 )
+      -  (i_D = 0, i_E = 1, i_F = 2)
 
       -  ...
 
@@ -1021,7 +1020,8 @@ Table of Contents
    specific registered device or administrator associated with the
    update collection in question.  If supporting the "Cursor" extension,
    the AS MUST provide registered devices and administrators with the
-   value of MAX_DIFF_BATCH, upon their registration (see Section 9).
+   corresponding value of MAX_DIFF_BATCH, upon their registration (see
+   Section 9).
 
 5.3.  Query Parameters
 
@@ -1062,7 +1062,7 @@ Table of Contents
 
       If included, the 'cursor' query parameter specifies an unsigned
       integer value that was provided by the AS in a previous response
-      from the TRL endpoint (see Section 8.1, Section 8.2.2 and
+      from the TRL endpoint (see Section 8.1, Section 8.2.2, and
       Section 8.2.3).
 
       If the AS does not support the "Cursor" extension, it ignores the
@@ -1121,8 +1121,8 @@ Table of Contents
        *  If the requester is a registered device, HASHES specifies the
           token hashes currently in the TRL and associated with the
           access tokens pertaining to that registered device.  The AS
-          can use the authenticated identity of the registered device to
-          perform the necessary filtering on the TRL content.
+          can always use the authenticated identity of the registered
+          device to perform the necessary filtering on the TRL content.
 
        *  If the requester is an administrator, HASHES specifies all the
           token hashes currently in the TRL.
@@ -1133,10 +1133,10 @@ Table of Contents
        formatted as follows.
 
        *  The 'full_set' parameter MUST be included and specifies a CBOR
-          array 'full_set_value'.  Each element of 'full_set_value'
-          specifies one of the token hashes from the set HASHES, encoded
-          as a CBOR byte string.  If the set HASHES is empty, the
-          'full_set' parameter specifies the empty CBOR array.
+          array 'full_set_value'.  Each element of 'full_set_value' is a
+          CBOR byte string, with value one of the token hashes from the
+          set HASHES.  If the set HASHES is empty, the 'full_set'
+          parameter specifies the empty CBOR array.
 
           The CBOR array MUST be treated as a set, i.e., the order of
           its elements has no meaning.
@@ -1169,7 +1169,7 @@ Table of Contents
    parameter is not included in the payload of the response.  Also, full
    token hashes are omitted for brevity.
 
-   2.05 Content
+   Header: Content (Code=2.05)
    Content-Format: application/ace-trl+cbor
    Payload:
    {
@@ -1284,7 +1284,7 @@ Table of Contents
    not included in the payload of the response.  Also, full token hashes
    are omitted for brevity.
 
-   2.05 Content
+   Header: Content (Code=2.05)
    Content-Format: application/ace-trl+cbor
    Payload:
    {
@@ -1351,7 +1351,7 @@ Table of Contents
    value null (0xf6) or a CBOR unsigned integer.
 
    The 'cursor' parameter MUST specify the CBOR simple value null in
-   case there are currently no TRL updates pertinent to the requester,
+   case there are currently no TRL updates pertaining to the requester,
    i.e., the update collection for that requester is empty.  This is the
    case from when the requester registers at the AS until the first
    update pertaining to that requester occurs to the TRL.
@@ -1473,7 +1473,7 @@ Table of Contents
          simple value true (0xf5).
 
       With the combination ('cursor', 'more') = (null, true), the AS is
-      signaling that the update collection is in fact not empty, but
+      indicating that the update collection is in fact not empty, but
       that one or more series items have been lost due to their removal.
       These include the item with 'index' value (P + 1) % (MAX_INDEX +
       1), that the requester wished to obtain as the first one following
@@ -1943,7 +1943,7 @@ Table of Contents
    Conversely, this design deliberately favors the case where the RS
    uses CWTs as access tokens, which is a preferable option for
    resource-constrained RSs as well as the default case in the ACE
-   framework (see Section 3 of [RFC9200]).  That is, if a RS uses CWTs
+   framework (see Section 3 of [RFC9200]).  That is, if an RS uses CWTs
    as access tokens, then the RS is not exposed to the attack described
    above, and thus it safely computes and stores only one token hash per
    access token (see Section 3.3.1).
@@ -2011,7 +2011,7 @@ Table of Contents
    Published specification: [RFC-XXXX]
 
    Applications that use this media type: The type is used by
-   Authorization Servers, Clients and Resource Servers that support the
+   Authorization Servers, Clients, and Resource Servers that support the
    notification of revoked access tokens, according to a Token
    Revocation List maintained by the Authorization Server as specified
    in [RFC-XXXX].
@@ -2035,7 +2035,8 @@ Table of Contents
 14.2.  CoAP Content-Formats Registry
 
    IANA is asked to add the following entry to the "CoAP Content-
-   Formats" registry within the "CoRE Parameters" registry group.
+   Formats" registry within the "Constrained RESTful Environments (CoRE)
+   Parameters" registry group.
 
    Content Type: application/ace-trl+cbor
 
@@ -2086,11 +2087,11 @@ Table of Contents
    The columns of this registry are:
 
    *  Name: This field contains a descriptive name that enables easier
-      reference to the item.  The name MUST be unique.  It is not used
+      reference to the item.  The name MUST be unique and it is not used
       in the encoding.
 
    *  CBOR Key: This field contains the value used as CBOR map key of
-      the item.  These values MUST be unique.  The value is an unsigned
+      the item.  The value MUST be unique.  The value is an unsigned
       integer or a negative integer.  Different ranges of values use
       different registration policies [RFC8126].  Integer values from
       -256 to 255 are designated as "Standards Action With Expert
@@ -2134,7 +2135,7 @@ Table of Contents
    The columns of this registry are:
 
    *  Value: The field contains the value to be used to identify the
-      error.  These values MUST be unique.  The value is an unsigned
+      error.  The value MUST be unique.  The value is an unsigned
       integer or a negative integer.  Different ranges of values use
       different registration policies [RFC8126].  Integer values from
       -256 to 255 are designated as "Standards Action With Expert
@@ -2489,7 +2490,7 @@ C.1.  Full Query with Observe
    and a full query of the TRL.
 
    In this example, the AS does not support the "Cursor" extension.
-   Hence the 'cursor' parameter is not included in the payload of the
+   Hence, the 'cursor' parameter is not included in the payload of the
    responses to a full query request.
 
           RS                                                  AS
@@ -2584,7 +2585,7 @@ C.2.  Diff Query with Observe
    from the AS.
 
    In this example, the AS does not support the "Cursor" extension.
-   Hence the 'cursor' parameter and the 'more' parameter are not
+   Hence, the 'cursor' parameter and the 'more' parameter are not
    included in the payload of the responses to a diff query request.
 
           RS                                                  AS
