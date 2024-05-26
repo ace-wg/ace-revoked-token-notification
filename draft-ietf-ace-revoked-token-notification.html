@@ -1284,6 +1284,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.6">
                 <p id="section-toc.1-1.13.2.6.1"><a href="#section-13.6" class="auto internal xref">13.6</a>.  <a href="#name-two-token-hashes-at-the-rs-" class="internal xref">Two Token Hashes at the RS using JWTs</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.7">
+                <p id="section-toc.1-1.13.2.7.1"><a href="#section-13.7" class="auto internal xref">13.7</a>.  <a href="#name-additional-security-measure" class="internal xref">Additional Security Measures</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
@@ -2625,7 +2628,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-content-retrieval-from-the-" class="section-name selfRef">Content Retrieval from the TRL</a>
         </h3>
 <p id="section-13.1-1">The AS <span class="bcp14">MUST</span> ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can always perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
-<p id="section-13.1-2">Disclosing any information about revoked access tokens to entities to which they do not pertain may result in privacy concerns. Therefore, the AS <span class="bcp14">MUST</span> ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-13.1-2" class="pilcrow">¶</a></p>
+<p id="section-13.1-2">The AS <span class="bcp14">MUST</span> ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see <a href="#sec-registration" class="auto internal xref">Section 9</a>).<a href="#section-13.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="size-of-the-trl">
@@ -2652,7 +2655,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <a href="#section-13.4" class="section-number selfRef">13.4. </a><a href="#name-request-of-new-access-token" class="section-name selfRef">Request of New Access Tokens</a>
         </h3>
 <p id="section-13.4-1">If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client may receive an unprotected 4.01 (Unauthorized) response from the RS.<a href="#section-13.4-1" class="pilcrow">¶</a></p>
-<p id="section-13.4-2">This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). Also, an on-path, active adversary might have injected a forged 4.01 (Unauthorized) response.<a href="#section-13.4-2" class="pilcrow">¶</a></p>
+<p id="section-13.4-2">This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). As another example, the access token is still valid, but an on-path active adversary might have injected a forged 4.01 (Unauthorized) response, or the RS might have deleted the access token from its local storage due to its dedicated storage space being all consumed.<a href="#section-13.4-2" class="pilcrow">¶</a></p>
 <p id="section-13.4-3">In either case, if the Client believes that the access token is still valid, it <span class="bcp14">SHOULD NOT</span> immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client <span class="bcp14">SHOULD</span> send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.<a href="#section-13.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2677,6 +2680,25 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 <p id="section-13.6-4">Fundamentally, this would happen because the HASH_INPUT used to compute the token hash of a JWT depends on whether the AS-to-Client response is encoded in CBOR or in JSON. This makes the RS vulnerable to the attack described above, when JWTs are used as access tokens. Instead, this is not a problem if the access token is a CWT, since the HASH_INPUT used to compute the token hash of a CWT does not depend on whether the AS-to-Client response is encoded in CBOR or in JSON.<a href="#section-13.6-4" class="pilcrow">¶</a></p>
 <p id="section-13.6-5">While this asymmetry cannot be avoided altogether, the method defined for the AS and the Client in <a href="#sec-token-hash-input-c-as" class="auto internal xref">Section 3.2</a> deliberately penalizes the case where the RS uses JWTs as access tokens. In such a case, the RS effectively neutralizes the attack described above, by computing and storing two token hashes associated with the same access token (see <a href="#sec-token-hash-input-rs-jwt" class="auto internal xref">Section 3.3.2</a>).<a href="#section-13.6-5" class="pilcrow">¶</a></p>
 <p id="section-13.6-6">Conversely, this design deliberately favors the case where the RS uses CWTs as access tokens, which is a preferable option for resource-constrained RSs as well as the default case in the ACE framework (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-3" class="relref">Section 3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). That is, if a RS uses CWTs as access tokens, then the RS is not exposed to the attack described above, and thus it safely computes and stores only one token hash per access token (see <a href="#sec-token-hash-input-rs-cwt" class="auto internal xref">Section 3.3.1</a>).<a href="#section-13.6-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="additional-security-measures">
+<section id="section-13.7">
+        <h3 id="name-additional-security-measure">
+<a href="#section-13.7" class="section-number selfRef">13.7. </a><a href="#name-additional-security-measure" class="section-name selfRef">Additional Security Measures</a>
+        </h3>
+<p id="section-13.7-1">By accessing the TRL at the AS, registered devices and administrators are able to learn that their pertaining access tokens have been revoked. However, they cannot learn the reason why that happened, including when that reason is the compromise, misbehavior, or decommissioning of a registered device.<a href="#section-13.7-1" class="pilcrow">¶</a></p>
+<p id="section-13.7-2">In fact, even the AS might not know that a registered device to which a revoked access token pertains has been specifically compromised, misbehaving, or decommissioned. At the same time, it might not be acceptable to only revoke the access tokens pertaining to such a registered device.<a href="#section-13.7-2" class="pilcrow">¶</a></p>
+<p id="section-13.7-3">Therefore, in order to preserve the security of the system and application, the entity that authoritatively declares a registered device to be compromised, misbehaving, or decommissioned should also promptly trigger the execution of additional revocation processes as deemed appropriate. These include, for instance:<a href="#section-13.7-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-13.7-4.1">
+            <p id="section-13.7-4.1.1">The de-registration of the registered device from the AS, so that the AS does not issue further access tokens pertaining to that device.<a href="#section-13.7-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.7-4.2">
+            <p id="section-13.7-4.2.1">If applicable, the revocation of the public authentication credential associated with the registered device (e.g., its public key certificate).<a href="#section-13.7-4.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-13.7-5">The methods by which these processes are triggered and carried out are out of the scope of this document.<a href="#section-13.7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4630,7 +4652,7 @@ more = 3
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="appendix-F-1"><span class="contact-name">Ludwig Seitz</span> contributed as a co-author of initial versions of this document.<a href="#appendix-F-1" class="pilcrow">¶</a></p>
-<p id="appendix-F-2">The authors sincerely thank <span class="contact-name">Christian Amsüss</span>, <span class="contact-name">Carsten Bormann</span>, <span class="contact-name">Dhruv Dhody</span>, <span class="contact-name">Rikard Höglund</span>, <span class="contact-name">Benjamin Kaduk</span>, <span class="contact-name">David Navarro</span>, <span class="contact-name">Joerg Ott</span>, <span class="contact-name">Marco Rasori</span>, <span class="contact-name">Michael Richardson</span>, <span class="contact-name">Jim Schaad</span>, <span class="contact-name">Göran Selander</span>, <span class="contact-name">Travis Spencer</span>, <span class="contact-name">Dale Worley</span>, and <span class="contact-name">Paul Wouters</span> for their comments and feedback.<a href="#appendix-F-2" class="pilcrow">¶</a></p>
+<p id="appendix-F-2">The authors sincerely thank <span class="contact-name">Christian Amsüss</span>, <span class="contact-name">Carsten Bormann</span>, <span class="contact-name">Dhruv Dhody</span>, <span class="contact-name">Rikard Höglund</span>, <span class="contact-name">Benjamin Kaduk</span>, <span class="contact-name">David Navarro</span>, <span class="contact-name">Joerg Ott</span>, <span class="contact-name">Marco Rasori</span>, <span class="contact-name">Michael Richardson</span>, <span class="contact-name">Kyle Rose</span>, <span class="contact-name">Jim Schaad</span>, <span class="contact-name">Göran Selander</span>, <span class="contact-name">Travis Spencer</span>, <span class="contact-name">Dale Worley</span>, and <span class="contact-name">Paul Wouters</span> for their comments and feedback.<a href="#appendix-F-2" class="pilcrow">¶</a></p>
 <p id="appendix-F-3">The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the H2020 project SIFIS-Home (Grant agreement 952652).<a href="#appendix-F-3" class="pilcrow">¶</a></p>
 </section>
 </div>
