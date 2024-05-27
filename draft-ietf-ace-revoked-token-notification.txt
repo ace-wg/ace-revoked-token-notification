@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 27 November 2024                                    Ericsson AB
+Expires: 28 November 2024                                    Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                             26 May 2024
+                                                             27 May 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 November 2024.
+   This Internet-Draft will expire on 28 November 2024.
 
 Copyright Notice
 
@@ -1772,17 +1772,17 @@ Table of Contents
    key of the map pair for the parameter, instead of the parameter's
    name as a text string.
 
-           +==========+============+==========================+
-           | Name     | CBOR Value | CBOR Type                |
-           +==========+============+==========================+
-           | full_set | 0          | array                    |
-           +----------+------------+--------------------------+
-           | diff_set | 1          | array                    |
-           +----------+------------+--------------------------+
-           | cursor   | 2          | Null or unsigned integer |
-           +----------+------------+--------------------------+
-           | more     | 3          | True or False            |
-           +----------+------------+--------------------------+
+            +==========+==========+==========================+
+            | Name     | CBOR Key | CBOR Type                |
+            +==========+==========+==========================+
+            | full_set | 0        | array                    |
+            +----------+----------+--------------------------+
+            | diff_set | 1        | array                    |
+            +----------+----------+--------------------------+
+            | cursor   | 2        | Null or unsigned integer |
+            +----------+----------+--------------------------+
+            | more     | 3        | True or False            |
+            +----------+----------+--------------------------+
 
               Table 1: CBOR abbreviations for the ACE Token
                         Revocation List parameters
@@ -2100,7 +2100,7 @@ Table of Contents
       greater than 65535 are designated as "Expert Review".  Integer
       values less than -65536 are marked as "Private Use".
 
-   *  Value Type: This field contains the allowable CBOR data types for
+   *  CBOR Type: This field contains the allowable CBOR data types for
       values of this item, or a pointer to the registry that defines its
       type, when that depends on another item.
 
