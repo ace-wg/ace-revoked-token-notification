@@ -900,11 +900,11 @@ This specification defines a number of parameters that can be transported in the
 
 The table below summarizes the parameters. For each of them, it specifies the value to use as CBOR key, i.e., as abbreviation in the key of the map pair for the parameter, instead of the parameter's name as a text string.
 
-| Name              | CBOR Value | CBOR Type                |
-| full_set          |  0         | array                    |
-| diff_set          |  1         | array                    |
-| cursor            |  2         | Null or unsigned integer |
-| more              |  3         | True or False            |
+| Name              | CBOR Key | CBOR Type                |
+| full_set          |  0       | array                    |
+| diff_set          |  1       | array                    |
+| cursor            |  2       | Null or unsigned integer |
+| more              |  3       | True or False            |
 {: #table-cbor-trl-params title="CBOR abbreviations for the ACE Token Revocation List parameters" align="center"}
 
 # ACE Token Revocation List Error Identifiers {#error-types}
@@ -1061,7 +1061,7 @@ The columns of this registry are:
 
 * CBOR Key: This field contains the value used as CBOR map key of the item. The value MUST be unique. The value is an unsigned integer or a negative integer. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as "Standards Action With Expert Review". Integer values from -65536 to -257 and from 256 to 65535 are designated as "Specification Required". Integer values greater than 65535 are designated as "Expert Review". Integer values less than -65536 are marked as "Private Use".
 
-* Value Type: This field contains the allowable CBOR data types for values of this item, or a pointer to the registry that defines its type, when that depends on another item.
+* CBOR Type: This field contains the allowable CBOR data types for values of this item, or a pointer to the registry that defines its type, when that depends on another item.
 
 * Reference: This field contains a pointer to the public specification for the item.
 
