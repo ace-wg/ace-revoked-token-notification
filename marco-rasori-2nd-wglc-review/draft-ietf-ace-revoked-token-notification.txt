@@ -804,14 +804,10 @@ Table of Contents
       query and the related response format are defined in Section 6.
 
    *  Diff query: the AS returns a list of diff entries.  Each diff
-      entry is related to one of the most recent updates to the TRL,
-      with such an update performed in the subset of the TRL pertaining
-      to the requester.
-
-      The entry associated with one of such updates contains the list of
-      token hashes that were added to or removed from the TRL at that
-      update, and for which the corresponding revoked access tokens
-      pertain to the requester.
+      entry is related to one update occurred to the TRL, and it
+      contains a set of token hashes pertaining to the requester.  In
+      particular, all such token hashes were added to the TRL or removed
+      from the TRL at the update related to the diff entry in question.
 
       The AS MAY support this type of query.  In such a case, the AS
       maintains the history of updates to the TRL as defined in
@@ -822,10 +818,10 @@ Table of Contents
    "Cursor" extension, which has two benefits.  First, the AS can avoid
    excessively long messages when several diff entries have to be
    transferred, by delivering several diff query responses, each
-   containing one adjacent subset at a time.  Second, a requester can
-   retrieve diff entries associated with TRL updates that, even if not
-   the most recent ones, occurred after a TRL update indicated as
-   reference point.
+   containing one adjacent subset of diff entries at a time.  Second, a
+   requester can retrieve diff entries associated with TRL updates that,
+   even if not the most recent ones, occurred after a TRL update
+   associated with a diff entry indicated as reference point.
 
    If it supports the "Cursor" extension, the AS stores additional
    information when maintaining the history of updates to the TRL, as
@@ -910,21 +906,25 @@ Table of Contents
 5.2.  Supporting Diff Queries
 
    If the AS supports diff queries, it is able to transfer a list of
-   diff entries, as a series of TRL updates.  That is, when replying to
-   a diff query performed by a requester, the AS specifies the most
-   recent updates to the subset of the TRL pertaining to that requester.
+   diff entries, each of which is related to one update occurred to the
+   TRL (see Section 5).  That is, when replying to a diff query
+   performed by a requester, the AS specifies the diff entries related
+   to the most recent TRL updates pertaining to the requester.
 
-   The following defines how the AS builds and maintains consistent
-   histories of TRL updates for each registered device and
-   administrator, hereafter referred to as requesters.
+   The following defines how the AS builds and maintains an ordered list
+   of diff entries, for each registered device and administrator,
+   hereafter referred to as requesters.  In particular, a requester's
+   diff entry associated with a TRL update contains a set of token
+   hashes pertaining to that requester, which were added to the TRL or
+   removed from the TRL at that update.
 
    The AS defines the single, constant positive integer MAX_N >= 1.  For
    each requester, the AS maintains an update collection of maximum
-   MAX_N series items.  For each requester, the AS MUST keep track of
-   the MAX_N most recent updates to the subset of the TRL that pertains
-   to the requester.  If the AS supports diff queries, the AS MUST
-   provide requesters with the value of MAX_N, upon their registration
-   (see Section 9).
+   MAX_N series items, each of which is a diff entry.  For each
+   requester, the AS MUST keep track of the MAX_N most recent TRL
+   updates pertaining to the requester.  If the AS supports diff
+   queries, the AS MUST provide requesters with the value of MAX_N, upon
+   their registration (see Section 9).
 
    The series items in the update collection MUST be strictly ordered in
    a chronological fashion.  That is, at any point in time, the current
@@ -956,9 +956,6 @@ Table of Contents
        includes MAX_N series items, the AS MUST delete the oldest series
        item in the update collection.
 
-       This occurs when the number of TRL updates pertaining to the
-       requester and currently stored at the AS is equal to MAX_N.
-
    6.  The AS adds the series item to the update collection associated
        with the requester, as the last (most recent) one.
 
@@ -973,8 +970,8 @@ Table of Contents
    to be at least ((2^32) - 1).  MAX_INDEX SHOULD be orders of magnitude
    greater than MAX_N.
 
-   When maintaining the history of updates to the TRL, the following
-   applies separately for each requester's update collection.
+   The following applies separately for each requester's update
+   collection.
 
    *  Each series item X in the update collection is also associated
       with an unsigned integer 'index', whose minimum value is 0 and
@@ -1211,8 +1208,8 @@ Table of Contents
        NUM takes N.
 
    2.  The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N.  In
-       particular, SIZE is the number of TRL updates pertaining to the
-       requester and currently stored at the AS.
+       particular, SIZE is the number of diff entries currently stored
+       in the requester's update collection.
 
    3.  The AS prepares U diff entries.  If U is equal to 0 (e.g.,
        because SIZE is equal to 0 at step 2), then no diff entries are
@@ -1259,10 +1256,10 @@ Table of Contents
           Within 'diff_set_value', the CBOR arrays 'diff_entry' MUST be
           sorted to reflect the corresponding updates to the TRL in
           reverse chronological order.  That is, the first 'diff_entry'
-          element of 'diff_set_value' relates to the most recent update
-          to the subset of the TRL pertaining to the requester.  The
-          second 'diff_entry' element relates to the second from last
-          most recent update to that subset, and so on.
+          element of 'diff_set_value' relates to the most recent TRL
+          update pertaining to the requester.  The second 'diff_entry'
+          element relates to the second from last most recent TRL update
+          pertaining to the requester, and so on.
 
        *  The 'cursor' parameter and the 'more' parameter MUST be
           included if the AS supports both diff queries and the related
@@ -1370,10 +1367,10 @@ Table of Contents
    Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned
    integer.  This MUST take the 'index' value of the last series item in
    the update collection associated with the requester (see
-   Section 5.2.1), as corresponding to the most recent update pertaining
-   to the requester that occurred to the TRL.  Such a value is in fact
-   the current value of 'last_index' for the update collection
-   associated with the requester.
+   Section 5.2.1), as corresponding to the most recent TRL update
+   pertaining to the requester.  Such a value is in fact the current
+   value of 'last_index' for the update collection associated with the
+   requester.
 
 8.2.  Response to Diff Query
 
@@ -1437,8 +1434,9 @@ Table of Contents
          entry in the 'diff_set_value' CBOR array, which is specified by
          the 'diff_set' parameter.  That is, the 'cursor' parameter
          takes the 'index' value of the series item in the update
-         collection corresponding to the most recent update pertaining
-         to the requester and returned in this diff query response.
+         collection corresponding to the most recent TRL update
+         pertaining to the requester and returned in this diff query
+         response.
 
          Note that the 'cursor' parameter takes the same 'index' value
          of the last series item in the update collection when U <=
@@ -1467,7 +1465,7 @@ Table of Contents
       series item Y with 'index' having value (P + 1) % (MAX_INDEX + 1)
       are both not found in the update collection associated with the
       requester.  This occurs when the item Y (and possibly further ones
-      after it) has been previously removed from the history of updates
+      after it) has been previously removed from the update collection
       for that requester (see step 5 at Section 5.2).
 
       In this case, the AS returns a 2.05 (Content) response.  The
@@ -1548,7 +1546,7 @@ Table of Contents
                update collection included as first diff entry in the
                'diff_set' CBOR array.  That is, the 'cursor' parameter
                takes the 'index' value of the series item in the update
-               collection corresponding to the most recent update
+               collection corresponding to the most recent TRL update
                pertaining to the requester and returned in this diff
                query response.
 
@@ -2369,10 +2367,10 @@ Appendix A.  On using the Series Transfer Pattern
    fact a usage example of the Series Transfer Pattern defined in
    [I-D.bormann-t2trg-stp].
 
-   That is, a diff query enables the transfer of a series of TRL
-   updates, with the AS specifying U <= MAX_N diff entries as the U most
-   recent updates to the subset of the TRL pertaining to a requester,
-   i.e., a registered device or an administrator.
+   That is, a diff query enables the transfer of a series of diff
+   entries, with the AS specifying U <= MAX_N diff entries as related to
+   the U most recent TRL updates pertaining to a requester, i.e., a
+   registered device or an administrator.
 
    When responding to a diff query request from a requester (see
    Section 7), 'diff_set' is a subset of the update collection
@@ -2431,11 +2429,11 @@ Appendix B.  Local Supportive Parameters of the TRL Endpoint
    | Name           | Single   | Description        | Value            |
    |                | instance |                    |                  |
    +================+==========+====================+==================+
-   | MAX_N          | Y        | Max number of TRL  | LB = 1           |
-   |                |          | updates stored     |                  |
-   |                |          | per requester      | If supporting    |
-   |                |          |                    | "Cursor", then   |
-   |                |          |                    | UB = MAX_INDEX+1 |
+   | MAX_N          | Y        | Max number of      | LB = 1           |
+   |                |          | series items in    |                  |
+   |                |          | the update         | If supporting    |
+   |                |          | collection of      | "Cursor", then   |
+   |                |          | each requester     | UB = MAX_INDEX+1 |
    +----------------+----------+--------------------+------------------+
    | MAX_DIFF_BATCH | N        | Max number of      | LB = 1           |
    |                |          | diff entries       |                  |
@@ -2484,8 +2482,8 @@ Appendix C.  Interaction Examples
       Section 3;
 
    *  a 'max_n' parameter, specifying the value of MAX_N, i.e., the
-      maximum number of TRL updates pertaining to each registered device
-      that the AS retains for that device (see Section 7);
+      maximum number of series items that the AS retains in the update
+      collection associated with a registered device (see Section 7);
 
    *  possible further parameters related to the registration process.
 
@@ -3274,6 +3272,8 @@ E.1.  Version -07 to -08
    *  Added definition of pertaining TRL update.
 
    *  Rephrased example of token uploading to be more future ready.
+
+   *  Consistent use of "TRL update" throughout the document.
 
    *  Editorial improvements.
 
