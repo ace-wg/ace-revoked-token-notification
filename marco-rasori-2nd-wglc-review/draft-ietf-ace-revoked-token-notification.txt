@@ -278,6 +278,14 @@ Table of Contents
          following its request.  An access token pertains to an RS if
          the AS has issued the access token to be consumed by that RS.
 
+   *  Token hash pertaining to a requester: a token hash corresponding
+      to an access token pertaining to that requester, i.e., an
+      administrator or a registered device.
+
+   *  TRL update pertaining to a requester: an update to the TRL through
+      which token hashes pertaining to that requester have been added to
+      the TRL or removed from the TRL.
+
    Examples throughout this document are expressed in CBOR diagnostic
    notation as defined in Section 8 of [RFC8949] and Appendix G of
    [RFC8610].  Diagnostic notation comments are often used to provide a
@@ -3258,6 +3266,10 @@ Appendix E.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 E.1.  Version -07 to -08
+
+   *  Added definition of pertaining token hash.
+
+   *  Added definition of pertaining TRL update.
 
    *  Editorial improvements.
 
