@@ -634,7 +634,7 @@ Payload:
    ]
 }
 ~~~~~~~~~~~
-{: #response-full title="Example of response following a Full Query request to the TRL endpoint" artwork-align="left"}
+{: #response-full title="Example of response following a full query request to the TRL endpoint" artwork-align="left"}
 
 # Diff Query of the TRL ## {#ssec-trl-diff-query}
 
@@ -1243,7 +1243,7 @@ RS                                                  AS
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
-{: #fig-RS-AS title="Interaction for Full Query with Observe" artwork-align="center"}
+{: #fig-RS-AS title="Interaction for full query with Observe" artwork-align="center"}
 
 ## Diff Query with Observe # {#sec-RS-example-2}
 
@@ -1461,7 +1461,7 @@ RS                                                  AS
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
-{: #fig-RS-AS-3 title="Interaction for Full Query with Observe plus Diff Query" artwork-align="center"}
+{: #fig-RS-AS-3 title="Interaction for full query with Observe plus Diff Query" artwork-align="center"}
 
 ## Diff Query with Observe and \"Cursor\" # {#sec-RS-example-2-3}
 
@@ -1630,7 +1630,7 @@ When this happens, and after a waiting time defined by the application has elaps
 
 * The query parameter 'cursor' with value 2, thus requesting from the update collection the series items following the one with 'index' value equal to 2 (i.e., following the last series item that the RS successfully received in an earlier notification response).
 
-The response from the AS conveys a first batch of MAX_DIFF_BATCH=5 series items from the update collection corresponding to the RS. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to `true`. Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.
+The response from the AS conveys a first batch of MAX_DIFF_BATCH = 5 series items from the update collection corresponding to the RS. The AS indicates that further series items are actually available in the update collection, by setting the 'more' parameter of the response to `true`. Also, the 'cursor' parameter of the response is set to 7, i.e., to the 'index' value of the most recent series item included in the response.
 
 After that, the RS follows up with a further diff query request specifying the query parameter 'cursor' with value 7, in order to retrieve the next and last batch of series items from the update collection.
 
@@ -1857,7 +1857,7 @@ RS                                                             AS
 |          }                                                    |
 |                                                               |
 ~~~~~~~~~~~
-{: #fig-RS-AS-5 title="Interaction for Full Query with Observe plus Diff Query with \"Cursor\"" artwork-align="center"}
+{: #fig-RS-AS-5 title="Interaction for full query with Observe plus Diff Query with \"Cursor\"" artwork-align="center"}
 
 
 # CDDL Model # {#sec-cddl-model}
@@ -1876,6 +1876,10 @@ ace-trl-error = 1
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -07 to -08 ## {#sec-07-08}
+
+* Editorial improvements.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
