@@ -155,6 +155,10 @@ This specification also refers to the following terminology.
 
    - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
+* Token hash pertaining to a requester: a token hash corresponding to an access token pertaining to that requester, i.e., an administrator or a registered device.
+
+* TRL update pertaining to a requester: an update to the TRL through which token hashes pertaining to that requester have been added to the TRL or removed from the TRL.
+
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
 
 In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'full_set': \[\], e'cursor': 3} stands for {0: \[\], 2: 3}.
@@ -1878,6 +1882,10 @@ ace-trl-error = 1
 {:removeinrfc}
 
 ## Version -07 to -08 ## {#sec-07-08}
+
+* Added definition of pertaining token hash.
+
+* Added definition of pertaining TRL update.
 
 * Editorial improvements.
 
