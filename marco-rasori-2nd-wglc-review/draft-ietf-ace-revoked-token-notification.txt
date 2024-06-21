@@ -500,7 +500,7 @@ Table of Contents
       request.
 
    *  The access token can be uploaded to the RS by means of a POST
-      request to the /authz-info enpoint, using the media-type
+      request to the /authz-info endpoint, using the media-type
       "application/ace+cbor" (e.g., like in [RFC9203]).  When doing so,
       TOKEN_INFO is the value of the CBOR byte string conveyed by the
       'access_token' parameter, within the CBOR map specified as payload
