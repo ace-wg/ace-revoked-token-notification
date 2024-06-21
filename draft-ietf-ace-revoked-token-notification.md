@@ -265,7 +265,7 @@ The following overviews how the above specifically applies to the existing trans
 
 * The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so, TOKEN_INFO is the payload of the POST request.
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info enpoint, using the media-type "application/ace+cbor" (e.g., like in {{RFC9203}}). When doing so, TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor" (e.g., like in {{RFC9203}}). When doing so, TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
 
 * The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. When doing so, TOKEN_INFO is the value of the 'psk_identity' field of the ClientKeyExchange message (when using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
 
