@@ -121,7 +121,7 @@ This document specifies a method for allowing registered devices to access and p
 
 Unlike in the case of token introspection (see {{Section 5.9 of RFC9200}}), a registered device does not provide an owned access token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining access tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.
 
-The benefits of this method are that it complements token introspection, and it does not require the registered devices to support any additional endpoints (see {{terminology}}). The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as Token identifiers (see {{sec-token-name}}).
+The benefits of this method are that it complements token introspection, and it does not require the registered devices to support any additional endpoints (see {{terminology}}). The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see {{sec-overview}}), and the lightweight computation of hash values to use as access token identifiers (see {{sec-token-name}}).
 
 The process by which access tokens are declared revoked is out of the scope of this document. It is also out of scope the method by which the AS determines or is notified of revoked access tokens, according to which the AS consequently updates the TRL as specified in this document.
 
@@ -139,7 +139,7 @@ Note that the term "endpoint" is used here following its OAuth definition {{RFC6
 
 This specification also refers to the following terminology.
 
-* Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
+* Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other access token identifiers possibly used, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
 
 * Token Revocation List (TRL): a collection of token hashes such that the corresponding access tokens have been revoked but are not expired yet.
 
@@ -209,7 +209,7 @@ At a high level, the steps of this protocol are as follows.
                      :    :   t1   :           :     t3     :    :
                      :    :........:           :............:    :
                      :                   t2                      :
-                     .............................................
+                     :...........................................:
 ~~~~~~~~~~~
 {: #fig-protocol-overview title="Protocol Overview" artwork-align="center"}
 
@@ -263,9 +263,9 @@ In particular:
 
 The following overviews how the above specifically applies to the existing transport profiles of ACE.
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so, TOKEN_INFO is the payload of the POST request.
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so (e.g., like in {{RFC9202}}), TOKEN_INFO is the payload of the POST request.
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor" (e.g., like in {{RFC9203}}). When doing so, TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
+* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor". When doing so (e.g., like in {{RFC9203}}), TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
 
 * The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. When doing so, TOKEN_INFO is the value of the 'psk_identity' field of the ClientKeyExchange message (when using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
 
@@ -273,7 +273,7 @@ The following overviews how the above specifically applies to the existing trans
 
 ### Design Rationale
 
-Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).
+Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash of a given access token, by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).
 
 This is achieved by building HASH_INPUT according to the content of the 'access_token' parameter in the AS-to-Client responses, since that is what all among the AS, the Client, and the RS are able to see.
 
@@ -285,7 +285,7 @@ The following defines how the Client and the AS determine the HASH_INPUT value t
 
 Once determined HASH_INPUT, the Client and the AS use it to compute the token hash of the conveyed access token as defined in {{sec-token-hash-output}}.
 
-### AS-to-Client Response in CBOR # {#sec-token-hash-input-c-as-cbor}
+### AS-to-Client Response Encoded in CBOR # {#sec-token-hash-input-c-as-cbor}
 
 If the AS-to-Client response is encoded in CBOR, then HASH_INPUT is defined as follows:
 
@@ -322,7 +322,7 @@ Payload:
 ~~~~~~~~~~~
 {: #fig-as-response-cbor title="Example of AS-to-Client CoAP response using CBOR" artwork-align="left"}
 
-### AS-to-Client Response in JSON # {#sec-token-hash-input-c-as-json}
+### AS-to-Client Response Encoded in JSON # {#sec-token-hash-input-c-as-json}
 
 If the AS-to-Client response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the 'access_token' parameter.
 
@@ -690,7 +690,8 @@ Payload:
        [ h'01fa51cc/...
            (remainder of the token hash omitted for brevity)/',
          h'01748190/...
-           (remainder of the token hash omitted for brevity)/'],
+           (remainder of the token hash omitted for brevity)/'
+       ],
        [ h'01cdf1ca/...
            (remainder of the token hash omitted for brevity)/',
          h'01be41a6/...
@@ -716,7 +717,7 @@ Payload:
    ]
 }
 ~~~~~~~~~~~
-{: #response-diff title="Example of response following a Diff Query request to the TRL endpoint" artwork-align="left"}
+{: #response-diff title="Example of response following a diff query request to the TRL endpoint" artwork-align="left"}
 
 {{sec-series-pattern}} discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in {{I-D.bormann-t2trg-stp}}.
 
@@ -836,7 +837,7 @@ When communicating with one another, the registered devices and the AS have to u
 
 In the same spirit, it MUST be ensured that communications between the AS and an administrator are mutually authenticated, encrypted and integrity protected, as well as protected against message replay.
 
-Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is REQUIRED during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication {{RFC8446}}{{RFC9147}}, or an OSCORE Security Context {{RFC8613}} by running the authenticated key establishment protocol EDHOC {{RFC9528}}.
+Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is REQUIRED during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication {{RFC8446}}{{RFC9147}}, or an OSCORE Security Context {{RFC8613}} by running the authenticated key exchange protocol EDHOC {{RFC9528}}.
 
 When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the full TRL.
 
@@ -929,7 +930,7 @@ The AS MUST ensure that, other than registered devices accessing their own perta
 
 ## Size of the TRL
 
-If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
+If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception of a response from the TRL endpoint, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
 
 This could be exploited by attackers to negatively affect the behavior of a registered device. Therefore, in order to help reduce the size of the TRL, the AS SHOULD refrain from issuing access tokens with an excessively long expiration time.
 
@@ -953,7 +954,7 @@ A Client may attempt to access a protected resource at an RS after the access to
 
 In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.
 
-In order to minimize such risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
+In order to minimize such a risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
 ## Two Token Hashes at the RS using JWTs # {#sec-seccons-two-hashes-jwt}
 
@@ -1130,13 +1131,13 @@ For each parameter, the columns of the table specify the following information. 
 
 * Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.
 
-| Name           | Single <br> instance | Description                                                                      | Value                                                                   |
+| Name           | Single <br> instance | Description                                                                      | Values                                                                   |
 | MAX_N          | Y                    | Max number of series items in the update collection of each requester            | LB = 1 <br><br> If supporting <br> "Cursor", then <br> UB = MAX_INDEX+1 |
 | MAX_DIFF_BATCH | N                    | Max number of diff entries included in a diff query response when using "Cursor" | LB = 1 <br><br> UB = MAX_N                                              |
 | MAX_INDEX      | Y                    | Max value of each instance of the 'index' parameter                              | LB = MAX_N-1 <br><br> UB = (2^64)-1                                     |
 | index          | N                    | Value associated with a series item of an update collection                      | LB = 0 <br><br> UB = MAX_INDEX                                          |
 | last_index     | N                    | The 'index' value of the most recently added series item in an update collection | LB = 0 <br><br> UB = MAX_INDEX                                          |
-{: #table-TRL-endpoint-parameters title="Parameters of the TRL Endpoint" align="center"}
+{: #table-TRL-endpoint-parameters title="Local Supportive Parameters of the TRL Endpoint" align="center"}
 
 # Interaction Examples # {#sec-RS-examples}
 
@@ -1154,7 +1155,7 @@ Registration is assumed to be done by the RS sending a POST request with an unsp
 
 * possible further parameters related to the registration process.
 
-Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value the token hashes of the access tokens t1 and t2, respectively.
+Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in {{sec-token-name}} of this specification and according to {{RFC6920}}. Assuming the usage of CWTs transported in AS-to-Client responses encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}), 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value the token hashes of the access tokens t1 and t2, respectively.
 
 ## Full Query with Observe # {#sec-RS-example-1}
 
@@ -1169,13 +1170,13 @@ RS                                                  AS
 +--------------------------------------------------->|
 |                                                    |
 |<---------------------------------------------------+
-|                    2.01 Created                    |
-|                      Payload: {                    |
-|                        / ... /                     |
-|                        "trl_path" : "revoke/trl",  |
-|                        "trl_hash" : "sha-256",     |
-|                           "max_n" : 10             |
-|                      }                             |
+|                   2.01 Created                     |
+|                     Payload: {                     |
+|                       / ... /                      |
+|                       "trl_path" : "/revoke/trl",  |
+|                       "trl_hash" : "sha-256",      |
+|                          "max_n" : 10              |
+|                     }                              |
 |                                                    |
 |  GET coap://as.example.com/revoke/trl/             |
 |    Observe: 0                                      |
@@ -1263,7 +1264,7 @@ RS                                                  AS
 |                   2.01 Created                     |
 |                     Payload: {                     |
 |                       / ... /                      |
-|                       "trl_path" : "revoke/trl",   |
+|                       "trl_path" : "/revoke/trl",  |
 |                       "trl_hash" : "sha-256",      |
 |                          "max_n" : 10              |
 |                     }                              |
@@ -1347,7 +1348,7 @@ RS                                                  AS
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
-{: #fig-RS-AS-2 title="Interaction for Diff Query with Observe" artwork-align="center"}
+{: #fig-RS-AS-2 title="Interaction for diff query with Observe" artwork-align="center"}
 
 ## Full Query with Observe plus Diff Query # {#sec-RS-example-3}
 
@@ -1369,7 +1370,7 @@ RS                                                  AS
 |                   2.01 Created                     |
 |                     Payload: {                     |
 |                       / ... /                      |
-|                       "trl_path" : "revoke/trl",   |
+|                       "trl_path" : "/revoke/trl",  |
 |                       "trl_hash" : "sha-256",      |
 |                          "max_n" : 10              |
 |                     }                              |
@@ -1461,7 +1462,7 @@ RS                                                  AS
 |        }                                           |
 |                                                    |
 ~~~~~~~~~~~
-{: #fig-RS-AS-3 title="Interaction for full query with Observe plus Diff Query" artwork-align="center"}
+{: #fig-RS-AS-3 title="Interaction for full query with Observe plus diff query" artwork-align="center"}
 
 ## Diff Query with Observe and \"Cursor\" # {#sec-RS-example-2-3}
 
@@ -1482,14 +1483,14 @@ RS                                                      AS
 +------------------------------------------------------->|
 |                                                        |
 |<-------------------------------------------------------+
-|                   2.01 Created                         |
-|                     Payload: {                         |
-|                            / ... /                     |
-|                            "trl_path" : "revoke/trl",  |
-|                            "trl_hash" : "sha-256",     |
-|                               "max_n" : 10,            |
-|                       "max_diff_batch": 5              |
-|                     }                                  |
+|                  2.01 Created                          |
+|                    Payload: {                          |
+|                           / ... /                      |
+|                           "trl_path" : "/revoke/trl",  |
+|                           "trl_hash" : "sha-256",      |
+|                              "max_n" : 10,             |
+|                      "max_diff_batch": 5               |
+|                    }                                   |
 |                                                        |
 |  GET coap://as.example.com/revoke/trl?diff=3           |
 |    Observe: 0                                          |
@@ -1614,7 +1615,7 @@ RS                                                      AS
 |            }                                           |
 |                                                        |
 ~~~~~~~~~~~
-{: #fig-RS-AS-4 title="Interaction for Diff Query with Observe and \"Cursor\"" artwork-align="center"}
+{: #fig-RS-AS-4 title="Interaction for diff query with Observe and \"Cursor\"" artwork-align="center"}
 
 ## Full Query with Observe plus Diff Query with \"Cursor\" # {#sec-RS-example-5}
 
@@ -1641,14 +1642,14 @@ RS                                                             AS
 +-------------------------------------------------------------->|
 |                                                               |
 |<--------------------------------------------------------------+
-|                          2.01 Created                         |
-|                            Payload: {                         |
-|                                   / ... /                     |
-|                                   "trl_path" : "revoke/trl",  |
-|                                   "trl_hash" : "sha-256",     |
-|                                      "max_n" : 10,            |
-|                              "max_diff_batch": 5              |
-|                            }                                  |
+|                         2.01 Created                          |
+|                           Payload: {                          |
+|                                  / ... /                      |
+|                                  "trl_path" : "/revoke/trl",  |
+|                                  "trl_hash" : "sha-256",      |
+|                                     "max_n" : 10,             |
+|                             "max_diff_batch": 5               |
+|                           }                                   |
 |                                                               |
 |  GET coap://as.example.com/revoke/trl/                        |
 |    Observe: 0                                                 |
@@ -1857,7 +1858,7 @@ RS                                                             AS
 |          }                                                    |
 |                                                               |
 ~~~~~~~~~~~
-{: #fig-RS-AS-5 title="Interaction for full query with Observe plus Diff Query with \"Cursor\"" artwork-align="center"}
+{: #fig-RS-AS-5 title="Interaction for full query with Observe plus diff query with \"Cursor\"" artwork-align="center"}
 
 
 # CDDL Model # {#sec-cddl-model}
