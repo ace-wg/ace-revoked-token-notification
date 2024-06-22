@@ -1032,7 +1032,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca, et al.</td>
-<td class="center">Expires 23 December 2024</td>
+<td class="center">Expires 24 December 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1045,12 +1045,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-ace-revoked-token-notification-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-06-21" class="published">21 June 2024</time>
+<time datetime="2024-06-22" class="published">22 June 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-12-23">23 December 2024</time></dd>
+<dd class="expires"><time datetime="2024-12-24">24 December 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1107,7 +1107,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1168,10 +1168,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-hash-input-on-the-client-an" class="internal xref">Hash Input on the Client and the AS</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
-                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-as-to-client-response-in-cb" class="internal xref">AS-to-Client Response in CBOR</a></p>
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-as-to-client-response-encod" class="internal xref">AS-to-Client Response Encoded in CBOR</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
-                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-as-to-client-response-in-js" class="internal xref">AS-to-Client Response in JSON</a></p>
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-as-to-client-response-encode" class="internal xref">AS-to-Client Response Encoded in JSON</a></p>
 </li>
                 </ul>
 </li>
@@ -1401,7 +1401,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-3">As discussed in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, only client-initiated revocation is currently specified <span>[<a href="#RFC7009" class="cite xref">RFC7009</a>]</span> for OAuth 2.0 <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, based on the assumption that access tokens in OAuth are issued with a relatively short lifetime. However, this is not expected to be the case for constrained, intermittently connected devices, that need access tokens with relatively long lifetimes.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">This document specifies a method for allowing registered devices to access and possibly subscribe to a Token Revocation List (TRL) on the AS, in order to obtain updated information about pertaining access tokens that were revoked prior to their expiration. As specified in this document, the registered devices use the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> to communicate with the AS and with one another, and can subscribe to the TRL on the AS by using resource observation for CoAP <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>. Other underlying protocols than CoAP are not prohibited from being supported in the future, if they are defined to be used in the ACE framework for Authentication and Authorization.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">Unlike in the case of token introspection (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.9" class="relref">Section 5.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), a registered device does not provide an owned access token to the AS for inquiring about its current state. Instead, registered devices simply obtain updated information about pertaining access tokens that were revoked prior to their expiration, as efficiently identified by corresponding hash values.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">The benefits of this method are that it complements token introspection, and it does not require the registered devices to support any additional endpoints (see <a href="#terminology" class="auto internal xref">Section 1.1</a>). The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see <a href="#sec-overview" class="auto internal xref">Section 2</a>), and the lightweight computation of hash values to use as Token identifiers (see <a href="#sec-token-name" class="auto internal xref">Section 3</a>).<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">The benefits of this method are that it complements token introspection, and it does not require the registered devices to support any additional endpoints (see <a href="#terminology" class="auto internal xref">Section 1.1</a>). The only additional requirements for registered devices are a request/response interaction with the AS to access and possibly subscribe to the TRL (see <a href="#sec-overview" class="auto internal xref">Section 2</a>), and the lightweight computation of hash values to use as access token identifiers (see <a href="#sec-token-name" class="auto internal xref">Section 3</a>).<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">The process by which access tokens are declared revoked is out of the scope of this document. It is also out of scope the method by which the AS determines or is notified of revoked access tokens, according to which the AS consequently updates the TRL as specified in this document.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <div id="terminology">
 <section id="section-1.1">
@@ -1419,7 +1419,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 <p id="section-1.1-6">This specification also refers to the following terminology.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-7.1">
-            <p id="section-1.1-7.1.1">Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-1.1-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-7.1.1">Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other access token identifiers possibly used, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-1.1-7.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-7.2">
             <p id="section-1.1-7.2.1">Token Revocation List (TRL): a collection of token hashes such that the corresponding access tokens have been revoked but are not expired yet.<a href="#section-1.1-7.2.1" class="pilcrow">¶</a></p>
@@ -1575,7 +1575,7 @@ Further Observe notifications may be sent, consistently with ongoing additional 
                 <text x="176" y="292">:</text>
                 <text x="340" y="292">t2</text>
                 <text x="528" y="292">:</text>
-                <text x="352" y="308">.............................................</text>
+                <text x="352" y="308">:...........................................:</text>
               </g>
             </svg><a href="#section-2-5.1.1" class="pilcrow">¶</a>
 </div>
@@ -1659,10 +1659,10 @@ This implies that, within the JSON object specified as message payload, the para
 <p id="section-3.1.2-4">The following overviews how the above specifically applies to the existing transport profiles of ACE.<a href="#section-3.1.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-5.1">
-              <p id="section-3.1.2-5.1.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10.1" class="relref">Section 5.10.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so, TOKEN_INFO is the payload of the POST request.<a href="#section-3.1.2-5.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-5.1.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10.1" class="relref">Section 5.10.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so (e.g., like in <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), TOKEN_INFO is the payload of the POST request.<a href="#section-3.1.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-5.2">
-              <p id="section-3.1.2-5.2.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor" (e.g., like in <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>). When doing so, TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.<a href="#section-3.1.2-5.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-5.2.1">The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor". When doing so (e.g., like in <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>), TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.<a href="#section-3.1.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-5.3">
               <p id="section-3.1.2-5.3.1">The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>. When doing so, TOKEN_INFO is the value of the 'psk_identity' field of the ClientKeyExchange message (when using DTLS 1.2 <span>[<a href="#RFC6347" class="cite xref">RFC6347</a>]</span>), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>).<a href="#section-3.1.2-5.3.1" class="pilcrow">¶</a></p>
@@ -1678,7 +1678,7 @@ This implies that, within the JSON object specified as message payload, the para
           <h4 id="name-design-rationale">
 <a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-design-rationale" class="section-name selfRef">Design Rationale</a>
           </h4>
-<p id="section-3.1.3-1">Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-1">Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash of a given access token, by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.3-2">This is achieved by building HASH_INPUT according to the content of the 'access_token' parameter in the AS-to-Client responses, since that is what all among the AS, the Client, and the RS are able to see.<a href="#section-3.1.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1694,8 +1694,8 @@ This implies that, within the JSON object specified as message payload, the para
 <p id="section-3.2-3">Once determined HASH_INPUT, the Client and the AS use it to compute the token hash of the conveyed access token as defined in <a href="#sec-token-hash-output" class="auto internal xref">Section 3.4</a>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <div id="sec-token-hash-input-c-as-cbor">
 <section id="section-3.2.1">
-          <h4 id="name-as-to-client-response-in-cb">
-<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-as-to-client-response-in-cb" class="section-name selfRef">AS-to-Client Response in CBOR</a>
+          <h4 id="name-as-to-client-response-encod">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-as-to-client-response-encod" class="section-name selfRef">AS-to-Client Response Encoded in CBOR</a>
           </h4>
 <p id="section-3.2.1-1">If the AS-to-Client response is encoded in CBOR, then HASH_INPUT is defined as follows:<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1746,8 +1746,8 @@ Payload:
 </div>
 <div id="sec-token-hash-input-c-as-json">
 <section id="section-3.2.2">
-          <h4 id="name-as-to-client-response-in-js">
-<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-as-to-client-response-in-js" class="section-name selfRef">AS-to-Client Response in JSON</a>
+          <h4 id="name-as-to-client-response-encode">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-as-to-client-response-encode" class="section-name selfRef">AS-to-Client Response Encoded in JSON</a>
           </h4>
 <p id="section-3.2.2-1">If the AS-to-Client response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the 'access_token' parameter.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.2-2">With reference to the example in <a href="#fig-as-response-json" class="auto internal xref">Figure 3</a>, HASH_INPUT is the binary representation of "2YotnFZFEjr1zCsicMWpAA".<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
@@ -2271,7 +2271,8 @@ Payload:
        [ h'01fa51cc/...
            (remainder of the token hash omitted for brevity)/',
          h'01748190/...
-           (remainder of the token hash omitted for brevity)/'],
+           (remainder of the token hash omitted for brevity)/'
+       ],
        [ h'01cdf1ca/...
            (remainder of the token hash omitted for brevity)/',
          h'01be41a6/...
@@ -2299,7 +2300,7 @@ Payload:
 </pre>
 </div>
 <figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
-<a href="#name-example-of-response-followin" class="selfRef">Example of response following a Diff Query request to the TRL endpoint</a>
+<a href="#name-example-of-response-followin" class="selfRef">Example of response following a diff query request to the TRL endpoint</a>
         </figcaption></figure>
 </div>
 <p id="section-7-8"><a href="#sec-series-pattern" class="auto internal xref">Appendix A</a> discusses how performing a diff query of the TRL is in fact a usage example of the Series Transfer Pattern defined in <span>[<a href="#I-D.bormann-t2trg-stp" class="cite xref">I-D.bormann-t2trg-stp</a>]</span>.<a href="#section-7-8" class="pilcrow">¶</a></p>
@@ -2480,7 +2481,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
       </ul>
 <p id="section-9-3">When communicating with one another, the registered devices and the AS have to use a secure communication association and be mutually authenticated (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5" class="relref">Section 5</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">In the same spirit, it <span class="bcp14">MUST</span> be ensured that communications between the AS and an administrator are mutually authenticated, encrypted and integrity protected, as well as protected against message replay.<a href="#section-9-4" class="pilcrow">¶</a></p>
-<p id="section-9-5">Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is <span class="bcp14">REQUIRED</span> during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span><span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, or an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span> by running the authenticated key establishment protocol EDHOC <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-9-5" class="pilcrow">¶</a></p>
+<p id="section-9-5">Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is <span class="bcp14">REQUIRED</span> during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span><span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, or an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span> by running the authenticated key exchange protocol EDHOC <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>.<a href="#section-9-5" class="pilcrow">¶</a></p>
 <p id="section-9-6">When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the full TRL.<a href="#section-9-6" class="pilcrow">¶</a></p>
 <p id="section-9-7">To this end, the AS may rely on a local access control list or similar, which specifies the authentication credentials of trusted, authorized administrators. In particular, the AS verifies the requester to the TRL endpoint as an authorized administrator, only if the access control list includes the same authentication credential used by the requester when establishing the mutually-authenticated secure communication association with the AS.<a href="#section-9-7" class="pilcrow">¶</a></p>
 <p id="section-9-8">Further details about the registration process at the AS are out of scope for this specification. Note that the registration process is also out of the scope of the ACE framework for Authentication and Authorization (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.5" class="relref">Section 5.5</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-9-8" class="pilcrow">¶</a></p>
@@ -2641,7 +2642,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         <h3 id="name-size-of-the-trl">
 <a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-size-of-the-trl" class="section-name selfRef">Size of the TRL</a>
         </h3>
-<p id="section-13.2-1">If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception, especially if relying on a full query of the TRL (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>).<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+<p id="section-13.2-1">If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception of a response from the TRL endpoint, especially if relying on a full query of the TRL (see <a href="#ssec-trl-full-query" class="auto internal xref">Section 6</a>).<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 <p id="section-13.2-2">This could be exploited by attackers to negatively affect the behavior of a registered device. Therefore, in order to help reduce the size of the TRL, the AS <span class="bcp14">SHOULD</span> refrain from issuing access tokens with an excessively long expiration time.<a href="#section-13.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2671,7 +2672,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         </h3>
 <p id="section-13.5-1">A Client may attempt to access a protected resource at an RS after the access token allowing such an access has been revoked, but before the RS is aware of the revocation.<a href="#section-13.5-1" class="pilcrow">¶</a></p>
 <p id="section-13.5-2">In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.<a href="#section-13.5-2" class="pilcrow">¶</a></p>
-<p id="section-13.5-3">In order to minimize such risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS <span class="bcp14">SHOULD</span> implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.<a href="#section-13.5-3" class="pilcrow">¶</a></p>
+<p id="section-13.5-3">In order to minimize such a risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS <span class="bcp14">SHOULD</span> implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.<a href="#section-13.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-seccons-two-hashes-jwt">
@@ -3025,18 +3026,18 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
           <p id="appendix-B-4.4.1">Values: the unsigned integer values that the parameter can assume, where LB and UB denote the inclusive lower bound and upper bound, respectively, and "^" is the exponentiation operator.<a href="#appendix-B-4.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<span id="name-parameters-of-the-trl-endpo"></span><div id="_table-TRL-endpoint-parameters">
+<span id="name-local-supportive-parameters-"></span><div id="_table-TRL-endpoint-parameters">
 <table class="center" id="table-3">
         <caption>
 <a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-parameters-of-the-trl-endpo" class="selfRef">Parameters of the TRL Endpoint</a>
+<a href="#name-local-supportive-parameters-" class="selfRef">Local Supportive Parameters of the TRL Endpoint</a>
         </caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">Name</th>
             <th class="text-left" rowspan="1" colspan="1">Single  instance</th>
             <th class="text-left" rowspan="1" colspan="1">Description</th>
-            <th class="text-left" rowspan="1" colspan="1">Value</th>
+            <th class="text-left" rowspan="1" colspan="1">Values</th>
           </tr>
         </thead>
         <tbody>
@@ -3097,7 +3098,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
           <p id="appendix-C-4.4.1">possible further parameters related to the registration process.<a href="#appendix-C-4.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-C-5">Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in <a href="#sec-token-name" class="auto internal xref">Section 3</a> of this specification and according to <span>[<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>. Assuming the usage of CWTs transported in CBOR, 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value the token hashes of the access tokens t1 and t2, respectively.<a href="#appendix-C-5" class="pilcrow">¶</a></p>
+<p id="appendix-C-5">Furthermore, 'h(x)' refers to the hash function used to compute the token hashes, as defined in <a href="#sec-token-name" class="auto internal xref">Section 3</a> of this specification and according to <span>[<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>. Assuming the usage of CWTs transported in AS-to-Client responses encoded in CBOR (see <a href="#sec-token-hash-input-c-as-cbor" class="auto internal xref">Section 3.2.1</a>), 'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value the token hashes of the access tokens t1 and t2, respectively.<a href="#appendix-C-5" class="pilcrow">¶</a></p>
 <div id="sec-RS-example-1">
 <section id="appendix-C.1">
         <h3 id="name-full-query-with-observe">
@@ -3133,23 +3134,23 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
                   <text x="428" y="36">AS</text>
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
-                  <text x="188" y="132">2.01</text>
-                  <text x="240" y="132">Created</text>
-                  <text x="220" y="148">Payload:</text>
-                  <text x="264" y="148">{</text>
-                  <text x="208" y="164">/</text>
-                  <text x="232" y="164">...</text>
-                  <text x="256" y="164">/</text>
-                  <text x="244" y="180">"trl_path"</text>
-                  <text x="296" y="180">:</text>
-                  <text x="360" y="180">"revoke/trl",</text>
-                  <text x="244" y="196">"trl_hash"</text>
-                  <text x="296" y="196">:</text>
-                  <text x="348" y="196">"sha-256",</text>
-                  <text x="256" y="212">"max_n"</text>
-                  <text x="296" y="212">:</text>
-                  <text x="316" y="212">10</text>
-                  <text x="192" y="228">}</text>
+                  <text x="180" y="132">2.01</text>
+                  <text x="232" y="132">Created</text>
+                  <text x="212" y="148">Payload:</text>
+                  <text x="256" y="148">{</text>
+                  <text x="200" y="164">/</text>
+                  <text x="224" y="164">...</text>
+                  <text x="248" y="164">/</text>
+                  <text x="236" y="180">"trl_path"</text>
+                  <text x="288" y="180">:</text>
+                  <text x="356" y="180">"/revoke/trl",</text>
+                  <text x="236" y="196">"trl_hash"</text>
+                  <text x="288" y="196">:</text>
+                  <text x="340" y="196">"sha-256",</text>
+                  <text x="248" y="212">"max_n"</text>
+                  <text x="288" y="212">:</text>
+                  <text x="308" y="212">10</text>
+                  <text x="184" y="228">}</text>
                   <text x="40" y="260">GET</text>
                   <text x="192" y="260">coap://as.example.com/revoke/trl/</text>
                   <text x="76" y="276">Observe:</text>
@@ -3304,7 +3305,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
                   <text x="248" y="164">/</text>
                   <text x="236" y="180">"trl_path"</text>
                   <text x="288" y="180">:</text>
-                  <text x="352" y="180">"revoke/trl",</text>
+                  <text x="356" y="180">"/revoke/trl",</text>
                   <text x="236" y="196">"trl_hash"</text>
                   <text x="288" y="196">:</text>
                   <text x="340" y="196">"sha-256",</text>
@@ -3455,7 +3456,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 </div>
 </div>
 <figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
-<a href="#name-interaction-for-diff-query-" class="selfRef">Interaction for Diff Query with Observe</a>
+<a href="#name-interaction-for-diff-query-" class="selfRef">Interaction for diff query with Observe</a>
           </figcaption></figure>
 </div>
 </section>
@@ -3510,7 +3511,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
                   <text x="248" y="164">/</text>
                   <text x="236" y="180">"trl_path"</text>
                   <text x="288" y="180">:</text>
-                  <text x="352" y="180">"revoke/trl",</text>
+                  <text x="356" y="180">"/revoke/trl",</text>
                   <text x="236" y="196">"trl_hash"</text>
                   <text x="288" y="196">:</text>
                   <text x="340" y="196">"sha-256",</text>
@@ -3663,7 +3664,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 </div>
 </div>
 <figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
-<a href="#name-interaction-for-full-query-w" class="selfRef">Interaction for full query with Observe plus Diff Query</a>
+<a href="#name-interaction-for-full-query-w" class="selfRef">Interaction for full query with Observe plus diff query</a>
           </figcaption></figure>
 </div>
 </section>
@@ -3714,25 +3715,25 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
                   <text x="460" y="36">AS</text>
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
-                  <text x="180" y="132">2.01</text>
-                  <text x="232" y="132">Created</text>
-                  <text x="212" y="148">Payload:</text>
-                  <text x="256" y="148">{</text>
-                  <text x="240" y="164">/</text>
-                  <text x="264" y="164">...</text>
-                  <text x="288" y="164">/</text>
-                  <text x="276" y="180">"trl_path"</text>
-                  <text x="328" y="180">:</text>
-                  <text x="392" y="180">"revoke/trl",</text>
-                  <text x="276" y="196">"trl_hash"</text>
-                  <text x="328" y="196">:</text>
-                  <text x="380" y="196">"sha-256",</text>
-                  <text x="288" y="212">"max_n"</text>
-                  <text x="328" y="212">:</text>
-                  <text x="352" y="212">10,</text>
-                  <text x="264" y="228">"max_diff_batch":</text>
-                  <text x="344" y="228">5</text>
-                  <text x="184" y="244">}</text>
+                  <text x="172" y="132">2.01</text>
+                  <text x="224" y="132">Created</text>
+                  <text x="204" y="148">Payload:</text>
+                  <text x="248" y="148">{</text>
+                  <text x="232" y="164">/</text>
+                  <text x="256" y="164">...</text>
+                  <text x="280" y="164">/</text>
+                  <text x="268" y="180">"trl_path"</text>
+                  <text x="320" y="180">:</text>
+                  <text x="388" y="180">"/revoke/trl",</text>
+                  <text x="268" y="196">"trl_hash"</text>
+                  <text x="320" y="196">:</text>
+                  <text x="372" y="196">"sha-256",</text>
+                  <text x="280" y="212">"max_n"</text>
+                  <text x="320" y="212">:</text>
+                  <text x="344" y="212">10,</text>
+                  <text x="256" y="228">"max_diff_batch":</text>
+                  <text x="336" y="228">5</text>
+                  <text x="176" y="244">}</text>
                   <text x="40" y="276">GET</text>
                   <text x="216" y="276">coap://as.example.com/revoke/trl?diff=3</text>
                   <text x="76" y="292">Observe:</text>
@@ -3965,7 +3966,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 </div>
 </div>
 <figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
-<a href="#name-interaction-for-diff-query-w" class="selfRef">Interaction for Diff Query with Observe and "Cursor"</a>
+<a href="#name-interaction-for-diff-query-w" class="selfRef">Interaction for diff query with Observe and "Cursor"</a>
           </figcaption></figure>
 </div>
 </section>
@@ -4039,25 +4040,25 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
                   <text x="516" y="36">AS</text>
                   <text x="80" y="68">Registration:</text>
                   <text x="156" y="68">POST</text>
-                  <text x="236" y="132">2.01</text>
-                  <text x="288" y="132">Created</text>
-                  <text x="268" y="148">Payload:</text>
-                  <text x="312" y="148">{</text>
-                  <text x="296" y="164">/</text>
-                  <text x="320" y="164">...</text>
-                  <text x="344" y="164">/</text>
-                  <text x="332" y="180">"trl_path"</text>
-                  <text x="384" y="180">:</text>
-                  <text x="448" y="180">"revoke/trl",</text>
-                  <text x="332" y="196">"trl_hash"</text>
-                  <text x="384" y="196">:</text>
-                  <text x="436" y="196">"sha-256",</text>
-                  <text x="344" y="212">"max_n"</text>
-                  <text x="384" y="212">:</text>
-                  <text x="408" y="212">10,</text>
-                  <text x="320" y="228">"max_diff_batch":</text>
-                  <text x="400" y="228">5</text>
-                  <text x="240" y="244">}</text>
+                  <text x="228" y="132">2.01</text>
+                  <text x="280" y="132">Created</text>
+                  <text x="260" y="148">Payload:</text>
+                  <text x="304" y="148">{</text>
+                  <text x="288" y="164">/</text>
+                  <text x="312" y="164">...</text>
+                  <text x="336" y="164">/</text>
+                  <text x="324" y="180">"trl_path"</text>
+                  <text x="376" y="180">:</text>
+                  <text x="444" y="180">"/revoke/trl",</text>
+                  <text x="324" y="196">"trl_hash"</text>
+                  <text x="376" y="196">:</text>
+                  <text x="428" y="196">"sha-256",</text>
+                  <text x="336" y="212">"max_n"</text>
+                  <text x="376" y="212">:</text>
+                  <text x="400" y="212">10,</text>
+                  <text x="312" y="228">"max_diff_batch":</text>
+                  <text x="392" y="228">5</text>
+                  <text x="232" y="244">}</text>
                   <text x="40" y="276">GET</text>
                   <text x="192" y="276">coap://as.example.com/revoke/trl/</text>
                   <text x="76" y="292">Observe:</text>
@@ -4433,7 +4434,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
 </div>
 </div>
 <figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
-<a href="#name-interaction-for-full-query-wi" class="selfRef">Interaction for full query with Observe plus Diff Query with "Cursor"</a>
+<a href="#name-interaction-for-full-query-wi" class="selfRef">Interaction for full query with Observe plus diff query with "Cursor"</a>
           </figcaption></figure>
 </div>
 </section>
