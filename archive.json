@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-20T01:09:22.680258+00:00",
+  "timestamp": "2024-06-23T01:15:08.441221+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -476,6 +476,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOG4P0p85zPqxz",
+      "title": "Marco Rasori 2nd WGLC Review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/11",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Marco Rasori during the 2nd WG Last Call, archived at https://mailarchive.ietf.org/arch/msg/ace/gFhIBwJHdc_nN3v9ZuTakkAuohA/",
+      "createdAt": "2024-06-22T10:00:15Z",
+      "updatedAt": "2024-06-22T10:00:16Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "2a54daa1a51bf04a54efcca46976e23d9bd20040",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "marco-rasori-2nd-wglc-review",
+      "headRefOid": "06a874817d999bbee56e3685449a08aaa88dbc18",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
