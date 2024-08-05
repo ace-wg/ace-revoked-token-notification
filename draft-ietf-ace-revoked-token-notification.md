@@ -464,7 +464,7 @@ Some error responses from the TRL endpoint at the AS can convey error-specific i
 
   - The field 'error-id' MUST be present. The map key used for this field is the CBOR unsigned integer with value 0. The value of this field is a CBOR integer specifying the error occurred at the AS. This value is taken from the 'Value' column of the "ACE Token Revocation List Errors" registry defined in {{iana-token-revocation-list-errors}} of this document.
 
-  - The field 'cursor' MAY be present. The map key used for this field is the CBOR unsigned integer with value 1. The value of this field is a CBOR unsigned integer or the CBOR simple value `null` (0xf6).
+  - The field 'cursor' MAY be present. The map key used for this field is the CBOR unsigned integer with value 1. The value of this field is a CBOR unsigned integer or the CBOR simple value `null` (0xf6). The use of this field is defined in {{sec-trl-endpoint-query-parameters}}.
 
   The CDDL notation {{RFC8610}} of the 'ace-trl-error' entry is given below.
 
