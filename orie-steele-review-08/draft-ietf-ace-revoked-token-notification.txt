@@ -1828,9 +1828,9 @@ Table of Contents
    The protocol defined in this document inherits the security
    considerations from the ACE framework for Authentication and
    Authorization [RFC9200], from [RFC8392] as to the usage of CWTs, from
-   [RFC7519] as to the usage of JWTs, from [RFC7641] as to the usage of
-   CoAP Observe, and from [RFC6920] with regard to computing the token
-   hashes.  The following considerations also apply.
+   [RFC7519] and [RFC8725] as to the usage of JWTs, from [RFC7641] as to
+   the usage of CoAP Observe, and from [RFC6920] with regard to
+   computing the token hashes.  The following considerations also apply.
 
 13.1.  Content Retrieval from the TRL
 
@@ -2298,6 +2298,11 @@ Table of Contents
               "Object Security for Constrained RESTful Environments
               (OSCORE)", RFC 8613, DOI 10.17487/RFC8613, July 2019,
               <https://www.rfc-editor.org/rfc/rfc8613>.
+
+   [RFC8725]  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
+              Current Practices", BCP 225, RFC 8725,
+              DOI 10.17487/RFC8725, February 2020,
+              <https://www.rfc-editor.org/rfc/rfc8725>.
 
    [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
