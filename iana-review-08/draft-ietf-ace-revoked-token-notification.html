@@ -12,11 +12,11 @@
 <meta content="
        This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked access tokens. As specified in this document, the method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked access tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers. 
     " name="description">
-<meta content="xml2rfc 3.22.0" name="generator">
+<meta content="xml2rfc 3.23.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-ace-revoked-token-notification-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.22.0
+  xml2rfc 3.23.0
     Python 3.12.3
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
@@ -27,7 +27,7 @@
     pycountry 22.3.5
     PyYAML 6.0.1
     requests 2.32.3
-    setuptools 69.5.1
+    setuptools 70.3.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-ace-revoked-token-notification.xml" rel="alternate" type="application/rfc+xml">
@@ -1031,7 +1031,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca, et al.</td>
-<td class="center">Expires 6 February 2025</td>
+<td class="center">Expires 2 March 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1044,12 +1044,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-ace-revoked-token-notification-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-08-05" class="published">5 August 2024</time>
+<time datetime="2024-08-29" class="published">29 August 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-02-06">6 February 2025</time></dd>
+<dd class="expires"><time datetime="2025-03-02">2 March 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1106,7 +1106,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 February 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2783,7 +2783,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         </h3>
 <p id="section-14.4-1">IANA is asked to establish the "ACE Token Revocation List Parameters" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-14.4-1" class="pilcrow">¶</a></p>
 <p id="section-14.4-2">As registration policy, the registry uses either "Standards Action with Expert Review", or "Specification Required" per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.6" class="relref">Section 4.6</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, or "Expert Review" per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Expert Review guidelines are provided in <a href="#review" class="auto internal xref">Section 14.6</a>.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
-<p id="section-14.4-3">All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.9" class="relref">Section 4.9</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, with Expert Review additionally required per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The procedure for early IANA allocation of Standards Track code points defined in <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span> also applies. When such a procedure is used, review and approval by the designated expert are also required, in order for the WG chairs to determine that the conditions for early allocation are met (see step 2 in <span><a href="https://rfc-editor.org/rfc/rfc7120#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7120" class="cite xref">RFC7120</a>]</span>).<a href="#section-14.4-3" class="pilcrow">¶</a></p>
+<p id="section-14.4-3">All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.9" class="relref">Section 4.9</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, with Expert Review additionally required per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The procedure for early IANA allocation of Standards Track code points defined in <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span> also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, WG chairs are encouraged to consult the expert(s) early during the process outlined in <span><a href="https://rfc-editor.org/rfc/rfc7120#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7120" class="cite xref">RFC7120</a>]</span>.<a href="#section-14.4-3" class="pilcrow">¶</a></p>
 <p id="section-14.4-4">The columns of this registry are:<a href="#section-14.4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-14.4-5.1">
@@ -2809,7 +2809,7 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
         </h3>
 <p id="section-14.5-1">IANA is asked to establish the "ACE Token Revocation List Errors" IANA registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-14.5-1" class="pilcrow">¶</a></p>
 <p id="section-14.5-2">As registration policy, the registry uses either "Standards Action with Expert Review", or "Specification Required" per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.6" class="relref">Section 4.6</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, or "Expert Review" per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Expert Review guidelines are provided in <a href="#review" class="auto internal xref">Section 14.6</a>.<a href="#section-14.5-2" class="pilcrow">¶</a></p>
-<p id="section-14.5-3">All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.9" class="relref">Section 4.9</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, with Expert Review additionally required per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The procedure for early IANA allocation of Standards Track code points defined in <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span> also applies. When such a procedure is used, review and approval by the designated expert are also required, in order for the WG chairs to determine that the conditions for early allocation are met (see step 2 in <span><a href="https://rfc-editor.org/rfc/rfc7120#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7120" class="cite xref">RFC7120</a>]</span>).<a href="#section-14.5-3" class="pilcrow">¶</a></p>
+<p id="section-14.5-3">All assignments according to "Standards Action with Expert Review" are made on a "Standards Action" basis per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.9" class="relref">Section 4.9</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>, with Expert Review additionally required per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The procedure for early IANA allocation of Standards Track code points defined in <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span> also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, WG chairs are encouraged to consult the expert(s) early during the process outlined in <span><a href="https://rfc-editor.org/rfc/rfc7120#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7120" class="cite xref">RFC7120</a>]</span>.<a href="#section-14.5-3" class="pilcrow">¶</a></p>
 <p id="section-14.5-4">The columns of this registry are:<a href="#section-14.5-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-14.5-5.1">
