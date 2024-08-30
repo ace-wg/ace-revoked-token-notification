@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 5 February 2025                                     Ericsson AB
+Expires: 3 March 2025                                        Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           4 August 2024
+                                                          30 August 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 February 2025.
+   This Internet-Draft will expire on 3 March 2025.
 
 Copyright Notice
 
@@ -285,6 +285,17 @@ Table of Contents
    *  TRL update pertaining to a requester: an update to the TRL through
       which token hashes pertaining to that requester have been added to
       the TRL or removed from the TRL.
+
+   *  Full query: a type of query to the TRL, where the AS returns the
+      token hashes of the revoked access tokens currently in the TRL and
+      pertaining to the requester.  Further details are specified in
+      Section 5 and Section 6.
+
+   *  Diff query: a type of query to the TRL, where the AS returns a
+      list of diff entries, each related to one update occurred to the
+      TRL and containing a set of token hashes pertaining to the
+      requester.  Further details are specified in Section 5 and
+      Section 7.
 
    Examples throughout this document are expressed in CBOR diagnostic
    notation as defined in Section 8 of [RFC8949] and Appendix G of
