@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 5 February 2025                                     Ericsson AB
+Expires: 5 March 2025                                        Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                           4 August 2024
+                                                        1 September 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 February 2025.
+   This Internet-Draft will expire on 5 March 2025.
 
 Copyright Notice
 
@@ -153,13 +153,13 @@ Table of Contents
 
    Authentication and Authorization for Constrained Environments (ACE)
    [RFC9200] is a framework that enforces access control on IoT devices
-   acting as Resource Servers.  In order to use ACE, both Clients and
-   Resource Servers have to register with an Authorization Server (AS)
-   and become a registered device.  Once registered, a Client can send a
-   request to the AS, to obtain an access token for a Resource Server
-   (RS).  For a Client to access the RS, the Client must present the
-   issued access token at the RS, which then validates it before storing
-   it (see Section 5.10.1.1 of [RFC9200]).
+   acting as Resource Servers (RSs).  In order to use ACE, both Clients
+   and RSs have to register with an Authorization Server (AS) and become
+   a registered device.  Once registered, a Client can send a request to
+   the AS, to obtain an access token for an RS.  For a Client to access
+   the RS, the Client must present the issued access token at the RS,
+   which then validates it before storing it (see Section 5.10.1.1 of
+   [RFC9200]).
 
    Even though access tokens have expiration times, there are
    circumstances by which an access token may need to be revoked before
