@@ -149,6 +149,8 @@ This specification also refers to the following terminology.
 
 * Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens.
 
+  An administrator might also be authorized to perform further administrative operations at the AS, e.g., through a dedicated admin interface that is out of the scope of this document. By considering the token hashes retrieved from the TRL together with other information obtained from the AS, the administrator becomes able to derive additional information, e.g., the fact that accesses have been revoked for specific registered devices.
+
 * Pertaining access token:
 
    - With reference to an administrator, an access token issued by the AS.
