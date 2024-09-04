@@ -835,6 +835,8 @@ During the registration process at the AS, an administrator or a registered devi
 
 * A positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
+Once completed the registration process, the AS maintains the registration and related information until a possible deregistration occurs, hence keeping track of active administrators and registered devices. The particular way to achieve this is implementation-specific. Such a mechanism to maintain registrations is enforced in any case at the AS, in order to ensure that requests sent by Clients to the /token endpoint (see {{Section 5.8 of RFC9200}}) and by RSs to the /introspect endpoint (see {{Section 5.9 of RFC9200}}) are processed as intended.
+
 When communicating with one another, the registered devices and the AS have to use a secure communication association and be mutually authenticated (see {{Section 5 of RFC9200}}).
 
 In the same spirit, it MUST be ensured that communications between the AS and an administrator are mutually authenticated, encrypted and integrity protected, as well as protected against message replay.
