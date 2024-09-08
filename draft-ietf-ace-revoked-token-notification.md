@@ -94,6 +94,13 @@ normative:
     date: false
     title: Named Information Hash Algorithm
     target: https://www.iana.org/assignments/named-information/named-information.xhtml
+  SHA-256:
+    author:
+      org: NIST
+    title: Secure Hash Standard
+    seriesinfo: FIPS 180-3
+    date: 2008-10
+    target: http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf
 
 informative:
   RFC7009:
@@ -410,7 +417,7 @@ If the RS performs both step 3 and step 4 above, then the RS MUST store, maintai
 
 Once determined HASH\_INPUT as defined in {{sec-token-hash-input-c-as}} and {{sec-token-hash-input-rs}}, a hash value of HASH\_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
 
-The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}.
+The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}. Consistent with the compliance requirements in {{Section 2 of RFC6920}}, the hash function sha-256 as specified in {{SHA-256}} is mandatory to implement.
 
 The AS specifies the used hash function to registered devices during their registration procedure (see {{sec-registration}}).
 
