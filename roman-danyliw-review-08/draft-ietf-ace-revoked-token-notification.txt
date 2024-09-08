@@ -1609,8 +1609,8 @@ Table of Contents
 
    When receiving authenticated requests from the administrator for
    accessing the TRL endpoint, the AS can always check whether the
-   requester is authorized to take such a role, i.e., to access the full
-   TRL.
+   requester is authorized to take such a role, i.e., to access the
+   content of the whole TRL.
 
    To this end, the AS may rely on a local access control list or
    similar, which specifies the authentication credentials of trusted,
@@ -1840,8 +1840,8 @@ Table of Contents
 
    The AS MUST ensure that, other than registered devices accessing
    their own pertaining subset of the TRL, only authorized and
-   authenticated administrators can retrieve the full TRL (see
-   Section 9).
+   authenticated administrators can access the content of the whole TRL
+   (see Section 9).
 
 13.2.  Size of the TRL
 
