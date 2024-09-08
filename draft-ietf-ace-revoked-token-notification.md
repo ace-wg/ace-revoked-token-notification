@@ -846,7 +846,7 @@ In the same spirit, it MUST be ensured that communications between the AS and an
 
 Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is REQUIRED during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication {{RFC8446}}{{RFC9147}}, or an OSCORE Security Context {{RFC8613}} by running the authenticated key exchange protocol EDHOC {{RFC9528}}.
 
-When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the full TRL.
+When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the content of the whole TRL.
 
 To this end, the AS may rely on a local access control list or similar, which specifies the authentication credentials of trusted, authorized administrators. In particular, the AS verifies the requester to the TRL endpoint as an authorized administrator, only if the access control list includes the same authentication credential used by the requester when establishing the mutually-authenticated secure communication association with the AS.
 
@@ -933,7 +933,7 @@ The protocol defined in this document inherits the security considerations from 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can always perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-The AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
+The AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can access the content of the whole TRL (see {{sec-registration}}).
 
 ## Size of the TRL
 
