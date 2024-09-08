@@ -1869,8 +1869,11 @@ Table of Contents
    In order to avoid this, a requester SHOULD NOT rely solely on the
    CoAP Observe notifications.  In particular, a requester SHOULD also
    regularly poll the AS for the most current information about revoked
-   access tokens, by sending GET requests to the TRL endpoint according
-   to a related application policy.
+   access tokens, by sending GET requests to the TRL endpoint.  Specific
+   strategies and schedules for polling the AS are to be defined by a
+   related application policy, by also taking into account the expected
+   operational and availability patterns adopted by the requester (e.g.,
+   in the interest of energy saving and other optimizations).
 
 13.4.  Request of New Access Tokens
 
