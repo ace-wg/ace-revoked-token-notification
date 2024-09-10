@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-08T01:24:25.724657+00:00",
+  "timestamp": "2024-09-10T01:19:24.937339+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -596,7 +596,7 @@
       "labels": [],
       "body": "This PR addresses the review from Orie Steele archived at https://mailarchive.ietf.org/arch/msg/ace/xyEYml0cSYVZWURk_yh8MsG5YBs/",
       "createdAt": "2024-08-30T10:25:09Z",
-      "updatedAt": "2024-08-30T10:25:10Z",
+      "updatedAt": "2024-09-09T21:40:35Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
@@ -608,7 +608,61 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p86IjcFj",
+          "commit": {
+            "abbreviatedOid": "13fb080"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-09T21:26:58Z",
+          "updatedAt": "2024-09-09T21:26:59Z",
+          "comments": [
+            {
+              "originalPosition": 52,
+              "body": "A JWT is never allowed to be in JSON serialization.\r\n\r\n> JWTs are always represented using the JWS Compact Serialization or the JWE Compact Serialization.\r\n\r\n- https://datatracker.ietf.org/doc/html/rfc7519#section-1\r\n\r\nNever the less, there are known cases, such as JAdES where JSON serialization is used:\r\n\r\n- https://www.etsi.org/deliver/etsi_ts/119100_119199/11918201/01.01.01_60/ts_11918201v010101p.pdf\r\n\r\nThere is also SD-JWT, which also supports JSON Serialization, adding to the confusion.\r\n\r\nYou might be able to use \"if the token is Compact Serialization such as JWS Compact Serialization or the JWE Compact Serialization...\".\r\n\r\nThis comment in a nit.",
+              "createdAt": "2024-09-09T21:26:58Z",
+              "updatedAt": "2024-09-09T21:34:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOG4P0p86Ijfyr",
+          "commit": {
+            "abbreviatedOid": "13fb080"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-09T21:38:55Z",
+          "updatedAt": "2024-09-09T21:38:55Z",
+          "comments": [
+            {
+              "originalPosition": 310,
+              "body": "You could mention a retry policy here.",
+              "createdAt": "2024-09-09T21:38:55Z",
+              "updatedAt": "2024-09-09T21:38:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOG4P0p86IjgRD",
+          "commit": {
+            "abbreviatedOid": "13fb080"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-09-09T21:40:35Z",
+          "updatedAt": "2024-09-09T21:40:35Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 14,
@@ -721,6 +775,32 @@
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "deb-cooley-review-08",
       "headRefOid": "09a4223bbbe7823ad89695be6629e4183c72b82d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOG4P0p856xgr2",
+      "title": "Roman Danyliw Review",
+      "url": "https://github.com/ace-wg/ace-revoked-token-notification/pull/18",
+      "state": "OPEN",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Roman Danyliw archived at https://mailarchive.ietf.org/arch/msg/ace/C8L1FzezGdMWVc5dpUpMKXGDxzo/",
+      "createdAt": "2024-09-08T17:00:13Z",
+      "updatedAt": "2024-09-08T17:06:26Z",
+      "baseRepository": "ace-wg/ace-revoked-token-notification",
+      "baseRefName": "main",
+      "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
+      "headRepository": "ace-wg/ace-revoked-token-notification",
+      "headRefName": "roman-danyliw-review-08",
+      "headRefOid": "bcce64d2754f559ae0ac9fabca4a17ea780145e9",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
