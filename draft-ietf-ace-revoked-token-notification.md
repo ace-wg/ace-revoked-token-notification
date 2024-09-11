@@ -867,7 +867,7 @@ Sending a diff query request specifically as an Observation request, and thus re
 
 In order to limit the amount of time during which the requester is unaware of pertaining access tokens that have been revoked but are not expired yet, a requester SHOULD NOT rely solely on diff query requests. In particular, a requester SHOULD also regularly send a full query request to the TRL endpoint according to a related application policy.
 
-## Handling of Access Tokens and Token Hashes # {#sec-handling-token-hashes}
+## Handling of Revoked Access Tokens and Token Hashes # {#sec-handling-token-hashes}
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored access token associated with a token hash specified in the response. In case the registered device is an RS, it MUST NOT delete the stored token hash after having expunged the associated access token.
 
