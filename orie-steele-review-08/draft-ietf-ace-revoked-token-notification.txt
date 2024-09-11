@@ -435,16 +435,25 @@ Table of Contents
          The example in Figure 2 shows a CWT that uses the COSE object
          COSE_Encrypt0 (see Section 5.2 of [RFC9052]).
 
-   *  If the access token is a JWT, the following applies.
+   *  If, like for JWTs [RFC7519], the access token relies on a JSON
+      object for encoding its claims, the following applies.
 
-      -  If the access token is specifically a JWS [RFC7515] that uses
-         the JWS JSON Serialization, it MUST NOT include the JWS
-         Unprotected Header.
+      Consistent with the ACE framework [RFC9200], this document
+      specifically considers JWTs, which are always represented using
+      the JWS Compact Serialization from [RFC7515] or the JWE Compact
+      Serialization from [RFC7516].  Consequently, all the header
+      parameters are specified within integrity-protected fields.
 
-      -  If the access token is specifically a JWE [RFC7516] that uses
-         the JWE JSON Serialization, it MUST NOT include the JWE Shared
-         Unprotected Header and it MUST NOT include the "header" member
-         in any of the elements of the "recipients" array.
+      In case alternative access tokens were used, the following
+      applies:
+
+      -  If the access token uses the JWS JSON Serialization from
+         [RFC7515], it MUST NOT include the JWS Unprotected Header.
+
+      -  If the access token uses the JWE JSON Serialization from
+         [RFC7516], it MUST NOT include the JWE Shared Unprotected
+         Header and it MUST NOT include the "header" member in any of
+         the elements of the "recipients" array.
 
    / CWT CBOR tag / 61(
      / COSE_Encrypt0 CBOR tag / 16(
@@ -1830,15 +1839,16 @@ Table of Contents
          number is 16 (COSE_Encrypt0), but the CWT is actually a
          COSE_Sign data item.
 
-   *  The access token is a JWT and any of the following holds.
+   *  The access token relies on a JSON object for encoding its claims,
+      but it is not a JWT [RFC7519] and any of the following holds.
 
-      -  The access token is specifically a JWS [RFC7515] using the JWS
-         JSON Serialization, and it includes the JWS Unprotected Header.
+      -  The access token uses the JWS JSON Serialization from
+         [RFC7515], and it includes the JWS Unprotected Header.
 
-      -  The access token is specifically a JWE [RFC7516] using the JWE
-         JSON Serialization, and it includes the JWE Shared Unprotected
-         Header and/or includes the "header" member in any of the
-         elements of the "recipients" array.
+      -  The access token uses the JWE JSON Serialization from
+         [RFC7516], and it includes the JWE Shared Unprotected Header
+         and/or includes the "header" member in any of the elements of
+         the "recipients" array.
 
    An RS MUST store the token hash th1 corresponding to an access token
    t1 until both the following conditions hold.

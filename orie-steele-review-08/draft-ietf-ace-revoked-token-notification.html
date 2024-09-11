@@ -1620,13 +1620,17 @@ The example in <a href="#fig-cwt-cose-encrypt0" class="auto internal xref">Figur
           </ul>
 </li>
         <li class="normal" id="section-3-2.3">
-          <p id="section-3-2.3.1">If the access token is a JWT, the following applies.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.3.1">If, like for JWTs <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, the access token relies on a JSON object for encoding its claims, the following applies.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+<p id="section-3-2.3.2">
+Consistent with the ACE framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, this document specifically considers JWTs, which are always represented using the JWS Compact Serialization from <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span> or the JWE Compact Serialization from <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span>. Consequently, all the header parameters are specified within integrity-protected fields.<a href="#section-3-2.3.2" class="pilcrow">¶</a></p>
+<p id="section-3-2.3.3">
+In case alternative access tokens were used, the following applies:<a href="#section-3-2.3.3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3-2.3.2.1">
-              <p id="section-3-2.3.2.1.1">If the access token is specifically a JWS <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span> that uses the JWS JSON Serialization, it <span class="bcp14">MUST NOT</span> include the JWS Unprotected Header.<a href="#section-3-2.3.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3-2.3.4.1">
+              <p id="section-3-2.3.4.1.1">If the access token uses the JWS JSON Serialization from <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span>, it <span class="bcp14">MUST NOT</span> include the JWS Unprotected Header.<a href="#section-3-2.3.4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3-2.3.2.2">
-              <p id="section-3-2.3.2.2.1">If the access token is specifically a JWE <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span> that uses the JWE JSON Serialization, it <span class="bcp14">MUST NOT</span> include the JWE Shared Unprotected Header and it <span class="bcp14">MUST NOT</span> include the "header" member in any of the elements of the "recipients" array.<a href="#section-3-2.3.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3-2.3.4.2">
+              <p id="section-3-2.3.4.2.1">If the access token uses the JWE JSON Serialization from <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span>, it <span class="bcp14">MUST NOT</span> include the JWE Shared Unprotected Header and it <span class="bcp14">MUST NOT</span> include the "header" member in any of the elements of the "recipients" array.<a href="#section-3-2.3.4.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
@@ -2609,13 +2613,13 @@ If the 'more' parameter in the payload of the received 2.05 (Content) response h
             </ul>
 </li>
           <li class="normal" id="section-11.1-3.3">
-            <p id="section-11.1-3.3.1">The access token is a JWT and any of the following holds.<a href="#section-11.1-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-11.1-3.3.1">The access token relies on a JSON object for encoding its claims, but it is not a JWT <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> and any of the following holds.<a href="#section-11.1-3.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.1-3.3.2.1">
-                <p id="section-11.1-3.3.2.1.1">The access token is specifically a JWS <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span> using the JWS JSON Serialization, and it includes the JWS Unprotected Header.<a href="#section-11.1-3.3.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-11.1-3.3.2.1.1">The access token uses the JWS JSON Serialization from <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span>, and it includes the JWS Unprotected Header.<a href="#section-11.1-3.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-11.1-3.3.2.2">
-                <p id="section-11.1-3.3.2.2.1">The access token is specifically a JWE <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span> using the JWE JSON Serialization, and it includes the JWE Shared Unprotected Header and/or includes the "header" member in any of the elements of the "recipients" array.<a href="#section-11.1-3.3.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-11.1-3.3.2.2.1">The access token uses the JWE JSON Serialization from <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span>, and it includes the JWE Shared Unprotected Header and/or includes the "header" member in any of the elements of the "recipients" array.<a href="#section-11.1-3.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
