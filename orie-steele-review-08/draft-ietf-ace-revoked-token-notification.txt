@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 3 March 2025                                        Ericsson AB
+Expires: 15 March 2025                                       Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                          30 August 2024
+                                                       11 September 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 March 2025.
+   This Internet-Draft will expire on 15 March 2025.
 
 Copyright Notice
 
@@ -1740,7 +1740,8 @@ Table of Contents
    In case a requester does not receive a response from the TRL endpoint
    or it receives an error response from the TRL endpoint, the requester
    does not make any assumption or draw any conclusion regarding the
-   revocation or expiration of its pertaining access tokens.
+   revocation or expiration of its pertaining access tokens.  The
+   requester MAY try again by sending a new request to the TRL endpoint.
 
    When the TRL is updated (see Section 5.1), the AS sends Observe
    notifications to the observers whose pertaining subset of the TRL has
