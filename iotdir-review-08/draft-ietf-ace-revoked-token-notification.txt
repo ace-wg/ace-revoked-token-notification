@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 8 March 2025                                        Ericsson AB
+Expires: 15 March 2025                                       Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                        4 September 2024
+                                                       11 September 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 March 2025.
+   This Internet-Draft will expire on 15 March 2025.
 
 Copyright Notice
 
@@ -107,7 +107,7 @@ Table of Contents
        8.2.3.  Cursor Specified in the Diff Query Request
    9.  Registration at the Authorization Server
    10. Notification of Revoked Access Tokens
-     10.1.  Handling of Access Tokens and Token Hashes
+     10.1.  Handling of Revoked Access Tokens and Token Hashes
    11. ACE Token Revocation List Parameters
    12. ACE Token Revocation List Error Identifiers
    13. Security Considerations
@@ -1709,7 +1709,7 @@ Table of Contents
    full query request to the TRL endpoint according to a related
    application policy.
 
-10.1.  Handling of Access Tokens and Token Hashes
+10.1.  Handling of Revoked Access Tokens and Token Hashes
 
    When receiving a response from the TRL endpoint, a registered device
    MUST expunge every stored access token associated with a token hash
