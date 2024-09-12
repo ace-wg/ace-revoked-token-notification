@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-10T01:19:24.937339+00:00",
+  "timestamp": "2024-09-12T01:19:00.501794+00:00",
   "repo": "ace-wg/ace-revoked-token-notification",
   "labels": [
     {
@@ -596,13 +596,13 @@
       "labels": [],
       "body": "This PR addresses the review from Orie Steele archived at https://mailarchive.ietf.org/arch/msg/ace/xyEYml0cSYVZWURk_yh8MsG5YBs/",
       "createdAt": "2024-08-30T10:25:09Z",
-      "updatedAt": "2024-09-09T21:40:35Z",
+      "updatedAt": "2024-09-11T18:50:36Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "orie-steele-review-08",
-      "headRefOid": "13fb080d578c7e677f1b0657844e3ccd7521973b",
+      "headRefOid": "ab91b71c652ff37ee96c8632071103ee4b8f4232",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -661,6 +661,46 @@
           "createdAt": "2024-09-09T21:40:35Z",
           "updatedAt": "2024-09-09T21:40:35Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOG4P0p86I-9nV",
+          "commit": {
+            "abbreviatedOid": "13fb080"
+          },
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-11T18:31:27Z",
+          "updatedAt": "2024-09-11T18:31:27Z",
+          "comments": [
+            {
+              "originalPosition": 310,
+              "body": "Now addressed at: https://github.com/ace-wg/ace-revoked-token-notification/pull/13/commits/0db3c7be32172151dc139eb8255a2e880cffa432",
+              "createdAt": "2024-09-11T18:31:27Z",
+              "updatedAt": "2024-09-11T18:31:27Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOG4P0p86I_Pp7",
+          "commit": {
+            "abbreviatedOid": "13fb080"
+          },
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-11T18:50:36Z",
+          "updatedAt": "2024-09-11T18:50:36Z",
+          "comments": [
+            {
+              "originalPosition": 52,
+              "body": "Thanks for this comment! It is now addressed at: https://github.com/ace-wg/ace-revoked-token-notification/pull/13/commits/ab91b71c652ff37ee96c8632071103ee4b8f4232\r\n\r\nThe JWS Compact Serialization from RFC 7515 and the JWE Compact Serialization from RFC 7516 do not admit unprotected headers altogether (see Section 3.1 of both RFCs).\r\n\r\nThis means that JWTs as defined in RFC 7519 are basically just fine. The explicit requirements on avoiding unprotected headers are needed only for possible other access tokens that use the JWS/JWE JSON Serialization.\r\n\r\nNow the text in Sections 3 and 11.1 reflects that.",
+              "createdAt": "2024-09-11T18:50:36Z",
+              "updatedAt": "2024-09-11T18:50:36Z"
+            }
+          ]
         }
       ]
     },
@@ -676,7 +716,7 @@
       "labels": [],
       "body": "This PR addresses the review from Zaheduzzaman Sarker archived at https://mailarchive.ietf.org/arch/msg/ace/ziPjHAti0D3jyn3e0v295x_NE9c/",
       "createdAt": "2024-08-30T16:00:16Z",
-      "updatedAt": "2024-08-30T16:22:05Z",
+      "updatedAt": "2024-09-11T22:38:45Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
@@ -700,6 +740,19 @@
           "body": "Looks good to me",
           "createdAt": "2024-08-30T16:22:05Z",
           "updatedAt": "2024-08-30T16:22:05Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOG4P0p86JBdw5",
+          "commit": {
+            "abbreviatedOid": "0aa1f1a"
+          },
+          "author": "zaheduzzaman",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "Thanks for the definitions, much better now.",
+          "createdAt": "2024-09-11T22:38:45Z",
+          "updatedAt": "2024-09-11T22:38:45Z",
           "comments": []
         }
       ]
@@ -742,19 +795,54 @@
       "labels": [],
       "body": "This PR addresses the IOTDIR review from Niklas Widell archived at https://mailarchive.ietf.org/arch/msg/ace/3SBeVtBmnqqliBZ5uUNK3WNj9EA/",
       "createdAt": "2024-09-04T12:00:34Z",
-      "updatedAt": "2024-09-04T12:01:17Z",
+      "updatedAt": "2024-09-11T10:07:54Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
       "headRepository": "ace-wg/ace-revoked-token-notification",
       "headRefName": "iotdir-review-08",
-      "headRefOid": "982d6c8a5b45fa9235166fa73e7221507d4f202e",
+      "headRefOid": "132b978082e80c1efe6920a4af29cbd8c0d26b5a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Everything looks ok. As described in my email, though, it may be useful to change the name of section 10.1 from \"Handling of Access Tokens and Token Hashes\" to \"Handling of Revoked Access Tokens and Token Hashes\"\r\n\r\nThanks! Now fixed in https://github.com/ace-wg/ace-revoked-token-notification/commit/132b978082e80c1efe6920a4af29cbd8c0d26b5a",
+          "createdAt": "2024-09-11T08:04:44Z",
+          "updatedAt": "2024-09-11T08:04:44Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p86Iqtro",
+          "commit": {
+            "abbreviatedOid": "982d6c8"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Everything looks ok. As described in my email, though, it may be useful to change the name of section 10.1 from \"Handling of Access Tokens and Token Hashes\" to \"Handling of Revoked Access Tokens and Token Hashes\"",
+          "createdAt": "2024-09-10T15:35:58Z",
+          "updatedAt": "2024-09-10T15:35:58Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOG4P0p86I3olm",
+          "commit": {
+            "abbreviatedOid": "132b978"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-09-11T10:07:54Z",
+          "updatedAt": "2024-09-11T10:07:54Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 17,
@@ -768,7 +856,7 @@
       "labels": [],
       "body": "This PR addresses the review from Deb Cooley archived at https://mailarchive.ietf.org/arch/msg/ace/r-vRzqWGbOIrq4q4IfVZEicqlOU/",
       "createdAt": "2024-09-05T16:58:22Z",
-      "updatedAt": "2024-09-05T16:58:51Z",
+      "updatedAt": "2024-09-10T15:39:36Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
@@ -780,7 +868,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p86IqvvI",
+          "commit": {
+            "abbreviatedOid": "09a4223"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me.",
+          "createdAt": "2024-09-10T15:39:36Z",
+          "updatedAt": "2024-09-10T15:39:36Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 18,
@@ -794,7 +896,7 @@
       "labels": [],
       "body": "This PR addresses the review from Roman Danyliw archived at https://mailarchive.ietf.org/arch/msg/ace/C8L1FzezGdMWVc5dpUpMKXGDxzo/",
       "createdAt": "2024-09-08T17:00:13Z",
-      "updatedAt": "2024-09-08T17:06:26Z",
+      "updatedAt": "2024-09-10T15:44:43Z",
       "baseRepository": "ace-wg/ace-revoked-token-notification",
       "baseRefName": "main",
       "baseRefOid": "8b4f2575f66c493f6829798c3e345cb17b6e514f",
@@ -806,7 +908,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOG4P0p86Iqyom",
+          "commit": {
+            "abbreviatedOid": "bcce64d"
+          },
+          "author": "sebastian-echeverria",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me.",
+          "createdAt": "2024-09-10T15:44:43Z",
+          "updatedAt": "2024-09-10T15:44:43Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
