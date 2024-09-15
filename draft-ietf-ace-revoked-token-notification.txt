@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 26 December 2024                                    Ericsson AB
+Expires: 19 March 2025                                       Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                            24 June 2024
+                                                       15 September 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 December 2024.
+   This Internet-Draft will expire on 19 March 2025.
 
 Copyright Notice
 
@@ -2354,9 +2354,9 @@ Table of Contents
               Koster, M., Soloway, A., and B. Silverajan, "Conditional
               Attributes for Constrained RESTful Environments", Work in
               Progress, Internet-Draft, draft-ietf-core-conditional-
-              attributes-06, 14 January 2023,
+              attributes-07, 8 July 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-core-
-              conditional-attributes-06>.
+              conditional-attributes-07>.
 
    [RFC7009]  Lodderstedt, T., Ed., Dronia, S., and M. Scurtescu, "OAuth
               2.0 Token Revocation", RFC 7009, DOI 10.17487/RFC7009,
