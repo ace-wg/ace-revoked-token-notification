@@ -115,7 +115,7 @@ This document specifies a method of the Authentication and Authorization for Con
 
 # Introduction # {#intro}
 
-Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers. In order to use ACE, both Clients and Resource Servers have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an access token for a Resource Server (RS). For a Client to access the RS, the Client must present the issued access token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
+Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers (RSs). In order to use ACE, both Clients and RSs have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an access token for an RS. For a Client to access the RS, the Client must present the issued access token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
 
 Even though access tokens have expiration times, there are circumstances by which an access token may need to be revoked before its expiration time, such as: (1) a registered device has been compromised, or is suspected of being compromised; (2) a registered device is decommissioned; (3) there has been a change in the ACE profile for a registered device; (4) there has been a change in access policies for a registered device; and (5) there has been a change in the outcome of policy evaluation for a registered device (e.g., if policy assessment depends on dynamic conditions in the execution environment, the user context, or the resource utilization).
 
@@ -152,6 +152,8 @@ This specification also refers to the following terminology.
 * Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.
 
 * Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens.
+
+  An administrator might also be authorized to perform further administrative operations at the AS, e.g., through a dedicated admin interface that is out of the scope of this document. By considering the token hashes retrieved from the TRL together with other information obtained from the AS, the administrator becomes able to derive additional information, e.g., the fact that accesses have been revoked for specific registered devices.
 
 * Pertaining access token:
 
@@ -902,6 +904,8 @@ During the registration process at the AS, an administrator or a registered devi
 
 * A positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
+Once completed the registration process, the AS maintains the registration and related information until a possible deregistration occurs, hence keeping track of active administrators and registered devices. The particular way to achieve this is implementation-specific. Such a mechanism to maintain registrations is enforced in any case at the AS, in order to ensure that requests sent by Clients to the /token endpoint (see {{Section 5.8 of RFC9200}}) and by RSs to the /introspect endpoint (see {{Section 5.9 of RFC9200}}) are processed as intended.
+
 When communicating with one another, the registered devices and the AS have to use a secure communication association and be mutually authenticated (see {{Section 5 of RFC9200}}).
 
 In the same spirit, it MUST be ensured that communications between the AS and an administrator are mutually authenticated, encrypted and integrity protected, as well as protected against message replay.
@@ -934,7 +938,7 @@ Sending a diff query request specifically as an Observation request, and thus re
 
 In order to limit the amount of time during which the requester is unaware of pertaining access tokens that have been revoked but are not expired yet, a requester SHOULD NOT rely solely on diff query requests. In particular, a requester SHOULD also regularly send a full query request to the TRL endpoint according to a related application policy.
 
-## Handling of Access Tokens and Token Hashes # {#sec-handling-token-hashes}
+## Handling of Revoked Access Tokens and Token Hashes # {#sec-handling-token-hashes}
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored access token associated with a token hash specified in the response. In case the registered device is an RS, it MUST NOT delete the stored token hash after having expunged the associated access token.
 
@@ -2142,6 +2146,6 @@ ace-trl-error = 1
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Niklas Widell}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
