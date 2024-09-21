@@ -98,6 +98,13 @@ normative:
     date: false
     title: Named Information Hash Algorithm
     target: https://www.iana.org/assignments/named-information/named-information.xhtml
+  SHA-256:
+    author:
+      org: NIST
+    title: Secure Hash Standard
+    seriesinfo: FIPS 180-3
+    date: 2008-10
+    target: http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf
 
 informative:
   RFC7009:
@@ -491,7 +498,7 @@ If the RS performs both step 3 and step 4 above, then the RS MUST store, maintai
 
 Once determined HASH\_INPUT as defined in {{sec-token-hash-input-c-as}} and {{sec-token-hash-input-rs}}, a hash value of HASH\_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
 
-The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}.
+The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}. Consistent with the compliance requirements in {{Section 2 of RFC6920}}, the hash function sha-256 as specified in {{SHA-256}} is mandatory to implement.
 
 The AS specifies the used hash function to registered devices during their registration procedure (see {{sec-registration}}).
 
@@ -912,7 +919,7 @@ In the same spirit, it MUST be ensured that communications between the AS and an
 
 Before starting its registration process at the AS, an administrator has to establish such a secure communication association with the AS, if they do not share one already. In particular, mutual authentication is REQUIRED during the establishment of the secure association. To this end, the administrator and the AS can rely, e.g., on establishing a TLS or DTLS secure session with mutual authentication {{RFC8446}}{{RFC9147}}, or an OSCORE Security Context {{RFC8613}} by running the authenticated key exchange protocol EDHOC {{RFC9528}}.
 
-When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the full TRL.
+When receiving authenticated requests from the administrator for accessing the TRL endpoint, the AS can always check whether the requester is authorized to take such a role, i.e., to access the content of the whole TRL.
 
 To this end, the AS may rely on a local access control list or similar, which specifies the authentication credentials of trusted, authorized administrators. In particular, the AS verifies the requester to the TRL endpoint as an authorized administrator, only if the access control list includes the same authentication credential used by the requester when establishing the mutually-authenticated secure communication association with the AS.
 
@@ -1017,7 +1024,7 @@ The protocol defined in this document inherits the security considerations from 
 
 The AS MUST ensure that each registered device can access and retrieve only its pertaining subset of the TRL. To this end, the AS can always perform the required filtering based on the authenticated identity of the registered device, i.e., a (non-public) identifier that the AS can securely relate to the registered device and the secure association that they use to communicate.
 
-The AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
+The AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can access the content of the whole TRL (see {{sec-registration}}).
 
 Note that the TRL endpoint supports only the GET method (see {{sec-trl-endpoint}}). Therefore, as detailed in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, accesses to the TRL endpoint are performed only by means of protected and authenticated GET requests, which by definition are safe in the REST sense and do not alter the content of the TRL. That is, registered devices and administrators can perform exclusively read-only operations when accessing the TRL endpoint.
 
@@ -1033,7 +1040,7 @@ This could be exploited by attackers to negatively affect the behavior of a regi
 
 The communication about revoked access tokens presented in this specification is expected to especially rely on CoAP Observe notifications sent from the AS to a requester (i.e., an administrator or a registered device). The suppression of those notifications by an external attacker that has access to the network would prevent requesters from ever knowing that their pertaining access tokens have been revoked.
 
-In order to avoid this, a requester SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a requester SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint according to a related application policy.
+In order to avoid this, a requester SHOULD NOT rely solely on the CoAP Observe notifications. In particular, a requester SHOULD also regularly poll the AS for the most current information about revoked access tokens, by sending GET requests to the TRL endpoint. Specific strategies and schedules for polling the AS are to be defined by a related application policy, by also taking into account the expected operational and availability patterns adopted by the requester (e.g., in the interest of energy saving and other optimizations).
 
 ## Request of New Access Tokens
 
@@ -2150,6 +2157,6 @@ ace-trl-error = 1
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Deb Cooley}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Niklas Widell}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Deb Cooley}}}, {{{Roman Danyliw}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Niklas Widell}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
