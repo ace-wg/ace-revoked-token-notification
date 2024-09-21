@@ -1019,6 +1019,10 @@ The AS MUST ensure that each registered device can access and retrieve only its 
 
 The AS MUST ensure that, other than registered devices accessing their own pertaining subset of the TRL, only authorized and authenticated administrators can retrieve the full TRL (see {{sec-registration}}).
 
+Note that the TRL endpoint supports only the GET method (see {{sec-trl-endpoint}}). Therefore, as detailed in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, accesses to the TRL endpoint are performed only by means of protected and authenticated GET requests, which by definition are safe in the REST sense and do not alter the content of the TRL. That is, registered devices and administrators can perform exclusively read-only operations when accessing the TRL endpoint.
+
+In fact, the content of the TRL can be updated only internally by the AS, in the two circumstances described in {{ssec-trl-update}}. Therefore, an adversary that is not in control of the AS cannot manipulate the content of the TRL, e.g., by removing a token hash and thereby fraudulently allowing a Client to access protected resources in spite of a revoked access token, or by adding a token hash and thereby fraudulently stopping a Client from accessing protected resources in spite of an access token being still valid.
+
 ## Size of the TRL
 
 If many non-expired access tokens associated with a registered device are revoked, the pertaining subset of the TRL could grow to a size bigger than what the registered device is prepared to handle upon reception of a response from the TRL endpoint, especially if relying on a full query of the TRL (see {{ssec-trl-full-query}}).
@@ -2146,6 +2150,6 @@ ace-trl-error = 1
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Niklas Widell}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Deb Cooley}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Niklas Widell}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
