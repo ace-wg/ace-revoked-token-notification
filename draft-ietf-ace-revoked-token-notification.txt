@@ -140,14 +140,15 @@ Table of Contents
      C.5.  Full Query with Observe plus Diff Query with "Cursor"
    Appendix D.  CDDL Model
    Appendix E.  Document Updates
-     E.1.  Version -07 to -08
-     E.2.  Version -06 to -07
-     E.3.  Version -05 to -06
-     E.4.  Version -04 to -05
-     E.5.  Version -03 to -04
-     E.6.  Version -02 to -03
-     E.7.  Version -01 to -02
-     E.8.  Version -00 to -01
+     E.1.  Version -08 to -09
+     E.2.  Version -07 to -08
+     E.3.  Version -06 to -07
+     E.4.  Version -05 to -06
+     E.5.  Version -04 to -05
+     E.6.  Version -03 to -04
+     E.7.  Version -02 to -03
+     E.8.  Version -01 to -02
+     E.9.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -3535,7 +3536,57 @@ Appendix E.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-E.1.  Version -07 to -08
+E.1.  Version -08 to -09
+
+   *  Terminology:
+
+      -  Improved definition of "administrator".
+
+      -  Added early definitions of "Full query" and "Diff query".
+
+   *  Rephrased "full TRL" to avoid confusion with "full query".
+
+   *  Consistent with RFC 6920, defined sha-256 as mandatory to
+      implement.
+
+   *  Prevented an attack to the RS by:
+
+      -  Using only Protected Headers in access tokens.
+
+      -  Using canonical CBOR tagging of CWTs.
+
+   *  Clarifications:
+
+      -  Handling of access tokens with 'exi' for both CWTs and JWTs.
+
+      -  Registrations of devices are persisted and tracked at the AS.
+
+      -  No response or error response from the TRL endpoint yields no
+         assumption.
+
+      -  Rationale of application policies in defining strategies and
+         schedules for polling the AS.
+
+   *  Security considerations:
+
+      -  Added reference to RFC 8725.
+
+      -  Improved considerations on content retrieval from the TRL.
+
+   *  IANA:
+
+      -  Added a pointer to where the use of the field 'cursor' in
+         problem-details is defined.
+
+      -  Revised text on Expert Review when using early allocation per
+         RFC 7120.
+
+   *  Split elision and comments in examples with CBOR Diagnostic
+      Notation.
+
+   *  Editorial improvements.
+
+E.2.  Version -07 to -08
 
    *  Added definition of pertaining token hash.
 
@@ -3547,7 +3598,7 @@ E.1.  Version -07 to -08
 
    *  Editorial improvements.
 
-E.2.  Version -06 to -07
+E.3.  Version -06 to -07
 
    *  RFC 9290 is used instead of the custom format for error responses.
 
@@ -3596,12 +3647,12 @@ E.2.  Version -06 to -07
 
    *  Clarifications and editorial improvements.
 
-E.3.  Version -05 to -06
+E.4.  Version -05 to -06
 
    *  Clarified instructions for Expert Review in the IANA
       considerations.
 
-E.4.  Version -04 to -05
+E.5.  Version -04 to -05
 
    *  Explicit focus on CoAP in the abstract and introduction.
 
@@ -3623,7 +3674,7 @@ E.4.  Version -04 to -05
 
    *  Updated author list.
 
-E.5.  Version -03 to -04
+E.6.  Version -03 to -04
 
    *  Improved presentation of pre- and post-registration operations.
 
@@ -3651,7 +3702,7 @@ E.5.  Version -03 to -04
 
    *  Clarifications and editorial improvements.
 
-E.6.  Version -02 to -03
+E.7.  Version -02 to -03
 
    *  Definition of MAX_INDEX for the "Cursor" extension.
 
@@ -3665,7 +3716,7 @@ E.6.  Version -02 to -03
 
    *  Editorial improvements.
 
-E.7.  Version -01 to -02
+E.8.  Version -01 to -02
 
    *  Earlier mentioning of error cases.
 
@@ -3681,7 +3732,7 @@ E.7.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-E.8.  Version -00 to -01
+E.9.  Version -00 to -01
 
    *  Added actions to perform upon receiving responses from the TRL
       endpoint.
