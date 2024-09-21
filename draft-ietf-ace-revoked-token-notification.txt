@@ -873,7 +873,9 @@ Table of Contents
 
    The specifically used hash function MUST be collision-resistant on
    byte-strings, and MUST be selected from the "Named Information Hash
-   Algorithm" Registry [Named.Information.Hash.Algorithm].
+   Algorithm" Registry [Named.Information.Hash.Algorithm].  Consistent
+   with the compliance requirements in Section 2 of [RFC6920], the hash
+   function sha-256 as specified in [SHA-256] is mandatory to implement.
 
    The AS specifies the used hash function to registered devices during
    their registration procedure (see Section 10).
@@ -1740,8 +1742,8 @@ Table of Contents
 
    When receiving authenticated requests from the administrator for
    accessing the TRL endpoint, the AS can always check whether the
-   requester is authorized to take such a role, i.e., to access the full
-   TRL.
+   requester is authorized to take such a role, i.e., to access the
+   content of the whole TRL.
 
    To this end, the AS may rely on a local access control list or
    similar, which specifies the authentication credentials of trusted,
@@ -2017,8 +2019,8 @@ Table of Contents
 
    The AS MUST ensure that, other than registered devices accessing
    their own pertaining subset of the TRL, only authorized and
-   authenticated administrators can retrieve the full TRL (see
-   Section 10).
+   authenticated administrators can access the content of the whole TRL
+   (see Section 10).
 
    Note that the TRL endpoint supports only the GET method (see
    Section 6).  Therefore, as detailed in Section 7 and Section 8,
@@ -2063,8 +2065,11 @@ Table of Contents
    In order to avoid this, a requester SHOULD NOT rely solely on the
    CoAP Observe notifications.  In particular, a requester SHOULD also
    regularly poll the AS for the most current information about revoked
-   access tokens, by sending GET requests to the TRL endpoint according
-   to a related application policy.
+   access tokens, by sending GET requests to the TRL endpoint.  Specific
+   strategies and schedules for polling the AS are to be defined by a
+   related application policy, by also taking into account the expected
+   operational and availability patterns adopted by the requester (e.g.,
+   in the interest of energy saving and other optimizations).
 
 14.4.  Request of New Access Tokens
 
@@ -2599,6 +2604,10 @@ Table of Contents
               "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
               DOI 10.17487/RFC9528, March 2024,
               <https://www.rfc-editor.org/rfc/rfc9528>.
+
+   [SHA-256]  NIST, "Secure Hash Standard", FIPS 180-3 , October 2008,
+              <http://csrc.nist.gov/publications/fips/fips180-3/
+              fips180-3_final.pdf>.
 
 16.2.  Informative References
 
@@ -3694,11 +3703,11 @@ Acknowledgments
    document.
 
    The authors sincerely thank Christian Amsüss, Carsten Bormann, Deb
-   Cooley, Dhruv Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro,
-   Joerg Ott, Marco Rasori, Michael Richardson, Kyle Rose, Zaheduzzaman
-   Sarker, Jim Schaad, Göran Selander, Travis Spencer, Orie Steele, Éric
-   Vyncke, Niklas Widell, Dale Worley, and Paul Wouters for their
-   comments and feedback.
+   Cooley, Roman Danyliw, Dhruv Dhody, Rikard Höglund, Benjamin Kaduk,
+   David Navarro, Joerg Ott, Marco Rasori, Michael Richardson, Kyle
+   Rose, Zaheduzzaman Sarker, Jim Schaad, Göran Selander, Travis
+   Spencer, Orie Steele, Éric Vyncke, Niklas Widell, Dale Worley, and
+   Paul Wouters for their comments and feedback.
 
    The work on this document has been partly supported by the Sweden's
    Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and
