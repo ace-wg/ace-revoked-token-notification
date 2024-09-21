@@ -72,6 +72,8 @@ normative:
   RFC7252:
   RFC7641:
   RFC8259:
+  RFC7515:
+  RFC7516:
   RFC7519:
   RFC8126:
   RFC8174:
@@ -79,7 +81,9 @@ normative:
   RFC8446:
   RFC8610:
   RFC8613:
+  RFC8725:
   RFC8949:
+  RFC9052:
   RFC9147:
   RFC9200:
   RFC9528:
@@ -133,7 +137,7 @@ Readers are expected to be familiar with the terms and concepts described in the
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, CoAP {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
+Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, COSE {{RFC9052}}, CoAP {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
 Note that the term "endpoint" is used here following its OAuth definition {{RFC6749}}, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
@@ -215,6 +219,55 @@ At a high level, the steps of this protocol are as follows.
 
 {{sec-RS-examples}} provides examples of the protocol flow and message exchanges between the AS and a registered device.
 
+# Issuing of Access Tokens at the AS # {#sec-issuing-access-tokens-as}
+
+An AS that supports the method defined in this document MUST adhere to the following rules when issuing an access token.
+
+* All the intended header parameters in the access token MUST be specified within integrity-protected fields.
+
+* If the access token is a CWT, the following applies.
+
+  - Any "unprotected" field MUST be empty, i.e., its value MUST be encoded as the empty CBOR map (0xa0). This applies to: the top-level "unprotected" field of the COSE object used for the CWT; the "unprotected" field of each element of the "signatures" array; and the "unprotected" field of each element of any "recipients" array (see {{Sections 2, 3, 4, 5, and 6 of RFC9052}}).
+
+  - Consistent with the specific COSE object used for the CWT, the corresponding tagged structure in the set COSE_Tagged_Message MUST be used (see {{Section 2 of RFC9052}}). That is, the CBOR array that encodes the CWT MUST be tagged by using the COSE CBOR tag corresponding to the used COSE object. Table 1 in {{Section 2 of RFC9052}} specifies the tag numbers in question.
+
+    In turn, the resulting tagged data item MUST be tagged by using the CWT CBOR tag with tag number 61 (see {{Section 6 of RFC8392}}). After that, the resulting data item MUST NOT be further tagged.
+
+    Encoding of the tag numbers MUST be done using definite lengths, and the length of the encoded tag numbers MUST be the minimum possible length. This means that the tag number 16 is encoded as 0xd0 and not as 0xd810.
+
+    The example in {{fig-cwt-cose-encrypt0}} shows a CWT that uses the COSE object COSE_Encrypt0 (see {{Section 5.2 of RFC9052}}).
+
+* If, like for JWTs {{RFC7519}}, the access token relies on a JSON object for encoding its claims, the following applies.
+
+  Consistent with the ACE framework {{RFC9200}}, this document specifically considers JWTs, which are always represented using the JWS Compact Serialization from {{RFC7515}} or the JWE Compact Serialization from {{RFC7516}}. Consequently, all the header parameters are specified within integrity-protected fields.
+
+  In case alternative access tokens were used, the following applies:
+
+  - If the access token uses the JWS JSON Serialization from {{RFC7515}}, it MUST NOT include the JWS Unprotected Header.
+
+  - If the access token uses the JWE JSON Serialization from {{RFC7516}}, it MUST NOT include the JWE Shared Unprotected Header and it MUST NOT include the "header" member in any of the elements of the "recipients" array.
+
+~~~~~~~~~~~
+/ CWT CBOR tag / 61(
+  / COSE_Encrypt0 CBOR tag / 16(
+    / COSE_Encrypt0 object / [
+      / protected /   h'a3010a044c53796d6d65747269633132
+                        38054d99a0d7846e762c49ffe8a63e0b',
+      / unprotected / {},
+      / ciphertext /  h'b918a11fd81e438b7f973d9e2e119bcb
+                        22424ba0f38a80f27562f400ee1d0d6c
+                        0fdb559c02421fd384fc2ebe22d70713
+                        78b0ea7428fff157444d45f7e6afcda1
+                        aae5f6495830c58627087fc5b4974f31
+                        9a8707a635dd643b'
+    ]
+  )
+)
+~~~~~~~~~~~
+{: #fig-cwt-cose-encrypt0 title="Example of CWT Using COSE_Encrypt0" artwork-align="left"}
+
+{{sec-seccons-token-manipulation}} discusses how adhering to the rules above neutralizes an attack against the RS, where an active adversary can induce the RS to compute a token hash different from the correct one.
+
 # Token Hash # {#sec-token-name}
 
 This section specifies how token hashes are computed.
@@ -224,6 +277,10 @@ First, {{sec-token-hash-input-motivation}} provides the motivation for the used 
 Building on that, the value used as input to compute a token hash is defined in {{sec-token-hash-input-c-as}} for the Client and the AS, and in {{sec-token-hash-input-rs}} for the RS. Finally, {{sec-token-hash-output}} defines how such an input is used for computing the token hash.
 
 The process outlined below refers to the base64url encoding and decoding without padding (see {{Section 5 of RFC4648}}), and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
+
+Consistent with {{Section 3.4 of RFC8949}}, the term "tag" is used for the entire CBOR data item consisting of both a tag number and the tag content: the tag content is the CBOR data item that is being tagged.
+
+Also, "tagged access token" is used to denote nested CBOR tags (possibly a single one), with the innermost tag content being a CWT.
 
 ## Motivation for the Used Construction # {#sec-token-hash-input-motivation}
 
@@ -235,19 +292,19 @@ There are two possible encodings that the AS can use for the AS-to-Client respon
 
 * One way relies on CBOR, which is required if CoAP is used (see {{Section 5 of RFC9200}}) and is recommended otherwise (see {{Section 3 of RFC9200}}). That is, the AS-to-Client response has media-type "application/ace+cbor".
 
-   This implies that, within the CBOR map specified as message payload, the parameter 'access_token' is a CBOR data item of type CBOR byte string and with value the binary representation BYTES of the access token. In particular:
+   This implies that, within the CBOR map specified as message payload, the parameter 'access_token' is a CBOR data item of type CBOR byte string and with value BYTES. In particular:
 
-   * If the access token is a CWT, then BYTES is the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).
+   * If the access token is a CWT, then BYTES is the binary representation of the CWT (i.e., of the CBOR array that encodes the untagged CWT) or of a tagged access token with the CWT as innermost tag content.
 
    * If the access token is a JWT, then BYTES is the binary representation of the JWT (i.e., of the text string that encodes the JWT).
 
 * An alternative way relies on JSON. That is, the AS-to-Client response has media-type "application/ace+json".
 
-  This implies that, within the JSON object specified as message payload, the parameter 'access_token' has as value a text string TEXT encoding the access token. In particular:
+  This implies that, within the JSON object specified as message payload, the parameter 'access_token' has as value a text string TEXT. In particular:
 
   * If the access token is a JWT, then TEXT is the text string that encodes the JWT.
 
-  * If the access token is a CWT, then TEXT is the base64url-encoded text string of the binary representation of the CWT (i.e., of the CBOR array that encodes the CWT).
+  * If the access token is a CWT, then TEXT is the base64url-encoded text string of BYTES, which is the binary representation of the CWT (i.e., of the CBOR array that encodes the untagged CWT) or of a tagged access token with the CWT as innermost tag content.
 
 ### Provisioning of Access Tokens to the RS # {#sec-token-hash-input-motivation-rs}
 
@@ -255,21 +312,21 @@ In accordance with the used transport profile of ACE (e.g., {{RFC9202}}, {{RFC92
 
 In particular:
 
-* If the AS-to-Client response was encoded in CBOR, then TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter of that response. This is irrespective of the access token being a CWT or a JWT. That is, TOKEN_INFO is the binary representation of the access token.
+* If the AS-to-Client response was encoded in CBOR, then TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter of that response. That is, TOKEN_INFO is the binary representation of the (tagged) access token.
 
 * If the AS-to-Client response was encoded in JSON and the access token is a JWT, then TOKEN_INFO is the binary representation of the text string conveyed by the 'access_token' parameter of that response. That is, TOKEN_INFO is the binary representation of the access token.
 
-* If the AS-to-Client response was encoded in JSON and the access token is a CWT, then TOKEN_INFO is the binary representation of the base64url-encoded text string that encodes the binary representation of the access token. That is, TOKEN_INFO is the binary representation of the base64url-encoded text string conveyed by the 'access_token' parameter.
+* If the AS-to-Client response was encoded in JSON and the access token is a CWT, then TOKEN_INFO is the binary representation of the base64url-encoded text string that encodes the binary representation of the (tagged) access token. That is, TOKEN_INFO is the binary representation of the base64url-encoded text string conveyed by the 'access_token' parameter.
 
 The following overviews how the above specifically applies to the existing transport profiles of ACE.
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so (e.g., like in {{RFC9202}}), TOKEN_INFO is the payload of the POST request.
+* The (tagged) access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint (see {{Section 5.10.1 of RFC9200}}), using a CoAP Content-Format or HTTP media-type that reflects the format of the access token, if available (e.g., "application/cwt" for CWTs), or "application/octet-stream" otherwise. When doing so (e.g., like in {{RFC9202}}), TOKEN_INFO is the payload of the POST request.
 
-* The access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor". When doing so (e.g., like in {{RFC9203}}), TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
+* The (tagged) access token can be uploaded to the RS by means of a POST request to the /authz-info endpoint, using the media-type "application/ace+cbor". When doing so (e.g., like in {{RFC9203}}), TOKEN_INFO is the value of the CBOR byte string conveyed by the 'access_token' parameter, within the CBOR map specified as payload of the POST request.
 
-* The access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. When doing so, TOKEN_INFO is the value of the 'psk_identity' field of the ClientKeyExchange message (when using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
+* The (tagged) access token can be uploaded to the RS during a DTLS session establishment, e.g., like it is defined in {{Section 3.2.2 of RFC9202}}. When doing so, TOKEN_INFO is the value of the 'psk_identity' field of the ClientKeyExchange message (when using DTLS 1.2 {{RFC6347}}), or of the 'identity' field of a PSKIdentity, within the PreSharedKeyExtension of a ClientHello message (when using DTLS 1.3 {{RFC9147}}).
 
-* The access token can be uploaded to the RS within the MQTT CONNECT packet, e.g., like it is defined in {{Section 2.2.4.1 of RFC9431}}. When doing so, TOKEN_INFO is specified within the 'Authentication Data' field of the MQTT CONNECT packet, following the property identifier 22 (0x16) and the token length.
+* The (tagged) access token can be uploaded to the RS within the MQTT CONNECT packet, e.g., like it is defined in {{Section 2.2.4.1 of RFC9431}}. When doing so, TOKEN_INFO is specified within the 'Authentication Data' field of the MQTT CONNECT packet, following the property identifier 22 (0x16) and the token length.
 
 ### Design Rationale
 
@@ -279,7 +336,7 @@ This is achieved by building HASH_INPUT according to the content of the 'access_
 
 ## Hash Input on the Client and the AS # {#sec-token-hash-input-c-as}
 
-The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the access token is included and provided to the requester Client.
+The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the (tagged) access token is included and provided to the requester Client.
 
 The following defines how the Client and the AS determine the HASH_INPUT value to use as input for computing the token hash of the conveyed access token, depending on the AS-to-Client response being encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}) or in JSON (see {{sec-token-hash-input-c-as-json}}).
 
@@ -291,9 +348,9 @@ If the AS-to-Client response is encoded in CBOR, then HASH_INPUT is defined as f
 
 * BYTES denotes the value of the CBOR byte string conveyed in the parameter 'access_token'.
 
-  With reference to the example in {{fig-as-response-cbor}}, BYTES is the bytes \{0xd0 0x83 0x43 ... 0x64 0x3b\}.
+  With reference to the example in {{fig-as-response-cbor}}, BYTES is the bytes \{0xd8 0x3d 0xd0 ... 0x64 0x3b\}.
 
-  Note that BYTES is the binary representation of the access token, irrespective of this being a CWT or a JWT.
+  Note that BYTES is the binary representation of the tagged access token if this is a CWT (as per {{sec-issuing-access-tokens-as}}), or of the access token if this is a JWT.
 
 * HASH_INPUT_TEXT is the base64url-encoded text string that encodes BYTES.
 
@@ -305,15 +362,15 @@ Content-Format: application/ace+cbor
 Max-Age: 85800
 Payload:
 {
-   / access_token / 1 : h'd08343a1010aa2044c53796d6d65
-                          74726963313238054d99a0d7846e
-                          762c49ffe8a63e0b5858b918a11f
-                          d81e438b7f973d9e2e119bcb2242
-                          4ba0f38a80f27562f400ee1d0d6c
-                          0fdb559c02421fd384fc2ebe22d7
-                          071378b0ea7428fff157444d45f7
-                          e6afcda1aae5f6495830c5862708
-                          7fc5b4974f319a8707a635dd643b',
+   / access_token / 1 : h'd83dd0835820a3010a044c53796d6d
+                          6574726963313238054d99a0d7846e
+                          762c49ffe8a63e0ba05858b918a11f
+                          d81e438b7f973d9e2e119bcb22424b
+                          a0f38a80f27562f400ee1d0d6c0fdb
+                          559c02421fd384fc2ebe22d7071378
+                          b0ea7428fff157444d45f7e6afcda1
+                          aae5f6495830c58627087fc5b4974f
+                          319a8707a635dd643b',
    / token_type /  34 : 2 / PoP /,
    / expires_in /   2 : 86400,
    / ace_profile / 38 : 1 / coap_dtls /,
@@ -326,13 +383,13 @@ Payload:
 
 If the AS-to-Client response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the 'access_token' parameter.
 
-With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary representation of "2YotnFZFEjr1zCsicMWpAA".
+With reference to the example in {{fig-as-response-json}}, HASH_INPUT is the binary representation of "eyJh...YFiA". When showing the access token, {{fig-as-response-json}} uses line breaks for display purposes only.
 
 Note that:
 
 * If the access token is a JWT, then HASH_INPUT is the binary representation of the JWT.
 
-* If the access token is a CWT, then HASH_INPUT is the binary representation of the base64url-encoded text string that encodes the binary representation of the CWT.
+* If the access token is a CWT, then HASH_INPUT is the binary representation of a base64url-encoded text string, which encodes the binary representation of a tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
 
 ~~~~~~~~~~~
 HTTP/1.1 200 OK
@@ -341,7 +398,25 @@ Cache-Control: no-store
 Pragma: no-cache
 Payload:
 {
-   "access_token" : "2YotnFZFEjr1zCsicMWpAA",
+   "access_token" : "eyJhbGciOiJSU0ExXzUiLCJlbmMiOiJB
+                     MTI4Q0JDLUhTMjU2In0.
+                     QR1Owv2ug2WyPBnbQrRARTeEk9kDO2w8
+                     qDcjiHnSJflSdv1iNqhWXaKH4MqAkQtM
+                     oNfABIPJaZm0HaA415sv3aeuBWnD8J-U
+                     i7Ah6cWafs3ZwwFKDFUUsWHSK-IPKxLG
+                     TkND09XyjORj_CHAgOPJ-Sd8ONQRnJvW
+                     n_hXV1BNMHzUjPyYwEsRhDhzjAD26ima
+                     sOTsgruobpYGoQcXUwFDn7moXPRfDE8-
+                     NoQX7N7ZYMmpUDkR-Cx9obNGwJQ3nM52
+                     YCitxoQVPzjbl7WBuB7AohdBoZOdZ24W
+                     lN1lVIeh8v1K4krB8xgKvRU8kgFrEn_a
+                     1rZgN5TiysnmzTROF869lQ.
+                     AxY8DCtDaGlsbGljb3RoZQ.
+                     MKOle7UQrG6nSxTLX6Mqwt0orbHvAKeW
+                     nDYvpIAeZ72deHxz3roJDXQyhxx0wKaM
+                     HDjUEOKIwrtkHthpqEanSBNYHZgmNOV7
+                     sln1Eu9g3J8.
+                     fiK51VwhsxJ-siBMR-YFiA",
    "token_type"   : "pop",
    "expires_in"   : 86400,
    "ace_profile"  : "1"
@@ -360,7 +435,7 @@ If the RS expects access tokens to be CWTs, then the RS performs the following s
 
 1. The RS receives the token-related information TOKEN_INFO, in accordance with what is specified by the used profile of ACE (see {{sec-token-hash-input-motivation-rs}}).
 
-2. The RS assumes that the Client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of the access token.
+2. The RS assumes that the Client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of the tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
 
 3. The RS verifies the access token as per {{Section 5.10.1.1 of RFC9200}}. If the verification fails, then the RS does not discard the access token yet, and it instead moves to step 4.
 
@@ -368,9 +443,9 @@ If the RS expects access tokens to be CWTs, then the RS performs the following s
 
    After that, the RS stores the computed token hash as associated with the access token, and then terminates this algorithm.
 
-4. The RS assumes that the Client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of HASH_INPUT_TEXT, which is the base64url-encoded text string that encodes the binary representation of the access token.
+4. The RS assumes that the Client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of HASH_INPUT_TEXT. In turn, HASH_INPUT_TEXT is the base64url-encoded text string that encodes the binary representation of the tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
 
-5. The RS performs the base64url decoding of HASH_INPUT_TEXT, and considers the result as the binary representation of the access token.
+5. The RS performs the base64url decoding of HASH_INPUT_TEXT, and considers the result as the binary representation of the tagged access token.
 
 6. The RS verifies the access token as per {{Section 5.10.1.1 of RFC9200}}. If the verification fails, then the RS terminates this algorithm.
 
@@ -627,10 +702,8 @@ Content-Format: application/ace-trl+cbor
 Payload:
 {
    e'full_set' : [
-     h'01fa51cc/...
-       (remainder of the token hash omitted for brevity)/',
-     h'01748190/...
-       (remainder of the token hash omitted for brevity)/'
+     h'01fa51cc...4819', / elided for brevity /
+     h'01748190...223d'  / elided for brevity /
    ]
 }
 ~~~~~~~~~~~
@@ -687,31 +760,23 @@ Payload:
 {
    e'diff_set' : [
      [
-       [ h'01fa51cc/...
-           (remainder of the token hash omitted for brevity)/',
-         h'01748190/...
-           (remainder of the token hash omitted for brevity)/'
+       [ h'01fa51cc...0f6a', / elided for brevity /
+         h'01748190...8bce'  / elided for brevity /
        ],
-       [ h'01cdf1ca/...
-           (remainder of the token hash omitted for brevity)/',
-         h'01be41a6/...
-           (remainder of the token hash omitted for brevity)/'
+       [ h'01cdf1ca...563d', / elided for brevity /
+         h'01be41a6...a057'  / elided for brevity /
        ]
      ],
      [
-       [ h'0144dd12/...
-           (remainder of the token hash omitted for brevity)/',
-         h'01231fff/...
-           (remainder of the token hash omitted for brevity)/'
+       [ h'0144dd12...77bc', / elided for brevity /
+         h'01231fff...a2ce'  / elided for brevity /
        ],
        []
      ],
      [
        [],
-       [ h'01ca986f/...
-           (remainder of the token hash omitted for brevity)/',
-         h'01fe1a2b/...
-           (remainder of the token hash omitted for brevity)/'
+       [ h'01ca986f...ffc1', / elided for brevity /
+         h'01fe1a2b...def0'  / elided for brevity /
        ]
      ]
    ]
@@ -851,6 +916,8 @@ Once registered at the AS, the administrator or registered device can send a GET
 
 In case the request is successfully processed, the AS replies with a response specifying the CoAP response code 2.05 (Content). In particular, if the AS supports diff queries but not the "Cursor" extension (see {{sec-trl-endpoint-supporting-diff-queries}} and {{sec-trl-endpoint-supporting-cursor}}), then the payload of the response is formatted as defined in {{ssec-trl-full-query}} or in {{ssec-trl-diff-query}}, in case the GET request has yielded the execution of a full query or of a diff query of the TRL, respectively. Instead, if the AS supports both diff queries and the related "Cursor" extension, then the payload of the response is formatted as defined in {{sec-using-cursor}}.
 
+In case a requester does not receive a response from the TRL endpoint or it receives an error response from the TRL endpoint, the requester does not make any assumption or draw any conclusion regarding the revocation or expiration of its pertaining access tokens. The requester MAY try again by sending a new request to the TRL endpoint.
+
 When the TRL is updated (see {{ssec-trl-update}}), the AS sends Observe notifications to the observers whose pertaining subset of the TRL has changed. Observe notifications are sent as per {{Section 4.2 of RFC7641}}. If supported by the AS, an observer may configure the behavior according to which the AS sends those Observe notifications. To this end, a possible way relies on the conditional control attribute "c.pmax" defined in {{I-D.ietf-core-conditional-attributes}}, which can be included as a "name=value" query parameter in an Observation Request. This ensures that no more than c.pmax seconds elapse between two consecutive notifications sent to that observer, regardless of whether the TRL has changed or not.
 
 Following a first exchange with the AS, an administrator or a registered device can send additional GET (Observation) requests to the TRL endpoint at any time, analogously to what is defined above. When doing so, the requester towards the TRL endpoint can perform a full query (see {{ssec-trl-full-query}}) or a diff query (see {{ssec-trl-diff-query}}) of the TRL. In the latter case, the requester can additionally rely on the "Cursor" extension (see {{sec-trl-endpoint-query-parameters}} and {{sec-using-cursor-diff-query-response}}).
@@ -867,7 +934,23 @@ In order to limit the amount of time during which the requester is unaware of pe
 
 When receiving a response from the TRL endpoint, a registered device MUST expunge every stored access token associated with a token hash specified in the response. In case the registered device is an RS, it MUST NOT delete the stored token hash after having expunged the associated access token.
 
-An RS MUST NOT accept and store an access token, if the corresponding token hash is among the currently stored ones.
+If an RS uses the method defined in this document with the AS that has issued an access token, then the RS MUST NOT accept and store that access token if any of the following holds.
+
+* The token hash corresponding to the access token is among the currently stored ones.
+
+* The access token is a CWT and any of the following holds.
+
+  - The access token includes a non-empty "unprotected" field, i.e., the value of the field is not encoded as the empty CBOR map (0xa0). This applies to: the top-level "unprotected" field of the COSE object used for the CWT; the "unprotected" field of each element of the "signatures" array; and the "unprotected" field of each element of any "recipients" array.
+
+  - The received CBOR data item that embodies the access token does not comply with what is defined in {{sec-issuing-access-tokens-as}}. This concerns: the use of exactly two nested CBOR tags, where the outer tag is the CWT CBOR tag and the inner tag is one of the COSE CBOR tags; the tag numbers encoded with the minimum possible length; and the access token being the innermost tag content of the received CBOR data item.
+
+  - In the received CBOR data item that embodies the access token, the inner tag has a tag number that is not consistent with the actual COSE data item to process. For instance, the inner tag number is 16 (COSE_Encrypt0), but the CWT is actually a COSE_Sign data item.
+
+* The access token relies on a JSON object for encoding its claims, but it is not a JWT {{RFC7519}} and any of the following holds.
+
+  - The access token uses the JWS JSON Serialization from {{RFC7515}}, and it includes the JWS Unprotected Header.
+
+  - The access token uses the JWE JSON Serialization from {{RFC7516}}, and it includes the JWE Shared Unprotected Header and/or includes the "header" member in any of the elements of the "recipients" array.
 
 An RS MUST store the token hash th1 corresponding to an access token t1 until both the following conditions hold.
 
@@ -885,11 +968,11 @@ An RS MUST store the token hash th1 corresponding to an access token t1 until bo
 
 The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill both the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
 
-Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
+Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim (for CWTs) or in the 'jti' claim (for JWTs) greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
 
 In order to further limit such a risk, when receiving an access token that specifies the 'exi' claim and for which a corresponding token hash is not stored, the RS can introspect the access token (see {{Section 5.9 of RFC9200}}), if token introspection is implemented by both the RS and the AS.
 
-When, due to the stored and corresponding token hash th2, an access token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
+When, due to the stored and corresponding token hash th2, an access token t2 that includes the 'exi' claim is expunged or is not accepted upon its upload, the RS retrieves the sequence number sn2 encoded in the 'cti' claim (for CWTs) or in the 'jti' claim (for JWTs) (see {{Section 5.10.3 of RFC9200}}). Then, the RS stores sn2 as associated with th2. If expunging or not accepting t2 yields the deletion of th2, then the RS MUST associate sn2 with th2 before continuing with the deletion of th2.
 
 When deleting any token hash, the RS checks whether the token hash is associated with a sequence number sn\_th. In such a case, the RS checks whether sn\_th is greater than the highest sequence number sn\* among the expired access tokens specifying the 'exi' claim for the RS. If that is the case, sn\* MUST take the value of sn\_th.
 
@@ -920,7 +1003,7 @@ This specification defines a number of values that the AS can use as error ident
 
 # Security Considerations # {#sec-security-considerations}
 
-The protocol defined in this document inherits the security considerations from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
+The protocol defined in this document inherits the security considerations from the ACE framework for Authentication and Authorization {{RFC9200}}, from {{RFC8392}} as to the usage of CWTs, from {{RFC7519}} and {{RFC8725}} as to the usage of JWTs, from {{RFC7641}} as to the usage of CoAP Observe, and from {{RFC6920}} with regard to computing the token hashes. The following considerations also apply.
 
 ## Content Retrieval from the TRL
 
@@ -955,6 +1038,26 @@ A Client may attempt to access a protected resource at an RS after the access to
 In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.
 
 In order to minimize such a risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
+
+## Preventing Unnoticed Manipulation of Access Tokens # {#sec-seccons-token-manipulation}
+
+As defined in {{sec-issuing-access-tokens-as}}, issued access tokens MUST NOT rely on unprotected headers to specify information as header parameters. Also, when issued access tokens are CWTs, they MUST be tagged by using the COSE CBOR tag corresponding to the used COSE object, the result MUST be in turn tagged by using the CWT CBOR tag, and no further tagging is performed.
+
+This ensures that the RS always computes the correct token hash corresponding to an access token, i.e., the same token hash computed by the AS and C for that access token.
+
+By construction, the rules defined in {{sec-issuing-access-tokens-as}} prevent an active adversary from successfully performing an attack against the RS, which would otherwise be possible in case the access token is uploaded to the RS over an unprotected communication channel.
+
+In such an attack, the adversary intercepts the access token when this is sent to the RS. Then, the adversary manipulates the access token in a way which is going to be unnoticed by the RS, but without preventing the successful, cryptographic validation of the access token at the RS. To this end, the adversary has two possible options:
+
+* Adding and/or removing fields within the unprotected header(s) of the access token, as long as those fields do not play a role in the cryptographic validation of the access token.
+
+* Specifically when the access token is a CWT, adding/removing or manipulating possible CBOR tag(s) enclosing the access token.
+
+After that, the adversary sends the manipulated access token to the RS.
+
+After having successfully validated the manipulated access token, the RS computes a corresponding token hash different from the one computed and stored by C and the AS. Finally, the RS stores the manipulated access token and the corresponding wrong token hash.
+
+Later on, if the access token is revoked and the AS provides the RS with the corresponding correct token hash, the RS does not recognize the received token hash among the stored ones, and therefore does not delete the revoked access token.
 
 ## Two Token Hashes at the RS using JWTs # {#sec-seccons-two-hashes-jwt}
 
@@ -2035,6 +2138,6 @@ ace-trl-error = 1
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
 
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
