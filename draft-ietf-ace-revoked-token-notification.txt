@@ -108,7 +108,7 @@ Table of Contents
        9.2.3.  Cursor Specified in the Diff Query Request
    10. Registration at the Authorization Server
    11. Notification of Revoked Access Tokens
-     11.1.  Handling of Access Tokens and Token Hashes
+     11.1.  Handling of Revoked Access Tokens and Token Hashes
    12. ACE Token Revocation List Parameters
    13. ACE Token Revocation List Error Identifiers
    14. Security Considerations
@@ -155,13 +155,13 @@ Table of Contents
 
    Authentication and Authorization for Constrained Environments (ACE)
    [RFC9200] is a framework that enforces access control on IoT devices
-   acting as Resource Servers.  In order to use ACE, both Clients and
-   Resource Servers have to register with an Authorization Server (AS)
-   and become a registered device.  Once registered, a Client can send a
-   request to the AS, to obtain an access token for a Resource Server
-   (RS).  For a Client to access the RS, the Client must present the
-   issued access token at the RS, which then validates it before storing
-   it (see Section 5.10.1.1 of [RFC9200]).
+   acting as Resource Servers (RSs).  In order to use ACE, both Clients
+   and RSs have to register with an Authorization Server (AS) and become
+   a registered device.  Once registered, a Client can send a request to
+   the AS, to obtain an access token for an RS.  For a Client to access
+   the RS, the Client must present the issued access token at the RS,
+   which then validates it before storing it (see Section 5.10.1.1 of
+   [RFC9200]).
 
    Even though access tokens have expiration times, there are
    circumstances by which an access token may need to be revoked before
@@ -268,6 +268,14 @@ Table of Contents
       administrator is not necessarily a registered device as defined
       above, i.e., a Client requesting access tokens or an RS consuming
       access tokens.
+
+      An administrator might also be authorized to perform further
+      administrative operations at the AS, e.g., through a dedicated
+      admin interface that is out of the scope of this document.  By
+      considering the token hashes retrieved from the TRL together with
+      other information obtained from the AS, the administrator becomes
+      able to derive additional information, e.g., the fact that
+      accesses have been revoked for specific registered devices.
 
    *  Pertaining access token:
 
@@ -1702,6 +1710,16 @@ Table of Contents
       of the TRL as well as the related "Cursor" extension (see
       Section 6.2.1 and Section 9).
 
+   Once completed the registration process, the AS maintains the
+   registration and related information until a possible deregistration
+   occurs, hence keeping track of active administrators and registered
+   devices.  The particular way to achieve this is implementation-
+   specific.  Such a mechanism to maintain registrations is enforced in
+   any case at the AS, in order to ensure that requests sent by Clients
+   to the /token endpoint (see Section 5.8 of [RFC9200]) and by RSs to
+   the /introspect endpoint (see Section 5.9 of [RFC9200]) are processed
+   as intended.
+
    When communicating with one another, the registered devices and the
    AS have to use a secure communication association and be mutually
    authenticated (see Section 5 of [RFC9200]).
@@ -1812,7 +1830,7 @@ Table of Contents
    full query request to the TRL endpoint according to a related
    application policy.
 
-11.1.  Handling of Access Tokens and Token Hashes
+11.1.  Handling of Revoked Access Tokens and Token Hashes
 
    When receiving a response from the TRL endpoint, a registered device
    MUST expunge every stored access token associated with a token hash
@@ -3662,7 +3680,8 @@ Acknowledgments
    Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro, Joerg Ott,
    Marco Rasori, Michael Richardson, Kyle Rose, Zaheduzzaman Sarker, Jim
    Schaad, Göran Selander, Travis Spencer, Orie Steele, Éric Vyncke,
-   Dale Worley, and Paul Wouters for their comments and feedback.
+   Niklas Widell, Dale Worley, and Paul Wouters for their comments and
+   feedback.
 
    The work on this document has been partly supported by the Sweden's
    Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and
