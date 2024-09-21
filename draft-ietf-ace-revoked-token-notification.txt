@@ -288,6 +288,17 @@ Table of Contents
       which token hashes pertaining to that requester have been added to
       the TRL or removed from the TRL.
 
+   *  Full query: a type of query to the TRL, where the AS returns the
+      token hashes of the revoked access tokens currently in the TRL and
+      pertaining to the requester.  Further details are specified in
+      Section 6 and Section 7.
+
+   *  Diff query: a type of query to the TRL, where the AS returns a
+      list of diff entries, each related to one update occurred to the
+      TRL and containing a set of token hashes pertaining to the
+      requester.  Further details are specified in Section 6 and
+      Section 8.
+
    Examples throughout this document are expressed in CBOR diagnostic
    notation as defined in Section 8 of [RFC8949] and Appendix G of
    [RFC8610].  Diagnostic notation comments are often used to provide a
@@ -3645,13 +3656,11 @@ E.8.  Version -00 to -01
 Acknowledgments
 
    Ludwig Seitz contributed as a co-author of initial versions of this
-   document.
-
-   The authors sincerely thank Christian Amsüss, Carsten Bormann, Dhruv
-   Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro, Joerg Ott,
-   Marco Rasori, Michael Richardson, Kyle Rose, Jim Schaad, Göran
-   Selander, Travis Spencer, Orie Steele, Dale Worley, and Paul Wouters
-   for their comments and feedback.
+   document.  The authors sincerely thank Christian Amsüss, Carsten
+   Bormann, Dhruv Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro,
+   Joerg Ott, Marco Rasori, Michael Richardson, Kyle Rose, Zaheduzzaman
+   Sarker, Jim Schaad, Göran Selander, Travis Spencer, Orie Steele, Dale
+   Worley, and Paul Wouters for their comments and feedback.
 
    The work on this document has been partly supported by the Sweden's
    Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and
