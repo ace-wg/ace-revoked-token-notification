@@ -163,6 +163,10 @@ This specification also refers to the following terminology.
 
 * TRL update pertaining to a requester: an update to the TRL through which token hashes pertaining to that requester have been added to the TRL or removed from the TRL.
 
+* Full query: a type of query to the TRL, where the AS returns the token hashes of the revoked access tokens currently in the TRL and pertaining to the requester. Further details are specified in {{sec-trl-endpoint}} and {{ssec-trl-full-query}}.
+
+* Diff query: a type of query to the TRL, where the AS returns a list of diff entries, each related to one update occurred to the TRL and containing a set of token hashes pertaining to the requester. Further details are specified in {{sec-trl-endpoint}} and {{ssec-trl-diff-query}}.
+
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Section G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
 
 In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'full_set': \[\], e'cursor': 3} stands for {0: \[\], 2: 3}.
@@ -2137,7 +2141,6 @@ ace-trl-error = 1
 {: numbered="no"}
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
-
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
