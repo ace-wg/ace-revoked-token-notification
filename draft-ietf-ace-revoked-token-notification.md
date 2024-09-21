@@ -61,7 +61,6 @@ author:
         email: glewis@sei.cmu.edu
 
 normative:
-  RFC2119:
   RFC3629:
   RFC4648:
   RFC6347:
@@ -76,7 +75,6 @@ normative:
   RFC7516:
   RFC7519:
   RFC8126:
-  RFC8174:
   RFC8392:
   RFC8446:
   RFC8610:
