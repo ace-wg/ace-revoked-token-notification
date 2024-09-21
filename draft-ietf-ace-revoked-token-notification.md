@@ -2141,6 +2141,7 @@ ace-trl-error = 1
 {: numbered="no"}
 
 {{{Ludwig Seitz}}} contributed as a co-author of initial versions of this document.
-The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
+
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Dhruv Dhody}}}, {{{Rikard Höglund}}}, {{{Benjamin Kaduk}}}, {{{David Navarro}}}, {{{Joerg Ott}}}, {{{Marco Rasori}}}, {{{Michael Richardson}}}, {{{Kyle Rose}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Göran Selander}}}, {{{Travis Spencer}}}, {{{Orie Steele}}}, {{{Éric Vyncke}}}, {{{Dale Worley}}}, and {{{Paul Wouters}}} for their comments and feedback.
 
 The work on this document has been partly supported by the Sweden's Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).
