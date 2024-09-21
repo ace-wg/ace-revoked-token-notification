@@ -1998,6 +1998,50 @@ ace-trl-error = 1
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
 
+## Version -08 to -09 ## {#sec-08-09}
+
+* Terminology:
+
+  - Improved definition of "administrator".
+
+  - Added early definitions of "Full query" and "Diff query".
+
+* Rephrased "full TRL" to avoid confusion with "full query".
+
+* Consistent with RFC 6920, defined sha-256 as mandatory to implement.
+
+* Prevented an attack to the RS by:
+
+  - Using only Protected Headers in access tokens.
+
+  - Using canonical CBOR tagging of CWTs.
+
+* Clarifications:
+
+  - Handling of access tokens with 'exi' for both CWTs and JWTs.
+
+  - Registrations of devices are persisted and tracked at the AS.
+
+  - No response or error response from the TRL endpoint yields no assumption.
+
+  - Rationale of application policies in defining strategies and schedules for polling the AS.
+
+* Security considerations:
+
+  - Added reference to RFC 8725.
+
+  - Improved considerations on content retrieval from the TRL.
+
+* IANA:
+
+  - Added a pointer to where the use of the field 'cursor' in problem-details is defined.
+
+  - Revised text on Expert Review when using early allocation per RFC 7120.
+
+* Split elision and comments in examples with CBOR Diagnostic Notation.
+
+* Editorial improvements.
+
 ## Version -07 to -08 ## {#sec-07-08}
 
 * Added definition of pertaining token hash.
