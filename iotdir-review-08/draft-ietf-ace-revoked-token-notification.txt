@@ -5,11 +5,11 @@
 ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Intended status: Standards Track                            F. Palombini
-Expires: 15 March 2025                                       Ericsson AB
+Expires: 25 March 2025                                       Ericsson AB
                                                            S. Echeverria
                                                                 G. Lewis
                                                                  CMU SEI
-                                                       11 September 2024
+                                                       21 September 2024
 
 
     Notification of Revoked Access Tokens in the Authentication and
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 March 2025.
+   This Internet-Draft will expire on 25 March 2025.
 
 Copyright Notice
 
@@ -78,56 +78,58 @@ Table of Contents
    1.  Introduction
      1.1.  Terminology
    2.  Protocol Overview
-   3.  Token Hash
-     3.1.  Motivation for the Used Construction
-       3.1.1.  Issuing of the Access Token to the Client
-       3.1.2.  Provisioning of Access Tokens to the RS
-       3.1.3.  Design Rationale
-     3.2.  Hash Input on the Client and the AS
-       3.2.1.  AS-to-Client Response Encoded in CBOR
-       3.2.2.  AS-to-Client Response Encoded in JSON
-     3.3.  HASH_INPUT on the RS
-       3.3.1.  Access Tokens as CWTs
-       3.3.2.  Access Tokens as JWTs
-     3.4.  Computing the Token Hash
-   4.  Token Revocation List (TRL)
-     4.1.  Update of the TRL
-   5.  The TRL Endpoint
-     5.1.  Error Responses with Problem Details
-     5.2.  Supporting Diff Queries
-       5.2.1.  Supporting the "Cursor" Extension
-     5.3.  Query Parameters
-   6.  Full Query of the TRL
-   7.  Diff Query of the TRL
-   8.  Response Messages when Using the "Cursor" Extension
-     8.1.  Response to Full Query
-     8.2.  Response to Diff Query
-       8.2.1.  Empty Collection
-       8.2.2.  Cursor Not Specified in the Diff Query Request
-       8.2.3.  Cursor Specified in the Diff Query Request
-   9.  Registration at the Authorization Server
-   10. Notification of Revoked Access Tokens
-     10.1.  Handling of Revoked Access Tokens and Token Hashes
-   11. ACE Token Revocation List Parameters
-   12. ACE Token Revocation List Error Identifiers
-   13. Security Considerations
-     13.1.  Content Retrieval from the TRL
-     13.2.  Size of the TRL
-     13.3.  Communication Patterns
-     13.4.  Request of New Access Tokens
-     13.5.  Vulnerable Time Window at the RS
-     13.6.  Two Token Hashes at the RS using JWTs
-     13.7.  Additional Security Measures
-   14. IANA Considerations
-     14.1.  Media Type Registrations
-     14.2.  CoAP Content-Formats Registry
-     14.3.  Custom Problem Detail Keys Registry
-     14.4.  ACE Token Revocation List Parameters Registry
-     14.5.  ACE Token Revocation List Errors
-     14.6.  Expert Review Instructions
-   15. References
-     15.1.  Normative References
-     15.2.  Informative References
+   3.  Issuing of Access Tokens at the AS
+   4.  Token Hash
+     4.1.  Motivation for the Used Construction
+       4.1.1.  Issuing of the Access Token to the Client
+       4.1.2.  Provisioning of Access Tokens to the RS
+       4.1.3.  Design Rationale
+     4.2.  Hash Input on the Client and the AS
+       4.2.1.  AS-to-Client Response Encoded in CBOR
+       4.2.2.  AS-to-Client Response Encoded in JSON
+     4.3.  HASH_INPUT on the RS
+       4.3.1.  Access Tokens as CWTs
+       4.3.2.  Access Tokens as JWTs
+     4.4.  Computing the Token Hash
+   5.  Token Revocation List (TRL)
+     5.1.  Update of the TRL
+   6.  The TRL Endpoint
+     6.1.  Error Responses with Problem Details
+     6.2.  Supporting Diff Queries
+       6.2.1.  Supporting the "Cursor" Extension
+     6.3.  Query Parameters
+   7.  Full Query of the TRL
+   8.  Diff Query of the TRL
+   9.  Response Messages when Using the "Cursor" Extension
+     9.1.  Response to Full Query
+     9.2.  Response to Diff Query
+       9.2.1.  Empty Collection
+       9.2.2.  Cursor Not Specified in the Diff Query Request
+       9.2.3.  Cursor Specified in the Diff Query Request
+   10. Registration at the Authorization Server
+   11. Notification of Revoked Access Tokens
+     11.1.  Handling of Revoked Access Tokens and Token Hashes
+   12. ACE Token Revocation List Parameters
+   13. ACE Token Revocation List Error Identifiers
+   14. Security Considerations
+     14.1.  Content Retrieval from the TRL
+     14.2.  Size of the TRL
+     14.3.  Communication Patterns
+     14.4.  Request of New Access Tokens
+     14.5.  Vulnerable Time Window at the RS
+     14.6.  Preventing Unnoticed Manipulation of Access Tokens
+     14.7.  Two Token Hashes at the RS using JWTs
+     14.8.  Additional Security Measures
+   15. IANA Considerations
+     15.1.  Media Type Registrations
+     15.2.  CoAP Content-Formats Registry
+     15.3.  Custom Problem Detail Keys Registry
+     15.4.  ACE Token Revocation List Parameters Registry
+     15.5.  ACE Token Revocation List Errors
+     15.6.  Expert Review Instructions
+   16. References
+     16.1.  Normative References
+     16.2.  Informative References
    Appendix A.  On using the Series Transfer Pattern
    Appendix B.  Local Supportive Parameters of the TRL Endpoint
    Appendix C.  Interaction Examples
@@ -205,7 +207,7 @@ Table of Contents
    additional requirements for registered devices are a request/response
    interaction with the AS to access and possibly subscribe to the TRL
    (see Section 2), and the lightweight computation of hash values to
-   use as access token identifiers (see Section 3).
+   use as access token identifiers (see Section 4).
 
    The process by which access tokens are declared revoked is out of the
    scope of this document.  It is also out of scope the method by which
@@ -231,9 +233,9 @@ Table of Contents
    Resource Server (RS), and Authorization Server (AS).
 
    Readers are also expected to be familiar with the terms and concepts
-   related to CDDL [RFC8610], CBOR [RFC8949], JSON [RFC8259], CoAP
-   [RFC7252], CoAP Observe [RFC7641], and the use of hash functions to
-   name objects as defined in [RFC6920].
+   related to CDDL [RFC8610], CBOR [RFC8949], JSON [RFC8259], COSE
+   [RFC9052], CoAP [RFC7252], CoAP Observe [RFC7641], and the use of
+   hash functions to name objects as defined in [RFC6920].
 
    Note that the term "endpoint" is used here following its OAuth
    definition [RFC6749], aimed at denoting resources such as /token and
@@ -294,6 +296,17 @@ Table of Contents
       which token hashes pertaining to that requester have been added to
       the TRL or removed from the TRL.
 
+   *  Full query: a type of query to the TRL, where the AS returns the
+      token hashes of the revoked access tokens currently in the TRL and
+      pertaining to the requester.  Further details are specified in
+      Section 6 and Section 7.
+
+   *  Diff query: a type of query to the TRL, where the AS returns a
+      list of diff entries, each related to one update occurred to the
+      TRL and containing a set of token hashes pertaining to the
+      requester.  Further details are specified in Section 6 and
+      Section 8.
+
    Examples throughout this document are expressed in CBOR diagnostic
    notation as defined in Section 8 of [RFC8949] and Appendix G of
    [RFC8610].  Diagnostic notation comments are often used to provide a
@@ -301,13 +314,13 @@ Table of Contents
 
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
-   in the CDDL model shown in Figure 14 of Appendix D.  For example,
+   in the CDDL model shown in Figure 15 of Appendix D.  For example,
    {e'full_set': [], e'cursor': 3} stands for {0: [], 2: 3}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
    document, please replace the constructs of the form e'SOME_NAME' with
-   the value assigned to SOME_NAME in the CDDL model shown in Figure 14
+   the value assigned to SOME_NAME in the CDDL model shown in Figure 15
    of Appendix D.  Finally, please delete this note.
 
 2.  Protocol Overview
@@ -331,9 +344,9 @@ Table of Contents
       At any time after the registration procedure is finished, the
       registered device can send a GET request to the TRL endpoint at
       the AS.  When doing so, it can request for: the current list of
-      pertaining revoked access tokens (see Section 6); or the most
+      pertaining revoked access tokens (see Section 7); or the most
       recent updates that occurred over the list of pertaining revoked
-      access tokens (see Section 7).
+      access tokens (see Section 8).
 
       In particular, the registered device can rely on Observation for
       CoAP [RFC7641].  In such a case, the GET request sent to the TRL
@@ -357,17 +370,17 @@ Table of Contents
       Depending on the specific subscription established through the
       Observation Request, the notification provides the current updated
       list of revoked access tokens in the subset of the TRL pertaining
-      to that device (see Section 6), or the most recent TRL updates
+      to that device (see Section 7), or the most recent TRL updates
       occurred over that list of pertaining revoked access tokens (see
-      Section 7).
+      Section 8).
 
       Further Observe notifications may be sent, consistently with
       ongoing additional observations of the TRL endpoint.
 
    *  An administrator can access and subscribe to the TRL like a
       registered device, while getting the content of the whole TRL (see
-      Section 6) or the most recent updates occurred to the whole TRL
-      (see Section 7).
+      Section 7) or the most recent updates occurred to the whole TRL
+      (see Section 8).
 
    Figure 1 shows a high-level overview of the service provided by this
    protocol.  For the sake of simplicity, the example shown in the
@@ -403,15 +416,95 @@ Table of Contents
    Appendix C provides examples of the protocol flow and message
    exchanges between the AS and a registered device.
 
-3.  Token Hash
+3.  Issuing of Access Tokens at the AS
+
+   An AS that supports the method defined in this document MUST adhere
+   to the following rules when issuing an access token.
+
+   *  All the intended header parameters in the access token MUST be
+      specified within integrity-protected fields.
+
+   *  If the access token is a CWT, the following applies.
+
+      -  Any "unprotected" field MUST be empty, i.e., its value MUST be
+         encoded as the empty CBOR map (0xa0).  This applies to: the
+         top-level "unprotected" field of the COSE object used for the
+         CWT; the "unprotected" field of each element of the
+         "signatures" array; and the "unprotected" field of each element
+         of any "recipients" array (see Sections 2, 3, 4, 5, and 6 of
+         [RFC9052]).
+
+      -  Consistent with the specific COSE object used for the CWT, the
+         corresponding tagged structure in the set COSE_Tagged_Message
+         MUST be used (see Section 2 of [RFC9052]).  That is, the CBOR
+         array that encodes the CWT MUST be tagged by using the COSE
+         CBOR tag corresponding to the used COSE object.  Table 1 in
+         Section 2 of [RFC9052] specifies the tag numbers in question.
+
+         In turn, the resulting tagged data item MUST be tagged by using
+         the CWT CBOR tag with tag number 61 (see Section 6 of
+         [RFC8392]).  After that, the resulting data item MUST NOT be
+         further tagged.
+
+         Encoding of the tag numbers MUST be done using definite
+         lengths, and the length of the encoded tag numbers MUST be the
+         minimum possible length.  This means that the tag number 16 is
+         encoded as 0xd0 and not as 0xd810.
+
+         The example in Figure 2 shows a CWT that uses the COSE object
+         COSE_Encrypt0 (see Section 5.2 of [RFC9052]).
+
+   *  If, like for JWTs [RFC7519], the access token relies on a JSON
+      object for encoding its claims, the following applies.
+
+      Consistent with the ACE framework [RFC9200], this document
+      specifically considers JWTs, which are always represented using
+      the JWS Compact Serialization from [RFC7515] or the JWE Compact
+      Serialization from [RFC7516].  Consequently, all the header
+      parameters are specified within integrity-protected fields.
+
+      In case alternative access tokens were used, the following
+      applies:
+
+      -  If the access token uses the JWS JSON Serialization from
+         [RFC7515], it MUST NOT include the JWS Unprotected Header.
+
+      -  If the access token uses the JWE JSON Serialization from
+         [RFC7516], it MUST NOT include the JWE Shared Unprotected
+         Header and it MUST NOT include the "header" member in any of
+         the elements of the "recipients" array.
+
+   / CWT CBOR tag / 61(
+     / COSE_Encrypt0 CBOR tag / 16(
+       / COSE_Encrypt0 object / [
+         / protected /   h'a3010a044c53796d6d65747269633132
+                           38054d99a0d7846e762c49ffe8a63e0b',
+         / unprotected / {},
+         / ciphertext /  h'b918a11fd81e438b7f973d9e2e119bcb
+                           22424ba0f38a80f27562f400ee1d0d6c
+                           0fdb559c02421fd384fc2ebe22d70713
+                           78b0ea7428fff157444d45f7e6afcda1
+                           aae5f6495830c58627087fc5b4974f31
+                           9a8707a635dd643b'
+       ]
+     )
+   )
+
+                Figure 2: Example of CWT Using COSE_Encrypt0
+
+   Section 14.6 discusses how adhering to the rules above neutralizes an
+   attack against the RS, where an active adversary can induce the RS to
+   compute a token hash different from the correct one.
+
+4.  Token Hash
 
    This section specifies how token hashes are computed.
 
-   First, Section 3.1 provides the motivation for the used construction.
+   First, Section 4.1 provides the motivation for the used construction.
 
    Building on that, the value used as input to compute a token hash is
-   defined in Section 3.2 for the Client and the AS, and in Section 3.3
-   for the RS.  Finally, Section 3.4 defines how such an input is used
+   defined in Section 4.2 for the Client and the AS, and in Section 4.3
+   for the RS.  Finally, Section 4.4 defines how such an input is used
    for computing the token hash.
 
    The process outlined below refers to the base64url encoding and
@@ -420,7 +513,14 @@ Table of Contents
    encoding [RFC3629], which is the implied charset used in JSON (see
    Section 8.1 of [RFC8259]).
 
-3.1.  Motivation for the Used Construction
+   Consistent with Section 3.4 of [RFC8949], the term "tag" is used for
+   the entire CBOR data item consisting of both a tag number and the tag
+   content: the tag content is the CBOR data item that is being tagged.
+
+   Also, "tagged access token" is used to denote nested CBOR tags
+   (possibly a single one), with the innermost tag content being a CWT.
+
+4.1.  Motivation for the Used Construction
 
    An access token can have one among different formats.  The most
    expected formats are CWT [RFC8392] and JWT [RFC7519], with the former
@@ -429,7 +529,7 @@ Table of Contents
    aware of whether access tokens that are issued for it to consume are
    either CWTs or JWTs.
 
-3.1.1.  Issuing of the Access Token to the Client
+4.1.1.  Issuing of the Access Token to the Client
 
    There are two possible encodings that the AS can use for the AS-to-
    Client response (see Section 5.8.2 of [RFC9200]), where the issued
@@ -444,12 +544,12 @@ Table of Contents
 
       This implies that, within the CBOR map specified as message
       payload, the parameter 'access_token' is a CBOR data item of type
-      CBOR byte string and with value the binary representation BYTES of
-      the access token.  In particular:
+      CBOR byte string and with value BYTES.  In particular:
 
       -  If the access token is a CWT, then BYTES is the binary
          representation of the CWT (i.e., of the CBOR array that encodes
-         the CWT).
+         the untagged CWT) or of a tagged access token with the CWT as
+         innermost tag content.
 
       -  If the access token is a JWT, then BYTES is the binary
          representation of the JWT (i.e., of the text string that
@@ -460,16 +560,18 @@ Table of Contents
 
       This implies that, within the JSON object specified as message
       payload, the parameter 'access_token' has as value a text string
-      TEXT encoding the access token.  In particular:
+      TEXT.  In particular:
 
       -  If the access token is a JWT, then TEXT is the text string that
          encodes the JWT.
 
       -  If the access token is a CWT, then TEXT is the base64url-
-         encoded text string of the binary representation of the CWT
-         (i.e., of the CBOR array that encodes the CWT).
+         encoded text string of BYTES, which is the binary
+         representation of the CWT (i.e., of the CBOR array that encodes
+         the untagged CWT) or of a tagged access token with the CWT as
+         innermost tag content.
 
-3.1.2.  Provisioning of Access Tokens to the RS
+4.1.2.  Provisioning of Access Tokens to the RS
 
    In accordance with the used transport profile of ACE (e.g.,
    [RFC9202], [RFC9203], [RFC9431]), the RS receives a piece of token-
@@ -479,9 +581,8 @@ Table of Contents
 
    *  If the AS-to-Client response was encoded in CBOR, then TOKEN_INFO
       is the value of the CBOR byte string conveyed by the
-      'access_token' parameter of that response.  This is irrespective
-      of the access token being a CWT or a JWT.  That is, TOKEN_INFO is
-      the binary representation of the access token.
+      'access_token' parameter of that response.  That is, TOKEN_INFO is
+      the binary representation of the (tagged) access token.
 
    *  If the AS-to-Client response was encoded in JSON and the access
       token is a JWT, then TOKEN_INFO is the binary representation of
@@ -492,43 +593,43 @@ Table of Contents
    *  If the AS-to-Client response was encoded in JSON and the access
       token is a CWT, then TOKEN_INFO is the binary representation of
       the base64url-encoded text string that encodes the binary
-      representation of the access token.  That is, TOKEN_INFO is the
-      binary representation of the base64url-encoded text string
+      representation of the (tagged) access token.  That is, TOKEN_INFO
+      is the binary representation of the base64url-encoded text string
       conveyed by the 'access_token' parameter.
 
    The following overviews how the above specifically applies to the
    existing transport profiles of ACE.
 
-   *  The access token can be uploaded to the RS by means of a POST
-      request to the /authz-info endpoint (see Section 5.10.1 of
+   *  The (tagged) access token can be uploaded to the RS by means of a
+      POST request to the /authz-info endpoint (see Section 5.10.1 of
       [RFC9200]), using a CoAP Content-Format or HTTP media-type that
       reflects the format of the access token, if available (e.g.,
       "application/cwt" for CWTs), or "application/octet-stream"
       otherwise.  When doing so (e.g., like in [RFC9202]), TOKEN_INFO is
       the payload of the POST request.
 
-   *  The access token can be uploaded to the RS by means of a POST
-      request to the /authz-info endpoint, using the media-type
+   *  The (tagged) access token can be uploaded to the RS by means of a
+      POST request to the /authz-info endpoint, using the media-type
       "application/ace+cbor".  When doing so (e.g., like in [RFC9203]),
       TOKEN_INFO is the value of the CBOR byte string conveyed by the
       'access_token' parameter, within the CBOR map specified as payload
       of the POST request.
 
-   *  The access token can be uploaded to the RS during a DTLS session
-      establishment, e.g., like it is defined in Section 3.2.2 of
-      [RFC9202].  When doing so, TOKEN_INFO is the value of the
+   *  The (tagged) access token can be uploaded to the RS during a DTLS
+      session establishment, e.g., like it is defined in Section 3.2.2
+      of [RFC9202].  When doing so, TOKEN_INFO is the value of the
       'psk_identity' field of the ClientKeyExchange message (when using
       DTLS 1.2 [RFC6347]), or of the 'identity' field of a PSKIdentity,
       within the PreSharedKeyExtension of a ClientHello message (when
       using DTLS 1.3 [RFC9147]).
 
-   *  The access token can be uploaded to the RS within the MQTT CONNECT
-      packet, e.g., like it is defined in Section 2.2.4.1 of [RFC9431].
-      When doing so, TOKEN_INFO is specified within the 'Authentication
-      Data' field of the MQTT CONNECT packet, following the property
-      identifier 22 (0x16) and the token length.
+   *  The (tagged) access token can be uploaded to the RS within the
+      MQTT CONNECT packet, e.g., like it is defined in Section 2.2.4.1
+      of [RFC9431].  When doing so, TOKEN_INFO is specified within the
+      'Authentication Data' field of the MQTT CONNECT packet, following
+      the property identifier 22 (0x16) and the token length.
 
-3.1.3.  Design Rationale
+4.1.3.  Design Rationale
 
    Considering the possible variants discussed above, it must always be
    ensured that the same HASH_INPUT value is used as input for
@@ -541,22 +642,22 @@ Table of Contents
    that is what all among the AS, the Client, and the RS are able to
    see.
 
-3.2.  Hash Input on the Client and the AS
+4.2.  Hash Input on the Client and the AS
 
    The Client and the AS consider the content of the 'access_token'
-   parameter in the AS-to-Client response, where the access token is
-   included and provided to the requester Client.
+   parameter in the AS-to-Client response, where the (tagged) access
+   token is included and provided to the requester Client.
 
    The following defines how the Client and the AS determine the
    HASH_INPUT value to use as input for computing the token hash of the
    conveyed access token, depending on the AS-to-Client response being
-   encoded in CBOR (see Section 3.2.1) or in JSON (see Section 3.2.2).
+   encoded in CBOR (see Section 4.2.1) or in JSON (see Section 4.2.2).
 
    Once determined HASH_INPUT, the Client and the AS use it to compute
    the token hash of the conveyed access token as defined in
-   Section 3.4.
+   Section 4.4.
 
-3.2.1.  AS-to-Client Response Encoded in CBOR
+4.2.1.  AS-to-Client Response Encoded in CBOR
 
    If the AS-to-Client response is encoded in CBOR, then HASH_INPUT is
    defined as follows:
@@ -564,11 +665,12 @@ Table of Contents
    *  BYTES denotes the value of the CBOR byte string conveyed in the
       parameter 'access_token'.
 
-      With reference to the example in Figure 2, BYTES is the bytes
-      {0xd0 0x83 0x43 ... 0x64 0x3b}.
+      With reference to the example in Figure 3, BYTES is the bytes
+      {0xd8 0x3d 0xd0 ... 0x64 0x3b}.
 
-      Note that BYTES is the binary representation of the access token,
-      irrespective of this being a CWT or a JWT.
+      Note that BYTES is the binary representation of the tagged access
+      token if this is a CWT (as per Section 3), or of the access token
+      if this is a JWT.
 
    *  HASH_INPUT_TEXT is the base64url-encoded text string that encodes
       BYTES.
@@ -580,31 +682,32 @@ Table of Contents
    Max-Age: 85800
    Payload:
    {
-      / access_token / 1 : h'd08343a1010aa2044c53796d6d65
-                             74726963313238054d99a0d7846e
-                             762c49ffe8a63e0b5858b918a11f
-                             d81e438b7f973d9e2e119bcb2242
-                             4ba0f38a80f27562f400ee1d0d6c
-                             0fdb559c02421fd384fc2ebe22d7
-                             071378b0ea7428fff157444d45f7
-                             e6afcda1aae5f6495830c5862708
-                             7fc5b4974f319a8707a635dd643b',
+      / access_token / 1 : h'd83dd0835820a3010a044c53796d6d
+                             6574726963313238054d99a0d7846e
+                             762c49ffe8a63e0ba05858b918a11f
+                             d81e438b7f973d9e2e119bcb22424b
+                             a0f38a80f27562f400ee1d0d6c0fdb
+                             559c02421fd384fc2ebe22d7071378
+                             b0ea7428fff157444d45f7e6afcda1
+                             aae5f6495830c58627087fc5b4974f
+                             319a8707a635dd643b',
       / token_type /  34 : 2 / PoP /,
       / expires_in /   2 : 86400,
       / ace_profile / 38 : 1 / coap_dtls /,
       / (remainder of the response omitted for brevity) /
    }
 
-         Figure 2: Example of AS-to-Client CoAP response using CBOR
+         Figure 3: Example of AS-to-Client CoAP response using CBOR
 
-3.2.2.  AS-to-Client Response Encoded in JSON
+4.2.2.  AS-to-Client Response Encoded in JSON
 
    If the AS-to-Client response is encoded in JSON, then HASH_INPUT is
    the binary representation of the text string conveyed by the
    'access_token' parameter.
 
-   With reference to the example in Figure 3, HASH_INPUT is the binary
-   representation of "2YotnFZFEjr1zCsicMWpAA".
+   With reference to the example in Figure 4, HASH_INPUT is the binary
+   representation of "eyJh...YFiA".  When showing the access token,
+   Figure 4 uses line breaks for display purposes only.
 
    Note that:
 
@@ -612,8 +715,9 @@ Table of Contents
       representation of the JWT.
 
    *  If the access token is a CWT, then HASH_INPUT is the binary
-      representation of the base64url-encoded text string that encodes
-      the binary representation of the CWT.
+      representation of a base64url-encoded text string, which encodes
+      the binary representation of a tagged access token with the CWT as
+      innermost tag content (as per Section 3).
 
    HTTP/1.1 200 OK
    Content-Type: application/ace+json
@@ -621,41 +725,60 @@ Table of Contents
    Pragma: no-cache
    Payload:
    {
-      "access_token" : "2YotnFZFEjr1zCsicMWpAA",
+      "access_token" : "eyJhbGciOiJSU0ExXzUiLCJlbmMiOiJB
+                        MTI4Q0JDLUhTMjU2In0.
+                        QR1Owv2ug2WyPBnbQrRARTeEk9kDO2w8
+                        qDcjiHnSJflSdv1iNqhWXaKH4MqAkQtM
+                        oNfABIPJaZm0HaA415sv3aeuBWnD8J-U
+                        i7Ah6cWafs3ZwwFKDFUUsWHSK-IPKxLG
+                        TkND09XyjORj_CHAgOPJ-Sd8ONQRnJvW
+                        n_hXV1BNMHzUjPyYwEsRhDhzjAD26ima
+                        sOTsgruobpYGoQcXUwFDn7moXPRfDE8-
+                        NoQX7N7ZYMmpUDkR-Cx9obNGwJQ3nM52
+                        YCitxoQVPzjbl7WBuB7AohdBoZOdZ24W
+                        lN1lVIeh8v1K4krB8xgKvRU8kgFrEn_a
+                        1rZgN5TiysnmzTROF869lQ.
+                        AxY8DCtDaGlsbGljb3RoZQ.
+                        MKOle7UQrG6nSxTLX6Mqwt0orbHvAKeW
+                        nDYvpIAeZ72deHxz3roJDXQyhxx0wKaM
+                        HDjUEOKIwrtkHthpqEanSBNYHZgmNOV7
+                        sln1Eu9g3J8.
+                        fiK51VwhsxJ-siBMR-YFiA",
       "token_type"   : "pop",
       "expires_in"   : 86400,
       "ace_profile"  : "1"
    }
 
-         Figure 3: Example of AS-to-Client HTTP response using JSON
+         Figure 4: Example of AS-to-Client HTTP response using JSON
 
-3.3.  HASH_INPUT on the RS
+4.3.  HASH_INPUT on the RS
 
    The following defines how the RS determines the HASH_INPUT value to
    use as input for computing the token hash of an access token,
-   depending on the RS using either CWTs (see Section 3.3.1) or JWTs
-   (see Section 3.3.2).
+   depending on the RS using either CWTs (see Section 4.3.1) or JWTs
+   (see Section 4.3.2).
 
-3.3.1.  Access Tokens as CWTs
+4.3.1.  Access Tokens as CWTs
 
    If the RS expects access tokens to be CWTs, then the RS performs the
    following steps.
 
    1.  The RS receives the token-related information TOKEN_INFO, in
        accordance with what is specified by the used profile of ACE (see
-       Section 3.1.2).
+       Section 4.1.2).
 
    2.  The RS assumes that the Client received the access token in an
-       AS-to-Client response encoded in CBOR (see Section 3.2.1).
+       AS-to-Client response encoded in CBOR (see Section 4.2.1).
        Hence, the RS assumes TOKEN_INFO to be the binary representation
-       of the access token.
+       of the tagged access token with the CWT as innermost tag content
+       (as per Section 3).
 
    3.  The RS verifies the access token as per Section 5.10.1.1 of
        [RFC9200].  If the verification fails, then the RS does not
        discard the access token yet, and it instead moves to step 4.
 
        Otherwise, the RS stores the access token and computes the
-       corresponding token hash, as defined in Section 3.4.  In
+       corresponding token hash, as defined in Section 4.4.  In
        particular, the RS considers HASH_INPUT_TEXT as the base64url-
        encoded text string that encodes TOKEN_INFO.  Then, HASH_INPUT is
        the binary representation of HASH_INPUT_TEXT.
@@ -664,55 +787,57 @@ Table of Contents
        with the access token, and then terminates this algorithm.
 
    4.  The RS assumes that the Client received the access token in an
-       AS-to-Client response encoded in JSON (see Section 3.2.2).
+       AS-to-Client response encoded in JSON (see Section 4.2.2).
        Hence, the RS assumes TOKEN_INFO to be the binary representation
-       of HASH_INPUT_TEXT, which is the base64url-encoded text string
-       that encodes the binary representation of the access token.
+       of HASH_INPUT_TEXT.  In turn, HASH_INPUT_TEXT is the base64url-
+       encoded text string that encodes the binary representation of the
+       tagged access token with the CWT as innermost tag content (as per
+       Section 3).
 
    5.  The RS performs the base64url decoding of HASH_INPUT_TEXT, and
-       considers the result as the binary representation of the access
-       token.
+       considers the result as the binary representation of the tagged
+       access token.
 
    6.  The RS verifies the access token as per Section 5.10.1.1 of
        [RFC9200].  If the verification fails, then the RS terminates
        this algorithm.
 
        Otherwise, the RS stores the access token and computes the
-       corresponding token hash, as defined in Section 3.4.  In
+       corresponding token hash, as defined in Section 4.4.  In
        particular, HASH_INPUT is TOKEN_INFO.
 
        After that, the RS stores the computed token hash as associated
        with the access token.
 
-3.3.2.  Access Tokens as JWTs
+4.3.2.  Access Tokens as JWTs
 
    If the RS expects access tokens to be JWTs, then the RS performs the
    following steps.
 
    1.  The RS receives the token-related information TOKEN_INFO, in
        accordance with what is specified by the used profile of ACE (see
-       Section 3.1.2).
+       Section 4.1.2).
 
    2.  The RS verifies the access token as per Section 5.10.1.1 of
        [RFC9200].  If the verification fails, then the RS terminates
        this algorithm.  Otherwise, the RS stores the access token.
 
    3.  The RS computes a first token hash associated with the access
-       token, as defined in Section 3.4.
+       token, as defined in Section 4.4.
 
        In particular, the RS assumes that the Client received the access
        token in an AS-to-Client response encoded in JSON (see
-       Section 3.2.2).  Hence, HASH_INPUT is TOKEN_INFO.
+       Section 4.2.2).  Hence, HASH_INPUT is TOKEN_INFO.
 
        After that, the RS stores the computed token hash as associated
        with the access token.
 
    4.  The RS computes a second token hash associated with the access
-       token, as defined in Section 3.4.
+       token, as defined in Section 4.4.
 
        In particular, the RS assumes that the Client received the access
        token in an AS-to-Client response encoded in CBOR (see
-       Section 3.2.1).  Hence, HASH_INPUT is the binary representation
+       Section 4.2.1).  Hence, HASH_INPUT is the binary representation
        of HASH_INPUT_TEXT, which in turn is the base64url-encoded text
        string that encodes TOKEN_INFO.
 
@@ -731,15 +856,15 @@ Table of Contents
 
    If the RS performs both step 3 and step 4 above, then the RS MUST
    store, maintain, and rely on both token hashes as associated with the
-   access token, consistent with what is specified in Section 10.1.
+   access token, consistent with what is specified in Section 11.1.
 
-   Section 13.6 discusses how computing and storing both token hashes
+   Section 14.7 discusses how computing and storing both token hashes
    neutralizes an attack against the RS, where a dishonest Client can
    induce the RS to compute a token hash different from the correct one.
 
-3.4.  Computing the Token Hash
+4.4.  Computing the Token Hash
 
-   Once determined HASH_INPUT as defined in Section 3.2 and Section 3.3,
+   Once determined HASH_INPUT as defined in Section 4.2 and Section 4.3,
    a hash value of HASH_INPUT is generated as per Section 6 of
    [RFC6920].  The resulting output in binary format is used as the
    token hash.  Note that the used binary format embeds the identifier
@@ -751,9 +876,9 @@ Table of Contents
    Algorithm" Registry [Named.Information.Hash.Algorithm].
 
    The AS specifies the used hash function to registered devices during
-   their registration procedure (see Section 9).
+   their registration procedure (see Section 10).
 
-4.  Token Revocation List (TRL)
+5.  Token Revocation List (TRL)
 
    Upon startup, the AS creates a single Token Revocation List (TRL),
    encoded as a CBOR array.
@@ -766,7 +891,7 @@ Table of Contents
    the empty CBOR array.  The TRL is accessible through the TRL endpoint
    at the AS.
 
-4.1.  Update of the TRL
+5.1.  Update of the TRL
 
    The AS updates the TRL in the following two cases.
 
@@ -785,7 +910,7 @@ Table of Contents
    the case if multiple access tokens are revoked or expire at the same
    time, or within an acceptably narrow time window.
 
-5.  The TRL Endpoint
+6.  The TRL Endpoint
 
    Consistent with Section 6.5 of [RFC9200], all communications between
    a requester towards the TRL endpoint and the AS MUST be encrypted, as
@@ -796,11 +921,11 @@ Table of Contents
    response messages sent by the AS use Content-Format "application/ace-
    trl+cbor".  Their payload is formatted as a CBOR map, and the CBOR
    values used to abbreviate the parameters included therein are defined
-   in Section 11.
+   in Section 12.
 
    The AS MUST implement measures to prevent access to the TRL endpoint
    by entities other than registered devices and authorized
-   administrators (see Section 9).
+   administrators (see Section 10).
 
    The TRL endpoint supports only the GET method, and allows two types
    of queries of the TRL.
@@ -809,7 +934,7 @@ Table of Contents
       tokens currently in the TRL and pertaining to the requester.
 
       The AS MUST support this type of query.  The processing of a full
-      query and the related response format are defined in Section 6.
+      query and the related response format are defined in Section 7.
 
    *  Diff query: the AS returns a list of diff entries.  Each diff
       entry is related to one update occurred to the TRL, and it
@@ -819,8 +944,8 @@ Table of Contents
 
       The AS MAY support this type of query.  In such a case, the AS
       maintains the history of updates to the TRL as defined in
-      Section 5.2.  The processing of a diff query and the related
-      response format are defined in Section 7.
+      Section 6.2.  The processing of a diff query and the related
+      response format are defined in Section 8.
 
    If it supports diff queries, the AS MAY additionally support its
    "Cursor" extension, which has two benefits.  First, the AS can avoid
@@ -833,15 +958,15 @@ Table of Contents
 
    If it supports the "Cursor" extension, the AS stores additional
    information when maintaining the history of updates to the TRL, as
-   defined in Section 5.2.1.  Also, the processing of full query
+   defined in Section 6.2.1.  Also, the processing of full query
    requests and diff query requests, as well as the related response
-   format, are further extended as defined in Section 8.
+   format, are further extended as defined in Section 9.
 
    Appendix B provides an aggregated overview of the local supportive
    parameters that the AS internally uses at its TRL endpoint, when
    supporting diff queries and the "Cursor" extension.
 
-5.1.  Error Responses with Problem Details
+6.1.  Error Responses with Problem Details
 
    Some error responses from the TRL endpoint at the AS can convey
    error-specific information according to the problem-details format
@@ -852,7 +977,7 @@ Table of Contents
    formatted as follows.
 
    *  It MUST include the Custom Problem Detail entry 'ace-trl-error'
-      registered in Section 14.3 of this document.  This entry is
+      registered in Section 15.3 of this document.  This entry is
       formatted as a CBOR map, which includes the following fields.
 
       -  The field 'error-id' MUST be present.  The map key used for
@@ -860,12 +985,12 @@ Table of Contents
          value of this field is a CBOR integer specifying the error
          occurred at the AS.  This value is taken from the 'Value'
          column of the "ACE Token Revocation List Errors" registry
-         defined in Section 14.5 of this document.
+         defined in Section 15.5 of this document.
 
       -  The field 'cursor' MAY be present.  The map key used for this
          field is the CBOR unsigned integer with value 1.  The value of
          this field is a CBOR unsigned integer or the CBOR simple value
-         null (0xf6).
+         null (0xf6).  The use of this field is defined in Section 6.3.
 
       The CDDL notation [RFC8610] of the 'ace-trl-error' entry is given
       below.
@@ -889,7 +1014,7 @@ Table of Contents
       intervention is not expected.
 
    An example of error response using the problem-details format is
-   shown in Figure 4.
+   shown in Figure 5.
 
    Header: Bad Request (Code=4.00)
    Content-Format: application/concise-problem-details+cbor
@@ -903,7 +1028,7 @@ Table of Contents
      }
    }
 
-          Figure 4: Example of Error Response with Problem Details
+          Figure 5: Example of Error Response with Problem Details
 
    The problem-details format in general and the Custom Problem Detail
    entry 'ace-trl-error' in particular are OPTIONAL to support for
@@ -911,11 +1036,11 @@ Table of Contents
    trl-error' and able to understand the specified error may use that
    information to determine what actions to take next.
 
-5.2.  Supporting Diff Queries
+6.2.  Supporting Diff Queries
 
    If the AS supports diff queries, it is able to transfer a list of
    diff entries, each of which is related to one update occurred to the
-   TRL (see Section 5).  That is, when replying to a diff query
+   TRL (see Section 6).  That is, when replying to a diff query
    performed by a requester, the AS specifies the diff entries related
    to the most recent TRL updates pertaining to the requester.
 
@@ -932,7 +1057,7 @@ Table of Contents
    requester, the AS MUST keep track of the MAX_N most recent TRL
    updates pertaining to the requester.  If the AS supports diff
    queries, the AS MUST provide requesters with the value of MAX_N, upon
-   their registration (see Section 9).
+   their registration (see Section 10).
 
    The series items in the update collection MUST be strictly ordered in
    a chronological fashion.  That is, at any point in time, the current
@@ -967,7 +1092,7 @@ Table of Contents
    6.  The AS adds the series item to the update collection associated
        with the requester, as the last (most recent) one.
 
-5.2.1.  Supporting the "Cursor" Extension
+6.2.1.  Supporting the "Cursor" Extension
 
    If it supports the "Cursor" extension for diff queries, the AS
    performs also the following actions.
@@ -1027,7 +1152,7 @@ Table of Contents
       added to that update collection, minus 1.
 
    When processing a diff query using the "Cursor" extension, the values
-   of 'index' are used as cursor information, as defined in Section 8.2.
+   of 'index' are used as cursor information, as defined in Section 9.2.
 
    For each requester's update collection, the AS also defines a
    constant, positive integer MAX_DIFF_BATCH <= MAX_N, whose value
@@ -1037,15 +1162,15 @@ Table of Contents
    update collection in question.  If supporting the "Cursor" extension,
    the AS MUST provide registered devices and administrators with the
    corresponding value of MAX_DIFF_BATCH, upon their registration (see
-   Section 9).
+   Section 10).
 
-5.3.  Query Parameters
+6.3.  Query Parameters
 
    A GET request to the TRL endpoint can include the following query
    parameters.  The AS MUST silently ignore unknown query parameters.
 
    *  'diff': if included, it indicates to perform a diff query of the
-      TRL (see Section 7).  Its value MUST be either:
+      TRL (see Section 8).  Its value MUST be either:
 
       -  the integer 0, indicating that a (notification) response should
          include as many diff entries as the AS can provide in the
@@ -1057,7 +1182,7 @@ Table of Contents
 
       If the AS does not support diff queries, it ignores the 'diff'
       query parameter when present in the GET request, and proceeds like
-      when processing a full query of the TRL (see Section 6).
+      when processing a full query of the TRL (see Section 7).
 
       Otherwise, the AS MUST return a 4.00 (Bad Request) response in
       case the 'diff' query parameter of the GET request specifies a
@@ -1065,29 +1190,29 @@ Table of Contents
       the presence of the 'cursor' parameter and its value (see below).
       The response MUST have Content-Format "application/concise-
       problem-details+cbor" and its payload is formatted as defined in
-      Section 5.1.  Within the Custom Problem Detail entry 'ace-trl-
+      Section 6.1.  Within the Custom Problem Detail entry 'ace-trl-
       error', the value of the 'error-id' field MUST be set to 0
       ("Invalid parameter value"), and the field 'cursor' MUST NOT be
       present.
 
    *  'cursor': if included, it indicates to perform a diff query of the
       TRL together with the "Cursor" extension, as defined in
-      Section 8.2.  Its value MUST be either 0 or a positive integer.
+      Section 9.2.  Its value MUST be either 0 or a positive integer.
       If the 'cursor' query parameter is included, then the 'diff' query
       parameter MUST also be included.
 
       If included, the 'cursor' query parameter specifies an unsigned
       integer value that was provided by the AS in a previous response
-      from the TRL endpoint (see Section 8.1, Section 8.2.2, and
-      Section 8.2.3).
+      from the TRL endpoint (see Section 9.1, Section 9.2.2, and
+      Section 9.2.3).
 
       If the AS does not support the "Cursor" extension, it ignores the
       'cursor' query parameter when present in the GET request.  In such
       a case, the AS proceeds as specified elsewhere in this document,
-      i.e.: i) it performs a diff query of the TRL (see Section 7), if
+      i.e.: i) it performs a diff query of the TRL (see Section 8), if
       it supports diff queries and the 'diff' query parameter is present
       in the GET request; or ii) it performs a full query of the TRL
-      (see Section 6) otherwise.
+      (see Section 7) otherwise.
 
       If the AS supports both diff queries and the "Cursor" extension,
       and the GET request specifies the 'cursor' query parameter, then
@@ -1096,7 +1221,7 @@ Table of Contents
 
       The 4.00 (Bad Request) response MUST have Content-Format
       "application/concise-problem-details+cbor" and its payload is
-      formatted as defined in Section 5.1.
+      formatted as defined in Section 6.1.
 
       -  The GET request does not specify the 'diff' query parameter,
          irrespective of the value of the 'cursor' parameter.
@@ -1107,7 +1232,7 @@ Table of Contents
 
       -  The 'cursor' query parameter has a value that is neither 0 nor
          a positive integer, or it has a value strictly greater than
-         MAX_INDEX (see Section 5.2.1).
+         MAX_INDEX (see Section 6.2.1).
 
          Within the Custom Problem Detail entry 'ace-trl-error', the
          value of the 'error-id' field MUST be set to 0 ("Invalid
@@ -1121,13 +1246,13 @@ Table of Contents
          with the requester is not empty; no wrap-around of its 'index'
          value has occurred; and the 'cursor' query parameter has a
          value strictly greater than the current 'last_index' on the
-         update collection (see Section 5.2.1).
+         update collection (see Section 6.2.1).
 
          Within the Custom Problem Detail entry 'ace-trl-error', the
          value of the 'error-id' field MUST be set to 2 ("Out of bound
          cursor value"), and the field 'cursor' MUST NOT be present.
 
-6.  Full Query of the TRL
+7.  Full Query of the TRL
 
    In order to produce a (notification) response to a GET request asking
    for a full query of the TRL, the AS performs the following actions.
@@ -1159,10 +1284,10 @@ Table of Contents
 
        *  The 'cursor' parameter MUST be included if the AS supports
           both diff queries and the related "Cursor" extension (see
-          Section 5.2 and Section 5.2.1).  Its value is set as specified
-          in Section 8.1, and provides the requester with information
+          Section 6.2 and Section 6.2.1).  Its value is set as specified
+          in Section 9.1, and provides the requester with information
           for performing a follow-up diff query using the "Cursor"
-          extension (see Section 8.2).
+          extension (see Section 9.2).
 
           If the AS does not support both diff queries and the "Cursor"
           extension, this parameter MUST NOT be included.  In case the
@@ -1170,16 +1295,16 @@ Table of Contents
           extension, it MUST silently ignore the 'cursor' parameter if
           present.
 
-   Figure 5 provides the CDDL definition [RFC8610] of the CBOR array
+   Figure 6 provides the CDDL definition [RFC8610] of the CBOR array
    'full_set_value' specified in the response from the AS, as value of
    the 'full_set' parameter.
 
    token_hash = bytes
    full_set_value = [* token_hash]
 
-               Figure 5: CDDL definition of 'full_set_value'
+               Figure 6: CDDL definition of 'full_set_value'
 
-   Figure 6 shows an example response from the AS, following a full
+   Figure 7 shows an example response from the AS, following a full
    query request to the TRL endpoint.  In this example, the AS does not
    support diff queries nor the "Cursor" extension, hence the 'cursor'
    parameter is not included in the payload of the response.  Also, full
@@ -1190,29 +1315,27 @@ Table of Contents
    Payload:
    {
       e'full_set' : [
-        h'01fa51cc/...
-          (remainder of the token hash omitted for brevity)/',
-        h'01748190/...
-          (remainder of the token hash omitted for brevity)/'
+        h'01fa51cc...4819', / elided for brevity /
+        h'01748190...223d'  / elided for brevity /
       ]
    }
 
-      Figure 6: Example of response following a full query request to
+      Figure 7: Example of response following a full query request to
                               the TRL endpoint
 
-7.  Diff Query of the TRL
+8.  Diff Query of the TRL
 
    In order to produce a (notification) response to a GET request asking
    for a diff query of the TRL, the AS performs the following actions.
 
    Note that, if the AS supports both diff queries and the related
    "Cursor" extension, the steps 3 and 4 defined below are extended as
-   defined in Section 8.2.
+   defined in Section 9.2.
 
    1.  The AS defines the positive integer NUM as follows.  If the value
        N specified in the 'diff' query parameter in the GET request is
        equal to 0 or greater than the pre-defined positive integer MAX_N
-       (see Section 5.2), then NUM takes the value of MAX_N.  Otherwise,
+       (see Section 6.2), then NUM takes the value of MAX_N.  Otherwise,
        NUM takes N.
 
    2.  The AS determines U = min(NUM, SIZE), where SIZE <= MAX_N.  In
@@ -1225,7 +1348,7 @@ Table of Contents
 
        The prepared diff entries are related to the U most recent TRL
        updates pertaining to the requester, as maintained in the update
-       collection for that requester (see Section 5.2).  In particular,
+       collection for that requester (see Section 6.2).  In particular,
        the first diff entry refers to the most recent of such updates,
        the second diff entry refers to the second from last of such
        updates, and so on.
@@ -1271,10 +1394,10 @@ Table of Contents
 
        *  The 'cursor' parameter and the 'more' parameter MUST be
           included if the AS supports both diff queries and the related
-          "Cursor" extension (see Section 5.2.1).  Their values are set
-          as specified in Section 8.2, and provide the requester with
+          "Cursor" extension (see Section 6.2.1).  Their values are set
+          as specified in Section 9.2, and provide the requester with
           information for performing a follow-up query of the TRL (see
-          Section 8.2).
+          Section 9.2).
 
           In case the AS supports diff queries but not the "Cursor"
           extension, these parameters MUST NOT be included.  In case the
@@ -1282,7 +1405,7 @@ Table of Contents
           extension, it MUST silently ignore the 'cursor' parameter and
           the 'more' parameter if present.
 
-   Figure 7 provides the CDDL definition [RFC8610] of the CBOR array
+   Figure 8 provides the CDDL definition [RFC8610] of the CBOR array
    'diff_set_value' specified in the response from the AS, as value of
    the 'diff_set' parameter.
 
@@ -1291,9 +1414,9 @@ Table of Contents
       diff_entry = [removed: trl_patch, added: trl_patch]
       diff_set_value = [* diff_entry]
 
-               Figure 7: CDDL definition of 'diff_set_value'
+               Figure 8: CDDL definition of 'diff_set_value'
 
-   Figure 8 shows an example response from the AS, following a diff
+   Figure 9 shows an example response from the AS, following a diff
    query request to the TRL endpoint, where U = 3 diff entries are
    specified.  In this example, the AS does not support the "Cursor"
    extension, hence the 'cursor' parameter and the 'more' parameter are
@@ -1306,48 +1429,40 @@ Table of Contents
    {
       e'diff_set' : [
         [
-          [ h'01fa51cc/...
-              (remainder of the token hash omitted for brevity)/',
-            h'01748190/...
-              (remainder of the token hash omitted for brevity)/'
+          [ h'01fa51cc...0f6a', / elided for brevity /
+            h'01748190...8bce'  / elided for brevity /
           ],
-          [ h'01cdf1ca/...
-              (remainder of the token hash omitted for brevity)/',
-            h'01be41a6/...
-              (remainder of the token hash omitted for brevity)/'
+          [ h'01cdf1ca...563d', / elided for brevity /
+            h'01be41a6...a057'  / elided for brevity /
           ]
         ],
         [
-          [ h'0144dd12/...
-              (remainder of the token hash omitted for brevity)/',
-            h'01231fff/...
-              (remainder of the token hash omitted for brevity)/'
+          [ h'0144dd12...77bc', / elided for brevity /
+            h'01231fff...a2ce'  / elided for brevity /
           ],
           []
         ],
         [
           [],
-          [ h'01ca986f/...
-              (remainder of the token hash omitted for brevity)/',
-            h'01fe1a2b/...
-              (remainder of the token hash omitted for brevity)/'
+          [ h'01ca986f...ffc1', / elided for brevity /
+            h'01fe1a2b...def0'  / elided for brevity /
           ]
         ]
       ]
    }
 
-      Figure 8: Example of response following a diff query request to
+      Figure 9: Example of response following a diff query request to
                               the TRL endpoint
 
    Appendix A discusses how performing a diff query of the TRL is in
    fact a usage example of the Series Transfer Pattern defined in
    [I-D.bormann-t2trg-stp].
 
-8.  Response Messages when Using the "Cursor" Extension
+9.  Response Messages when Using the "Cursor" Extension
 
    If the AS supports both diff queries and the "Cursor" extension, it
    composes a response to a full query request or diff query request as
-   defined in Section 8.1 and Section 8.2, respectively.
+   defined in Section 9.1 and Section 9.2, respectively.
 
    The exact format of the response depends on the request being a full
    query or diff query request, on the presence of the 'diff' and
@@ -1356,12 +1471,12 @@ Table of Contents
    the requester.
 
    Error handling and the possible resulting error responses are as
-   defined in Section 5.3.
+   defined in Section 6.3.
 
-8.1.  Response to Full Query
+9.1.  Response to Full Query
 
    When processing a full query request to the TRL endpoint, the AS
-   composes a response as defined in Section 6.
+   composes a response as defined in Section 7.
 
    In particular, the 'cursor' parameter included in the CBOR map
    carried in the response payload specifies either the CBOR simple
@@ -1376,17 +1491,17 @@ Table of Contents
    Otherwise, the 'cursor' parameter MUST specify a CBOR unsigned
    integer.  This MUST take the 'index' value of the last series item in
    the update collection associated with the requester (see
-   Section 5.2.1), as corresponding to the most recent TRL update
+   Section 6.2.1), as corresponding to the most recent TRL update
    pertaining to the requester.  Such a value is in fact the current
    value of 'last_index' for the update collection associated with the
    requester.
 
-8.2.  Response to Diff Query
+9.2.  Response to Diff Query
 
    When processing a diff query request to the TRL endpoint, the AS
    composes a response as defined in the following.
 
-8.2.1.  Empty Collection
+9.2.1.  Empty Collection
 
    If the update collection associated with the requester has no
    elements, the AS returns a 2.05 (Content) response.  The response
@@ -1408,15 +1523,15 @@ Table of Contents
    request, and irrespective of the specified unsigned integer value if
    present.
 
-8.2.2.  Cursor Not Specified in the Diff Query Request
+9.2.2.  Cursor Not Specified in the Diff Query Request
 
    If the update collection associated with the requester is not empty
    and the diff query request does not include the 'cursor' query
-   parameter, the AS performs the actions defined in Section 7, with the
+   parameter, the AS performs the actions defined in Section 8, with the
    following differences.
 
    *  At step 3, the AS considers the value MAX_DIFF_BATCH (see
-      Section 5.2.1), and prepares L = min(U, MAX_DIFF_BATCH) diff
+      Section 6.2.1), and prepares L = min(U, MAX_DIFF_BATCH) diff
       entries.
 
       If U <= MAX_DIFF_BATCH, the prepared diff entries are the last
@@ -1459,11 +1574,11 @@ Table of Contents
    response has value true, the requester can send a follow-up diff
    query request including the 'cursor' query parameter, with the same
    value of the 'cursor' parameter specified in this diff query
-   response.  As defined in Section 8.2.3, this would result in the AS
+   response.  As defined in Section 9.2.3, this would result in the AS
    transferring the following subset of series items as diff entries,
    thus resuming from where interrupted in the previous transfer.
 
-8.2.3.  Cursor Specified in the Diff Query Request
+9.2.3.  Cursor Specified in the Diff Query Request
 
    If the update collection associated with the requester is not empty
    and the diff query request includes the 'cursor' query parameter with
@@ -1475,7 +1590,7 @@ Table of Contents
       are both not found in the update collection associated with the
       requester.  This occurs when the item Y (and possibly further ones
       after it) has been previously removed from the update collection
-      for that requester (see step 5 at Section 5.2).
+      for that requester (see step 5 at Section 6.2).
 
       In this case, the AS returns a 2.05 (Content) response.  The
       response MUST have Content-Format "application/ace-trl+cbor" and
@@ -1501,7 +1616,7 @@ Table of Contents
       a new full query request to the AS.  A successful response
       provides the requester with the full, current pertaining subset of
       the TRL, as well as with a valid value of the 'cursor' parameter
-      (see Section 8.1) to be possibly used as query parameter in a
+      (see Section 9.1) to be possibly used as query parameter in a
       following diff query request.
 
    *  Case B - The series item X with 'index' having value P is found in
@@ -1510,11 +1625,11 @@ Table of Contents
       value (P + 1) % (MAX_INDEX + 1) is found in the update collection
       associated with the requester.
 
-      In this case, the AS performs the actions defined in Section 7,
+      In this case, the AS performs the actions defined in Section 8,
       with the following differences.
 
       -  At step 3, the AS considers the value MAX_DIFF_BATCH (see
-         Section 5.2.1), and prepares L = min(SUB_U, MAX_DIFF_BATCH)
+         Section 6.2.1), and prepares L = min(SUB_U, MAX_DIFF_BATCH)
          diff entries, where SUB_U = min(NUM, SUB_SIZE), and SUB_SIZE is
          the number of series items in the update collection starting
          from and including the series item added immediately after X.
@@ -1575,7 +1690,7 @@ Table of Contents
       transferring the following subset of series items as diff entries,
       thus resuming from where interrupted in the previous transfer.
 
-9.  Registration at the Authorization Server
+10.  Registration at the Authorization Server
 
    During the registration process at the AS, an administrator or a
    registered device receives the following information as part of the
@@ -1589,11 +1704,11 @@ Table of Contents
       for this is outside the scope of this document.
 
    *  A positive integer MAX_N, if the AS supports diff queries of the
-      TRL (see Section 5.2 and Section 7).
+      TRL (see Section 6.2 and Section 8).
 
    *  A positive integer MAX_DIFF_BATCH, if the AS supports diff queries
       of the TRL as well as the related "Cursor" extension (see
-      Section 5.2.1 and Section 8).
+      Section 6.2.1 and Section 9).
 
    Once completed the registration process, the AS maintains the
    registration and related information until a possible deregistration
@@ -1641,26 +1756,32 @@ Table of Contents
    also out of the scope of the ACE framework for Authentication and
    Authorization (see Section 5.5 of [RFC9200]).
 
-10.  Notification of Revoked Access Tokens
+11.  Notification of Revoked Access Tokens
 
    Once registered at the AS, the administrator or registered device can
    send a GET request to the TRL endpoint at the AS.  The request can
-   express the wish for a full query (see Section 6) or a diff query
-   (see Section 7) of the TRL.  Also, the request can include the CoAP
+   express the wish for a full query (see Section 7) or a diff query
+   (see Section 8) of the TRL.  Also, the request can include the CoAP
    Observe Option set to 0 (register), in order to start an observation
    of the TRL endpoint as per Section 3.1 of [RFC7641].
 
    In case the request is successfully processed, the AS replies with a
    response specifying the CoAP response code 2.05 (Content).  In
    particular, if the AS supports diff queries but not the "Cursor"
-   extension (see Section 5.2 and Section 5.2.1), then the payload of
-   the response is formatted as defined in Section 6 or in Section 7, in
+   extension (see Section 6.2 and Section 6.2.1), then the payload of
+   the response is formatted as defined in Section 7 or in Section 8, in
    case the GET request has yielded the execution of a full query or of
    a diff query of the TRL, respectively.  Instead, if the AS supports
    both diff queries and the related "Cursor" extension, then the
-   payload of the response is formatted as defined in Section 8.
+   payload of the response is formatted as defined in Section 9.
 
-   When the TRL is updated (see Section 4.1), the AS sends Observe
+   In case a requester does not receive a response from the TRL endpoint
+   or it receives an error response from the TRL endpoint, the requester
+   does not make any assumption or draw any conclusion regarding the
+   revocation or expiration of its pertaining access tokens.  The
+   requester MAY try again by sending a new request to the TRL endpoint.
+
+   When the TRL is updated (see Section 5.1), the AS sends Observe
    notifications to the observers whose pertaining subset of the TRL has
    changed.  Observe notifications are sent as per Section 4.2 of
    [RFC7641].  If supported by the AS, an observer may configure the
@@ -1676,11 +1797,11 @@ Table of Contents
    registered device can send additional GET (Observation) requests to
    the TRL endpoint at any time, analogously to what is defined above.
    When doing so, the requester towards the TRL endpoint can perform a
-   full query (see Section 6) or a diff query (see Section 7) of the
+   full query (see Section 7) or a diff query (see Section 8) of the
    TRL.  In the latter case, the requester can additionally rely on the
-   "Cursor" extension (see Section 5.3 and Section 8.2).
+   "Cursor" extension (see Section 6.3 and Section 9.2).
 
-   As specified in Section 5.2, an AS supporting diff queries maintains
+   As specified in Section 6.2, an AS supporting diff queries maintains
    an update collection of maximum MAX_N series items for each
    administrator or registered device, hereafter referred to as
    requester.  In particular, if an update collection includes MAX_N
@@ -1700,7 +1821,7 @@ Table of Contents
    chances for a requester to miss updates occurred to its associated
    update collection altogether.  In turn, this relies on the requester
    successfully receiving the Observe notification responses from the
-   TRL (see also Section 13.3).
+   TRL (see also Section 14.3).
 
    In order to limit the amount of time during which the requester is
    unaware of pertaining access tokens that have been revoked but are
@@ -1709,7 +1830,7 @@ Table of Contents
    full query request to the TRL endpoint according to a related
    application policy.
 
-10.1.  Handling of Revoked Access Tokens and Token Hashes
+11.1.  Handling of Revoked Access Tokens and Token Hashes
 
    When receiving a response from the TRL endpoint, a registered device
    MUST expunge every stored access token associated with a token hash
@@ -1717,8 +1838,46 @@ Table of Contents
    it MUST NOT delete the stored token hash after having expunged the
    associated access token.
 
-   An RS MUST NOT accept and store an access token, if the corresponding
-   token hash is among the currently stored ones.
+   If an RS uses the method defined in this document with the AS that
+   has issued an access token, then the RS MUST NOT accept and store
+   that access token if any of the following holds.
+
+   *  The token hash corresponding to the access token is among the
+      currently stored ones.
+
+   *  The access token is a CWT and any of the following holds.
+
+      -  The access token includes a non-empty "unprotected" field,
+         i.e., the value of the field is not encoded as the empty CBOR
+         map (0xa0).  This applies to: the top-level "unprotected" field
+         of the COSE object used for the CWT; the "unprotected" field of
+         each element of the "signatures" array; and the "unprotected"
+         field of each element of any "recipients" array.
+
+      -  The received CBOR data item that embodies the access token does
+         not comply with what is defined in Section 3.  This concerns:
+         the use of exactly two nested CBOR tags, where the outer tag is
+         the CWT CBOR tag and the inner tag is one of the COSE CBOR
+         tags; the tag numbers encoded with the minimum possible length;
+         and the access token being the innermost tag content of the
+         received CBOR data item.
+
+      -  In the received CBOR data item that embodies the access token,
+         the inner tag has a tag number that is not consistent with the
+         actual COSE data item to process.  For instance, the inner tag
+         number is 16 (COSE_Encrypt0), but the CWT is actually a
+         COSE_Sign data item.
+
+   *  The access token relies on a JSON object for encoding its claims,
+      but it is not a JWT [RFC7519] and any of the following holds.
+
+      -  The access token uses the JWS JSON Serialization from
+         [RFC7515], and it includes the JWS Unprotected Header.
+
+      -  The access token uses the JWE JSON Serialization from
+         [RFC7516], and it includes the JWE Shared Unprotected Header
+         and/or includes the "header" member in any of the elements of
+         the "recipients" array.
 
    An RS MUST store the token hash th1 corresponding to an access token
    t1 until both the following conditions hold.
@@ -1733,7 +1892,7 @@ Table of Contents
          after its earlier revocation, i.e., the token hash th1 has been
          removed from the TRL.  This can be indicated, for instance, in
          a response from the TRL endpoint following a diff query of the
-         TRL (see Section 7).
+         TRL (see Section 8).
 
       -  The value of the 'exp' claim specified in t1 indicates that t1
          has expired.
@@ -1755,11 +1914,12 @@ Table of Contents
    impact from a (dishonest) Client whose pertaining access token: i)
    specifies the 'exi' claim; ii) is uploaded at the RS for the first
    time after it has been revoked and later expired; and iii) has the
-   sequence number encoded in the 'cti' claim greater than the highest
-   sequence number among the expired access tokens specifying the 'exi'
-   claim for the RS (see Section 5.10.3 of [RFC9200]).  That is, the RS
-   would not accept such a revoked and expired access token as long as
-   it stores the corresponding token hash.
+   sequence number encoded in the 'cti' claim (for CWTs) or in the 'jti'
+   claim (for JWTs) greater than the highest sequence number among the
+   expired access tokens specifying the 'exi' claim for the RS (see
+   Section 5.10.3 of [RFC9200]).  That is, the RS would not accept such
+   a revoked and expired access token as long as it stores the
+   corresponding token hash.
 
    In order to further limit such a risk, when receiving an access token
    that specifies the 'exi' claim and for which a corresponding token
@@ -1770,10 +1930,11 @@ Table of Contents
    When, due to the stored and corresponding token hash th2, an access
    token t2 that includes the 'exi' claim is expunged or is not accepted
    upon its upload, the RS retrieves the sequence number sn2 encoded in
-   the 'cti' claim (see Section 5.10.3 of [RFC9200]).  Then, the RS
-   stores sn2 as associated with th2.  If expunging or not accepting t2
-   yields the deletion of th2, then the RS MUST associate sn2 with th2
-   before continuing with the deletion of th2.
+   the 'cti' claim (for CWTs) or in the 'jti' claim (for JWTs) (see
+   Section 5.10.3 of [RFC9200]).  Then, the RS stores sn2 as associated
+   with th2.  If expunging or not accepting t2 yields the deletion of
+   th2, then the RS MUST associate sn2 with th2 before continuing with
+   the deletion of th2.
 
    When deleting any token hash, the RS checks whether the token hash is
    associated with a sequence number sn_th.  In such a case, the RS
@@ -1787,12 +1948,12 @@ Table of Contents
    first time after it has been revoked and later expired, the RS will
    not accept the access token at that point in time or in the future.
 
-11.  ACE Token Revocation List Parameters
+12.  ACE Token Revocation List Parameters
 
    This specification defines a number of parameters that can be
    transported in the response from the TRL endpoint, when the response
    payload is a CBOR map.  Note that such a response MUST use the
-   Content-Format "application/ace-trl+cbor" defined in Section 14.2 of
+   Content-Format "application/ace-trl+cbor" defined in Section 15.2 of
    this specification.
 
    The table below summarizes the parameters.  For each of them, it
@@ -1815,13 +1976,13 @@ Table of Contents
               Table 1: CBOR abbreviations for the ACE Token
                         Revocation List parameters
 
-12.  ACE Token Revocation List Error Identifiers
+13.  ACE Token Revocation List Error Identifiers
 
    This specification defines a number of values that the AS can use as
    error identifiers.  These are used in error responses with Content-
    Format "application/concise-problem-details+cbor", as values of the
    'error-id' field within the Custom Problem Detail entry 'ace-trl-
-   error' (see Section 5.1).
+   error' (see Section 6.1).
 
                    +=======+===========================+
                    | Value | Description               |
@@ -1836,16 +1997,16 @@ Table of Contents
                        Table 2: ACE Token Revocation
                            List Error Identifiers
 
-13.  Security Considerations
+14.  Security Considerations
 
    The protocol defined in this document inherits the security
    considerations from the ACE framework for Authentication and
    Authorization [RFC9200], from [RFC8392] as to the usage of CWTs, from
-   [RFC7519] as to the usage of JWTs, from [RFC7641] as to the usage of
-   CoAP Observe, and from [RFC6920] with regard to computing the token
-   hashes.  The following considerations also apply.
+   [RFC7519] and [RFC8725] as to the usage of JWTs, from [RFC7641] as to
+   the usage of CoAP Observe, and from [RFC6920] with regard to
+   computing the token hashes.  The following considerations also apply.
 
-13.1.  Content Retrieval from the TRL
+14.1.  Content Retrieval from the TRL
 
    The AS MUST ensure that each registered device can access and
    retrieve only its pertaining subset of the TRL.  To this end, the AS
@@ -1857,22 +2018,22 @@ Table of Contents
    The AS MUST ensure that, other than registered devices accessing
    their own pertaining subset of the TRL, only authorized and
    authenticated administrators can retrieve the full TRL (see
-   Section 9).
+   Section 10).
 
-13.2.  Size of the TRL
+14.2.  Size of the TRL
 
    If many non-expired access tokens associated with a registered device
    are revoked, the pertaining subset of the TRL could grow to a size
    bigger than what the registered device is prepared to handle upon
    reception of a response from the TRL endpoint, especially if relying
-   on a full query of the TRL (see Section 6).
+   on a full query of the TRL (see Section 7).
 
    This could be exploited by attackers to negatively affect the
    behavior of a registered device.  Therefore, in order to help reduce
    the size of the TRL, the AS SHOULD refrain from issuing access tokens
    with an excessively long expiration time.
 
-13.3.  Communication Patterns
+14.3.  Communication Patterns
 
    The communication about revoked access tokens presented in this
    specification is expected to especially rely on CoAP Observe
@@ -1888,7 +2049,7 @@ Table of Contents
    access tokens, by sending GET requests to the TRL endpoint according
    to a related application policy.
 
-13.4.  Request of New Access Tokens
+14.4.  Request of New Access Tokens
 
    If a Client stores an access token that it still believes to be
    valid, and it accordingly attempts to access a protected resource at
@@ -1912,7 +2073,7 @@ Table of Contents
    can ask for a new one.  Otherwise, the Client can try again to upload
    the same access token to the RS, or instead to request a new one.
 
-13.5.  Vulnerable Time Window at the RS
+14.5.  Vulnerable Time Window at the RS
 
    A Client may attempt to access a protected resource at an RS after
    the access token allowing such an access has been revoked, but before
@@ -1929,9 +2090,54 @@ Table of Contents
    the polling frequency and the maximum length of the vulnerable time
    window.
 
-13.6.  Two Token Hashes at the RS using JWTs
+14.6.  Preventing Unnoticed Manipulation of Access Tokens
 
-   Section 3.3.2 defines that an RS using JWTs as access tokens has to
+   As defined in Section 3, issued access tokens MUST NOT rely on
+   unprotected headers to specify information as header parameters.
+   Also, when issued access tokens are CWTs, they MUST be tagged by
+   using the COSE CBOR tag corresponding to the used COSE object, the
+   result MUST be in turn tagged by using the CWT CBOR tag, and no
+   further tagging is performed.
+
+   This ensures that the RS always computes the correct token hash
+   corresponding to an access token, i.e., the same token hash computed
+   by the AS and C for that access token.
+
+   By construction, the rules defined in Section 3 prevent an active
+   adversary from successfully performing an attack against the RS,
+   which would otherwise be possible in case the access token is
+   uploaded to the RS over an unprotected communication channel.
+
+   In such an attack, the adversary intercepts the access token when
+   this is sent to the RS.  Then, the adversary manipulates the access
+   token in a way which is going to be unnoticed by the RS, but without
+   preventing the successful, cryptographic validation of the access
+   token at the RS.  To this end, the adversary has two possible
+   options:
+
+   *  Adding and/or removing fields within the unprotected header(s) of
+      the access token, as long as those fields do not play a role in
+      the cryptographic validation of the access token.
+
+   *  Specifically when the access token is a CWT, adding/removing or
+      manipulating possible CBOR tag(s) enclosing the access token.
+
+   After that, the adversary sends the manipulated access token to the
+   RS.
+
+   After having successfully validated the manipulated access token, the
+   RS computes a corresponding token hash different from the one
+   computed and stored by C and the AS.  Finally, the RS stores the
+   manipulated access token and the corresponding wrong token hash.
+
+   Later on, if the access token is revoked and the AS provides the RS
+   with the corresponding correct token hash, the RS does not recognize
+   the received token hash among the stored ones, and therefore does not
+   delete the revoked access token.
+
+14.7.  Two Token Hashes at the RS using JWTs
+
+   Section 4.3.2 defines that an RS using JWTs as access tokens has to
    compute and store two token hashes associated with the same access
    token.  This is because, when using JWTs, the RS does not know for
    sure if the AS provided the access token to the Client by means of an
@@ -1945,7 +2151,7 @@ Table of Contents
    response encoded in JSON (CBOR).
 
    Consequently, the RS considers a HASH_INPUT different from the one
-   considered by the AS and the Client (see Section 3.2).  Hence, the RS
+   considered by the AS and the Client (see Section 4.2).  Hence, the RS
    computes a token hash h' different from the token hash h computed by
    the AS and the Client.  It follows that, if the AS revokes the access
    token and advertises the right token hash h, then the RS will not
@@ -1962,11 +2168,11 @@ Table of Contents
    JSON.
 
    While this asymmetry cannot be avoided altogether, the method defined
-   for the AS and the Client in Section 3.2 deliberately penalizes the
+   for the AS and the Client in Section 4.2 deliberately penalizes the
    case where the RS uses JWTs as access tokens.  In such a case, the RS
    effectively neutralizes the attack described above, by computing and
    storing two token hashes associated with the same access token (see
-   Section 3.3.2).
+   Section 4.3.2).
 
    Conversely, this design deliberately favors the case where the RS
    uses CWTs as access tokens, which is a preferable option for
@@ -1974,9 +2180,9 @@ Table of Contents
    framework (see Section 3 of [RFC9200]).  That is, if an RS uses CWTs
    as access tokens, then the RS is not exposed to the attack described
    above, and thus it safely computes and stores only one token hash per
-   access token (see Section 3.3.1).
+   access token (see Section 4.3.1).
 
-13.7.  Additional Security Measures
+14.8.  Additional Security Measures
 
    By accessing the TRL at the AS, registered devices and administrators
    are able to learn that their pertaining access tokens have been
@@ -2007,14 +2213,14 @@ Table of Contents
    The methods by which these processes are triggered and carried out
    are out of the scope of this document.
 
-14.  IANA Considerations
+15.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-14.1.  Media Type Registrations
+15.1.  Media Type Registrations
 
    IANA is asked to register the media type "application/ace-trl+cbor"
    for messages of the protocol defined in this document encoded in
@@ -2032,7 +2238,7 @@ Table of Contents
    Encoding considerations: Must be encoded as a CBOR map containing the
    protocol parameters defined in [RFC-XXXX].
 
-   Security considerations: See Section 13 of this document.
+   Security considerations: See Section 14 of this document.
 
    Interoperability considerations: N/A
 
@@ -2060,7 +2266,7 @@ Table of Contents
 
    Provisional registration: No
 
-14.2.  CoAP Content-Formats Registry
+15.2.  CoAP Content-Formats Registry
 
    IANA is asked to add the following entry to the "CoAP Content-
    Formats" registry within the "Constrained RESTful Environments (CoRE)
@@ -2074,7 +2280,7 @@ Table of Contents
 
    Reference: [RFC-XXXX]
 
-14.3.  Custom Problem Detail Keys Registry
+15.3.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
    Detail Keys" registry within the "Constrained RESTful Environments
@@ -2089,9 +2295,9 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 5.1 of [RFC-XXXX]
+   *  Reference: Section 6.1 of [RFC-XXXX]
 
-14.4.  ACE Token Revocation List Parameters Registry
+15.4.  ACE Token Revocation List Parameters Registry
 
    IANA is asked to establish the "ACE Token Revocation List Parameters"
    IANA registry within the "Authentication and Authorization for
@@ -2100,17 +2306,17 @@ Table of Contents
    As registration policy, the registry uses either "Standards Action
    with Expert Review", or "Specification Required" per Section 4.6 of
    [RFC8126], or "Expert Review" per Section 4.5 of [RFC8126].  Expert
-   Review guidelines are provided in Section 14.6.
+   Review guidelines are provided in Section 15.6.
 
    All assignments according to "Standards Action with Expert Review"
    are made on a "Standards Action" basis per Section 4.9 of [RFC8126],
    with Expert Review additionally required per Section 4.5 of
    [RFC8126].  The procedure for early IANA allocation of Standards
    Track code points defined in [RFC7120] also applies.  When such a
-   procedure is used, review and approval by the designated expert are
-   also required, in order for the WG chairs to determine that the
-   conditions for early allocation are met (see step 2 in Section 3.1 of
-   [RFC7120]).
+   procedure is used, IANA will ask the designated expert(s) to approve
+   the early allocation before registration.  In addition, WG chairs are
+   encouraged to consult the expert(s) early during the process outlined
+   in Section 3.1 of [RFC7120].
 
    The columns of this registry are:
 
@@ -2136,10 +2342,10 @@ Table of Contents
       specification for the item.
 
    This registry has been initially populated by the values in
-   Section 11.  The "Reference" column for all of these entries refers
+   Section 12.  The "Reference" column for all of these entries refers
    to this document.
 
-14.5.  ACE Token Revocation List Errors
+15.5.  ACE Token Revocation List Errors
 
    IANA is asked to establish the "ACE Token Revocation List Errors"
    IANA registry within the "Authentication and Authorization for
@@ -2148,17 +2354,17 @@ Table of Contents
    As registration policy, the registry uses either "Standards Action
    with Expert Review", or "Specification Required" per Section 4.6 of
    [RFC8126], or "Expert Review" per Section 4.5 of [RFC8126].  Expert
-   Review guidelines are provided in Section 14.6.
+   Review guidelines are provided in Section 15.6.
 
    All assignments according to "Standards Action with Expert Review"
    are made on a "Standards Action" basis per Section 4.9 of [RFC8126],
    with Expert Review additionally required per Section 4.5 of
    [RFC8126].  The procedure for early IANA allocation of Standards
    Track code points defined in [RFC7120] also applies.  When such a
-   procedure is used, review and approval by the designated expert are
-   also required, in order for the WG chairs to determine that the
-   conditions for early allocation are met (see step 2 in Section 3.1 of
-   [RFC7120]).
+   procedure is used, IANA will ask the designated expert(s) to approve
+   the early allocation before registration.  In addition, WG chairs are
+   encouraged to consult the expert(s) early during the process outlined
+   in Section 3.1 of [RFC7120].
 
    The columns of this registry are:
 
@@ -2178,10 +2384,10 @@ Table of Contents
       specification defining the error, if one exists.
 
    This registry has been initially populated by the values in
-   Section 12.  The "Reference" column for all of these entries refers
+   Section 13.  The "Reference" column for all of these entries refers
    to this document.
 
-14.6.  Expert Review Instructions
+15.6.  Expert Review Instructions
 
    The IANA registries established in this document are defined as
    "Standards Action with Expert Review", "Specification Required", or
@@ -2221,9 +2427,9 @@ Table of Contents
       used on, and the number of code points left that encode to that
       size.
 
-15.  References
+16.  References
 
-15.1.  Normative References
+16.1.  Normative References
 
    [Named.Information.Hash.Algorithm]
               IANA, "Named Information Hash Algorithm",
@@ -2270,6 +2476,14 @@ Table of Contents
               DOI 10.17487/RFC7252, June 2014,
               <https://www.rfc-editor.org/rfc/rfc7252>.
 
+   [RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
+              Signature (JWS)", RFC 7515, DOI 10.17487/RFC7515, May
+              2015, <https://www.rfc-editor.org/rfc/rfc7515>.
+
+   [RFC7516]  Jones, M. and J. Hildebrand, "JSON Web Encryption (JWE)",
+              RFC 7516, DOI 10.17487/RFC7516, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7516>.
+
    [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
               <https://www.rfc-editor.org/rfc/rfc7519>.
@@ -2312,10 +2526,20 @@ Table of Contents
               (OSCORE)", RFC 8613, DOI 10.17487/RFC8613, July 2019,
               <https://www.rfc-editor.org/rfc/rfc8613>.
 
+   [RFC8725]  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
+              Current Practices", BCP 225, RFC 8725,
+              DOI 10.17487/RFC8725, February 2020,
+              <https://www.rfc-editor.org/rfc/rfc8725>.
+
    [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", STD 94, RFC 8949,
               DOI 10.17487/RFC8949, December 2020,
               <https://www.rfc-editor.org/rfc/rfc8949>.
+
+   [RFC9052]  Schaad, J., "CBOR Object Signing and Encryption (COSE):
+              Structures and Process", STD 96, RFC 9052,
+              DOI 10.17487/RFC9052, August 2022,
+              <https://www.rfc-editor.org/rfc/rfc9052>.
 
    [RFC9147]  Rescorla, E., Tschofenig, H., and N. Modadugu, "The
               Datagram Transport Layer Security (DTLS) Protocol Version
@@ -2359,7 +2583,7 @@ Table of Contents
               DOI 10.17487/RFC9528, March 2024,
               <https://www.rfc-editor.org/rfc/rfc9528>.
 
-15.2.  Informative References
+16.2.  Informative References
 
    [I-D.bormann-t2trg-stp]
               Bormann, C. and K. Hartke, "The Series Transfer Pattern
@@ -2382,7 +2606,7 @@ Table of Contents
 
 Appendix A.  On using the Series Transfer Pattern
 
-   Performing a diff query of the TRL as specified in Section 7 is in
+   Performing a diff query of the TRL as specified in Section 8 is in
    fact a usage example of the Series Transfer Pattern defined in
    [I-D.bormann-t2trg-stp].
 
@@ -2392,7 +2616,7 @@ Appendix A.  On using the Series Transfer Pattern
    registered device or an administrator.
 
    When responding to a diff query request from a requester (see
-   Section 7), 'diff_set' is a subset of the update collection
+   Section 8), 'diff_set' is a subset of the update collection
    associated with the requester, where each 'diff_entry' record is a
    series item from that update collection.  Note that 'diff_set'
    specifies the whole current update collection when the value of U is
@@ -2407,12 +2631,12 @@ Appendix A.  On using the Series Transfer Pattern
    up to MAX_N series items, the AS deletes the oldest series item when
    a new one is generated and added to the end of the update collection,
    due to a new TRL update pertaining to that requester (see
-   Section 5.2).  This addresses the question "When can the server
+   Section 6.2).  This addresses the question "When can the server
    decide to no longer retain older items?" raised in Section 3.2 of
    [I-D.bormann-t2trg-stp].
 
    Furthermore, performing a diff query of the TRL together with the
-   "Cursor" extension as specified in Section 8 in fact relies on the
+   "Cursor" extension as specified in Section 9 in fact relies on the
    "Cursor" pattern of the Series Transfer Pattern (see Section 3.3 of
    [I-D.bormann-t2trg-stp]).
 
@@ -2420,11 +2644,11 @@ Appendix B.  Local Supportive Parameters of the TRL Endpoint
 
    Table 3 provides an aggregated overview of the local supportive
    parameters that the AS internally uses at its TRL endpoint, when
-   supporting diff queries (see Section 5) and the "Cursor" extension
-   (see Section 5.2.1).
+   supporting diff queries (see Section 6) and the "Cursor" extension
+   (see Section 6.2.1).
 
-   Except for MAX_N defined in Section 5.2, all the other parameters are
-   defined in Section 5.2.1 and are used only if the AS supports the
+   Except for MAX_N defined in Section 6.2, all the other parameters are
+   defined in Section 6.2.1 and are used only if the AS supports the
    "Cursor" extension.
 
    For each parameter, the columns of the table specify the following
@@ -2486,7 +2710,7 @@ Appendix C.  Interaction Examples
    issued by the AS are intended to be consumed by the considered RS.
 
    The AS supports both full queries and diff queries of the TRL, as
-   defined in Section 6 and Section 7, respectively.
+   defined in Section 7 and Section 8, respectively.
 
    Registration is assumed to be done by the RS sending a POST request
    with an unspecified payload to the AS, which replies with a 2.01
@@ -2498,24 +2722,24 @@ Appendix C.  Interaction Examples
 
    *  a 'trl_hash' parameter, specifying the "Hash Name String" of the
       hash function used to compute token hashes as defined in
-      Section 3;
+      Section 4;
 
    *  a 'max_n' parameter, specifying the value of MAX_N, i.e., the
       maximum number of series items that the AS retains in the update
-      collection associated with a registered device (see Section 7);
+      collection associated with a registered device (see Section 8);
 
    *  possible further parameters related to the registration process.
 
    Furthermore, 'h(x)' refers to the hash function used to compute the
-   token hashes, as defined in Section 3 of this specification and
+   token hashes, as defined in Section 4 of this specification and
    according to [RFC6920].  Assuming the usage of CWTs transported in
-   AS-to-Client responses encoded in CBOR (see Section 3.2.1),
+   AS-to-Client responses encoded in CBOR (see Section 4.2.1),
    'bstr.h(t1)' and 'bstr.h(t2)' denote the CBOR byte strings with value
    the token hashes of the access tokens t1 and t2, respectively.
 
 C.1.  Full Query with Observe
 
-   Figure 9 shows an interaction example considering a CoAP observation
+   Figure 10 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
 
    In this example, the AS does not support the "Cursor" extension.
@@ -2602,11 +2826,11 @@ C.1.  Full Query with Observe
           |        }                                           |
           |                                                    |
 
-             Figure 9: Interaction for full query with Observe
+             Figure 10: Interaction for full query with Observe
 
 C.2.  Diff Query with Observe
 
-   Figure 10 shows an interaction example considering a CoAP observation
+   Figure 11 shows an interaction example considering a CoAP observation
    and a diff query of the TRL.
 
    The RS indicates N = 3 as value of the 'diff' query parameter, i.e.,
@@ -2710,11 +2934,11 @@ C.2.  Diff Query with Observe
           |        }                                           |
           |                                                    |
 
-             Figure 10: Interaction for diff query with Observe
+             Figure 11: Interaction for diff query with Observe
 
 C.3.  Full Query with Observe plus Diff Query
 
-   Figure 11 shows an interaction example considering a CoAP observation
+   Figure 12 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
 
    The example also considers one of the notifications from the AS to
@@ -2834,7 +3058,7 @@ C.3.  Full Query with Observe plus Diff Query
           |        }                                           |
           |                                                    |
 
-     Figure 11: Interaction for full query with Observe plus diff query
+     Figure 12: Interaction for full query with Observe plus diff query
 
 C.4.  Diff Query with Observe and "Cursor"
 
@@ -2845,7 +3069,7 @@ C.4.  Diff Query with Observe and "Cursor"
    that can be included in a response to a diff query request from this
    RS.
 
-   Figure 12 shows an interaction example considering a CoAP observation
+   Figure 13 shows an interaction example considering a CoAP observation
    and a diff query of the TRL.
 
    The RS specifies the query parameter 'diff' with value 3, i.e., the
@@ -2999,7 +3223,7 @@ C.4.  Diff Query with Observe and "Cursor"
         |            }                                           |
         |                                                        |
 
-      Figure 12: Interaction for diff query with Observe and "Cursor"
+      Figure 13: Interaction for diff query with Observe and "Cursor"
 
 C.5.  Full Query with Observe plus Diff Query with "Cursor"
 
@@ -3010,7 +3234,7 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
    that can be included in a response to a diff query request from this
    RS.
 
-   Figure 13 shows an interaction example considering a CoAP observation
+   Figure 14 shows an interaction example considering a CoAP observation
    and a full query of the TRL.
 
    The example also considers some of the notifications from the AS to
@@ -3265,7 +3489,7 @@ C.5.  Full Query with Observe plus Diff Query with "Cursor"
      |          }                                                    |
      |                                                               |
 
-        Figure 13: Interaction for full query with Observe plus diff
+        Figure 14: Interaction for full query with Observe plus diff
                             query with "Cursor"
 
 Appendix D.  CDDL Model
@@ -3279,7 +3503,7 @@ Appendix D.  CDDL Model
 
    ace-trl-error = 1
 
-                           Figure 14: CDDL model
+                           Figure 15: CDDL model
 
 Appendix E.  Document Updates
 
@@ -3454,9 +3678,10 @@ Acknowledgments
 
    The authors sincerely thank Christian Amsüss, Carsten Bormann, Dhruv
    Dhody, Rikard Höglund, Benjamin Kaduk, David Navarro, Joerg Ott,
-   Marco Rasori, Michael Richardson, Kyle Rose, Jim Schaad, Göran
-   Selander, Travis Spencer, Niklas Widell, Dale Worley, and Paul
-   Wouters for their comments and feedback.
+   Marco Rasori, Michael Richardson, Kyle Rose, Zaheduzzaman Sarker, Jim
+   Schaad, Göran Selander, Travis Spencer, Orie Steele, Éric Vyncke,
+   Niklas Widell, Dale Worley, and Paul Wouters for their comments and
+   feedback.
 
    The work on this document has been partly supported by the Sweden's
    Innovation Agency VINNOVA and the Celtic-Next projects CRITISEC and
