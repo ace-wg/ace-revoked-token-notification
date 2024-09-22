@@ -114,13 +114,13 @@ entity:
 
 --- abstract
 
-This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an Authorization Server to notify Clients and Resource Servers (i.e., registered devices) about revoked access tokens. As specified in this document, the method allows Clients and Resource Servers to access a Token Revocation List on the Authorization Server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked access tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on Clients and Resource Servers.
+This document specifies a method of the Authentication and Authorization for Constrained  Environments (ACE) framework, which allows an authorization server to notify clients and resource servers (i.e., registered devices) about revoked access tokens. As specified in this document, the method allows clients and resource servers to access a Token Revocation List on the authorization server by using the Constrained Application Protocol (CoAP), with the possible additional use of resource observation. Resulting (unsolicited) notifications of revoked access tokens complement alternative approaches such as token introspection, while not requiring additional endpoints on clients and resource servers.
 
 --- middle
 
 # Introduction # {#intro}
 
-Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as Resource Servers (RSs). In order to use ACE, both Clients and RSs have to register with an Authorization Server (AS) and become a registered device. Once registered, a Client can send a request to the AS, to obtain an access token for an RS. For a Client to access the RS, the Client must present the issued access token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
+Authentication and Authorization for Constrained Environments (ACE) {{RFC9200}} is a framework that enforces access control on IoT devices acting as resource servers (RSs). In order to use ACE, both clients and RSs have to register with an authorization server (AS) and become a registered device. Once registered, a client can send a request to the AS, to obtain an access token for an RS. For a client to access the RS, the client must present the issued access token at the RS, which then validates it before storing it (see {{Section 5.10.1.1 of RFC9200}}).
 
 Even though access tokens have expiration times, there are circumstances by which an access token may need to be revoked before its expiration time, such as: (1) a registered device has been compromised, or is suspected of being compromised; (2) a registered device is decommissioned; (3) there has been a change in the ACE profile for a registered device; (4) there has been a change in access policies for a registered device; and (5) there has been a change in the outcome of policy evaluation for a registered device (e.g., if policy assessment depends on dynamic conditions in the execution environment, the user context, or the resource utilization).
 
@@ -140,7 +140,7 @@ The process by which access tokens are declared revoked is out of the scope of t
 
 Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}} and JSON Web Tokens (JWTs) {{RFC7519}}.
 
-The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client, Resource Server (RS), and Authorization Server (AS).
+The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes client, resource server (RS), and authorization server (AS).
 
 Readers are also expected to be familiar with the terms and concepts related to CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, COSE {{RFC9052}}, CoAP {{RFC7252}}, CoAP Observe {{RFC7641}}, and the use of hash functions to name objects as defined in {{RFC6920}}.
 
@@ -154,9 +154,9 @@ This specification also refers to the following terminology.
 
 * TRL endpoint: an endpoint at the AS with a TRL as its representation. The default name of the TRL endpoint in a url-path is '/revoke/trl'. Implementations are not required to use this name, and can define their own instead.
 
-* Registered device: a device registered at the AS, i.e., as a Client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.
+* Registered device: a device registered at the AS, i.e., as a client, or an RS, or both. A registered device acts as a requester towards the TRL endpoint.
 
-* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a Client requesting access tokens or an RS consuming access tokens.
+* Administrator: entity authorized to get full access to the TRL at the AS, and acting as a requester towards the TRL endpoint. An administrator is not necessarily a registered device as defined above, i.e., a client requesting access tokens or an RS consuming access tokens.
 
   An administrator might also be authorized to perform further administrative operations at the AS, e.g., through a dedicated admin interface that is out of the scope of this document. By considering the token hashes retrieved from the TRL together with other information obtained from the AS, the administrator becomes able to derive additional information, e.g., the fact that accesses have been revoked for specific registered devices.
 
@@ -164,7 +164,7 @@ This specification also refers to the following terminology.
 
    - With reference to an administrator, an access token issued by the AS.
 
-   - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a Client if the AS has issued the access token for that Client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
+   - With reference to a registered device, an access token intended to be owned by that device. An access token pertains to a client if the AS has issued the access token for that client following its request. An access token pertains to an RS if the AS has issued the access token to be consumed by that RS.
 
 * Token hash pertaining to a requester: a token hash corresponding to an access token pertaining to that requester, i.e., an administrator or a registered device.
 
@@ -182,7 +182,7 @@ Note to RFC Editor: Please delete the paragraph immediately preceding this note.
 
 # Protocol Overview # {#sec-overview}
 
-This protocol defines how a CoAP-based Authorization Server informs Clients and Resource Servers, i.e., registered devices, about pertaining revoked access tokens. How the relationship between a registered device and the AS is established is out of the scope of this specification.
+This protocol defines how a CoAP-based authorization server informs clients and resource servers, i.e., registered devices, about pertaining revoked access tokens. How the relationship between a registered device and the AS is established is out of the scope of this specification.
 
 At a high level, the steps of this protocol are as follows.
 
@@ -208,7 +208,7 @@ At a high level, the steps of this protocol are as follows.
 
 ~~~~~~~~~~~ aasvg
                     +----------------------+
-                    | Authorization Server |
+                    | Authorization server |
                     +-----------o----------+
                   /revoke/trl   |   TRL: (th1,th2,th3)
                                 |
@@ -218,7 +218,7 @@ At a high level, the steps of this protocol are as follows.
  v                 v            v            v            v
 +---------------+ +----------+ +----------+ +----------+ +----------+
 | Administrator | | Client 1 | | Resource | | Client 2 | | Resource |
-|               | |          | | Server 1 | |          | | Server 2 |
+|               | |          | | server 1 | |          | | server 2 |
 +---------------+ +----------+ +----------+ +----------+ +----------+
                      :    :        :           :            :    :
                      :    :   t1   :           :     t3     :    :
@@ -285,7 +285,7 @@ This section specifies how token hashes are computed.
 
 First, {{sec-token-hash-input-motivation}} provides the motivation for the used construction.
 
-Building on that, the value used as input to compute a token hash is defined in {{sec-token-hash-input-c-as}} for the Client and the AS, and in {{sec-token-hash-input-rs}} for the RS. Finally, {{sec-token-hash-output}} defines how such an input is used for computing the token hash.
+Building on that, the value used as input to compute a token hash is defined in {{sec-token-hash-input-c-as}} for the client and the AS, and in {{sec-token-hash-input-rs}} for the RS. Finally, {{sec-token-hash-output}} defines how such an input is used for computing the token hash.
 
 The process outlined below refers to the base64url encoding and decoding without padding (see {{Section 5 of RFC4648}}), and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
 
@@ -295,11 +295,11 @@ Also, "tagged access token" is used to denote nested CBOR tags (possibly a singl
 
 ## Motivation for the Used Construction # {#sec-token-hash-input-motivation}
 
-An access token can have one among different formats. The most expected formats are CWT {{RFC8392}} and JWT {{RFC7519}}, with the former being the default format to use in the ACE framework (see {{Section 3 of RFC9200}}). While access tokens are opaque to Clients, an RS is aware of whether access tokens that are issued for it to consume are either CWTs or JWTs.
+An access token can have one among different formats. The most expected formats are CWT {{RFC8392}} and JWT {{RFC7519}}, with the former being the default format to use in the ACE framework (see {{Section 3 of RFC9200}}). While access tokens are opaque to clients, an RS is aware of whether access tokens that are issued for it to consume are either CWTs or JWTs.
 
 ### Issuing of the Access Token to the Client
 
-There are two possible encodings that the AS can use for the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the issued access token is included and provided to the requester Client. The RS may not be aware of which encoding is used for that response to that particular requester Client.
+There are two possible encodings that the AS can use for the AS-to-Client response (see {{Section 5.8.2 of RFC9200}}), where the issued access token is included and provided to the requester client. The RS may not be aware of which encoding is used for that response to that particular requester client.
 
 * One way relies on CBOR, which is required if CoAP is used (see {{Section 5 of RFC9200}}) and is recommended otherwise (see {{Section 3 of RFC9200}}). That is, the AS-to-Client response has media-type "application/ace+cbor".
 
@@ -341,17 +341,17 @@ The following overviews how the above specifically applies to the existing trans
 
 ### Design Rationale
 
-Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash of a given access token, by the AS that has issued the access token and by the registered devices to which the access token pertains (both Client and RS).
+Considering the possible variants discussed above, it must always be ensured that the same HASH_INPUT value is used as input for generating the token hash of a given access token, by the AS that has issued the access token and by the registered devices to which the access token pertains (both client and RS).
 
-This is achieved by building HASH_INPUT according to the content of the 'access_token' parameter in the AS-to-Client responses, since that is what all among the AS, the Client, and the RS are able to see.
+This is achieved by building HASH_INPUT according to the content of the 'access_token' parameter in the AS-to-Client responses, since that is what all among the AS, the client, and the RS are able to see.
 
 ## Hash Input on the Client and the AS # {#sec-token-hash-input-c-as}
 
-The Client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the (tagged) access token is included and provided to the requester Client.
+The client and the AS consider the content of the 'access_token' parameter in the AS-to-Client response, where the (tagged) access token is included and provided to the requester client.
 
-The following defines how the Client and the AS determine the HASH_INPUT value to use as input for computing the token hash of the conveyed access token, depending on the AS-to-Client response being encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}) or in JSON (see {{sec-token-hash-input-c-as-json}}).
+The following defines how the client and the AS determine the HASH_INPUT value to use as input for computing the token hash of the conveyed access token, depending on the AS-to-Client response being encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}) or in JSON (see {{sec-token-hash-input-c-as-json}}).
 
-Once determined HASH_INPUT, the Client and the AS use it to compute the token hash of the conveyed access token as defined in {{sec-token-hash-output}}.
+Once determined HASH_INPUT, the client and the AS use it to compute the token hash of the conveyed access token as defined in {{sec-token-hash-output}}.
 
 ### AS-to-Client Response Encoded in CBOR # {#sec-token-hash-input-c-as-cbor}
 
@@ -446,7 +446,7 @@ If the RS expects access tokens to be CWTs, then the RS performs the following s
 
 1. The RS receives the token-related information TOKEN_INFO, in accordance with what is specified by the used profile of ACE (see {{sec-token-hash-input-motivation-rs}}).
 
-2. The RS assumes that the Client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of the tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
+2. The RS assumes that the client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of the tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
 
 3. The RS verifies the access token as per {{Section 5.10.1.1 of RFC9200}}. If the verification fails, then the RS does not discard the access token yet, and it instead moves to step 4.
 
@@ -454,7 +454,7 @@ If the RS expects access tokens to be CWTs, then the RS performs the following s
 
    After that, the RS stores the computed token hash as associated with the access token, and then terminates this algorithm.
 
-4. The RS assumes that the Client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of HASH_INPUT_TEXT. In turn, HASH_INPUT_TEXT is the base64url-encoded text string that encodes the binary representation of the tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
+4. The RS assumes that the client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, the RS assumes TOKEN_INFO to be the binary representation of HASH_INPUT_TEXT. In turn, HASH_INPUT_TEXT is the base64url-encoded text string that encodes the binary representation of the tagged access token with the CWT as innermost tag content (as per {{sec-issuing-access-tokens-as}}).
 
 5. The RS performs the base64url decoding of HASH_INPUT_TEXT, and considers the result as the binary representation of the tagged access token.
 
@@ -474,23 +474,23 @@ If the RS expects access tokens to be JWTs, then the RS performs the following s
 
 3. The RS computes a first token hash associated with the access token, as defined in {{sec-token-hash-output}}.
 
-   In particular, the RS assumes that the Client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, HASH_INPUT is TOKEN_INFO.
+   In particular, the RS assumes that the client received the access token in an AS-to-Client response encoded in JSON (see {{sec-token-hash-input-c-as-json}}). Hence, HASH_INPUT is TOKEN_INFO.
 
    After that, the RS stores the computed token hash as associated with the access token.
 
 4. The RS computes a second token hash associated with the access token, as defined in {{sec-token-hash-output}}.
 
-   In particular, the RS assumes that the Client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, HASH_INPUT is the binary representation of HASH_INPUT_TEXT, which in turn is the base64url-encoded text string that encodes TOKEN_INFO.
+   In particular, the RS assumes that the client received the access token in an AS-to-Client response encoded in CBOR (see {{sec-token-hash-input-c-as-cbor}}). Hence, HASH_INPUT is the binary representation of HASH_INPUT_TEXT, which in turn is the base64url-encoded text string that encodes TOKEN_INFO.
 
    After that, the RS stores the computed token hash as associated with the access token.
 
-The RS skips step 3 only if it is certain that all its pertaining access tokens are provided to any Client by means of AS-to-Client responses encoded as CBOR messages. Otherwise, the RS MUST perform step 3.
+The RS skips step 3 only if it is certain that all its pertaining access tokens are provided to any client by means of AS-to-Client responses encoded as CBOR messages. Otherwise, the RS MUST perform step 3.
 
-The RS skips step 4 only if it is certain that all its pertaining access tokens are provided to any Client by means of AS-to-Client responses encoded as JSON messages. Otherwise, the RS MUST perform step 4.
+The RS skips step 4 only if it is certain that all its pertaining access tokens are provided to any client by means of AS-to-Client responses encoded as JSON messages. Otherwise, the RS MUST perform step 4.
 
 If the RS performs both step 3 and step 4 above, then the RS MUST store, maintain, and rely on both token hashes as associated with the access token, consistent with what is specified in {{sec-handling-token-hashes}}.
 
-{{sec-seccons-two-hashes-jwt}} discusses how computing and storing both token hashes neutralizes an attack against the RS, where a dishonest Client can induce the RS to compute a token hash different from the correct one.
+{{sec-seccons-two-hashes-jwt}} discusses how computing and storing both token hashes neutralizes an attack against the RS, where a dishonest client can induce the RS to compute a token hash different from the correct one.
 
 ## Computing the Token Hash # {#sec-token-hash-output}
 
@@ -909,7 +909,7 @@ During the registration process at the AS, an administrator or a registered devi
 
 * A positive integer MAX\_DIFF\_BATCH, if the AS supports diff queries of the TRL as well as the related "Cursor" extension (see {{sec-trl-endpoint-supporting-cursor}} and {{sec-using-cursor}}).
 
-Once completed the registration process, the AS maintains the registration and related information until a possible deregistration occurs, hence keeping track of active administrators and registered devices. The particular way to achieve this is implementation-specific. Such a mechanism to maintain registrations is enforced in any case at the AS, in order to ensure that requests sent by Clients to the /token endpoint (see {{Section 5.8 of RFC9200}}) and by RSs to the /introspect endpoint (see {{Section 5.9 of RFC9200}}) are processed as intended.
+Once completed the registration process, the AS maintains the registration and related information until a possible deregistration occurs, hence keeping track of active administrators and registered devices. The particular way to achieve this is implementation-specific. Such a mechanism to maintain registrations is enforced in any case at the AS, in order to ensure that requests sent by clients to the /token endpoint (see {{Section 5.8 of RFC9200}}) and by RSs to the /introspect endpoint (see {{Section 5.9 of RFC9200}}) are processed as intended.
 
 When communicating with one another, the registered devices and the AS have to use a secure communication association and be mutually authenticated (see {{Section 5 of RFC9200}}).
 
@@ -981,7 +981,7 @@ An RS MUST store the token hash th1 corresponding to an access token t1 until bo
 
 The RS MUST NOT delete the stored token hashes whose corresponding access tokens do not fulfill both the two conditions above, unless it becomes necessary due to memory limitations. In such a case, the RS MUST delete the earliest stored token hashes first.
 
-Retaining the stored token hashes as specified above limits the impact from a (dishonest) Client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim (for CWTs) or in the 'jti' claim (for JWTs) greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
+Retaining the stored token hashes as specified above limits the impact from a (dishonest) client whose pertaining access token: i) specifies the 'exi' claim; ii) is uploaded at the RS for the first time after it has been revoked and later expired; and iii) has the sequence number encoded in the 'cti' claim (for CWTs) or in the 'jti' claim (for JWTs) greater than the highest sequence number among the expired access tokens specifying the 'exi' claim for the RS (see {{Section 5.10.3 of RFC9200}}). That is, the RS would not accept such a revoked and expired access token as long as it stores the corresponding token hash.
 
 In order to further limit such a risk, when receiving an access token that specifies the 'exi' claim and for which a corresponding token hash is not stored, the RS can introspect the access token (see {{Section 5.9 of RFC9200}}), if token introspection is implemented by both the RS and the AS.
 
@@ -1026,7 +1026,7 @@ The AS MUST ensure that, other than registered devices accessing their own perta
 
 Note that the TRL endpoint supports only the GET method (see {{sec-trl-endpoint}}). Therefore, as detailed in {{ssec-trl-full-query}} and {{ssec-trl-diff-query}}, accesses to the TRL endpoint are performed only by means of protected and authenticated GET requests, which by definition are safe in the REST sense and do not alter the content of the TRL. That is, registered devices and administrators can perform exclusively read-only operations when accessing the TRL endpoint.
 
-In fact, the content of the TRL can be updated only internally by the AS, in the two circumstances described in {{ssec-trl-update}}. Therefore, an adversary that is not in control of the AS cannot manipulate the content of the TRL, e.g., by removing a token hash and thereby fraudulently allowing a Client to access protected resources in spite of a revoked access token, or by adding a token hash and thereby fraudulently stopping a Client from accessing protected resources in spite of an access token being still valid.
+In fact, the content of the TRL can be updated only internally by the AS, in the two circumstances described in {{ssec-trl-update}}. Therefore, an adversary that is not in control of the AS cannot manipulate the content of the TRL, e.g., by removing a token hash and thereby fraudulently allowing a client to access protected resources in spite of a revoked access token, or by adding a token hash and thereby fraudulently stopping a client from accessing protected resources in spite of an access token being still valid.
 
 ## Size of the TRL
 
@@ -1042,17 +1042,17 @@ In order to avoid this, a requester SHOULD NOT rely solely on the CoAP Observe n
 
 ## Request of New Access Tokens
 
-If a Client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the Client may receive an unprotected 4.01 (Unauthorized) response from the RS.
+If a client stores an access token that it still believes to be valid, and it accordingly attempts to access a protected resource at the RS, the client may receive an unprotected 4.01 (Unauthorized) response from the RS.
 
-This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the Client is not aware of it (yet). As another example, the access token is still valid, but an on-path active adversary might have injected a forged 4.01 (Unauthorized) response, or the RS might have deleted the access token from its local storage due to its dedicated storage space being all consumed.
+This can be due to a number of causes. For example, the access token has been revoked, and the RS has become aware of it and has expunged the access token, but the client is not aware of it (yet). As another example, the access token is still valid, but an on-path active adversary might have injected a forged 4.01 (Unauthorized) response, or the RS might have deleted the access token from its local storage due to its dedicated storage space being all consumed.
 
-In either case, if the Client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the Authorization Server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the Client SHOULD send a request to the TRL endpoint at the AS. If the Client gains knowledge that the access token is not valid anymore, the Client expunges the access token and can ask for a new one. Otherwise, the Client can try again to upload the same access token to the RS, or instead to request a new one.
+In either case, if the client believes that the access token is still valid, it SHOULD NOT immediately ask for a new access token to the authorization server upon receiving a 4.01 (Unauthorized) response from the RS. Instead, the client SHOULD send a request to the TRL endpoint at the AS. If the client gains knowledge that the access token is not valid anymore, the client expunges the access token and can ask for a new one. Otherwise, the client can try again to upload the same access token to the RS, or instead to request a new one.
 
 ## Vulnerable Time Window at the RS
 
-A Client may attempt to access a protected resource at an RS after the access token allowing such an access has been revoked, but before the RS is aware of the revocation.
+A client may attempt to access a protected resource at an RS after the access token allowing such an access has been revoked, but before the RS is aware of the revocation.
 
-In such a case, if the RS is still storing the access token, the Client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the Client is not attempting to be malicious.
+In such a case, if the RS is still storing the access token, the client will be able to access the protected resource, even though it should not. Such an access is a security violation, even if the client is not attempting to be malicious.
 
 In order to minimize such a risk, if an RS relies solely on polling through individual requests to the TRL endpoint to learn of revoked access tokens, the RS SHOULD implement an adequate trade-off between the polling frequency and the maximum length of the vulnerable time window.
 
@@ -1078,15 +1078,15 @@ Later on, if the access token is revoked and the AS provides the RS with the cor
 
 ## Two Token Hashes at the RS using JWTs # {#sec-seccons-two-hashes-jwt}
 
-{{sec-token-hash-input-rs-jwt}} defines that an RS using JWTs as access tokens has to compute and store two token hashes associated with the same access token. This is because, when using JWTs, the RS does not know for sure if the AS provided the access token to the Client by means of an AS-to-Client response encoded in CBOR or in JSON.
+{{sec-token-hash-input-rs-jwt}} defines that an RS using JWTs as access tokens has to compute and store two token hashes associated with the same access token. This is because, when using JWTs, the RS does not know for sure if the AS provided the access token to the client by means of an AS-to-Client response encoded in CBOR or in JSON.
 
-Taking advantage of that, a dishonest Client can attempt to perform an attack against the RS. That is, the Client can first receive the JWT in an AS-to-Client response encoded in CBOR (JSON). Then, the Client can upload the JWT to the RS in a way that makes the RS believe that the Client instead received the JWT in an AS-to-Client response encoded in JSON (CBOR).
+Taking advantage of that, a dishonest client can attempt to perform an attack against the RS. That is, the client can first receive the JWT in an AS-to-Client response encoded in CBOR (JSON). Then, the client can upload the JWT to the RS in a way that makes the RS believe that the client instead received the JWT in an AS-to-Client response encoded in JSON (CBOR).
 
-Consequently, the RS considers a HASH_INPUT different from the one considered by the AS and the Client (see {{sec-token-hash-input-c-as}}). Hence, the RS computes a token hash h' different from the token hash h computed by the AS and the Client. It follows that, if the AS revokes the access token and advertises the right token hash h, then the RS will not learn about the access token revocation and thus will not delete the access token.
+Consequently, the RS considers a HASH_INPUT different from the one considered by the AS and the client (see {{sec-token-hash-input-c-as}}). Hence, the RS computes a token hash h' different from the token hash h computed by the AS and the client. It follows that, if the AS revokes the access token and advertises the right token hash h, then the RS will not learn about the access token revocation and thus will not delete the access token.
 
 Fundamentally, this would happen because the HASH_INPUT used to compute the token hash of a JWT depends on whether the AS-to-Client response is encoded in CBOR or in JSON. This makes the RS vulnerable to the attack described above, when JWTs are used as access tokens. Instead, this is not a problem if the access token is a CWT, since the HASH_INPUT used to compute the token hash of a CWT does not depend on whether the AS-to-Client response is encoded in CBOR or in JSON.
 
-While this asymmetry cannot be avoided altogether, the method defined for the AS and the Client in {{sec-token-hash-input-c-as}} deliberately penalizes the case where the RS uses JWTs as access tokens. In such a case, the RS effectively neutralizes the attack described above, by computing and storing two token hashes associated with the same access token (see {{sec-token-hash-input-rs-jwt}}).
+While this asymmetry cannot be avoided altogether, the method defined for the AS and the client in {{sec-token-hash-input-c-as}} deliberately penalizes the case where the RS uses JWTs as access tokens. In such a case, the RS effectively neutralizes the attack described above, by computing and storing two token hashes associated with the same access token (see {{sec-token-hash-input-rs-jwt}}).
 
 Conversely, this design deliberately favors the case where the RS uses CWTs as access tokens, which is a preferable option for resource-constrained RSs as well as the default case in the ACE framework (see {{Section 3 of RFC9200}}). That is, if an RS uses CWTs as access tokens, then the RS is not exposed to the attack described above, and thus it safely computes and stores only one token hash per access token (see {{sec-token-hash-input-rs-cwt}}).
 
@@ -1130,7 +1130,7 @@ Interoperability considerations: N/A
 
 Published specification: {{&SELF}}
 
-Applications that use this media type: The type is used by Authorization Servers, Clients, and Resource Servers that support the notification of revoked access tokens, according to a Token Revocation List maintained by the Authorization Server as specified in {{&SELF}}.
+Applications that use this media type: The type is used by authorization servers, clients, and resource servers that support the notification of revoked access tokens, according to a Token Revocation List maintained by the authorization server as specified in {{&SELF}}.
 
 Fragment identifier considerations: N/A
 
@@ -2039,6 +2039,8 @@ ace-trl-error = 1
   - Revised text on Expert Review when using early allocation per RFC 7120.
 
 * Split elision and comments in examples with CBOR Diagnostic Notation.
+
+* Lowercase capitalization for "client", "resource server", and "authorization server".
 
 * Editorial improvements.
 
